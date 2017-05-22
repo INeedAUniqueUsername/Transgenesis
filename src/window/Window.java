@@ -1,5 +1,7 @@
 package window;
 
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,13 +13,16 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 public class Window implements Runnable {
+	public static final boolean DEBUG = true;
+	public static final Font FONT_DEFAULT = new Font("Consolas", Font.PLAIN, 18);
 	String file_name = "0.txt";
 	File file;
 	Writer writer;
 	BufferedReader reader;
-	JFrame frame;
+	Frame frame;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -68,14 +73,7 @@ public class Window implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		frame = new JFrame();
-		frame.setTitle("TransGenesis");
-		frame.setSize(1920, 1080);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
-		frame.pack();
-		frame.setVisible(true);
+		frame = new Frame();
 	}
 
 }

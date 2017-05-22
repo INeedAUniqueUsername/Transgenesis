@@ -1,39 +1,31 @@
 package designType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 
+import xml.Attribute;
+import xml.Attribute.ValueType;
 import xml.Element;
 
-public class DesignType implements Element {
-
-	private HashMap<String, ValueType> attribute_types;
-	private HashMap<String, String> attribute_values;
+public class DesignType extends Element implements Comparable {
 	public DesignType() {
-		attribute_types = new HashMap<String, ValueType>() {{
-			put("UNID", ValueType.UNID);
-			put("attributes", ValueType.STRING);
-			put("inherit", ValueType.TYPE_INHERITED);
-		}};
-	}
-	protected void addAttributeType(String name, ValueType type) {
-		attribute_types.put(name, type);
+		super();
+		addAttributes(
+				new Attribute("UNID", ValueType.UNID, ""),
+				new Attribute("attributes", ValueType.STRING, ""),
+				new Attribute("inherit", ValueType.TYPE_INHERITED, "")
+				);
 	}
 	@Override
-	public HashMap<String, ValueType> getAttributeList() {
-		// TODO Auto-generated method stub
-		return attribute_types;
+	public int compareTo(Object arg0) {
+		if(arg0 instanceof DesignType) {
+			int unid = Integer.valueOf(getAttributes().get(0).getValue());
+			int unid_other = Integer.valueOf(((Element) arg0).getAttributes().get(0).getValue());
+			if(unid > unid_other) {
+				return 1;
+			} else if(unid < unid_other) {
+				return -1;
+			}
+		}
+		return 0;
 	}
-	@Override
-	public HashMap<String, String> getAttributeValues() {
-		// TODO Auto-generated method stub
-		return attribute_values;
-	}
-
-	@Override
-	public ArrayList<Element> getSubElements() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

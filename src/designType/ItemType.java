@@ -4,5 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import xml.Element;
-public class ItemType extends DesignType {
+import xml.IElement;
+public class ItemType extends Element {
 }
