@@ -18,7 +18,7 @@ public class Element implements IElement {
 	private List<IElement> subelements;
 	String text;
 	public Element() {
-		name = getClass().getName();
+		name = getClass().getSimpleName();
 		attributes = new LinkedList<Attribute>();
 		subelements = new LinkedList<IElement>();
 		text = "";
@@ -42,17 +42,20 @@ public class Element implements IElement {
 		return text;
 	}
 	
-	protected void setAttributes(List<Attribute> attributes) {
+	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
-	protected void addAttributes(Attribute...attributes) {
+	public void addAttributes(Attribute...attributes) {
 		this.attributes.addAll(Arrays.asList(attributes));
 	}
-	protected void setSubElements(List<IElement> subelements) {
+	public void setSubElements(List<IElement> subelements) {
 		this.subelements = subelements;
 	}
-	protected void addSubElements(IElement...subelements) {
+	public void addSubElements(IElement...subelements) {
 		this.subelements.addAll(Arrays.asList(subelements));
+	}
+	public void setText(String text) {
+		this.text = text;
 	}
 	
 	public String toString() {

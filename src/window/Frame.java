@@ -1,8 +1,13 @@
 package window;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
@@ -14,6 +19,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -52,23 +59,45 @@ import org.w3c.dom.Node;
 
 public class Frame extends JFrame {
 	
+	public static final int SCREEN_WIDTH;
+	public static final int SCREEN_HEIGHT;
+	static {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		SCREEN_WIDTH = (int) screenSize.getWidth();
+		SCREEN_HEIGHT = (int) screenSize.getHeight();
+	}
 	DefaultTreeModel elementTreeModel;
 	JTree elementTree;
 	JScrollPane elementTreePane;
 	DefaultTreeCellRenderer elementTreeCellRenderer;
 	
 	List<TranscendenceMod> mods;
+	Element selected;
 	
-	JPanel attributePanel;
+	
+	JPanel labelPanel;
+	JPanel fieldPanel;
+	JTextField text;
+	JButton applyButton;
 	//JPanel subelementPanel;
 	public Frame() {
 		
 		setTitle("TransGenesis");
-		setSize(1920, 1080);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(0, 2));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.setPreferredSize(new Dimension(SCREEN_WIDTH, (int) (SCREEN_HEIGHT * 0.9)));
 		add(panel);
+		
+		JPanel leftPanel = new JPanel();
+		leftPanel.setPreferredSize(new Dimension(SCREEN_WIDTH/4, (int) (SCREEN_HEIGHT * 0.9)));
+		leftPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+		rightPanel.setPreferredSize(new Dimension(SCREEN_WIDTH/4, (int) (SCREEN_HEIGHT * 0.9)));
+		panel.add(leftPanel);
+		panel.add(rightPanel);
 		
 		//mods = Loader.loadAllMods(new File("C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions"));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode();
@@ -119,30 +148,54 @@ public class Frame extends JFrame {
 	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	    				elementTree.getLastSelectedPathComponent();
 	    		Element element = (Element) node.getUserObject();
-	    		initializeFromElement(element);
+	    		selectElement(element);
 	    	}
 	    });
 	    elementTreePane = new JScrollPane(elementTree);
 	    elementTreePane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		panel.add(elementTreePane);
+	    elementTreePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		leftPanel.add(elementTreePane);
 		
-		attributePanel = new JPanel();
-		panel.add(attributePanel);
+		JPanel attributePanel = new JPanel();
+		attributePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		labelPanel = new JPanel();
+		fieldPanel = new JPanel();
+		attributePanel.add(labelPanel);
+		attributePanel.add(fieldPanel);
+		rightPanel.add(attributePanel);
 		
-		initializeFromElement(new Power());
-		//setAttributes(new Power());
+		text = new JTextField();
+		applyButton = new JButton();
+		applyButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				setAttributes(selected);
+			}
+		});
+		applyButton.setFont(Window.FONT_DEFAULT);
+		applyButton.setText("Apply");
+		rightPanel.add(text);
+		rightPanel.add(applyButton);
 		
 		
 		pack();
 		setVisible(true);
 	}
-	public void initializeFromElement(IElement e) {
+	public void selectElement(Element e) {
 		System.out.println("Initialize from element: " + e.getName());
-		attributePanel.removeAll();
-		attributePanel.setLayout(new GridLayout(0, 2));
+		selected = e;
+		labelPanel.removeAll();
+		fieldPanel.removeAll();
+		labelPanel.setLayout(new GridLayout(20, 1));
+		fieldPanel.setLayout(new GridLayout(20, 1));
+		
+		labelPanel.setPreferredSize(new Dimension(200, SCREEN_HEIGHT/3));
+		fieldPanel.setPreferredSize(new Dimension(SCREEN_WIDTH/4, SCREEN_HEIGHT/3));
 		for(Attribute a : e.getAttributes()) {
-			attributePanel.add(createLabel(a.getName() + "="));
-			attributePanel.add(a.getValueType().getInputField(a.getValue()));
+			labelPanel.add(createLabel(a.getName() + "="));
+			JComponent inputField = a.getValueType().getInputField(a.getValue());
+			fieldPanel.add(inputField);
 		}
 		/*
 		subelementPanel.removeAll();
@@ -164,11 +217,12 @@ public class Frame extends JFrame {
 		}
 		*/
 		pack();
+		repaint();
 	}
 	public void setAttributes(Element e) {
 		List<Attribute> attributes = e.getAttributes();
-		Component[] fields = attributePanel.getComponents();
-		for(int i = 0; i < attributes.size(); i += 1) {
+		Component[] fields = fieldPanel.getComponents();
+		for(int i = 0; i < attributes.size(); i++) {
 			String value = "";
 			Component field = fields[i];
 			if(field instanceof JTextField) {
@@ -178,6 +232,7 @@ public class Frame extends JFrame {
 			}
 			attributes.get(i).setValue(value);
 		}
+		e.setText(text.getText());
 	}
 	public static JLabel createLabel(String text) {
 		JLabel result = new JLabel();

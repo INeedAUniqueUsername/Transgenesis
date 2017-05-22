@@ -10,9 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Set;
 
 public interface IElement {
-	public default String getName() {
-		return getClass().getName();
-	}
+	public String getName();
 	public default String getXML() {
 		return getXML("");
 	}
@@ -38,10 +36,10 @@ public interface IElement {
 		
 		if(hasSubelements || hasText) {
 			result += ">";
+			result += "\n" + tabs_subelements + text;
 			for(IElement e : subelements) {
 				result += "\n" + e.getXML(tabs_subelements);
 			}
-			result += "\n" + tabs_subelements + text;
 			result += "\n" + tabs + "</" + name + ">";
 		} else {
 			result += "/>";
