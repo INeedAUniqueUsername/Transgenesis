@@ -1,10 +1,8 @@
 package designType;
 
 import designType.subElements.Events_OverlayType;
-import subelements.CodeBlock;
 import xml.Attribute;
 import xml.Attribute.ValueType;
-import xml.Element;
 
 public class OverlayType extends DesignType {
 	public OverlayType() {

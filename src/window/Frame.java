@@ -1,28 +1,17 @@
 package window;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -31,33 +20,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
-import designType.DesignType;
+import designType.DesignElement;
 import designType.OverlayType;
 import designType.Power;
 import mod.TranscendenceMod;
 import xml.Attribute;
-import xml.Element;
-import xml.IElement;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Entity;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 
 public class Frame extends JFrame {
 	
@@ -74,7 +49,7 @@ public class Frame extends JFrame {
 	DefaultTreeCellRenderer elementTreeCellRenderer;
 	
 	List<TranscendenceMod> mods;
-	Element selected;
+	DesignElement selected;
 	
 	
 	JPanel labelPanel;
@@ -125,7 +100,7 @@ public class Frame extends JFrame {
 			                    tree, value, sel,
 			                    expanded, leaf, row,
 			                    hasFocus);
-			    Element element = (Element) ((DefaultMutableTreeNode) value).getUserObject();
+			    DesignElement element = (DesignElement) ((DefaultMutableTreeNode) value).getUserObject();
 			
 			    return this;
 			}
@@ -148,7 +123,7 @@ public class Frame extends JFrame {
 	    		// TODO Auto-generated method stub
 	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	    				elementTree.getLastSelectedPathComponent();
-	    		Element element = (Element) node.getUserObject();
+	    		DesignElement element = (DesignElement) node.getUserObject();
 	    		selectElement(element);
 	    	}
 	    });
@@ -184,7 +159,7 @@ public class Frame extends JFrame {
 		pack();
 		setVisible(true);
 	}
-	public void selectElement(Element e) {
+	public void selectElement(DesignElement e) {
 		System.out.println("Initialize from element: " + e.getName());
 		selected = e;
 		labelPanel.removeAll();
@@ -222,14 +197,14 @@ public class Frame extends JFrame {
 		pack();
 		repaint();
 	}
-	public void setAttributes(Element e) {
+	public void setAttributes(DesignElement e) {
 		List<Attribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();
 		for(int i = 0; i < attributes.size(); i++) {
 			String value = "";
 			Component field = fields[i];
-			if(field instanceof JTextField) {
-				value = ((JTextField) field).getText();
+			if(field instanceof JTextArea) {
+				value = ((JTextArea) field).getText();
 			} else if(field instanceof JComboBox) {
 				value = (String) ((JComboBox) field).getSelectedItem();
 			}
@@ -244,12 +219,12 @@ public class Frame extends JFrame {
 		return result;
 	}
 	
-	public void updateTreeText(Element se)
+	public void updateTreeText(DesignElement se)
 	{
 		elementTreeModel.nodeChanged(getNode(se));
 	}
 	
-	public DefaultMutableTreeNode getNode(Element element)
+	public DefaultMutableTreeNode getNode(DesignElement element)
 	{
 		DefaultMutableTreeNode theNode = null;
 		for (Enumeration<DefaultMutableTreeNode> e = (Enumeration<DefaultMutableTreeNode>) ((DefaultMutableTreeNode) elementTreeModel.getRoot()).depthFirstEnumeration(); e.hasMoreElements() && theNode == null;) {

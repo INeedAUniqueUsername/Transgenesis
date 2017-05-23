@@ -1,7 +1,7 @@
 package mod;
 
-import xml.Element;
+import designType.DesignType;
 
-public class TranscendenceMod extends Element {
+public class TranscendenceMod extends DesignType {
 
 }

@@ -1,12 +1,7 @@
 package designType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import xml.Attribute;
 import xml.Attribute.ValueType;
-import xml.Element;
 
 public class DesignType extends DesignElement implements Comparable {
 
@@ -27,7 +22,7 @@ public class DesignType extends DesignElement implements Comparable {
 	public int compareTo(Object arg0) {
 		if(arg0 instanceof DesignType) {
 			int unid = Integer.valueOf(getAttributes().get(0).getValue());
-			int unid_other = Integer.valueOf(((Element) arg0).getAttributes().get(0).getValue());
+			int unid_other = Integer.valueOf(((DesignElement) arg0).getAttributes().get(0).getValue());
 			if(unid > unid_other) {
 				return 1;
 			} else if(unid < unid_other) {

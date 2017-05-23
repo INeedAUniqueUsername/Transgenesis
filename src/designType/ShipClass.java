@@ -1,10 +1,9 @@
 package designType;
+public class ShipClass extends DesignType {
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import xml.Element;
-import xml.IElement;
-public class ShipClass extends Element {
+	public ShipClass(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
 	
 }

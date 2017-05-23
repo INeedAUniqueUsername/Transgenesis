@@ -1,18 +1,16 @@
 package mod;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import xml.Element;
-import xml.IElement;
+import designType.DesignElement;
 
 public class TranscendenceExtension extends TranscendenceMod {
 	TreeMap<String, String> unid_index;
 	public DefaultMutableTreeNode toTreeNode() {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(this);
-		for (IElement e : getSubElements()) {
+		for (DesignElement e : getSubElements()) {
 			node.add(e.toTreeNode());
 		}
 		return node;

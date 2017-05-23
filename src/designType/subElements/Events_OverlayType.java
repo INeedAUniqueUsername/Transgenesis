@@ -1,17 +1,16 @@
 package designType.subElements;
 
-import subelements.CodeBlock;
-import xml.Element;
+import designType.DesignElement;
 
-public class Events_OverlayType extends Element {
+public class Events_OverlayType extends DesignElement {
 	public Events_OverlayType() {
 		super("Events");
 		addSubElements(
-				new CodeBlock("OnCreate"),
-				new CodeBlock("OnUpdate"),
-				new CodeBlock("OnDamage"),
-				new CodeBlock("OnDestroy"),
-				new CodeBlock("OnObjDestroyed")
+				new DesignElement("OnCreate"),
+				new DesignElement("OnUpdate"),
+				new DesignElement("OnDamage"),
+				new DesignElement("OnDestroy"),
+				new DesignElement("OnObjDestroyed")
 				);
 	}
 }
