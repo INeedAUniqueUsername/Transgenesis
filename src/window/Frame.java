@@ -14,6 +14,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -77,7 +79,7 @@ public class Frame extends JFrame {
 	
 	JPanel labelPanel;
 	JPanel fieldPanel;
-	JTextField text;
+	JTextArea text;
 	JButton applyButton;
 	//JPanel subelementPanel;
 	public Frame() {
@@ -91,7 +93,6 @@ public class Frame extends JFrame {
 		add(panel);
 		
 		JPanel leftPanel = new JPanel();
-		leftPanel.setPreferredSize(new Dimension(SCREEN_WIDTH/4, (int) (SCREEN_HEIGHT * 0.9)));
 		leftPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
@@ -135,7 +136,7 @@ public class Frame extends JFrame {
 	    elementTree.getSelectionModel().setSelectionMode
 	    	(TreeSelectionModel.SINGLE_TREE_SELECTION);
 	    elementTree.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    elementTree.setFont(Window.FONT_DEFAULT);
+	    elementTree.setFont(Window.FONT_MEDIUM);
 	    elementTree.setName("XML");
 	    elementTree.setShowsRootHandles(true);
 	    elementTree.setCellRenderer(elementTreeCellRenderer);
@@ -164,7 +165,8 @@ public class Frame extends JFrame {
 		attributePanel.add(fieldPanel);
 		rightPanel.add(attributePanel);
 		
-		text = new JTextField();
+		text = new JTextArea();
+		text.setFont(Window.FONT_LARGE);
 		applyButton = new JButton();
 		applyButton.addActionListener(new ActionListener() {
 			@Override
@@ -173,7 +175,7 @@ public class Frame extends JFrame {
 				setAttributes(selected);
 			}
 		});
-		applyButton.setFont(Window.FONT_DEFAULT);
+		applyButton.setFont(Window.FONT_LARGE);
 		applyButton.setText("Apply");
 		rightPanel.add(text);
 		rightPanel.add(applyButton);
@@ -197,6 +199,7 @@ public class Frame extends JFrame {
 			JComponent inputField = a.getValueType().getInputField(a.getValue());
 			fieldPanel.add(inputField);
 		}
+		text.setText(e.getText());
 		/*
 		subelementPanel.removeAll();
 		subelementPanel.setLayout(new GridLayout(0, 1));
@@ -236,7 +239,7 @@ public class Frame extends JFrame {
 	}
 	public static JLabel createLabel(String text) {
 		JLabel result = new JLabel();
-		result.setFont(Window.FONT_DEFAULT);
+		result.setFont(Window.FONT_MEDIUM);
 		result.setText(text);
 		return result;
 	}

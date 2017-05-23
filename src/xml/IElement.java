@@ -1,6 +1,7 @@
 package xml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -19,8 +20,8 @@ public interface IElement {
 		String tabs_attributes = tabs + "\t\t";
 		
 		String name = getName();
-		List<Attribute> attributes = getAttributes();
-		List<IElement> subelements = getSubElements();
+		Collection<Attribute> attributes = getAttributes();
+		Collection<IElement> subelements = getSubElements();
 		String text = getText();
 		
 		boolean hasAttributes = attributes.size() > 0;

@@ -1,14 +1,22 @@
 package designType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import xml.Attribute;
 import xml.Attribute.ValueType;
 import xml.Element;
 
-public class DesignType extends Element implements Comparable {
+public class DesignType extends DesignElement implements Comparable {
+
 	public DesignType() {
-		super();
+		this("Type");
+	}
+	public DesignType(String name) {
+		super(name);
+		
+		addRequiredAttributes("UNID");
 		addAttributes(
 				new Attribute("UNID", ValueType.UNID, ""),
 				new Attribute("attributes", ValueType.STRING, ""),

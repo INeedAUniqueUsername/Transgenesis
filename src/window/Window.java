@@ -17,7 +17,8 @@ import javax.swing.JTextField;
 
 public class Window implements Runnable {
 	public static final boolean DEBUG = true;
-	public static final Font FONT_DEFAULT = new Font("Consolas", Font.PLAIN, 18);
+	public static final Font FONT_LARGE = new Font("Consolas", Font.PLAIN, 18);
+	public static final Font FONT_MEDIUM = new Font("Consolas", Font.PLAIN, 14);
 	String file_name = "0.txt";
 	File file;
 	Writer writer;

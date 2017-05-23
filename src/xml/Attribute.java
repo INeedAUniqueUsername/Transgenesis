@@ -17,7 +17,7 @@ public class Attribute {
 				JComboBox<String> field = new JComboBox<String>();
 				field.addItem("Under Construction");
 				field.setEditable(false);
-				field.setFont(new Font("Consolas", Font.PLAIN, 18));
+				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
 			}
@@ -41,7 +41,7 @@ public class Attribute {
 				JComboBox<String> field = new JComboBox<String>();
 				field.addItem("Under Construction");
 				field.setEditable(false);
-				field.setFont(new Font("Consolas", Font.PLAIN, 18));
+				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
 			}
@@ -65,7 +65,7 @@ public class Attribute {
 				JComboBox<String> field = new JComboBox<String>();
 				field.addItem("Under Construction");
 				field.setEditable(false);
-				field.setFont(new Font("Consolas", Font.PLAIN, 18));
+				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
 			}
@@ -90,7 +90,7 @@ public class Attribute {
 				field.addItem("true");
 				field.addItem("false");
 				field.setEditable(false);
-				field.setFont(new Font("Consolas", Font.PLAIN, 18));
+				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
 			}
@@ -303,7 +303,7 @@ public class Attribute {
 		public abstract boolean isValid(String value);
 		public JComponent getInputField(String value) {
 			JTextField field = new JTextField();
-			field.setFont(new Font("Consolas", Font.PLAIN, 18));
+			field.setFont(Window.FONT_MEDIUM);
 			field.setText(value);
 			return field;
 		}
