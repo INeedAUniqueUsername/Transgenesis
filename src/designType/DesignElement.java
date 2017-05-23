@@ -3,7 +3,9 @@ package designType;
 import java.util.ArrayList;
 import java.util.List;
 
+import xml.Attribute;
 import xml.Element;
+import xml.IElement;
 
 public class DesignElement extends Element {
 	private final List<String> requiredAttributes;
@@ -23,7 +25,17 @@ public class DesignElement extends Element {
 			requiredSubElements.add(s);
 		}
 	}
+	
+	public void addSubElements(DesignElement...subelements) {
+		super.addSubElements(subelements);
+	}
+	
 	public void validate() {
-		
+		for(String name : requiredAttributes) {
+			getAttributeByName(name);
+		}
+		for(String name : requiredSubElements) {
+			
+		}
 	}
 }
