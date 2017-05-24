@@ -60,6 +60,36 @@ public class Attribute {
 				return false;
 			}
 		},
+		TYPE_IMAGE {
+
+			@Override
+			public boolean isValid(String value) {
+				// TODO Auto-generated method stub
+				try {
+					throw new Exception("Not supported");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return false;
+			}
+			
+		},
+		TYPE_MOD {
+
+			@Override
+			public boolean isValid(String value) {
+				// TODO Auto-generated method stub
+				try {
+					throw new Exception("Not supported");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return false;
+			}
+			
+		},
 		TYPE_INHERITED {
 			public JComponent getInputField(String value) {
 				JComboBox<String> field = new JComboBox<String>();

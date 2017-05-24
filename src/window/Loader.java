@@ -74,7 +74,7 @@ public class Loader {
 	}
 	
 	
-	
+	/*
 	  public static void main(String[] argv) throws Exception {
 		    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    factory.setValidating(false);
@@ -110,7 +110,7 @@ public class Loader {
 		      getEntityValues(list.item(i), map);
 		    }
 		  }
-	
+	*/
 	
 	
 	public static Document loadXMLFromString(String xml) throws Exception

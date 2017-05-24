@@ -1,5 +1,6 @@
 package window;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -20,17 +21,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import designType.DesignElement;
 import designType.OverlayType;
 import designType.Power;
+import mod.TranscendenceExtension;
 import mod.TranscendenceMod;
 import xml.Attribute;
 
@@ -40,40 +44,40 @@ public class Frame extends JFrame {
 	public static final int SCREEN_HEIGHT;
 	static {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		SCREEN_WIDTH = (int) screenSize.getWidth();
-		SCREEN_HEIGHT = (int) screenSize.getHeight();
+		SCREEN_WIDTH = (int) (screenSize.getWidth() * 0.9);
+		SCREEN_HEIGHT = (int) (screenSize.getHeight() * 0.9);
 	}
-	DefaultTreeModel elementTreeModel;
-	JTree elementTree;
-	JScrollPane elementTreePane;
-	DefaultTreeCellRenderer elementTreeCellRenderer;
+	private final DefaultTreeModel elementTreeModel;
+	private final JTree elementTree;
+	private final JScrollPane elementTreePane;
+	private final DefaultTreeCellRenderer elementTreeCellRenderer;
 	
-	List<TranscendenceMod> mods;
-	DesignElement selected;
+	private final List<TranscendenceMod> mods = null;
+	private DesignElement selected;
 	
-	
-	JPanel labelPanel;
-	JPanel fieldPanel;
-	JTextArea text;
-	JButton applyButton;
+	JLabel documentation;
+	private final JPanel labelPanel;
+	private final JPanel fieldPanel;
+	private final JPanel subElementPanel;
+	private final JTextArea text;
+	private final JButton applyButton;
 	//JPanel subelementPanel;
 	public Frame() {
 		
 		setTitle("TransGenesis");
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		panel.setPreferredSize(new Dimension(SCREEN_WIDTH, (int) (SCREEN_HEIGHT * 0.9)));
+		panel.setAlignmentY(JPanel.TOP_ALIGNMENT);
+		//panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		add(panel);
 		
 		JPanel leftPanel = new JPanel();
+		leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		leftPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 		JPanel rightPanel = new JPanel();
+		rightPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		rightPanel.setPreferredSize(new Dimension(SCREEN_WIDTH/4, (int) (SCREEN_HEIGHT * 0.9)));
-		panel.add(leftPanel);
-		panel.add(rightPanel);
 		
 		//mods = Loader.loadAllMods(new File("C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions"));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode();
@@ -82,8 +86,7 @@ public class Frame extends JFrame {
 			origin.add(tm.toTreeNode());
 		}
 		*/
-		origin.add(new Power().toTreeNode());
-		origin.add(new OverlayType().toTreeNode());
+		origin.add(new TranscendenceExtension().toTreeNode());
 		
 		elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
@@ -130,18 +133,39 @@ public class Frame extends JFrame {
 	    elementTreePane = new JScrollPane(elementTree);
 	    elementTreePane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	    elementTreePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    elementTreePane.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 		leftPanel.add(elementTreePane);
 		
+		documentation = new JLabel();
+		documentation.setFont(Window.FONT_MEDIUM);
+		rightPanel.add(documentation);
+		
 		JPanel attributePanel = new JPanel();
+		attributePanel.setLayout(new GridLayout(0, 2));
 		attributePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		labelPanel = new JPanel();
+		labelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		fieldPanel = new JPanel();
+		fieldPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		labelPanel.setLayout(new GridLayout(0, 1));
+		fieldPanel.setLayout(new GridLayout(0, 1));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
 		rightPanel.add(attributePanel);
 		
+		subElementPanel = new JPanel();
+		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		subElementPanel.setLayout(new GridLayout(0, 5));
+		rightPanel.add(subElementPanel);
+		
+		
 		text = new JTextArea();
-		text.setFont(Window.FONT_LARGE);
+		text.setTabSize(4);
+		text.setFont(Window.FONT_MEDIUM);
+		JScrollPane textPanel = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		rightPanel.add(textPanel);
+		
 		applyButton = new JButton();
 		applyButton.addActionListener(new ActionListener() {
 			@Override
@@ -152,48 +176,30 @@ public class Frame extends JFrame {
 		});
 		applyButton.setFont(Window.FONT_LARGE);
 		applyButton.setText("Apply");
-		rightPanel.add(text);
 		rightPanel.add(applyButton);
 		
+		panel.add(leftPanel);
+		panel.add(rightPanel);
+		setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+		panel.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+		leftPanel.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.2), SCREEN_HEIGHT));
+		elementTreePane.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.2), SCREEN_HEIGHT));
 		
+		rightPanel.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.75), SCREEN_HEIGHT));
+		
+		attributePanel.setMaximumSize(	new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
+		labelPanel.setMaximumSize(		new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
+		fieldPanel.setMaximumSize(		new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
+		
+		subElementPanel.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
+		textPanel.setMinimumSize(new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.5)));
 		pack();
 		setVisible(true);
 	}
 	public void selectElement(DesignElement e) {
 		System.out.println("Initialize from element: " + e.getName());
 		selected = e;
-		labelPanel.removeAll();
-		fieldPanel.removeAll();
-		labelPanel.setLayout(new GridLayout(20, 1));
-		fieldPanel.setLayout(new GridLayout(20, 1));
-		
-		labelPanel.setPreferredSize(new Dimension(200, SCREEN_HEIGHT/3));
-		fieldPanel.setPreferredSize(new Dimension(SCREEN_WIDTH/4, SCREEN_HEIGHT/3));
-		for(Attribute a : e.getAttributes()) {
-			labelPanel.add(createLabel(a.getName() + "="));
-			JComponent inputField = a.getValueType().getInputField(a.getValue());
-			fieldPanel.add(inputField);
-		}
-		text.setText(e.getText());
-		/*
-		subelementPanel.removeAll();
-		subelementPanel.setLayout(new GridLayout(0, 1));
-		Frame f = this;
-		for(IElement sub : e.getSubElements()) {
-			JButton j = new JButton(sub.getName());
-			j.setFont(Window.FONT_DEFAULT);
-			j.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					System.out.println("Button clicked");
-					f.initializeFromElement(sub);
-				}
-				
-			});
-			subelementPanel.add(j);
-		}
-		*/
+		e.initializeFrame(this);
 		pack();
 		repaint();
 	}
@@ -203,8 +209,8 @@ public class Frame extends JFrame {
 		for(int i = 0; i < attributes.size(); i++) {
 			String value = "";
 			Component field = fields[i];
-			if(field instanceof JTextArea) {
-				value = ((JTextArea) field).getText();
+			if(field instanceof JTextField) {
+				value = ((JTextField) field).getText();
 			} else if(field instanceof JComboBox) {
 				value = (String) ((JComboBox) field).getSelectedItem();
 			}
@@ -243,5 +249,25 @@ public class Frame extends JFrame {
 		for(int i = 0; i < elementTree.getRowCount(); i++){
 	        elementTree.expandRow(i);
 	    }
+	}
+	public void addElement(DesignElement se)
+	{
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se);
+		elementTreeModel.insertNodeInto(node, (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent(), 0);
+	    expandTreeNodes();
+	    System.out.println("Tree Path (Create): " + new TreePath(elementTreeModel.getPathToRoot(node)));
+	    elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
+	}
+	public JPanel getAttributeLabelPanel() {
+		return labelPanel;
+	}
+	public JPanel getAttributeFieldPanel() {
+		return fieldPanel;
+	}
+	public JPanel getSubElementPanel() {
+		return subElementPanel;
+	}
+	public JTextArea getTextArea() {
+		return text;
 	}
 }

@@ -5,12 +5,12 @@ import xml.Attribute.ValueType;
 
 public class Power extends DesignType {
 	public Power() {
-		super();
+		super("Power");
 		addAttributes(
 				new Attribute("name", ValueType.STRING, ""),
 				new Attribute("key", ValueType.CHARACTER, "")
 				);
-		addSubElements(
+		addOptionalSubElements(
 				new DesignElement("OnShow"),
 				new DesignElement("OnInvokedByPlayer"),
 				new DesignElement("OnInvoke"),

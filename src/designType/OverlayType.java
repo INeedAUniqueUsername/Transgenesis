@@ -1,6 +1,5 @@
 package designType;
 
-import designType.subElements.Events_OverlayType;
 import xml.Attribute;
 import xml.Attribute.ValueType;
 
@@ -15,6 +14,18 @@ public class OverlayType extends DesignType {
 				new Attribute("absorbAdj", ValueType.INTEGER_SEQUENCE, "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0"),
 				new Attribute("weaponSuppress", ValueType.STRING, "")
 				);
-		addSubElements(new Events_OverlayType());
+		addOptionalSubElements(new Events_OverlayType());
+	}
+}
+class Events_OverlayType extends DesignElement {
+	public Events_OverlayType() {
+		super("Events");
+		addOptionalSubElements(
+				new DesignElement("OnCreate"),
+				new DesignElement("OnUpdate"),
+				new DesignElement("OnDamage"),
+				new DesignElement("OnDestroy"),
+				new DesignElement("OnObjDestroyed")
+				);
 	}
 }

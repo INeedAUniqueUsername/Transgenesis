@@ -11,9 +11,9 @@ public class DesignType extends DesignElement implements Comparable {
 	public DesignType(String name) {
 		super(name);
 		
-		addRequiredAttributes("UNID");
+		Attribute unid = new Attribute("UNID", ValueType.UNID, "");
+		addRequiredAttributes(unid);
 		addAttributes(
-				new Attribute("UNID", ValueType.UNID, ""),
 				new Attribute("attributes", ValueType.STRING, ""),
 				new Attribute("inherit", ValueType.TYPE_INHERITED, "")
 				);
