@@ -10,7 +10,7 @@ public class Power extends DesignType {
 				new Attribute("name", ValueType.STRING, ""),
 				new Attribute("key", ValueType.CHARACTER, "")
 				);
-		addOptionalSubElements(
+		addOptionalSingleSubElements(
 				new DesignElement("OnShow"),
 				new DesignElement("OnInvokedByPlayer"),
 				new DesignElement("OnInvoke"),

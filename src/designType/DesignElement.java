@@ -31,7 +31,8 @@ public class DesignElement {
 	
 	private final List<Attribute> requiredAttributes;
 	private final List<DesignElement> requiredSubElements;
-	private final List<DesignElement> optionalSubElements;
+	private final List<DesignElement> optionalSingleSubElements;
+	private final List<DesignElement> optionalMultipleSubElements;
 	public DesignElement(String name) {
 		this.name = name;
 		
@@ -40,7 +41,8 @@ public class DesignElement {
 		text = "";
 		requiredAttributes = new ArrayList<Attribute>();
 		requiredSubElements = new ArrayList<DesignElement>();
-		optionalSubElements = new ArrayList<DesignElement>();
+		optionalSingleSubElements = new ArrayList<DesignElement>();
+		optionalMultipleSubElements = new ArrayList<DesignElement>();
 	}
 	protected void addRequiredAttributes(Attribute...attributes) {
 		for(Attribute s : attributes) {
@@ -54,8 +56,11 @@ public class DesignElement {
 			requiredSubElements.add(s);
 		}
 	}
-	protected void addOptionalSubElements(DesignElement...subelements) {
-		optionalSubElements.addAll(Arrays.asList(subelements));
+	protected void addOptionalSingleSubElements(DesignElement...subelements) {
+		optionalSingleSubElements.addAll(Arrays.asList(subelements));
+	}
+	protected void addOptionalMultipleSubElements(DesignElement...subelements) {
+		optionalMultipleSubElements.addAll(Arrays.asList(subelements));
 	}
 	
 	public void addAttributes(Attribute...attributes) {
@@ -184,7 +189,7 @@ public class DesignElement {
 		}
 		DesignElement me = this;
 		ArrayList<DesignElement> addableSubElements = new ArrayList<>(requiredSubElements);
-		addableSubElements.addAll(optionalSubElements);
+		addableSubElements.addAll(optionalSingleSubElements);
 		if(addableSubElements.size() == 0) {
 			JLabel label = new JLabel("No subelements");
 			label.setFont(Window.FONT_LARGE);
@@ -211,5 +216,31 @@ public class DesignElement {
 		}
 		
 		textArea.setText(getText());
+	}
+	public DesignElement clone() {
+		DesignElement result = new DesignElement(name);
+		copyFields(result);
+		return result;
+	}
+	public void copyFields(DesignElement result) {
+		for(Attribute a : attributes.values()) {
+			if(requiredAttributes.contains(a)) {
+				result.addRequiredAttributes(a.clone());
+			} else {
+				result.addAttributes(a.clone());
+			}
+		}
+		for(DesignElement e : subElements) {
+			result.addSubElements(e.clone());
+		}
+		for(DesignElement e : requiredSubElements) {
+			result.addRequiredSubElements(e.clone());
+		}
+		for(DesignElement e : optionalSingleSubElements) {
+			result.addOptionalSingleSubElements(e.clone());
+		}
+		for(DesignElement e : optionalMultipleSubElements) {
+			result.addOptionalMultipleSubElements(e.clone());
+		}
 	}
 }

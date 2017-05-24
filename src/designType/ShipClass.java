@@ -1,9 +1,8 @@
 package designType;
 public class ShipClass extends DesignType {
 
-	public ShipClass(String name) {
-		super(name);
+	public ShipClass() {
+		super("ShipClass");
 		// TODO Auto-generated constructor stub
 	}
-	
 }

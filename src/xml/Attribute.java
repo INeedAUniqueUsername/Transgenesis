@@ -375,5 +375,8 @@ public class Attribute {
 		
 		return false;
 	}
+	public Attribute clone() {
+		return new Attribute(name, valueType, value);
+	}
 	
 }

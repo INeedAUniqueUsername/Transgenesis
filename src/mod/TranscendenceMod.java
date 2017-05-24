@@ -25,8 +25,6 @@ public class TranscendenceMod extends DesignElement {
 				new Attribute("UNID", ValueType.UNID, ""),
 				new Attribute("usesXML", ValueType.BOOLEAN, "false"),
 				new Attribute("version", ValueType.STRING, "1.0")
-				
 				);
 	}
-
 }
