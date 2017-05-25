@@ -309,16 +309,24 @@ public class Attribute {
 		},
 		STRING {
 			@Override
-			public String getInputValue(JComponent field) {
-				// TODO Auto-generated method stub
-				return ((JTextField) field).getText();
-			}
-			@Override
 			public boolean isValid(String value) {
 				// TODO Auto-generated method stub
 				return true;
 			}
 			
+		},
+		FILENAME {
+			@Override
+			public boolean isValid(String value) {
+				// TODO Auto-generated method stub
+				try {
+					throw new Exception("Not supported");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return false;
+			}
 		},
 		ALIGNMENT {
 			public JComponent getInputField(String value) {

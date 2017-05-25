@@ -48,7 +48,22 @@ public class TranscendenceMod extends Element {
 				new SystemTable(),
 				new SystemType(),
 				new SystemMap(),
-				new TemplateType()
+				new TemplateType(),
+				new Library(),
+				new Module()
+				
 				);
+	}
+}
+class Library extends Element {
+	public Library() {
+		super();
+		addRequiredAttributes(new Attribute("unid", ValueType.TYPE_MOD));
+	}
+}
+class Module extends Element {
+	public Module() {
+		super();
+		addRequiredAttributes(new Attribute("filename", ValueType.STRING));
 	}
 }
