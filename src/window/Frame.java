@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -31,12 +32,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import designType.DesignElement;
 import designType.OverlayType;
 import designType.Power;
 import mod.TranscendenceExtension;
 import mod.TranscendenceMod;
 import xml.Attribute;
+import xml.Element;
 
 public class Frame extends JFrame {
 	
@@ -53,7 +54,7 @@ public class Frame extends JFrame {
 	private final DefaultTreeCellRenderer elementTreeCellRenderer;
 	
 	private final List<TranscendenceMod> mods = null;
-	private DesignElement selected;
+	private Element selected;
 	
 	JLabel documentation;
 	private final JPanel labelPanel;
@@ -61,6 +62,7 @@ public class Frame extends JFrame {
 	private final JPanel subElementPanel;
 	private final JTextArea text;
 	private final JButton applyButton;
+	private final JButton xmlButton;
 	//JPanel subelementPanel;
 	public Frame() {
 		
@@ -103,8 +105,8 @@ public class Frame extends JFrame {
 			                    tree, value, sel,
 			                    expanded, leaf, row,
 			                    hasFocus);
-			    DesignElement element = (DesignElement) ((DefaultMutableTreeNode) value).getUserObject();
-			
+			    Element element = (Element) ((DefaultMutableTreeNode) value).getUserObject();
+			    
 			    return this;
 			}
 		};
@@ -124,9 +126,12 @@ public class Frame extends JFrame {
 	    	@Override
 	    	public void valueChanged(TreeSelectionEvent arg0) {
 	    		// TODO Auto-generated method stub
+	    		if(selected != null) {
+	    			setAttributes(selected);
+	    		}
 	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	    				elementTree.getLastSelectedPathComponent();
-	    		DesignElement element = (DesignElement) node.getUserObject();
+	    		Element element = (Element) node.getUserObject();
 	    		selectElement(element);
 	    	}
 	    });
@@ -155,7 +160,7 @@ public class Frame extends JFrame {
 		
 		subElementPanel = new JPanel();
 		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		subElementPanel.setLayout(new GridLayout(0, 5));
+		subElementPanel.setLayout(new GridLayout(0, 4));
 		rightPanel.add(subElementPanel);
 		
 		
@@ -171,12 +176,33 @@ public class Frame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				setAttributes(selected);
+				if(selected != null) {
+					setAttributes(selected);
+				}
 			}
 		});
 		applyButton.setFont(Window.FONT_LARGE);
 		applyButton.setText("Apply");
+		applyButton.setAlignmentX(LEFT_ALIGNMENT);
 		rightPanel.add(applyButton);
+		
+		xmlButton = new JButton("Generate XML");
+		xmlButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(selected != null) {
+					JTextArea ta = new JTextArea(selected.getXML());
+					ta.setFont(Window.FONT_MEDIUM);
+					ta.setTabSize(4);
+					JOptionPane.showMessageDialog(null, new JScrollPane(ta, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+				}
+			}
+			
+		});
+		xmlButton.setFont(Window.FONT_LARGE);
+		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
+		rightPanel.add(xmlButton);
 		
 		panel.add(leftPanel);
 		panel.add(rightPanel);
@@ -196,14 +222,14 @@ public class Frame extends JFrame {
 		pack();
 		setVisible(true);
 	}
-	public void selectElement(DesignElement e) {
+	public void selectElement(Element e) {
 		System.out.println("Initialize from element: " + e.getName());
 		selected = e;
 		e.initializeFrame(this);
 		pack();
 		repaint();
 	}
-	public void setAttributes(DesignElement e) {
+	public void setAttributes(Element e) {
 		List<Attribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();
 		for(int i = 0; i < attributes.size(); i++) {
@@ -225,12 +251,12 @@ public class Frame extends JFrame {
 		return result;
 	}
 	
-	public void updateTreeText(DesignElement se)
+	public void updateTreeText(Element se)
 	{
 		elementTreeModel.nodeChanged(getNode(se));
 	}
 	
-	public DefaultMutableTreeNode getNode(DesignElement element)
+	public DefaultMutableTreeNode getNode(Element element)
 	{
 		DefaultMutableTreeNode theNode = null;
 		for (Enumeration<DefaultMutableTreeNode> e = (Enumeration<DefaultMutableTreeNode>) ((DefaultMutableTreeNode) elementTreeModel.getRoot()).depthFirstEnumeration(); e.hasMoreElements() && theNode == null;) {
@@ -250,7 +276,7 @@ public class Frame extends JFrame {
 	        elementTree.expandRow(i);
 	    }
 	}
-	public void addElement(DesignElement se)
+	public void addElement(Element se)
 	{
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se);
 		elementTreeModel.insertNodeInto(node, (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent(), 0);

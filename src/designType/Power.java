@@ -1,9 +1,10 @@
 package designType;
 
 import xml.Attribute;
+import xml.Element;
 import xml.Attribute.ValueType;
 
-public class Power extends DesignType {
+public class Power extends Type {
 	public Power() {
 		super("Power");
 		addAttributes(
@@ -11,10 +12,10 @@ public class Power extends DesignType {
 				new Attribute("key", ValueType.CHARACTER, "")
 				);
 		addOptionalSingleSubElements(
-				new DesignElement("OnShow"),
-				new DesignElement("OnInvokedByPlayer"),
-				new DesignElement("OnInvoke"),
-				new DesignElement("OnDestroyCheck")
+				new Element("OnShow"),
+				new Element("OnInvokedByPlayer"),
+				new Element("OnInvoke"),
+				new Element("OnDestroyCheck")
 				);
 	}
 }

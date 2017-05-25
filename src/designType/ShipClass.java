@@ -1,5 +1,5 @@
 package designType;
-public class ShipClass extends DesignType {
+public class ShipClass extends Type {
 
 	public ShipClass() {
 		super("ShipClass");
