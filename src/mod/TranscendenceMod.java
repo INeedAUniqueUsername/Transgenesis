@@ -1,6 +1,7 @@
 package mod;
 
 import designType.*;
+import designType.subElements.ImageElement;
 import xml.Attribute;
 import xml.Element;
 import xml.Attribute.ValueType;
@@ -32,7 +33,7 @@ public class TranscendenceMod extends Element {
 		addOptionalMultipleSubElements(
 				new DockScreen(),
 				new EffectType(),
-				new Image(),
+				new ImageElement(),
 				new ItemTable(),
 				new ItemType(),
 				new MissionType(),

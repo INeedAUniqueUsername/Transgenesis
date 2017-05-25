@@ -245,7 +245,7 @@ public class Element {
 		} else {
 			for(Element addable : addableSubElements) {
 				JButton button = new JButton(addable.getDisplayName());
-				button.setFont(Window.FONT_LARGE);
+				button.setFont(Window.FONT_MEDIUM);
 				button.addActionListener(new ActionListener() {
 
 					@Override

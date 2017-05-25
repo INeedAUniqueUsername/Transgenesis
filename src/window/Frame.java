@@ -45,8 +45,8 @@ public class Frame extends JFrame {
 	public static final int SCREEN_HEIGHT;
 	static {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		SCREEN_WIDTH = (int) (screenSize.getWidth() * 0.9);
-		SCREEN_HEIGHT = (int) (screenSize.getHeight() * 0.9);
+		SCREEN_WIDTH = (int) (screenSize.getWidth() * 0.95);
+		SCREEN_HEIGHT = (int) (screenSize.getHeight() * 0.90);
 	}
 	private final DefaultTreeModel elementTreeModel;
 	private final JTree elementTree;

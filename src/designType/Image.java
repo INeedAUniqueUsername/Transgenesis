@@ -6,31 +6,17 @@ import xml.Attribute.ValueType;
 public class Image extends Type {
 	public Image() {
 		super();
-		initializeImage();
-	}
-	public Image(String name) {
-		super(name);
-		initializeImage();
-	}
-	public void initializeImage() {
 		addRequiredAttributes(
-				new Attribute("imageID", ValueType.TYPE_IMAGE),
-				new Attribute("imageX", ValueType.WHOLE),
-				new Attribute("imageY", ValueType.WHOLE),
-				new Attribute("imageWidth", ValueType.WHOLE),
-				new Attribute("imageHeight", ValueType.WHOLE),
-				new Attribute("imageFrameCount", ValueType.WHOLE),
-				new Attribute("rotationCount", ValueType.WHOLE),
-				new Attribute("rotationColumns", ValueType.WHOLE),
-				new Attribute("animationColumns", ValueType.WHOLE),
-				new Attribute("imageTicksPerFrame", ValueType.WHOLE),
-				new Attribute("flashTicks", ValueType.WHOLE),
-				new Attribute("blending", ValueType.BLENDING),
-				new Attribute("viewportRatio", ValueType.DECIMAL),
-				new Attribute("viewportSize", ValueType.INTEGER),
-				new Attribute("rotationOffset", ValueType.INTEGER),
-				new Attribute("xOffset", ValueType.INTEGER),
-				new Attribute("yOffset", ValueType.INTEGER)
+				new Attribute("bitmap", ValueType.FILENAME),
+				new Attribute("bitmask", ValueType.FILENAME)
+				);
+		addAttributes(
+				new Attribute("backColor", ValueType.HEX_COLOR),
+				new Attribute("hitMask", ValueType.FILENAME),
+				new Attribute("loadOnUse", ValueType.BOOLEAN),
+				new Attribute("noPM", ValueType.BOOLEAN),
+				new Attribute("shadowMask", ValueType.FILENAME),
+				new Attribute("sprite", ValueType.BOOLEAN)
 				);
 	}
 }

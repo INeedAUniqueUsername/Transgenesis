@@ -1,14 +1,15 @@
 package designType;
 
 import designType.subElements.Event;
+import designType.subElements.ImageElement;
 import xml.Attribute;
 import xml.Attribute.ValueType;
 
 public class SpaceEnvironment extends Type {
 	public SpaceEnvironment() {
 		super();
-		addRequiredSingleSubElements(new Image());
-		addOptionalSingleSubElements(new Image("EdgeMask"));
+		addRequiredSingleSubElements(new ImageElement());
+		addOptionalSingleSubElements(new ImageElement("EdgeMask"));
 		addAttributes(
 				new Attribute("autoEdges", ValueType.BOOLEAN),
 				new Attribute("dragFactor", ValueType.WHOLE),
