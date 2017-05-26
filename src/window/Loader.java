@@ -14,6 +14,9 @@ import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Entity;
@@ -24,6 +27,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import com.jcabi.xml.XMLDocument;
 
 import mod.TranscendenceMod;
 
@@ -42,20 +48,23 @@ public class Loader {
 	}
 	public static TranscendenceMod processMod(File path) {
 		try {
-			Scanner s = new Scanner(path);
-			boolean keep = false;
-			for(int i = 0; i < 10; i++) {
-				if(s.nextLine().contains("Library")) {
-					keep = true;
-				}
-			}
-			if(!keep) {
-				return null;
-			}
-		} catch(Exception e) {
-			return null;
+			/*
+			byte[] bytes = Files.readAllBytes(path.toPath());
+			String lines = new String(bytes, Charset.defaultCharset());
+			*/
+			
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+		    spf.setNamespaceAware(true);
+		    SAXParser saxParser = spf.newSAXParser();
+		    XMLReader xmlReader = saxParser.getXMLReader();
+		    xmlReader.setContentHandler(new Parser());
+		    xmlReader.parse(convertToFileURL(path.getAbsolutePath()));
+		} catch (IOException | ParserConfigurationException | SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+		return null;
+		/*
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			System.out.println(successes);
@@ -70,8 +79,18 @@ public class Loader {
 			
 		}
 		return null;
-		
+		*/
 	}
+	private static String convertToFileURL(String absolutePath) {
+        if (File.separatorChar != '/') {
+            absolutePath = absolutePath.replace(File.separatorChar, '/');
+        }
+
+        if (!absolutePath.startsWith("/")) {
+        	absolutePath = "/" + absolutePath;
+        }
+        return "file:" + absolutePath;
+    }
 	
 	
 	/*
@@ -112,7 +131,7 @@ public class Loader {
 		  }
 	*/
 	
-	
+	/*
 	public static Document loadXMLFromString(String xml) throws Exception
 	{
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -130,4 +149,5 @@ public class Loader {
 	    InputSource is = new InputSource(new StringReader(xml));
 	    return builder.parse(is);
 	}
+	*/
 }

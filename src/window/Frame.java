@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -32,6 +33,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.jcabi.xml.XMLDocument;
+
 import designType.OverlayType;
 import designType.Power;
 import mod.TranscendenceExtension;
@@ -53,7 +56,7 @@ public class Frame extends JFrame {
 	private final JScrollPane elementTreePane;
 	private final DefaultTreeCellRenderer elementTreeCellRenderer;
 	
-	private final List<TranscendenceMod> mods = null;
+	private final List<TranscendenceMod> mods;
 	private Element selected;
 	
 	JLabel documentation;
@@ -81,7 +84,7 @@ public class Frame extends JFrame {
 		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
-		//mods = Loader.loadAllMods(new File("C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions"));
+		mods = Loader.loadAllMods(new File("C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions"));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode();
 		/*
 		for(TranscendenceMod tm : mods) {
