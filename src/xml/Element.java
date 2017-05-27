@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import designType.subElements.SubElement;
+import designType.subElements.SubElementFactory.SubElements;
 import window.Frame;
 import window.Window;
 
@@ -32,7 +34,7 @@ public class Element {
 	private final List<Attribute> requiredAttributes;				//These attributes must not be empty
 	private final List<Element> requiredSingleSubElements;			//Must have 1 of these elements
 	private final List<Element> optionalSingleSubElements;	//Can have 0 or 1 of these elements
-	private final List<Element> optionalMultipleSubElements;	//Can have 0 or multiple of these elements
+	private final List<SubElement> optionalMultipleSubElements;	//Can have 0 or multiple of these elements
 	public Element() {
 		this.name = getClass().getSimpleName();
 		
@@ -42,7 +44,7 @@ public class Element {
 		requiredAttributes = new ArrayList<Attribute>();
 		requiredSingleSubElements = new ArrayList<Element>();
 		optionalSingleSubElements = new ArrayList<Element>();
-		optionalMultipleSubElements = new ArrayList<Element>();
+		optionalMultipleSubElements = new ArrayList<SubElement>();
 	}
 	public Element(String name) {
 		this.name = name;
@@ -53,7 +55,7 @@ public class Element {
 		requiredAttributes = new ArrayList<Attribute>();
 		requiredSingleSubElements = new ArrayList<Element>();
 		optionalSingleSubElements = new ArrayList<Element>();
-		optionalMultipleSubElements = new ArrayList<Element>();
+		optionalMultipleSubElements = new ArrayList<SubElement>();
 	}
 	public void addRequiredAttributes(Attribute...attributes) {
 		for(Attribute s : attributes) {
@@ -75,13 +77,8 @@ public class Element {
 			optionalSingleSubElements.add(new Element(s));
 		}
 	}
-	public void addOptionalMultipleSubElements(Element...subelements) {
+	public void addOptionalMultipleSubElements(SubElement...subelements) {
 		optionalMultipleSubElements.addAll(Arrays.asList(subelements));
-	}
-	public void addOptionalMultipleSubElements(String...subelements) {
-		for(String s : subelements) {
-			optionalMultipleSubElements.add(new Element(s));
-		}
 	}
 	
 	public void addAttributes(Attribute...attributes) {
@@ -236,7 +233,7 @@ public class Element {
 		};
 		requiredSingleSubElements.forEach(singleCheck);
 		optionalSingleSubElements.forEach(singleCheck);
-		addableSubElements.addAll(optionalMultipleSubElements);	//Can always add more optional-multiple elements
+		optionalMultipleSubElements.forEach((SubElement e) -> addableSubElements.add(e.create()));
 		
 		if(addableSubElements.size() == 0) {
 			JLabel label = new JLabel("No subelements");
@@ -285,8 +282,8 @@ public class Element {
 		for(Element e : optionalSingleSubElements) {
 			result.addOptionalSingleSubElements(e.clone());
 		}
-		for(Element e : optionalMultipleSubElements) {
-			result.addOptionalMultipleSubElements(e.clone());
+		for(SubElement e : optionalMultipleSubElements) {
+			result.addOptionalMultipleSubElements(e);
 		}
 	}
 }

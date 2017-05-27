@@ -55,7 +55,9 @@ public class Loader {
 			
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 		    spf.setNamespaceAware(true);
+		    spf.setValidating(false);
 		    SAXParser saxParser = spf.newSAXParser();
+		    
 		    XMLReader xmlReader = saxParser.getXMLReader();
 		    xmlReader.setContentHandler(new Parser());
 		    xmlReader.parse(convertToFileURL(path.getAbsolutePath()));

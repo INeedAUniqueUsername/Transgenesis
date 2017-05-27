@@ -35,9 +35,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.jcabi.xml.XMLDocument;
 
-import designType.OverlayType;
-import designType.Power;
-import mod.TranscendenceExtension;
+import mod.ExtensionFactory;
 import mod.TranscendenceMod;
 import xml.Attribute;
 import xml.Element;
@@ -91,7 +89,7 @@ public class Frame extends JFrame {
 			origin.add(tm.toTreeNode());
 		}
 		*/
-		origin.add(new TranscendenceExtension().toTreeNode());
+		origin.add(ExtensionFactory.Extensions.TranscendenceExtension.create().toTreeNode());
 		
 		elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
@@ -198,7 +196,10 @@ public class Frame extends JFrame {
 					JTextArea ta = new JTextArea(selected.getXML());
 					ta.setFont(Window.FONT_MEDIUM);
 					ta.setTabSize(4);
-					JOptionPane.showMessageDialog(null, new JScrollPane(ta, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+					ta.setEditable(false);
+					JScrollPane pane = new JScrollPane(ta, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					pane.setMaximumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+					JOptionPane.showMessageDialog(null, pane);
 				}
 			}
 			
