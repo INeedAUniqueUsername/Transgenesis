@@ -1,37 +1,29 @@
 package window;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.EntityDeclaration;
+import javax.xml.stream.events.EntityReference;
+import javax.xml.stream.events.StartDocument;
+import javax.xml.stream.events.XMLEvent;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Entity;
-import org.w3c.dom.EntityReference;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import com.jcabi.xml.XMLDocument;
-
+import designType.TypeFactory.Types;
+import designType.subElements.SubElement;
+import designType.subElements.SubElementFactory;
+import mod.ExtensionFactory.Extensions;
+import mod.ExtensionFactory;
 import mod.TranscendenceMod;
+import xml.Element;
 
 public class Loader {
 	public static int successes = 0;
@@ -48,22 +40,70 @@ public class Loader {
 	}
 	public static TranscendenceMod processMod(File path) {
 		try {
-			/*
 			byte[] bytes = Files.readAllBytes(path.toPath());
-			String lines = new String(bytes, Charset.defaultCharset());
-			*/
+			//String lines = new String(bytes, Charset.defaultCharset());
+			
+			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+			inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
+			
+			TranscendenceMod mod = null;	//Current mod
+			Element element = null;			//Current element we are looking at
+			Types category = null;			//Current category of DesignType
+			while (reader.hasNext()) {
+			    XMLEvent event = reader.nextEvent();
+			    switch(event.getEventType()) {
+			    case XMLEvent.START_ELEMENT:
+			    	String name = event.asStartElement().getName().getLocalPart();
+			    	
+			    	//Check if we have an extension
+			    	try {
+			    		Extensions result = Extensions.valueOf(name);
+			    		mod = result.create();
+			    		continue;
+			    	} catch(Exception e) {}
+			    	try {
+			    		//Check if we have a DesignType
+				    	Types result = Types.valueOf(name);
+				    	if(result != null) {
+				    		element = result.create();
+				    		category = result;
+				    		continue;
+				    	}
+			    	} catch(Exception e) {}
+			    	
+			    	
+			    	//Otherwise, we have some kind of subelement for our current DesignType
+			    	switch(name) {
+			    	//Note: category cannot equal null at this point because extensions cannot have Events
+			    	case "Events":
+			    		SubElementFactory.createEvents(category);
+			    		break;
+			    	}
+			    	break;
+			    //We have an attribute for our current element, which is definitely not null
+			    case XMLEvent.ATTRIBUTE:
+			    	Attribute a = ((Attribute) event);
+			    	element.setAttribute(a.getName().getLocalPart(), a.getValue());
+			    	break;
+			    }
+			}
+			
+			/*
+			lines = lines.replaceAll("&", "AMPERSAND");
 			
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 		    spf.setNamespaceAware(true);
 		    spf.setValidating(false);
 		    SAXParser saxParser = spf.newSAXParser();
-		    
 		    XMLReader xmlReader = saxParser.getXMLReader();
+		    
 		    xmlReader.setContentHandler(new Parser());
-		    xmlReader.parse(convertToFileURL(path.getAbsolutePath()));
-		} catch (IOException | ParserConfigurationException | SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    //xmlReader.parse(convertToFileURL(path.getAbsolutePath()));
+		    xmlReader.parse(new InputSource(new StringReader(lines)));
+		    */
+		} catch (IOException | XMLStreamException e) {
+			//e.printStackTrace();
 		}
 		return null;
 		/*

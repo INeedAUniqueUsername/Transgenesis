@@ -27,14 +27,14 @@ import window.Window;
 
 public class Element {
 	private final String name;
-	private final LinkedHashMap<String, Attribute> attributes;
+	private final LinkedHashMap<String, Attribute> attributes;		
 	private final List<Element> subElements;
 	String text;
 	
-	private final List<Attribute> requiredAttributes;				//These attributes must not be empty
-	private final List<Element> requiredSingleSubElements;			//Must have 1 of these elements
-	private final List<Element> optionalSingleSubElements;	//Can have 0 or 1 of these elements
-	private final List<SubElement> optionalMultipleSubElements;	//Can have 0 or multiple of these elements
+	private final List<Attribute> requiredAttributes;				//Must be defined
+	private final List<Element> requiredSingleSubElements;			//Must have 1 of each
+	private final List<Element> optionalSingleSubElements;			//Can have 0 or 1 of each
+	private final List<SubElement> optionalMultipleSubElements;		//Can have 0, 1, or more of each
 	public Element() {
 		this.name = getClass().getSimpleName();
 		
@@ -91,6 +91,10 @@ public class Element {
 	}
 	public void setText(String text) {
 		this.text = text;
+	}
+	
+	public void setAttribute(String name, String value) {
+		attributes.get(name).setValue(value);
 	}
 	
 	public boolean validate() {

@@ -16,22 +16,26 @@ public class ExtensionFactory {
 		;
 
 		@Override
-		public Element create() {
+		public TranscendenceMod create() {
 			// TODO Auto-generated method stub
 			return createExtension(this);
 		}
 	}
-	public static Element createExtension(Extensions t) {
-		Element e = null;
+	public static TranscendenceMod createExtension(Extensions t) {
+		TranscendenceMod e = null;
 		switch(t) {
 		case TranscendenceAdventure:
-			e = new Element("TranscendenceAdventure");
+			e = new TranscendenceMod("TranscendenceAdventure");
 			e.addRequiredSingleSubElements(
 					TypeFactory.Types.AdventureDesc.create()
 					);
 			break;
+		case TranscendenceLibrary:
+			e = new TranscendenceMod("TranscendenceLibrary");
+			break;
+		case TranscendenceExtension:
 		default:
-			e = new Element("TranscendenceExtension");
+			e = new TranscendenceMod("TranscendenceExtension");
 			break;
 		}
 		e.addRequiredAttributes(

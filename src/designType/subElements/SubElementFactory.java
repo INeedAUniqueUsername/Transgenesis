@@ -87,6 +87,53 @@ public class SubElementFactory {
 		case Power:
 			break;
 		case ShipClass:
+		case StationType:
+			e.addOptionalSingleSubElements(
+					new Event("CanDockAsPlayer"),
+					new Event("CanInstallItem"),
+					new Event("GetDockScreen"),
+					new Event("GetExplosionType"),
+					new Event("GetPlayerPriceAdj"),
+					new Event("OnAttacked"),
+					new Event("OnAttackedByPlayer"),
+					new Event("OnCreate"),
+					new Event("OnCreateOrders"),
+					new Event("OnDamage"),
+					new Event("OnDataTransfer"),
+					new Event("OnDeselected"),
+					new Event("OnDestroy"),
+					new Event("OnDockObjAdj"),
+					new Event("OnEnteredGate"),
+					new Event("OnEnteredSystem"),
+					new Event("OnLoad"),
+					new Event("OnMining"),
+					new Event("OnObjBlacklistedPlayer"),
+					new Event("OnObjDestroyed"),
+					new Event("OnObjDocked"),
+					new Event("OnObjEnteredGate"),
+					new Event("OnObjJumped"),
+					new Event("OnObjJumpPosAdj"),
+					new Event("OnObjReconned"),
+					new Event("OnOrderChanged"),
+					new Event("OnOrdersCompleted"),
+					new Event("OnEventHandlerInit"),
+					new Event("OnMissionAccepted"),
+					new Event("OnMissionCompleted"),
+					new Event("OnPlayerBlacklisted"),
+					new Event("OnPlayerEnteredShip"),
+					new Event("OnPlayerEnteredSystem"),
+					new Event("OnPlayerLeftShip"),
+					new Event("OnPlayerLeftSystem"),
+					new Event("OnRandomEncounter"),
+					new Event("OnSelected"),
+					new Event("OnSubordinateAttacked"),
+					new Event("OnSystemExplosion"),
+					new Event("OnSystemObjAttacked"),
+					new Event("OnSystemObjDestroyed"),
+					new Event("OnSystemWeaponFire"),
+					new Event("OnTranslateMessage"),
+					new Event("OnUpdate")
+					);
 			break;
 		case ShipTable:
 			break;
@@ -96,8 +143,6 @@ public class SubElementFactory {
 			break;
 		case SpaceEnvironment:
 			e.addOptionalSingleSubElements(new Event("OnObjUpdate"));
-			break;
-		case StationType:
 			break;
 		case SystemMap:
 			break;
@@ -223,7 +268,50 @@ public class SubElementFactory {
 		return new Element("InitialData");
 	}
 	public static enum SubElements implements SubElement {
-		Relationships, Relationship,
+		DockingPorts,
+		Trade,
+			AcceptDonation,
+			Buy,
+			Sell,
+			Refuel,
+			RepairArmor,
+			ReplaceArmor,
+			InstallDevice,
+			UpgradeDevice,
+			RemoveDevice,
+			EnhanceItem,
+			RepairItem,
+			BuyShip,
+			SellShip,
+			Custom,
+			
+		//StationType
+		Animations,
+		Communications,
+		ImageComposite,
+		Construction,
+		Devices,
+		
+		DockScreens,
+		EncounterGroup,
+		EncounterType,
+		Encounters,
+		Events,
+		HeroImage,
+		ImageEffect,
+		ImageLookup,
+		ImageVariants,
+		Items,
+		Names,
+		Reinforcements,
+		Satellites,
+		Ships,
+			Ship,
+		Station,
+		Table,
+		
+		Relationships,
+			Relationship,
 		
 		Image,
 		
@@ -234,7 +322,6 @@ public class SubElementFactory {
 
 	@Override
 	public Element create() {
-		// TODO Auto-generated method stub
 		return createSubElement(this);
 	}}
 	
@@ -269,6 +356,13 @@ public class SubElementFactory {
 		case Library:
 			e = new Element("Library");
 			e.addRequiredAttributes(new Attribute("unid", ValueType.TYPE_MOD));
+			break;
+		default:
+			try {
+				throw new Exception("Not supported: " + s.toString());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			break;
 		}
 		return e;

@@ -82,7 +82,7 @@ public class Frame extends JFrame {
 		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
-		mods = Loader.loadAllMods(new File("C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions"));
+		mods = Loader.loadAllMods(new File("C:\\Users\\Alex\\Desktop\\Transcendence Multiverse"));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode();
 		/*
 		for(TranscendenceMod tm : mods) {
