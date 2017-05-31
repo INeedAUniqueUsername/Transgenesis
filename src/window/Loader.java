@@ -14,6 +14,8 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.Comment;
 import javax.xml.stream.events.XMLEvent;
 
 import designType.TypeFactory.Types;
@@ -150,7 +152,14 @@ public class Loader {
 			    		elementStack.removeLast();
 			    	}
 			    	break EventType;
+			    case XMLEvent.CHARACTERS:
+			    	elementStack.getLast().appendText(((Characters) event).getData());
+			    	break;
+			    case XMLEvent.COMMENT:
+			    	elementStack.getLast().appendText(((Comment) event).getText());
+			    	break;
 			    }
+			    
 			}
 			
 			/*
