@@ -148,8 +148,6 @@ public class Frame extends JFrame {
 		documentation.setFont(Window.FONT_MEDIUM);
 		rightPanel.add(documentation);
 		
-		JPanel elementPanel = new JPanel();
-		elementPanel.setLayout(new BoxLayout(elementPanel, BoxLayout.X_AXIS));
 		JPanel attributePanel = new JPanel();
 		attributePanel.setLayout(new GridLayout(0, 2));
 		attributePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -159,15 +157,12 @@ public class Frame extends JFrame {
 		fieldPanel.setLayout(new GridLayout(0, 1));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
-		elementPanel.add(new JScrollPane(attributePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-		
+		rightPanel.add(attributePanel);
 		
 		subElementPanel = new JPanel();
 		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		subElementPanel.setLayout(new GridLayout(0, 4));
-		elementPanel.add(new JScrollPane(subElementPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-		
-		rightPanel.add(elementPanel);
+		rightPanel.add(subElementPanel);
 		
 		text = new JTextArea();
 		text.setTabSize(4);
