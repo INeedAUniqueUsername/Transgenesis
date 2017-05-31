@@ -358,11 +358,15 @@ public class SubElementFactory {
 			e.addRequiredAttributes(new Attribute("unid", ValueType.TYPE_MOD));
 			break;
 		default:
+			System.out.println("Not supported: " + s.toString());
+			/*
 			try {
 				throw new Exception("Not supported: " + s.toString());
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			*/
+			e = new Element(s.name());
 			break;
 		}
 		return e;

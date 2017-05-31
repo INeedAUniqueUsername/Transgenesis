@@ -56,11 +56,9 @@ public class ExtensionFactory {
 				new Attribute("version", ValueType.STRING, "1.0")
 				);
 		e.addOptionalSingleSubElements(new Element("Globals"));
-		for(SubElement se : TypeFactory.Types.values()) {
-			e.addOptionalMultipleSubElements(
-					se
-					);
-		}
+		e.addOptionalMultipleSubElements(
+				TypeFactory.Types.values()
+				);
 		
 		e.addOptionalMultipleSubElements(SubElements.Module, SubElements.Library);
 		return e;

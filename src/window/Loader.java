@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.EntityDeclaration;
-import javax.xml.stream.events.EntityReference;
-import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.XMLEvent;
 
 import designType.TypeFactory.Types;
@@ -39,53 +38,118 @@ public class Loader {
 		return result;
 	}
 	public static TranscendenceMod processMod(File path) {
+		TranscendenceMod mod = null;	//Current mod
+		System.out.println("Processing: " + path.getAbsolutePath());
 		try {
+			System.out.println("Beginning Read");
 			byte[] bytes = Files.readAllBytes(path.toPath());
 			//String lines = new String(bytes, Charset.defaultCharset());
 			
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+			inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
 			inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
 			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
 			
-			TranscendenceMod mod = null;	//Current mod
-			Element element = null;			//Current element we are looking at
+			LinkedList<Element> elementStack = new LinkedList<Element>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
-			while (reader.hasNext()) {
+			Read: while (reader.hasNext()) {
 			    XMLEvent event = reader.nextEvent();
+			    /*
 			    switch(event.getEventType()) {
 			    case XMLEvent.START_ELEMENT:
+		            System.out.println("START_ELEMENT");
+		            System.out.println(event.asStartElement().getName().getLocalPart());
+		            break;
+		        case XMLEvent.END_ELEMENT:
+		        	System.out.println("END_ELEMENT");
+		        	break;
+		        case XMLEvent.START_DOCUMENT:
+		        	System.out.println("START_DOCUMENT");
+		        	break;
+
+		        case XMLEvent.END_DOCUMENT:
+		        	System.out.println("END_DOCUMENT");
+		        	break;
+			    }
+			    if(true) {
+			    	continue Read;
+			    }
+			    */
+			    EventType: switch(event.getEventType()) {
+			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
-			    	
+			    	System.out.println("Element name: " + name);
+			    	Consumer<Element> addAttributes =((Element e) -> {
+			    		Element element = elementStack.getLast();
+				    	//Now add all the attributes
+				    	Iterator<Attribute> attributes = event.asStartElement().getAttributes();
+				    	while(attributes.hasNext()) {
+				    		Attribute a = attributes.next();
+				    		System.out.println("Attribute found: " + a.getName().getLocalPart() + "=" + a.getValue());
+				    		element.setAttribute(a.getName().getLocalPart(), a.getValue());
+				    	}
+			    	});
 			    	//Check if we have an extension
 			    	try {
 			    		Extensions result = Extensions.valueOf(name);
 			    		mod = result.create();
-			    		continue;
-			    	} catch(Exception e) {}
+			    		elementStack.addLast(mod);
+			    		addAttributes.accept(mod);
+			    		System.out.println("Extension Found");
+			    		continue Read;
+			    	} catch(Exception e) { System.out.println("Not an extension"); }
 			    	try {
 			    		//Check if we have a DesignType
 				    	Types result = Types.valueOf(name);
-				    	if(result != null) {
-				    		element = result.create();
-				    		category = result;
-				    		continue;
-				    	}
-			    	} catch(Exception e) {}
-			    	
+			    		Element element = result.create();
+			    		elementStack.getLast().addSubElements(element);
+			    		elementStack.addLast(element);
+			    		addAttributes.accept(element);
+			    		category = result;
+			    		System.out.println("DesignType Found");
+			    		continue Read;
+			    	} catch(Exception e) { System.out.println("Not a DesignType"); }
 			    	
 			    	//Otherwise, we have some kind of subelement for our current DesignType
-			    	switch(name) {
+			    	ElementName: switch(name) {
 			    	//Note: category cannot equal null at this point because extensions cannot have Events
 			    	case "Events":
-			    		SubElementFactory.createEvents(category);
-			    		break;
+			    		System.out.println("Events Found");
+			    		Element element = SubElementFactory.createEvents(category);
+			    		elementStack.add(element);
+			    		elementStack.getLast().addSubElements(element);
+			    		break ElementName;
+			    	default:
+			    		if(elementStack.size() == 0) {
+			    			System.out.println("Skipping Start: First element is unrecognized");
+			    			break ElementName;
+			    		}
+			    		element = elementStack.getLast();
+			    		if(element == null) {
+			    			System.out.println("Null Element Found");
+			    			break ElementName;
+			    		}
+			    		Element add = element.getAddableElement(name);
+			    		if(add == null) {
+			    			System.out.println("Adding generic element: " + name);
+			    			add = new Element(name);
+			    		} else {
+			    			System.out.println("Adding identified element: " + name);
+			    		}
+			    		element.addSubElements(add);
+			    		elementStack.addLast(add);
+			    		addAttributes.accept(add);
+			    		break ElementName;
 			    	}
-			    	break;
-			    //We have an attribute for our current element, which is definitely not null
-			    case XMLEvent.ATTRIBUTE:
-			    	Attribute a = ((Attribute) event);
-			    	element.setAttribute(a.getName().getLocalPart(), a.getValue());
-			    	break;
+			    	break EventType;
+			    case XMLEvent.END_ELEMENT:
+			    	//This means that the first element was not recognized
+			    	if(elementStack.size() == 0) {
+			    		System.out.println("Skipping End: First element is unrecognized");
+			    	} else {
+			    		elementStack.removeLast();
+			    	}
+			    	break EventType;
 			    }
 			}
 			
@@ -103,9 +167,9 @@ public class Loader {
 		    xmlReader.parse(new InputSource(new StringReader(lines)));
 		    */
 		} catch (IOException | XMLStreamException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
-		return null;
+		return mod;
 		/*
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
