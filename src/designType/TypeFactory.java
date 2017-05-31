@@ -28,6 +28,7 @@ public final class TypeFactory {
 		EconomyType,
 		EffectType,
 		Image,
+		ImageComposite,
 		ItemTable,
 		ItemType,
 		MissionType,
