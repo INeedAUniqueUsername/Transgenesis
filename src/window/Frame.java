@@ -82,11 +82,6 @@ public class Frame extends JFrame {
 		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
-		int rightPanel_width = (int) (SCREEN_WIDTH * 0.75);
-		int rightPanel_height = SCREEN_HEIGHT;
-		
-		rightPanel.setPreferredSize(new Dimension(rightPanel_width, rightPanel_height));
-		
 		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		mods = Loader.loadAllMods(new File(dir));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new Element(dir));
@@ -164,14 +159,13 @@ public class Frame extends JFrame {
 		fieldPanel.setLayout(new GridLayout(0, 1));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
-		JScrollPane attributePanelScroll = new JScrollPane(attributePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		elementPanel.add(attributePanelScroll);
+		elementPanel.add(new JScrollPane(attributePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+		
 		
 		subElementPanel = new JPanel();
 		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		subElementPanel.setLayout(new GridLayout(0, 1));
-		JScrollPane subElementPanelScroll = new JScrollPane(subElementPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		elementPanel.add(subElementPanelScroll);
+		subElementPanel.setLayout(new GridLayout(0, 4));
+		elementPanel.add(new JScrollPane(subElementPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 		
 		rightPanel.add(elementPanel);
 		
@@ -225,16 +219,13 @@ public class Frame extends JFrame {
 		leftPanel.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.2), SCREEN_HEIGHT));
 		elementTreePane.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.2), SCREEN_HEIGHT));
 		
-		attributePanel.setMaximumSize(	new Dimension((int) (rightPanel_width * 0.75), (int) (rightPanel_height * 0.25)));
-		attributePanelScroll.setMaximumSize(attributePanel.getMaximumSize());
-		labelPanel.setMaximumSize(		new Dimension((int) (rightPanel_width * 0.75), (int) (rightPanel_height * 0.25)));
-		fieldPanel.setMaximumSize(		new Dimension((int) (rightPanel_width * 0.75), (int) (rightPanel_height * 0.25)));
+		rightPanel.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.75), SCREEN_HEIGHT));
 		
-		subElementPanel.setMaximumSize(new Dimension((int) (rightPanel_width * 0.25), (int) (rightPanel_height * 0.25)));
-		subElementPanelScroll.setMaximumSize(subElementPanel.getMaximumSize());
+		attributePanel.setMaximumSize(	new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
+		labelPanel.setMaximumSize(		new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
+		fieldPanel.setMaximumSize(		new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
 		
-		elementPanel.setMaximumSize(	new Dimension(rightPanel_width, (int) (rightPanel_height * 0.25)));
-		
+		subElementPanel.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
 		textPanel.setMinimumSize(new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.5)));
 		pack();
 		setVisible(true);
