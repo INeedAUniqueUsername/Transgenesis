@@ -93,6 +93,9 @@ public class Element {
 	public void setText(String text) {
 		this.text = text;
 	}
+	public void appendText(String text) {
+		this.text += text;
+	}
 	
 	public void setAttribute(String name, String value) {
 		Attribute a = attributes.get(name);

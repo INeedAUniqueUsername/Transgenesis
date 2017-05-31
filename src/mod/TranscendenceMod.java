@@ -1,5 +1,6 @@
 package mod;
 
+import java.io.File;
 import java.util.TreeMap;
 
 import xml.Attribute;
