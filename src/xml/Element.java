@@ -24,17 +24,18 @@ import designType.subElements.SubElement;
 import designType.subElements.SubElementFactory.SubElements;
 import window.Frame;
 import window.Window;
+import xml.Attribute.ValueType;
 
 public class Element {
 	private final String name;
-	private final LinkedHashMap<String, Attribute> attributes;
+	private final LinkedHashMap<String, Attribute> attributes;		
 	private final List<Element> subElements;
 	String text;
 	
-	private final List<Attribute> requiredAttributes;				//These attributes must not be empty
-	private final List<Element> requiredSingleSubElements;			//Must have 1 of these elements
-	private final List<Element> optionalSingleSubElements;	//Can have 0 or 1 of these elements
-	private final List<SubElement> optionalMultipleSubElements;	//Can have 0 or multiple of these elements
+	private final List<Attribute> requiredAttributes;				//Must be defined
+	private final List<Element> requiredSingleSubElements;			//Must have 1 of each
+	private final List<Element> optionalSingleSubElements;			//Can have 0 or 1 of each
+	private final List<SubElement> optionalMultipleSubElements;		//Can have 0, 1, or more of each
 	public Element() {
 		this.name = getClass().getSimpleName();
 		
@@ -93,6 +94,16 @@ public class Element {
 		this.text = text;
 	}
 	
+	public void setAttribute(String name, String value) {
+		Attribute a = attributes.get(name);
+		if(a == null) {
+			System.out.println("Unknown attribute: " + name);
+			attributes.put(name, new Attribute(name, ValueType.STRING));
+		} else {
+			attributes.get(name).setValue(value);
+		}
+	}
+	
 	public boolean validate() {
 		for(Attribute a : requiredAttributes) {
 			if(a == null || !a.getValue().equals("") || !a.getValueType().isValid(a.getValue())) {
@@ -124,12 +135,7 @@ public class Element {
 	}
 	
 	public Attribute getAttributeByName(String name) {
-		for(Attribute a : attributes.values()) {
-			if(a.getName().equals(name)) {
-				return a;
-			}
-		}
-		return null;
+		return attributes.get(name);
 	}
 	public List<Element> getSubElementsByName(String name) {
 		List<Element> result = new ArrayList<Element>();
@@ -176,7 +182,6 @@ public class Element {
 				}
 				result += "\n" + tabs_attributes + String.format("%-40s", e.getName() + "=") + "\"" + value + "\""; 
 			}
-			result += "\n" + tabs_attributes;
 		}
 		
 		if(hasSubelements || hasText) {
@@ -198,6 +203,33 @@ public class Element {
 			node.add(e.toTreeNode());
 		}
 		return node;
+	}
+	public ArrayList<Element> getAddableElements() {
+		ArrayList<Element> addableElements = new ArrayList<>();
+		//Check if this element already has one instance of a single-only element
+		Consumer<Element> singleCheck = (Element e) -> {
+			if(!subElements.contains(e)) {
+				addableElements.add(e);
+			}
+		};
+		requiredSingleSubElements.forEach(singleCheck);
+		optionalSingleSubElements.forEach(singleCheck);
+		optionalMultipleSubElements.forEach((SubElement e) -> addableElements.add(e.create()));
+		return addableElements;
+	}
+	public Element getAddableElement(String name) {
+		ArrayList<Element> addableElements = new ArrayList<>();
+		addableElements.addAll(requiredSingleSubElements);
+		addableElements.addAll(optionalSingleSubElements);
+		optionalMultipleSubElements.forEach((SubElement s) -> {
+			addableElements.add(s.create());
+		});
+		for(Element e : addableElements) {
+			if(e.getName().equals(name)) {
+				return e;
+			}
+		}
+		return null;
 	}
 	public void initializeFrame(Frame frame) {
 		JPanel labelPanel = frame.getAttributeLabelPanel();
@@ -223,17 +255,7 @@ public class Element {
 			}
 		}
 		Element me = this;
-		ArrayList<Element> addableSubElements = new ArrayList<>();
-		
-		//Check if this element already has one instance of a single-only element
-		Consumer<Element> singleCheck = (Element e) -> {
-			if(!subElements.contains(e)) {
-				addableSubElements.add(e);
-			}
-		};
-		requiredSingleSubElements.forEach(singleCheck);
-		optionalSingleSubElements.forEach(singleCheck);
-		optionalMultipleSubElements.forEach((SubElement e) -> addableSubElements.add(e.create()));
+		ArrayList<Element> addableSubElements = getAddableElements();
 		
 		if(addableSubElements.size() == 0) {
 			JLabel label = new JLabel("No subelements");

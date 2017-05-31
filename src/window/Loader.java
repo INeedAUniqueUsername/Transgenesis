@@ -1,37 +1,28 @@
 package window;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.function.Consumer;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.XMLEvent;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Entity;
-import org.w3c.dom.EntityReference;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import com.jcabi.xml.XMLDocument;
-
+import designType.TypeFactory.Types;
+import designType.subElements.SubElement;
+import designType.subElements.SubElementFactory;
+import mod.ExtensionFactory.Extensions;
+import mod.ExtensionFactory;
 import mod.TranscendenceMod;
+import xml.Element;
 
 public class Loader {
 	public static int successes = 0;
@@ -47,25 +38,138 @@ public class Loader {
 		return result;
 	}
 	public static TranscendenceMod processMod(File path) {
+		TranscendenceMod mod = null;	//Current mod
+		System.out.println("Processing: " + path.getAbsolutePath());
 		try {
-			/*
+			System.out.println("Beginning Read");
 			byte[] bytes = Files.readAllBytes(path.toPath());
-			String lines = new String(bytes, Charset.defaultCharset());
-			*/
+			//String lines = new String(bytes, Charset.defaultCharset());
+			
+			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+			inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
+			inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
+			
+			LinkedList<Element> elementStack = new LinkedList<Element>();	//The last one is the current element we are looking at
+			Types category = null;			//Current category of DesignType
+			Read: while (reader.hasNext()) {
+			    XMLEvent event = reader.nextEvent();
+			    /*
+			    switch(event.getEventType()) {
+			    case XMLEvent.START_ELEMENT:
+		            System.out.println("START_ELEMENT");
+		            System.out.println(event.asStartElement().getName().getLocalPart());
+		            break;
+		        case XMLEvent.END_ELEMENT:
+		        	System.out.println("END_ELEMENT");
+		        	break;
+		        case XMLEvent.START_DOCUMENT:
+		        	System.out.println("START_DOCUMENT");
+		        	break;
+
+		        case XMLEvent.END_DOCUMENT:
+		        	System.out.println("END_DOCUMENT");
+		        	break;
+			    }
+			    if(true) {
+			    	continue Read;
+			    }
+			    */
+			    EventType: switch(event.getEventType()) {
+			    case XMLEvent.START_ELEMENT:
+			    	String name = event.asStartElement().getName().getLocalPart();
+			    	System.out.println("Element name: " + name);
+			    	Consumer<Element> addAttributes =((Element e) -> {
+			    		Element element = elementStack.getLast();
+				    	//Now add all the attributes
+				    	Iterator<Attribute> attributes = event.asStartElement().getAttributes();
+				    	while(attributes.hasNext()) {
+				    		Attribute a = attributes.next();
+				    		System.out.println("Attribute found: " + a.getName().getLocalPart() + "=" + a.getValue());
+				    		element.setAttribute(a.getName().getLocalPart(), a.getValue());
+				    	}
+			    	});
+			    	//Check if we have an extension
+			    	try {
+			    		Extensions result = Extensions.valueOf(name);
+			    		mod = result.create();
+			    		elementStack.addLast(mod);
+			    		addAttributes.accept(mod);
+			    		System.out.println("Extension Found");
+			    		continue Read;
+			    	} catch(Exception e) { System.out.println("Not an extension"); }
+			    	try {
+			    		//Check if we have a DesignType
+				    	Types result = Types.valueOf(name);
+			    		Element element = result.create();
+			    		elementStack.getLast().addSubElements(element);
+			    		elementStack.addLast(element);
+			    		addAttributes.accept(element);
+			    		category = result;
+			    		System.out.println("DesignType Found");
+			    		continue Read;
+			    	} catch(Exception e) { System.out.println("Not a DesignType"); }
+			    	
+			    	//Otherwise, we have some kind of subelement for our current DesignType
+			    	ElementName: switch(name) {
+			    	//Note: category cannot equal null at this point because extensions cannot have Events
+			    	case "Events":
+			    		System.out.println("Events Found");
+			    		Element element = SubElementFactory.createEvents(category);
+			    		elementStack.add(element);
+			    		elementStack.getLast().addSubElements(element);
+			    		break ElementName;
+			    	default:
+			    		if(elementStack.size() == 0) {
+			    			System.out.println("Skipping Start: First element is unrecognized");
+			    			break ElementName;
+			    		}
+			    		element = elementStack.getLast();
+			    		if(element == null) {
+			    			System.out.println("Null Element Found");
+			    			break ElementName;
+			    		}
+			    		Element add = element.getAddableElement(name);
+			    		if(add == null) {
+			    			System.out.println("Adding generic element: " + name);
+			    			add = new Element(name);
+			    		} else {
+			    			System.out.println("Adding identified element: " + name);
+			    		}
+			    		element.addSubElements(add);
+			    		elementStack.addLast(add);
+			    		addAttributes.accept(add);
+			    		break ElementName;
+			    	}
+			    	break EventType;
+			    case XMLEvent.END_ELEMENT:
+			    	//This means that the first element was not recognized
+			    	if(elementStack.size() == 0) {
+			    		System.out.println("Skipping End: First element is unrecognized");
+			    	} else {
+			    		elementStack.removeLast();
+			    	}
+			    	break EventType;
+			    }
+			}
+			
+			/*
+			lines = lines.replaceAll("&", "AMPERSAND");
 			
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 		    spf.setNamespaceAware(true);
 		    spf.setValidating(false);
 		    SAXParser saxParser = spf.newSAXParser();
-		    
 		    XMLReader xmlReader = saxParser.getXMLReader();
+		    
 		    xmlReader.setContentHandler(new Parser());
-		    xmlReader.parse(convertToFileURL(path.getAbsolutePath()));
-		} catch (IOException | ParserConfigurationException | SAXException e) {
-			// TODO Auto-generated catch block
+		    //xmlReader.parse(convertToFileURL(path.getAbsolutePath()));
+		    xmlReader.parse(new InputSource(new StringReader(lines)));
+		    */
+		} catch (IOException | XMLStreamException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return mod;
 		/*
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
