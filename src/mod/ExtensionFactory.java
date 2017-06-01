@@ -34,8 +34,18 @@ public class ExtensionFactory {
 			e = new TranscendenceMod("TranscendenceLibrary");
 			break;
 		case TranscendenceExtension:
-		default:
 			e = new TranscendenceMod("TranscendenceExtension");
+			break;
+		case TranscendenceModule:
+			e = new TranscendenceMod("TranscendenceModule");
+			break;
+		default:
+			try {
+				throw new Exception("Not an Extension");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 		}
 		e.addRequiredAttributes(

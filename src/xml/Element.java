@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -28,7 +28,7 @@ import xml.Attribute.ValueType;
 
 public class Element {
 	private final String name;
-	private final LinkedHashMap<String, Attribute> attributes;		
+	private final TreeMap<String, Attribute> attributes;		
 	private final List<Element> subElements;
 	String text;
 	
@@ -39,7 +39,7 @@ public class Element {
 	public Element() {
 		this.name = getClass().getSimpleName();
 		
-		attributes = new LinkedHashMap<String, Attribute>();
+		attributes = new TreeMap<String, Attribute>(String.CASE_INSENSITIVE_ORDER);
 		subElements = new ArrayList<Element>();
 		text = "";
 		requiredAttributes = new ArrayList<Attribute>();
@@ -50,7 +50,7 @@ public class Element {
 	public Element(String name) {
 		this.name = name;
 		
-		attributes = new LinkedHashMap<String, Attribute>();
+		attributes = new TreeMap<String, Attribute>(String.CASE_INSENSITIVE_ORDER);
 		subElements = new ArrayList<Element>();
 		text = "";
 		requiredAttributes = new ArrayList<Attribute>();
@@ -101,7 +101,7 @@ public class Element {
 		Attribute a = attributes.get(name);
 		if(a == null) {
 			System.out.println("Unknown attribute: " + name);
-			attributes.put(name, new Attribute(name, ValueType.STRING));
+			attributes.put(name, new Attribute(name, ValueType.STRING, value));
 		} else {
 			attributes.get(name).setValue(value);
 		}
@@ -228,7 +228,7 @@ public class Element {
 			addableElements.add(s.create());
 		});
 		for(Element e : addableElements) {
-			if(e.getName().equals(name)) {
+			if(e.getName().equalsIgnoreCase(name)) {
 				return e;
 			}
 		}

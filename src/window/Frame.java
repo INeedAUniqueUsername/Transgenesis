@@ -82,7 +82,8 @@ public class Frame extends JFrame {
 		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
-		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
+		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
+		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
 		mods = Loader.loadAllMods(new File(dir));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new Element(dir));
 		for(TranscendenceMod tm : mods) {

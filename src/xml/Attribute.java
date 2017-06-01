@@ -474,6 +474,71 @@ public class Attribute {
 				field.setColumns(1);
 				return field;
 			}
+		}, LEVEL_FREQUENCY {
+			public JComponent getInputField(String value) {
+				JTextField field = (JTextField) super.getInputField(value);
+				field.addKeyListener(new KeyAdapter() {
+					public void keyTyped(KeyEvent e) {
+		                String c = "" + e.getKeyChar();
+		               if(c.matches("c|u|r|v| ")) {
+		            	   e.consume();
+		               }
+		            }
+				});
+				field.setColumns(1);
+				return field;
+			}
+
+			@Override
+			public boolean isValid(String value) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		}, FREQUENCY {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = new JComboBox<String>();
+				for(String s : new String[] {"common", "uncommon", "rare", "veryRare", "notRandom"}) {
+					field.addItem(s);
+				}
+				field.setEditable(false);
+				field.setFont(Window.FONT_MEDIUM);
+				field.setSelectedItem(value);
+				return field;
+			}
+			public boolean isValid(String value) {
+				return false;
+			}
+		}, UNIQUE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = new JComboBox<String>();
+				for(String s : new String[] {"inSystem", "inUniverse"}) {
+					field.addItem(s);
+				}
+				field.setEditable(false);
+				field.setFont(Window.FONT_MEDIUM);
+				field.setSelectedItem(value);
+				return field;
+			}
+			@Override
+			public boolean isValid(String value) {
+				return false;
+			}
+		}, SCALE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = new JComboBox<String>();
+				for(String s : new String[] {"star", "world", "structure", "ship", "flotsam"}) {
+					field.addItem(s);
+				}
+				field.setEditable(false);
+				field.setFont(Window.FONT_MEDIUM);
+				field.setSelectedItem(value);
+				return field;
+			}
+			@Override
+			public boolean isValid(String value) {
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
 		public abstract boolean isValid(String value);
 		public JComponent getInputField(String value) {
