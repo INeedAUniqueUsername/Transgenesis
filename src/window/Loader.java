@@ -19,6 +19,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.Comment;
+import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.XMLEvent;
 
 import org.xml.sax.InputSource;
@@ -105,6 +106,9 @@ public class Loader {
 			    }
 			    */
 			    EventType: switch(event.getEventType()) {
+			    case XMLEvent.ENTITY_DECLARATION:
+			    	EntityDeclaration b;
+			    	break;
 			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
 			    	System.out.println("Element name: " + name);
