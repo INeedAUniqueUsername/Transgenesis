@@ -24,17 +24,6 @@ public class Attribute {
 			public String getInputValue(JComponent field) {
 				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		TYPE_ANY {
 			public JComponent getInputField(String value) {
@@ -45,17 +34,6 @@ public class Attribute {
 				field.setSelectedItem(value);
 				return field;
 			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		TYPE_IMAGE {
 			public JComponent getInputField(String value) {
@@ -65,17 +43,6 @@ public class Attribute {
 				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 			
 		},
@@ -88,17 +55,6 @@ public class Attribute {
 				field.setSelectedItem(value);
 				return field;
 			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 			
 		},
 		TYPE_SOVEREIGN {
@@ -110,17 +66,6 @@ public class Attribute {
 				field.setSelectedItem(value);
 				return field;
 			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		TYPE_SYSTEM_MAP {
 			public JComponent getInputField(String value) {
@@ -130,17 +75,6 @@ public class Attribute {
 				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not Supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 			
 		},
@@ -155,17 +89,6 @@ public class Attribute {
 			}
 			public String getInputValue(JComponent field) {
 				return (String) ((JComboBox<String>) field).getSelectedItem();
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		BOOLEAN {
@@ -225,18 +148,6 @@ public class Attribute {
 				});
 				return field;
 			}
-
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		WHOLE {
 			public JComponent getInputField(String value) {
@@ -295,38 +206,11 @@ public class Attribute {
 			}
 		},
 		HEX_COLOR {
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		STRING {
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				return true;
-			}
 			
 		},
 		FILENAME {
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		ALIGNMENT {
 			public JComponent getInputField(String value) {
@@ -338,17 +222,6 @@ public class Attribute {
 				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
-			}
-
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		DISPOSITION {
@@ -362,17 +235,6 @@ public class Attribute {
 				field.setSelectedItem(value);
 				return field;
 			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 			
 		},
 		BLENDING {
@@ -384,18 +246,6 @@ public class Attribute {
 				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
-			}
-
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		DICE_RANGE {
@@ -488,12 +338,6 @@ public class Attribute {
 				field.setColumns(1);
 				return field;
 			}
-
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				return false;
-			}
 		}, FREQUENCY {
 			public JComponent getInputField(String value) {
 				JComboBox<String> field = new JComboBox<String>();
@@ -504,9 +348,6 @@ public class Attribute {
 				field.setFont(Window.FONT_MEDIUM);
 				field.setSelectedItem(value);
 				return field;
-			}
-			public boolean isValid(String value) {
-				return false;
 			}
 		}, UNIQUE {
 			public JComponent getInputField(String value) {
@@ -519,10 +360,6 @@ public class Attribute {
 				field.setSelectedItem(value);
 				return field;
 			}
-			@Override
-			public boolean isValid(String value) {
-				return false;
-			}
 		}, SCALE {
 			public JComponent getInputField(String value) {
 				JComboBox<String> field = new JComboBox<String>();
@@ -534,13 +371,40 @@ public class Attribute {
 				field.setSelectedItem(value);
 				return field;
 			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				return false;
+		}, TILE_SIZE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = new JComboBox<String>();
+				field.addItem("small");
+				field.addItem("medium");
+				field.addItem("large");
+				field.addItem("huge");
+				field.setEditable(false);
+				field.setFont(Window.FONT_MEDIUM);
+				field.setSelectedItem(value);
+				return field;
 			}
+		}, SYSTEMTYPE_BACKGROUND {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = new JComboBox<String>();
+				field.addItem("none");
+				field.setEditable(true);
+				field.setFont(Window.FONT_MEDIUM);
+				field.setSelectedItem(value);
+				return field;
+			}
+		}, PRICE_ADJ {
+			
 		};
-		public abstract boolean isValid(String value);
+		public boolean isValid(String value) {
+			// TODO Auto-generated method stub
+			try {
+				throw new Exception("Not supported");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return false;
+		};
 		public JComponent getInputField(String value) {
 			JTextField field = new JTextField();
 			field.setFont(Window.FONT_MEDIUM);

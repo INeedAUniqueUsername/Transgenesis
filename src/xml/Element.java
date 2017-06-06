@@ -20,8 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import designType.subElements.SubElement;
-import designType.subElements.SubElementFactory.SubElements;
+import designType.subElements.SubElementType;
 import window.Frame;
 import window.Window;
 import xml.Attribute.ValueType;
@@ -35,7 +34,7 @@ public class Element {
 	private final List<Attribute> requiredAttributes;				//Must be defined
 	private final List<Element> requiredSingleSubElements;			//Must have 1 of each
 	private final List<Element> optionalSingleSubElements;			//Can have 0 or 1 of each
-	private final List<SubElement> optionalMultipleSubElements;		//Can have 0, 1, or more of each
+	private final List<SubElementType> optionalMultipleSubElements;		//Can have 0, 1, or more of each
 	public Element() {
 		this.name = getClass().getSimpleName();
 		
@@ -45,7 +44,7 @@ public class Element {
 		requiredAttributes = new ArrayList<Attribute>();
 		requiredSingleSubElements = new ArrayList<Element>();
 		optionalSingleSubElements = new ArrayList<Element>();
-		optionalMultipleSubElements = new ArrayList<SubElement>();
+		optionalMultipleSubElements = new ArrayList<SubElementType>();
 	}
 	public Element(String name) {
 		this.name = name;
@@ -56,29 +55,12 @@ public class Element {
 		requiredAttributes = new ArrayList<Attribute>();
 		requiredSingleSubElements = new ArrayList<Element>();
 		optionalSingleSubElements = new ArrayList<Element>();
-		optionalMultipleSubElements = new ArrayList<SubElement>();
-	}
-	public void addRequiredAttributes(Attribute...attributes) {
-		for(Attribute s : attributes) {
-			this.attributes.put(s.getName(), s);
-			requiredAttributes.add(s);
-		}
-	}
-	public void addRequiredSingleSubElements(Element...subelements) {
-		for(Element s : subelements) {
-			subElements.add(s);
-			requiredSingleSubElements.add(s);
-		}
+		optionalMultipleSubElements = new ArrayList<SubElementType>();
 	}
 	public void addOptionalSingleSubElements(Element...subelements) {
 		optionalSingleSubElements.addAll(Arrays.asList(subelements));
 	}
-	public void addOptionalSingleSubElements(String...subelements) {
-		for(String s : subelements) {
-			optionalSingleSubElements.add(new Element(s));
-		}
-	}
-	public void addOptionalMultipleSubElements(SubElement...subelements) {
+	public void addOptionalMultipleSubElements(SubElementType...subelements) {
 		optionalMultipleSubElements.addAll(Arrays.asList(subelements));
 	}
 	
@@ -217,14 +199,14 @@ public class Element {
 		};
 		requiredSingleSubElements.forEach(singleCheck);
 		optionalSingleSubElements.forEach(singleCheck);
-		optionalMultipleSubElements.forEach((SubElement e) -> addableElements.add(e.create()));
+		optionalMultipleSubElements.forEach((SubElementType e) -> addableElements.add(e.create()));
 		return addableElements;
 	}
 	public Element getAddableElement(String name) {
 		ArrayList<Element> addableElements = new ArrayList<>();
 		addableElements.addAll(requiredSingleSubElements);
 		addableElements.addAll(optionalSingleSubElements);
-		optionalMultipleSubElements.forEach((SubElement s) -> {
+		optionalMultipleSubElements.forEach((SubElementType s) -> {
 			addableElements.add(s.create());
 		});
 		for(Element e : addableElements) {
@@ -293,7 +275,7 @@ public class Element {
 	public void copyFields(Element result) {
 		for(Attribute a : attributes.values()) {
 			if(requiredAttributes.contains(a)) {
-				result.addRequiredAttributes(a.clone());
+				result.addAttributes(a.clone());
 			} else {
 				result.addAttributes(a.clone());
 			}
@@ -302,12 +284,12 @@ public class Element {
 			result.addSubElements(e.clone());
 		}
 		for(Element e : requiredSingleSubElements) {
-			result.addRequiredSingleSubElements(e.clone());
+			result.addSubElements(e.clone());
 		}
 		for(Element e : optionalSingleSubElements) {
 			result.addOptionalSingleSubElements(e.clone());
 		}
-		for(SubElement e : optionalMultipleSubElements) {
+		for(SubElementType e : optionalMultipleSubElements) {
 			result.addOptionalMultipleSubElements(e);
 		}
 	}

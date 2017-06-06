@@ -83,7 +83,8 @@ public class Frame extends JFrame {
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
+		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
+		String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new Element(dir));
 		for(TranscendenceMod tm : mods) {
@@ -274,17 +275,17 @@ public class Frame extends JFrame {
 		System.out.println("Found Parent: " + theNode.getParent().toString());
 		return theNode;
 	}
-	public void expandTreeNodes()
-	{
+	public void expandTreeNodes() {
 		for(int i = 0; i < elementTree.getRowCount(); i++){
 	        elementTree.expandRow(i);
 	    }
 	}
 	public void addElement(Element se)
 	{
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se);
-		elementTreeModel.insertNodeInto(node, (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent(), 0);
-	    expandTreeNodes();
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se), parent = (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent();
+		elementTreeModel.insertNodeInto(node, parent, 0);
+	    int rowIndex = parent.getIndex(node);
+	    elementTree.expandRow(rowIndex);
 	    System.out.println("Tree Path (Create): " + new TreePath(elementTreeModel.getPathToRoot(node)));
 	    elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
 	}

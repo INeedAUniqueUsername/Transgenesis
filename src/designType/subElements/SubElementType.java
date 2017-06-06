@@ -2,6 +2,6 @@ package designType.subElements;
 
 import xml.Element;
 
-public interface SubElement {
+public interface SubElementType {
 	public Element create();
 }

@@ -25,7 +25,7 @@ import javax.xml.stream.events.XMLEvent;
 import org.xml.sax.InputSource;
 
 import designType.TypeFactory.Types;
-import designType.subElements.SubElement;
+import designType.subElements.SubElementType;
 import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
