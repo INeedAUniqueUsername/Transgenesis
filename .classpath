@@ -4,5 +4,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="jcabi/jcabi-xml-0.18.1.jar"/>
+	<classpathentry kind="lib" path="miglayout-swing-5.1-20170606.220033-796.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TransGenesis/miglayout-swing-5.1-20170606.220033-796-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
