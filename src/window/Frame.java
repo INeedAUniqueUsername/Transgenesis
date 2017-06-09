@@ -69,7 +69,7 @@ public class Frame extends JFrame {
 	private final JPanel fieldPanel;
 	private final JPanel subElementPanel;
 	private final JTextArea text;
-	private final JButton applyButton;
+	//private final JButton applyButton;
 	private final JButton xmlButton;
 	//JPanel subelementPanel;
 	public Frame() {
@@ -136,13 +136,13 @@ public class Frame extends JFrame {
 	    		selectElement(element);
 	    	}
 	    });
-	    elementTreePane = new JScrollPane(elementTree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	    elementTreePane.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+	    elementTreePane = createScrollPane(elementTree);
+	    //elementTreePane.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 		
 		documentation = new JLabel("Documentation Here");
 		documentation.setFont(Window.FONT_MEDIUM);
 		documentation.setVerticalTextPosition(SwingConstants.TOP);
-		JScrollPane documentationScroll = new JScrollPane(documentation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane documentationScroll = createScrollPane(documentation);
 		
 		JPanel attributePanel = new JPanel();
 		attributePanel.setLayout(new GridLayout(0, 2));
@@ -153,19 +153,19 @@ public class Frame extends JFrame {
 		fieldPanel.setLayout(new GridLayout(0, 1));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
-		JScrollPane attributeScroll = new JScrollPane(attributePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane attributeScroll = createScrollPane(attributePanel);
 		
 		subElementPanel = new JPanel();
 		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		subElementPanel.setLayout(new GridLayout(0, 1));
-		JScrollPane subElementScroll = new JScrollPane(subElementPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane subElementScroll = createScrollPane(subElementPanel);
 		
 		text = new JTextArea();
 		text.setTabSize(4);
 		text.setFont(Window.FONT_MEDIUM);
-		JScrollPane textPanel = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane textPanel = createScrollPane(text);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		
+		/*
 		applyButton = new JButton();
 		applyButton.addActionListener(new ActionListener() {
 			@Override
@@ -176,21 +176,23 @@ public class Frame extends JFrame {
 				}
 			}
 		});
+		
 		applyButton.setFont(Window.FONT_LARGE);
 		applyButton.setText("Apply");
 		applyButton.setAlignmentX(LEFT_ALIGNMENT);
-		
+		*/
 		xmlButton = new JButton("Generate XML");
 		xmlButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(selected != null) {
+					setAttributes(selected);
 					JTextArea ta = new JTextArea(selected.getXML());
 					ta.setFont(Window.FONT_MEDIUM);
 					ta.setTabSize(4);
 					ta.setEditable(false);
-					JScrollPane pane = new JScrollPane(ta, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					JScrollPane pane = createScrollPane(ta);
 					pane.setMaximumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 					JOptionPane.showMessageDialog(null, pane);
 				}
@@ -208,8 +210,17 @@ public class Frame extends JFrame {
 				.y("0")
 				.minWidth("25%")
 				.maxWidth("25%")
-				.minHeight("100%")
-				.maxHeight("100%")
+				.minHeight("95%")
+				.maxHeight("95%")
+				);
+		panel.add(xmlButton,
+				new CC()
+				.x("0%")
+				.y("95%")
+				.minWidth("25%")
+				.maxWidth("25%")
+				.minHeight("5%")
+				.maxHeight("5%")
 				);
 		panel.add(documentationScroll,
 				new CC()
@@ -256,6 +267,11 @@ public class Frame extends JFrame {
 				SCREEN_HEIGHT
 				));
 		setVisible(true);
+	}
+	public static JScrollPane createScrollPane(JComponent c) {
+		JScrollPane result = new JScrollPane(c, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		result.getVerticalScrollBar().setUnitIncrement(16);
+		return result;
 	}
 	public void selectElement(Element e) {
 		System.out.println("Initialize from element: " + e.getName());
