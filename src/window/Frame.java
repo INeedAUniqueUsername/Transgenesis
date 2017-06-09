@@ -211,7 +211,7 @@ public class Frame extends JFrame {
 				.minHeight("100%")
 				.maxHeight("100%")
 				);
-		panel.add(documentation,
+		panel.add(documentationScroll,
 				new CC()
 				.x("25%")
 				.y("0")
