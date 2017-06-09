@@ -25,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -33,8 +34,14 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
+import net.miginfocom.swing.MigLayout;
+
 import com.jcabi.xml.XMLDocument;
 
+import designType.TypeFactory;
+import designType.TypeFactory.Types;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
 import xml.Attribute;
@@ -46,8 +53,8 @@ public class Frame extends JFrame {
 	public static final int SCREEN_HEIGHT;
 	static {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		SCREEN_WIDTH = (int) (screenSize.getWidth() * 0.95);
-		SCREEN_HEIGHT = (int) (screenSize.getHeight() * 0.90);
+		SCREEN_WIDTH = (int) (screenSize.getWidth());
+		SCREEN_HEIGHT = (int) (screenSize.getHeight() * 0.96);
 	}
 	private final DefaultTreeModel elementTreeModel;
 	private final JTree elementTree;
@@ -69,22 +76,10 @@ public class Frame extends JFrame {
 		
 		setTitle("TransGenesis");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel panel = new JPanel();
-		panel.setAlignmentY(JPanel.TOP_ALIGNMENT);
-		//panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		add(panel);
-		
-		JPanel leftPanel = new JPanel();
-		leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		leftPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-		JPanel rightPanel = new JPanel();
-		rightPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-		rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
-		String dir = JOptionPane.showInputDialog("Specify mod directory");
+		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
+		//String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new Element(dir));
 		for(TranscendenceMod tm : mods) {
@@ -94,6 +89,7 @@ public class Frame extends JFrame {
 				origin.add(tm.toTreeNode());
 			}
 		}
+		origin.add(ExtensionFactory.Extensions.TranscendenceModule.create().toTreeNode());
 		
 		elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
@@ -140,15 +136,13 @@ public class Frame extends JFrame {
 	    		selectElement(element);
 	    	}
 	    });
-	    elementTreePane = new JScrollPane(elementTree);
-	    elementTreePane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	    elementTreePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    elementTreePane = new JScrollPane(elementTree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	    elementTreePane.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-		leftPanel.add(elementTreePane);
 		
 		documentation = new JLabel("Documentation Here");
 		documentation.setFont(Window.FONT_MEDIUM);
-		rightPanel.add(documentation);
+		documentation.setVerticalTextPosition(SwingConstants.TOP);
+		JScrollPane documentationScroll = new JScrollPane(documentation, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		JPanel attributePanel = new JPanel();
 		attributePanel.setLayout(new GridLayout(0, 2));
@@ -159,19 +153,18 @@ public class Frame extends JFrame {
 		fieldPanel.setLayout(new GridLayout(0, 1));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
-		rightPanel.add(attributePanel);
+		JScrollPane attributeScroll = new JScrollPane(attributePanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		subElementPanel = new JPanel();
 		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		subElementPanel.setLayout(new GridLayout(0, 4));
-		rightPanel.add(subElementPanel);
+		subElementPanel.setLayout(new GridLayout(0, 1));
+		JScrollPane subElementScroll = new JScrollPane(subElementPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		text = new JTextArea();
 		text.setTabSize(4);
 		text.setFont(Window.FONT_MEDIUM);
 		JScrollPane textPanel = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		rightPanel.add(textPanel);
 		
 		applyButton = new JButton();
 		applyButton.addActionListener(new ActionListener() {
@@ -186,7 +179,6 @@ public class Frame extends JFrame {
 		applyButton.setFont(Window.FONT_LARGE);
 		applyButton.setText("Apply");
 		applyButton.setAlignmentX(LEFT_ALIGNMENT);
-		rightPanel.add(applyButton);
 		
 		xmlButton = new JButton("Generate XML");
 		xmlButton.addActionListener(new ActionListener() {
@@ -207,24 +199,62 @@ public class Frame extends JFrame {
 		});
 		xmlButton.setFont(Window.FONT_LARGE);
 		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
-		rightPanel.add(xmlButton);
 		
-		panel.add(leftPanel);
-		panel.add(rightPanel);
-		setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-		panel.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-		leftPanel.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.2), SCREEN_HEIGHT));
-		elementTreePane.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.2), SCREEN_HEIGHT));
-		
-		rightPanel.setPreferredSize(new Dimension((int) (SCREEN_WIDTH * 0.75), SCREEN_HEIGHT));
-		
-		attributePanel.setMaximumSize(	new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
-		labelPanel.setMaximumSize(		new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
-		fieldPanel.setMaximumSize(		new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
-		
-		subElementPanel.setMaximumSize(new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.2)));
-		textPanel.setMinimumSize(new Dimension((int) (SCREEN_WIDTH * 0.75), (int) (SCREEN_HEIGHT * 0.5)));
+		JPanel panel = new JPanel();
+		panel.setLayout(new MigLayout());
+		panel.add(elementTreePane,
+				new CC()
+				.x("0")
+				.y("0")
+				.minWidth("25%")
+				.maxWidth("25%")
+				.minHeight("100%")
+				.maxHeight("100%")
+				);
+		panel.add(documentation,
+				new CC()
+				.x("25%")
+				.y("0")
+				.minWidth("75%")
+				.maxWidth("75%")
+				.height("20%")
+				
+				);
+		panel.add(attributeScroll,
+				new CC()
+				.x("25%")
+				.y("20%")
+				.minWidth("55%")
+				.maxWidth("55%")
+				.maxHeight("50%")
+				);
+		panel.add(subElementScroll,
+				new CC()
+				.x("80%")
+				.y("20%")
+				.minWidth("20%")
+				.maxWidth("20%")
+				.maxHeight("50%")
+				);
+		panel.add(textPanel,
+				new CC()
+				.x("25%")
+				.y("70%")
+				.minWidth("75%")
+				.maxWidth("75%")
+				.minHeight("30%")
+				.maxHeight("30%")
+				);
+		add(panel);
+		this.setMaximumSize(new Dimension(
+				SCREEN_WIDTH,
+				SCREEN_HEIGHT
+				));
 		pack();
+		this.setSize(new Dimension(
+				SCREEN_WIDTH,
+				SCREEN_HEIGHT
+				));
 		setVisible(true);
 	}
 	public void selectElement(Element e) {
@@ -232,6 +262,7 @@ public class Frame extends JFrame {
 		selected = e;
 		e.initializeFrame(this);
 		pack();
+		setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		repaint();
 	}
 	public void setAttributes(Element e) {
