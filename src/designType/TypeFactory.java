@@ -5,7 +5,7 @@ import designType.subElements.SingleSubElementFactory;
 import designType.subElements.SingleSubElementFactory.DataElements;
 import xml.Attribute;
 import xml.DesignElement;
-import xml.Attribute.ValueType;
+import static xml.Attribute.ValueType;
 public final class TypeFactory {
 	//@Override
 	/*

@@ -13,7 +13,7 @@ import window.Frame;
 import window.Window;
 import xml.Attribute;
 import xml.DesignElement;
-import xml.Attribute.ValueType;
+import static xml.Attribute.ValueType.*;
 
 public class SingleSubElementFactory {
 
@@ -285,22 +285,22 @@ public class SingleSubElementFactory {
 	public static DesignElement[] createSpaceObjectSubElements() {
 		DesignElement dockingPorts = new DesignElement("DockingPorts");
 		dockingPorts.addAttributes(
-				new Attribute("bringToFront", ValueType.STRING),
-				new Attribute("sendToBack", ValueType.STRING),
-				new Attribute("maxDist", ValueType.WHOLE),
-				new Attribute("portAngle", ValueType.INTEGER),
-				new Attribute("portCount", ValueType.WHOLE),
-				new Attribute("portRadius", ValueType.INTEGER),
-				new Attribute("rotation", ValueType.INTEGER),
-				new Attribute("x", ValueType.INTEGER),
-				new Attribute("y", ValueType.INTEGER)
+				new Attribute("bringToFront", STRING),
+				new Attribute("sendToBack", STRING),
+				new Attribute("maxDist", WHOLE),
+				new Attribute("portAngle", INTEGER),
+				new Attribute("portCount", WHOLE),
+				new Attribute("portRadius", INTEGER),
+				new Attribute("rotation", INTEGER),
+				new Attribute("x", INTEGER),
+				new Attribute("y", INTEGER)
 				);
 		DesignElement trade = new DesignElement("Trade");
 		trade.addAttributes(
-				new Attribute("currency", ValueType.STRING),
-				new Attribute("creditConversion", ValueType.WHOLE),
-				new Attribute("max", ValueType.WHOLE),
-				new Attribute("replenish", ValueType.WHOLE)
+				new Attribute("currency", STRING),
+				new Attribute("creditConversion", WHOLE),
+				new Attribute("max", WHOLE),
+				new Attribute("replenish", WHOLE)
 				);
 		trade.addOptionalMultipleSubElements(TradeElements.values());
 		
@@ -337,7 +337,7 @@ class Text extends DesignElement {
 	public Text(String id) {
 		super();
 		displayName = id;
-		addAttributes(new Attribute("id", ValueType.STRING, id));
+		addAttributes(new Attribute("id", STRING, id));
 	}
 	public String getDisplayName() {
 		return displayName;

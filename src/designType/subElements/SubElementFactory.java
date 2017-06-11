@@ -12,6 +12,7 @@ import window.Window;
 import xml.Attribute;
 import xml.DesignElement;
 import xml.Attribute.ValueType;
+import static xml.Attribute.ValueType.*;
 
 public class SubElementFactory {
 	public static enum AdventureDescElements implements SubElementType {
@@ -27,13 +28,13 @@ public class SubElementFactory {
 			switch(this) {
 			case EncounterOverrides:
 				result = StationTypeElements.Encounter.create();
-				result.addAttributes(new Attribute("unid", ValueType.TYPE_STATION));
+				result.addAttributes(new Attribute("unid", TYPE_STATION));
 				break;
 			case ArmorDamageAdj:
 			case ShieldDamageAdj:
 				result.addAttributes(
-						new Attribute("level", ValueType.WHOLE),
-						new Attribute("damageAdj", ValueType.STRING)
+						new Attribute("level", WHOLE),
+						new Attribute("damageAdj", STRING)
 						);
 				break;
 			default:
@@ -48,7 +49,7 @@ public class SubElementFactory {
 		;
 		public DesignElement create() {
 			DesignElement e = new DesignElement(name());
-			e.addAttributes(new Attribute("id", ValueType.STRING));
+			e.addAttributes(new Attribute("id", STRING));
 			return e;
 		}
 	}
@@ -75,15 +76,15 @@ public class SubElementFactory {
 			switch(this) {
 			case AcceptDonation:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("actualPrice", ValueType.BOOLEAN)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("actualPrice", BOOLEAN)
 						);
 				break;
 			case Buy:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ)
 						);
 				break;
 			case BuyShip:
@@ -94,56 +95,56 @@ public class SubElementFactory {
 				break;
 			case InstallDevice:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("upgradeInstallOnly", ValueType.BOOLEAN),
-						new Attribute("messageID", ValueType.STRING)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("upgradeInstallOnly", BOOLEAN),
+						new Attribute("messageID", STRING)
 						);
 				break;
 			case Refuel:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("messageID", ValueType.STRING)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("messageID", STRING)
 						);
 				break;
 			case RemoveDevice:
 				
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("messageID", ValueType.STRING)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("messageID", STRING)
 						);
 				break;
 			case RepairArmor:
 				
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("messageID", ValueType.STRING)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("messageID", STRING)
 						);
 				break;
 			case RepairItem:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("messageID", ValueType.STRING)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("messageID", STRING)
 						);
 				break;
 			case ReplaceArmor:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("messageID", ValueType.STRING)
+						new Attribute("criteria", STRING),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("messageID", STRING)
 						);
 				break;
 			case Sell:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("inventoryAdj", ValueType.WHOLE),
-						new Attribute("levelFrequency", ValueType.LEVEL_FREQUENCY),
-						new Attribute("priceAdj", ValueType.PRICE_ADJ),
-						new Attribute("noDescription", ValueType.BOOLEAN)
+						new Attribute("criteria", STRING),
+						new Attribute("inventoryAdj", WHOLE),
+						new Attribute("levelFrequency", LEVEL_FREQUENCY),
+						new Attribute("priceAdj", PRICE_ADJ),
+						new Attribute("noDescription", BOOLEAN)
 						);
 				break;
 			case SellShip:
@@ -180,9 +181,9 @@ public class SubElementFactory {
 			switch(this) {
 			case Relationship:
 				e.addAttributes(
-						new Attribute("sovereign", ValueType.TYPE_SOVEREIGN),
-						new Attribute("disposition", ValueType.DISPOSITION),
-						new Attribute("mutual", ValueType.BOOLEAN)
+						new Attribute("sovereign", TYPE_SOVEREIGN),
+						new Attribute("disposition", DISPOSITION),
+						new Attribute("mutual", BOOLEAN)
 						);
 				break;
 			}
@@ -239,14 +240,14 @@ public class SubElementFactory {
 				break;
 			case Encounter:
 				e.addAttributes(
-						new Attribute("enemyExclusionRadius", ValueType.WHOLE),
-						new Attribute("exclusionRadius", ValueType.WHOLE),
-						new Attribute("levelFrequency", ValueType.LEVEL_FREQUENCY),
-						new Attribute("locationCriteria", ValueType.STRING),
-						new Attribute("maxAppearing", ValueType.WHOLE),
-						new Attribute("minAppearing", ValueType.WHOLE),
-						new Attribute("systemCriteria", ValueType.STRING),
-						new Attribute("unique", ValueType.UNIQUE)
+						new Attribute("enemyExclusionRadius", WHOLE),
+						new Attribute("exclusionRadius", WHOLE),
+						new Attribute("levelFrequency", LEVEL_FREQUENCY),
+						new Attribute("locationCriteria", STRING),
+						new Attribute("maxAppearing", WHOLE),
+						new Attribute("minAppearing", WHOLE),
+						new Attribute("systemCriteria", STRING),
+						new Attribute("unique", UNIQUE)
 						);
 				DesignElement criteria = new DesignElement("Criteria");
 				criteria.addOptionalMultipleSubElements(
@@ -309,29 +310,29 @@ public class SubElementFactory {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Attributes:
-				e.addAttributes(new Attribute("criteria", ValueType.STRING));
+				e.addAttributes(new Attribute("criteria", STRING));
 				break;
 			case Chance:
-				e.addAttributes(new Attribute("chance", ValueType.WHOLE));
+				e.addAttributes(new Attribute("chance", WHOLE));
 				break;
 			case DistanceBetweenNodes:
 				e.addAttributes(
-						new Attribute("min", ValueType.WHOLE),
-						new Attribute("max", ValueType.WHOLE)
+						new Attribute("min", WHOLE),
+						new Attribute("max", WHOLE)
 						);
 				break;
 			case DistanceTo:
 				e.addAttributes(
-						new Attribute("criteria", ValueType.STRING),
-						new Attribute("nodeID", ValueType.STRING),
-						new Attribute("min", ValueType.WHOLE),
-						new Attribute("max", ValueType.WHOLE)
+						new Attribute("criteria", STRING),
+						new Attribute("nodeID", STRING),
+						new Attribute("min", WHOLE),
+						new Attribute("max", WHOLE)
 						);
 				break;
 			case StargateCount:
 				e.addAttributes(
-						new Attribute("min", ValueType.WHOLE),
-						new Attribute("max", ValueType.WHOLE)
+						new Attribute("min", WHOLE),
+						new Attribute("max", WHOLE)
 						);
 				break;
 			default:
@@ -348,10 +349,10 @@ public class SubElementFactory {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Library:
-				e.addAttributes(new Attribute("unid", ValueType.TYPE_MOD));
+				e.addAttributes(new Attribute("unid", TYPE_MOD));
 				break;
 			case Module:
-				e.addAttributes(new Attribute("filename", ValueType.STRING));
+				e.addAttributes(new Attribute("filename", STRING));
 				break;
 			}
 			return e;
@@ -398,23 +399,23 @@ public class SubElementFactory {
 	*/
 	public static Attribute[] createImageAttributes() {
 		return new Attribute[] {
-				new Attribute("imageID", ValueType.TYPE_IMAGE),
-				new Attribute("imageX", ValueType.WHOLE),
-				new Attribute("imageY", ValueType.WHOLE),
-				new Attribute("imageWidth", ValueType.WHOLE),
-				new Attribute("imageHeight", ValueType.WHOLE),
-				new Attribute("imageFrameCount", ValueType.WHOLE),
-				new Attribute("rotationCount", ValueType.WHOLE),
-				new Attribute("rotationColumns", ValueType.WHOLE),
-				new Attribute("animationColumns", ValueType.WHOLE),
-				new Attribute("imageTicksPerFrame", ValueType.WHOLE),
-				new Attribute("flashTicks", ValueType.WHOLE),
-				new Attribute("blending", ValueType.BLENDING),
-				new Attribute("viewportRatio", ValueType.DECIMAL),
-				new Attribute("viewportSize", ValueType.INTEGER),
-				new Attribute("rotationOffset", ValueType.INTEGER),
-				new Attribute("xOffset", ValueType.INTEGER),
-				new Attribute("yOffset", ValueType.INTEGER)
+				new Attribute("imageID", TYPE_IMAGE),
+				new Attribute("imageX", WHOLE),
+				new Attribute("imageY", WHOLE),
+				new Attribute("imageWidth", WHOLE),
+				new Attribute("imageHeight", WHOLE),
+				new Attribute("imageFrameCount", WHOLE),
+				new Attribute("rotationCount", WHOLE),
+				new Attribute("rotationColumns", WHOLE),
+				new Attribute("animationColumns", WHOLE),
+				new Attribute("imageTicksPerFrame", WHOLE),
+				new Attribute("flashTicks", WHOLE),
+				new Attribute("blending", BLENDING),
+				new Attribute("viewportRatio", DECIMAL),
+				new Attribute("viewportSize", INTEGER),
+				new Attribute("rotationOffset", INTEGER),
+				new Attribute("xOffset", INTEGER),
+				new Attribute("yOffset", INTEGER)
 		};
 	}
 }
