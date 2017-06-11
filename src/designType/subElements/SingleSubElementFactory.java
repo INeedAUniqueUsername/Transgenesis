@@ -5,19 +5,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import designType.TypeFactory.Types;
+import designType.subElements.SubElementFactory.AdventureDescElements;
 import designType.subElements.SubElementFactory.MiscElements;
 import designType.subElements.SubElementFactory.SovereignElements;
+import designType.subElements.SubElementFactory.TradeElements;
 import window.Frame;
 import window.Window;
 import xml.Attribute;
-import xml.Element;
+import xml.DesignElement;
 import xml.Attribute.ValueType;
 
 public class SingleSubElementFactory {
 
 	//Done
-	public static Element createEvents(Types type) {
-		Element e = new Element("Events");
+	public static DesignElement createEvents(Types type) {
+		DesignElement e = new DesignElement("Events");
 		e.addOptionalSingleSubElements(
 					new Event("GetGlobalAchievements"),
 					new Event("GetGlobalDockScreen"),
@@ -151,8 +153,8 @@ public class SingleSubElementFactory {
 		return e;
 	}
 	//Done
-	public static Element createLanguage(Types t) {
-		Element e = new Element("Language");
+	public static DesignElement createLanguage(Types t) {
+		DesignElement e = new DesignElement("Language");
 		
 		switch(t) {
 		case AdventureDesc:
@@ -229,9 +231,20 @@ public class SingleSubElementFactory {
 		return e;
 	}
 
-	public static Element[] createSingleSubElementsForType(Types t) {
+	public static DesignElement[] createSingleSubElementsForType(Types t) {
 		switch(t) {
-		case AdventureDesc:			break;
+		case AdventureDesc:
+			DesignElement encounterOverrides = new DesignElement("EncounterOverrides");
+			encounterOverrides.addOptionalMultipleSubElements(AdventureDescElements.EncounterOverrides);
+			DesignElement constants = new DesignElement("Constants");
+			constants.addOptionalMultipleSubElements(
+					AdventureDescElements.ArmorDamageAdj,
+					AdventureDescElements.ShieldDamageAdj
+					);
+			return new DesignElement[] {
+					encounterOverrides, constants
+			}
+			;
 		case DockScreen:			break;
 		case EconomyType:			break;
 		case EffectType:			break;
@@ -242,20 +255,20 @@ public class SingleSubElementFactory {
 		case NameGenerator:			break;
 		case OverlayType:			break;
 		case Power:
-			return new Element[] {
-					new Element("OnShow"),
-					new Element("OnInvokedByPlayer"),
-					new Element("OnInvoke"),
-					new Element("OnDestroyCheck")	
+			return new DesignElement[] {
+					new DesignElement("OnShow"),
+					new DesignElement("OnInvokedByPlayer"),
+					new DesignElement("OnInvoke"),
+					new DesignElement("OnDestroyCheck")	
 			};
 		case ShipClass:				break;
 		case ShipTable:				break;
 		case Sound:					break;
 		case Sovereign:
-			Element e = new Element("Relationships");
+			DesignElement e = new DesignElement("Relationships");
 			e.addOptionalMultipleSubElements(SovereignElements.Relationship);
-			return new Element[] {
-					e
+			return new DesignElement[] {
+					
 			};
 		case SpaceEnvironmentType:	break;
 		case StationType:			break;
@@ -266,11 +279,11 @@ public class SingleSubElementFactory {
 		case Type:					break;
 		default:					break;
 		}
-		return new Element[] {
+		return new DesignElement[] {
 		};
 	}
-	public static Element[] createSpaceObjectSubElements() {
-		Element dockingPorts = new Element("DockingPorts");
+	public static DesignElement[] createSpaceObjectSubElements() {
+		DesignElement dockingPorts = new DesignElement("DockingPorts");
 		dockingPorts.addAttributes(
 				new Attribute("bringToFront", ValueType.STRING),
 				new Attribute("sendToBack", ValueType.STRING),
@@ -282,14 +295,21 @@ public class SingleSubElementFactory {
 				new Attribute("x", ValueType.INTEGER),
 				new Attribute("y", ValueType.INTEGER)
 				);
-		Element trade = new Element("Trade");
+		DesignElement trade = new DesignElement("Trade");
 		trade.addAttributes(
 				new Attribute("currency", ValueType.STRING),
 				new Attribute("creditConversion", ValueType.WHOLE),
 				new Attribute("max", ValueType.WHOLE),
 				new Attribute("replenish", ValueType.WHOLE)
 				);
-		return new Element[0];
+		trade.addOptionalMultipleSubElements(TradeElements.values());
+		
+		try {
+			throw new Exception("") {};
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new DesignElement[0];
 	}
 	
 	//Done
@@ -299,20 +319,20 @@ public class SingleSubElementFactory {
 		InitialData,
 		;
 		@Override
-		public Element create() {
-			Element e = new Element(name());
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
 			e.addOptionalMultipleSubElements(MiscElements.Data);
 			return e;
 		}
 	}
 }
 
-class Event extends Element {
+class Event extends DesignElement {
 	public Event(String name) {
 		super(name);
 	}
 }
-class Text extends Element {
+class Text extends DesignElement {
 	String displayName;
 	public Text(String id) {
 		super();

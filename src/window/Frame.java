@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.List;
@@ -17,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -45,7 +48,7 @@ import designType.TypeFactory.Types;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
 import xml.Attribute;
-import xml.Element;
+import xml.DesignElement;
 
 public class Frame extends JFrame {
 	
@@ -62,7 +65,7 @@ public class Frame extends JFrame {
 	private final DefaultTreeCellRenderer elementTreeCellRenderer;
 	
 	private final List<TranscendenceMod> mods;
-	private Element selected;
+	private DesignElement selected;
 	
 	JLabel documentation;
 	private final JPanel labelPanel;
@@ -77,11 +80,11 @@ public class Frame extends JFrame {
 		setTitle("TransGenesis");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
+		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
+		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
 		//String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
-		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new Element(dir));
+		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new DesignElement(dir));
 		for(TranscendenceMod tm : mods) {
 			if(tm == null) {
 				System.out.println("Null extension found");
@@ -89,7 +92,7 @@ public class Frame extends JFrame {
 				origin.add(tm.toTreeNode());
 			}
 		}
-		origin.add(ExtensionFactory.Extensions.TranscendenceModule.create().toTreeNode());
+		origin.add(ExtensionFactory.Extensions.TranscendenceAdventure.create().toTreeNode());
 		
 		elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
@@ -106,7 +109,7 @@ public class Frame extends JFrame {
 			                    tree, value, sel,
 			                    expanded, leaf, row,
 			                    hasFocus);
-			    Element element = (Element) ((DefaultMutableTreeNode) value).getUserObject();
+			    DesignElement element = (DesignElement) ((DefaultMutableTreeNode) value).getUserObject();
 			    
 			    return this;
 			}
@@ -132,7 +135,7 @@ public class Frame extends JFrame {
 	    		}
 	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	    				elementTree.getLastSelectedPathComponent();
-	    		Element element = (Element) node.getUserObject();
+	    		DesignElement element = (DesignElement) node.getUserObject();
 	    		selectElement(element);
 	    	}
 	    });
@@ -163,6 +166,24 @@ public class Frame extends JFrame {
 		text = new JTextArea();
 		text.setTabSize(4);
 		text.setFont(Window.FONT_MEDIUM);
+		text.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2 && !e.isConsumed()) {
+                    e.consume();
+                    System.out.println("Double Click");
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+		});
 		JScrollPane textPanel = createScrollPane(text);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		/*
@@ -182,8 +203,8 @@ public class Frame extends JFrame {
 		applyButton.setAlignmentX(LEFT_ALIGNMENT);
 		*/
 		xmlButton = new JButton("Generate XML");
+		JFrame f = this;
 		xmlButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(selected != null) {
@@ -193,11 +214,10 @@ public class Frame extends JFrame {
 					ta.setTabSize(4);
 					ta.setEditable(false);
 					JScrollPane pane = createScrollPane(ta);
-					pane.setMaximumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-					JOptionPane.showMessageDialog(null, pane);
+					pane.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+					JOptionPane.showMessageDialog(f, pane);
 				}
 			}
-			
 		});
 		xmlButton.setFont(Window.FONT_LARGE);
 		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
@@ -257,15 +277,8 @@ public class Frame extends JFrame {
 				.maxHeight("30%")
 				);
 		add(panel);
-		this.setMaximumSize(new Dimension(
-				SCREEN_WIDTH,
-				SCREEN_HEIGHT
-				));
 		pack();
-		this.setSize(new Dimension(
-				SCREEN_WIDTH,
-				SCREEN_HEIGHT
-				));
+		setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
 		setVisible(true);
 	}
 	public static JScrollPane createScrollPane(JComponent c) {
@@ -273,15 +286,17 @@ public class Frame extends JFrame {
 		result.getVerticalScrollBar().setUnitIncrement(16);
 		return result;
 	}
-	public void selectElement(Element e) {
+	public void selectElement(DesignElement e) {
 		System.out.println("Initialize from element: " + e.getName());
+		Dimension size = getSize();
+		int state = getExtendedState();
 		selected = e;
+		setPreferredSize(size);
 		e.initializeFrame(this);
 		pack();
-		setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		repaint();
 	}
-	public void setAttributes(Element e) {
+	public void setAttributes(DesignElement e) {
 		List<Attribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();
 		for(int i = 0; i < attributes.size(); i++) {
@@ -303,12 +318,12 @@ public class Frame extends JFrame {
 		return result;
 	}
 	
-	public void updateTreeText(Element se)
+	public void updateTreeText(DesignElement se)
 	{
 		elementTreeModel.nodeChanged(getNode(se));
 	}
 	
-	public DefaultMutableTreeNode getNode(Element element)
+	public DefaultMutableTreeNode getNode(DesignElement element)
 	{
 		DefaultMutableTreeNode theNode = null;
 		for (Enumeration<DefaultMutableTreeNode> e = (Enumeration<DefaultMutableTreeNode>) ((DefaultMutableTreeNode) elementTreeModel.getRoot()).depthFirstEnumeration(); e.hasMoreElements() && theNode == null;) {
@@ -327,7 +342,7 @@ public class Frame extends JFrame {
 	        elementTree.expandRow(i);
 	    }
 	}
-	public void addElement(Element se)
+	public void addElement(DesignElement se)
 	{
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se), parent = (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent();
 		elementTreeModel.insertNodeInto(node, parent, 0);

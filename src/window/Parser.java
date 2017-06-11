@@ -9,15 +9,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import xml.Element;
+import xml.DesignElement;
 
 public class Parser extends DefaultHandler implements EntityResolver {
-	LinkedList<Element> stack;
+	LinkedList<DesignElement> stack;
 	public void startDocument() throws SAXException {
-		stack = new LinkedList<Element>();
+		stack = new LinkedList<DesignElement>();
 	}
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
-		Element e = new Element(localName);
+		DesignElement e = new DesignElement(localName);
 		if(stack.size() > 0) {
 			stack.getLast().addSubElements(e);
 		}

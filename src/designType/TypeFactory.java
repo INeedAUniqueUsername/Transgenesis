@@ -4,7 +4,7 @@ import designType.subElements.SubElementType;
 import designType.subElements.SingleSubElementFactory;
 import designType.subElements.SingleSubElementFactory.DataElements;
 import xml.Attribute;
-import xml.Element;
+import xml.DesignElement;
 import xml.Attribute.ValueType;
 public final class TypeFactory {
 	//@Override
@@ -35,6 +35,7 @@ public final class TypeFactory {
 		OverlayType,
 		Power,
 		ShipClass,
+		ShipClassOverride,
 		ShipTable,
 		Sound,
 		Sovereign,
@@ -48,13 +49,13 @@ public final class TypeFactory {
 		;
 		
 		@Override
-		public Element create() {
+		public DesignElement create() {
 			return createDesignType(this);
 		}
 	}
 	//\#define ([A-Z]*_*)*\s+CONSTLIT\(\"(.+)\"\)
-	public static Element createDesignType(Types t) {
-		Element e = new Type(t.name());
+	public static DesignElement createDesignType(Types t) {
+		DesignElement e = new Type(t.name());
 		e.addAttributes(AttributeFactory.createAttributesForType(t));
 		e.addOptionalSingleSubElements(
 				SingleSubElementFactory.createSingleSubElementsForType(t)

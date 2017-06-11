@@ -10,15 +10,44 @@ import javax.swing.event.ListSelectionEvent;
 import window.Frame;
 import window.Window;
 import xml.Attribute;
-import xml.Element;
+import xml.DesignElement;
 import xml.Attribute.ValueType;
 
 public class SubElementFactory {
+	public static enum AdventureDescElements implements SubElementType {
+		EncounterOverrides,
+
+		ArmorDamageAdj,
+		ShieldDamageAdj,
+		
+		;
+		@Override
+		public DesignElement create() {
+			DesignElement result = new DesignElement(name());
+			switch(this) {
+			case EncounterOverrides:
+				result = StationTypeElements.Encounter.create();
+				result.addAttributes(new Attribute("unid", ValueType.TYPE_STATION));
+				break;
+			case ArmorDamageAdj:
+			case ShieldDamageAdj:
+				result.addAttributes(
+						new Attribute("level", ValueType.WHOLE),
+						new Attribute("damageAdj", ValueType.STRING)
+						);
+				break;
+			default:
+				break;
+			
+			}
+			return result;
+		}
+	}
 	public static enum MiscElements implements SubElementType {
 		Data,
 		;
-		public Element create() {
-			Element e = new Element(name());
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
 			e.addAttributes(new Attribute("id", ValueType.STRING));
 			return e;
 		}
@@ -40,8 +69,8 @@ public class SubElementFactory {
 		Custom,;
 
 		@Override
-		public Element create() {
-			Element e = new Element(name());
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
 			// TODO Auto-generated method stub
 			switch(this) {
 			case AcceptDonation:
@@ -133,10 +162,33 @@ public class SubElementFactory {
 		;
 
 			@Override
-			public Element create() {
+			public DesignElement create() {
 				// TODO Auto-generated method stub
-				return new Element(name());
+				return new DesignElement(name());
 			}
+	}
+	public static enum SovereignElements implements SubElementType {
+		//Relationships,
+			Relationship,
+			
+		;
+
+		@Override
+		public DesignElement create() {
+			// TODO Auto-generated method stub
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			case Relationship:
+				e.addAttributes(
+						new Attribute("sovereign", ValueType.TYPE_SOVEREIGN),
+						new Attribute("disposition", ValueType.DISPOSITION),
+						new Attribute("mutual", ValueType.BOOLEAN)
+						);
+				break;
+			}
+			return e;
+		}
+		
 	}
 	public static enum StationTypeElements implements SubElementType {
 		Animations,
@@ -148,6 +200,7 @@ public class SubElementFactory {
 		DockScreens,
 		EncounterGroup,
 		EncounterType,
+		Encounter,
 		Encounters,
 		Events,
 		HeroImage,
@@ -166,9 +219,9 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public Element create() {
+		public DesignElement create() {
 			// TODO Auto-generated method stub
-			Element e = new Element(this.name());
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Animations:
 				break;
@@ -183,6 +236,25 @@ public class SubElementFactory {
 			case EncounterGroup:
 				break;
 			case EncounterType:
+				break;
+			case Encounter:
+				e.addAttributes(
+						new Attribute("enemyExclusionRadius", ValueType.WHOLE),
+						new Attribute("exclusionRadius", ValueType.WHOLE),
+						new Attribute("levelFrequency", ValueType.LEVEL_FREQUENCY),
+						new Attribute("locationCriteria", ValueType.STRING),
+						new Attribute("maxAppearing", ValueType.WHOLE),
+						new Attribute("minAppearing", ValueType.WHOLE),
+						new Attribute("systemCriteria", ValueType.STRING),
+						new Attribute("unique", ValueType.UNIQUE)
+						);
+				DesignElement criteria = new DesignElement("Criteria");
+				criteria.addOptionalMultipleSubElements(
+						SystemCriteria.values()
+						);
+				e.addOptionalSingleSubElements(
+						criteria
+						);
 				break;
 			case Encounters:
 				break;
@@ -225,35 +297,55 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public static enum SovereignElements implements SubElementType {
-		//Relationships,
-			Relationship,
-			
-		;
+	public static enum SystemCriteria implements SubElementType {
+		Attributes,
+		Chance,
+		DistanceBetweenNodes,
+		DistanceTo,
+		StargateCount,;
 
 		@Override
-		public Element create() {
-			// TODO Auto-generated method stub
-			Element e = new Element(name());
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
 			switch(this) {
-			case Relationship:
+			case Attributes:
+				e.addAttributes(new Attribute("criteria", ValueType.STRING));
+				break;
+			case Chance:
+				e.addAttributes(new Attribute("chance", ValueType.WHOLE));
+				break;
+			case DistanceBetweenNodes:
 				e.addAttributes(
-						new Attribute("sovereign", ValueType.TYPE_SOVEREIGN),
-						new Attribute("disposition", ValueType.DISPOSITION),
-						new Attribute("mutual", ValueType.BOOLEAN)
+						new Attribute("min", ValueType.WHOLE),
+						new Attribute("max", ValueType.WHOLE)
 						);
+				break;
+			case DistanceTo:
+				e.addAttributes(
+						new Attribute("criteria", ValueType.STRING),
+						new Attribute("nodeID", ValueType.STRING),
+						new Attribute("min", ValueType.WHOLE),
+						new Attribute("max", ValueType.WHOLE)
+						);
+				break;
+			case StargateCount:
+				e.addAttributes(
+						new Attribute("min", ValueType.WHOLE),
+						new Attribute("max", ValueType.WHOLE)
+						);
+				break;
+			default:
 				break;
 			}
 			return e;
 		}
-		
 	}
 	public static enum ExtensionElements implements SubElementType {
 		Module, Library;
 
 		@Override
-		public Element create() {
-			Element e = new Element(name());
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Library:
 				e.addAttributes(new Attribute("unid", ValueType.TYPE_MOD));
@@ -268,8 +360,8 @@ public class SubElementFactory {
 	public static enum SpaceEnvironmentElements implements SubElementType {
 		Image,
 		EdgeMask,;
-		public Element create() {
-			Element e = new Element(this.name());
+		public DesignElement create() {
+			DesignElement e = new DesignElement(this.name());
 			e.addAttributes(createImageAttributes());
 			return e;
 		}

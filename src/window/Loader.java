@@ -30,7 +30,7 @@ import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
-import xml.Element;
+import xml.DesignElement;
 
 public class Loader {
 	private static final String AMPERSAND_PLACEHOLDER;
@@ -80,7 +80,7 @@ public class Loader {
 			});
 			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
 			
-			LinkedList<Element> elementStack = new LinkedList<Element>();	//The last one is the current element we are looking at
+			LinkedList<DesignElement> elementStack = new LinkedList<DesignElement>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
 			Read: while (reader.hasNext()) {
 			    XMLEvent event = reader.nextEvent();
@@ -112,8 +112,8 @@ public class Loader {
 			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
 			    	System.out.println("Element name: " + name);
-			    	Consumer<Element> addAttributes =((Element e) -> {
-			    		Element element = elementStack.getLast();
+			    	Consumer<DesignElement> addAttributes =((DesignElement e) -> {
+			    		DesignElement element = elementStack.getLast();
 				    	//Now add all the attributes
 				    	Iterator<Attribute> attributes = event.asStartElement().getAttributes();
 				    	while(attributes.hasNext()) {
@@ -135,7 +135,7 @@ public class Loader {
 			    	try {
 			    		//Check if we have a DesignType
 				    	Types result = Types.valueOf(name);
-			    		Element element = result.create();
+			    		DesignElement element = result.create();
 			    		elementStack.getLast().addSubElements(element);
 			    		elementStack.addLast(element);
 			    		addAttributes.accept(element);
@@ -159,15 +159,15 @@ public class Loader {
 			    			System.out.println("Skipping Start: First element is unrecognized");
 			    			break ElementName;
 			    		}
-			    		Element element = elementStack.getLast();
+			    		DesignElement element = elementStack.getLast();
 			    		if(element == null) {
 			    			System.out.println("Null Element Found");
 			    			break ElementName;
 			    		}
-			    		Element add = element.getAddableElement(name);
+			    		DesignElement add = element.getAddableElement(name);
 			    		if(add == null) {
 			    			System.out.println("Adding generic element: " + name);
-			    			add = new Element(name);
+			    			add = new DesignElement(name);
 			    		} else {
 			    			System.out.println("Adding identified element: " + name);
 			    		}

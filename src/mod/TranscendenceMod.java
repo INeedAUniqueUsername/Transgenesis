@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.TreeMap;
 
 import xml.Attribute;
-import xml.Element;
-public class TranscendenceMod extends Element {
+import xml.DesignElement;
+public class TranscendenceMod extends DesignElement {
 	TreeMap<String, String> unid_index;
 	File path;
 	public TranscendenceMod(String name) {

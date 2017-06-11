@@ -7,7 +7,7 @@ import java.util.List;
 import designType.TypeFactory.Types;
 import xml.Attribute;
 import xml.Attribute.ValueType;
-import xml.Element;
+import xml.DesignElement;
 
 public class AttributeFactory {
 	public static Attribute[] createAttributesForType(Types t) {

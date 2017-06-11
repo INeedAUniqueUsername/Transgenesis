@@ -394,6 +394,15 @@ public class Attribute {
 			}
 		}, PRICE_ADJ {
 			
+		}, TYPE_STATION {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = new JComboBox<String>();
+				//WIP
+				field.setEditable(true);
+				field.setFont(Window.FONT_MEDIUM);
+				field.setSelectedItem(value);
+				return field;
+			}
 		};
 		public boolean isValid(String value) {
 			// TODO Auto-generated method stub

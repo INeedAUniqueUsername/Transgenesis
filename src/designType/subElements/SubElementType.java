@@ -1,7 +1,7 @@
 package designType.subElements;
 
-import xml.Element;
+import xml.DesignElement;
 
 public interface SubElementType {
-	public Element create();
+	public DesignElement create();
 }

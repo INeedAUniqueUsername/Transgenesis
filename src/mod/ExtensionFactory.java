@@ -5,7 +5,7 @@ import designType.TypeFactory.Types;
 import designType.subElements.SubElementFactory.ExtensionElements;
 import designType.subElements.SubElementType;
 import xml.Attribute;
-import xml.Element;
+import xml.DesignElement;
 import xml.Attribute.ValueType;
 
 public class ExtensionFactory {
@@ -26,7 +26,6 @@ public class ExtensionFactory {
 				e.addSubElements(
 						TypeFactory.Types.AdventureDesc.create()
 						);
-				break;
 			case TranscendenceExtension:
 			case TranscendenceLibrary:
 				e.addAttributes(
@@ -62,7 +61,7 @@ public class ExtensionFactory {
 				}
 				break;
 			}
-			e.addOptionalSingleSubElements(new Element("Globals"));
+			e.addOptionalSingleSubElements(new DesignElement("Globals"));
 			for(Types t : Types.values()) {
 				if(!t.equals(Types.AdventureDesc)) {
 					e.addOptionalMultipleSubElements(t);
