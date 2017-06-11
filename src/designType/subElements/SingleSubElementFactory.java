@@ -6,12 +6,14 @@ import javax.swing.JTextArea;
 
 import designType.TypeFactory.Types;
 import designType.subElements.SubElementFactory.AdventureDescElements;
+import designType.subElements.SubElementFactory.DisplayElements;
 import designType.subElements.SubElementFactory.MiscElements;
 import designType.subElements.SubElementFactory.SovereignElements;
 import designType.subElements.SubElementFactory.TradeElements;
 import window.Frame;
 import window.Window;
 import xml.Attribute;
+import xml.Attribute.ValueType;
 import xml.DesignElement;
 import static xml.Attribute.ValueType.*;
 
@@ -245,7 +247,54 @@ public class SingleSubElementFactory {
 					encounterOverrides, constants
 			}
 			;
-		case DockScreen:			break;
+		case DockScreen:
+			DesignElement listOptions = new DesignElement("ListOptions");
+			DesignElement list = new DesignElement("List");
+			for(DesignElement e : new DesignElement[] {listOptions, list}) {
+				e.addAttributes(
+						new Attribute("dataFrom", ValueType.DOCKSCREEN_DATA_FROM),
+						new Attribute("criteria", STRING),
+						new Attribute("list", STRING),
+						new Attribute("initialItem", STRING),
+						new Attribute("rowHeight", WHOLE),
+						new Attribute("noArmorSpeedDisplay", BOOLEAN),
+						new Attribute("slotName", STRING),
+						new Attribute("noEmptySlots", BOOLEAN),
+						new Attribute("posX", INTEGER),
+						new Attribute("posY", INTEGER),
+						new Attribute("width", WHOLE),
+						new Attribute("height", WHOLE)
+						);
+			}
+			Event onScreenInit = new Event("OnScreenInit");
+			Event onInit = new Event("OnInit");
+			Event initialPane = new Event("InitialPane");
+			Event onScreenUpdate = new Event("OnScreenUpdate");
+			DesignElement display = new DesignElement("Display");
+			display.addAttributes(
+					new Attribute("display", STRING),
+					new Attribute("animate", STRING),
+					new Attribute("type", DOCKSCREEN_TYPE),
+					new Attribute("dataFrom", DOCKSCREEN_DATA_FROM)
+					);
+			display.addOptionalSingleSubElements(
+					new Event("OnDisplayInit")
+					);
+			display.addOptionalMultipleSubElements(
+					DisplayElements.values()
+					);
+			DesignElement canvas = new DesignElement("Canvas");
+			canvas.addAttributes(
+					new Attribute("left", INTEGER),
+					new Attribute("right", INTEGER),
+					new Attribute("top", INTEGER),
+					new Attribute("bottom", INTEGER)
+					);
+			//WIP
+			DesignElement panes = new DesignElement("Panes");
+			return new DesignElement[] {
+				listOptions, list, onScreenInit, onInit, initialPane, onScreenUpdate, display, canvas, panes
+			};
 		case EconomyType:			break;
 		case EffectType:			break;
 		case Image:					break;

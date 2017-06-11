@@ -14,95 +14,62 @@ public class Attribute {
 	public enum ValueType {
 		UNID {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			public String getInputValue(JComponent field) {
-				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
 		},
 		TYPE_ANY {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
 			}
 		},
 		TYPE_IMAGE {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
 			}
 			
 		},
 		TYPE_MOD {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
 			}
 			
 		},
 		TYPE_SOVEREIGN {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
 			}
 		},
 		TYPE_SYSTEM_MAP {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
 			}
 			
 		},
 		TYPE_INHERITED {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			public String getInputValue(JComponent field) {
-				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
 		},
 		BOOLEAN {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
+				JComboBox<String> field = createComboBox(false, value);
 				field.addItem("true");
 				field.addItem("false");
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
 				return field;
-			}
-			public String getInputValue(JComponent field) {
-				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
 			@Override
 			public boolean isValid(String value) {
@@ -214,38 +181,25 @@ public class Attribute {
 		},
 		ALIGNMENT {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"
+						);
 			}
 		},
 		DISPOSITION {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"friend", "neutral", "enemy"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"friend", "neutral", "enemy"
+						);
 			}
 			
 		},
 		BLENDING {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				field.addItem("brighten");
-				field.addItem("");
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"",
+						"brighten"
+						);
 			}
 		},
 		DICE_RANGE {
@@ -340,68 +294,110 @@ public class Attribute {
 			}
 		}, FREQUENCY {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"common", "uncommon", "rare", "veryRare", "notRandom"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"common", "uncommon", "rare", "veryRare", "notRandom"
+						);
 			}
 		}, UNIQUE {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"inSystem", "inUniverse"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"inSystem", "inUniverse"
+						);
 			}
 		}, SCALE {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"star", "world", "structure", "ship", "flotsam"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"star", "world", "structure", "ship", "flotsam"
+						);
 			}
 		}, TILE_SIZE {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				field.addItem("small");
-				field.addItem("medium");
-				field.addItem("large");
-				field.addItem("huge");
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(false, value,
+						"small",
+						"medium",
+						"large",
+						"huge"
+						);
 			}
 		}, SYSTEMTYPE_BACKGROUND {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				field.addItem("none");
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(true, value,
+						"none"
+						);
 			}
 		}, PRICE_ADJ {
 			
 		}, TYPE_STATION {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
+				return createComboBox(true, value);
+			}
+		}, DOCKSCREEN_TYPE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"",
+						"canvas",
+						"itemPicker",
+						"deviceSelector",
+						"weaponsSelector",
+						"armorSelector",
+						"miscSelector",
+						"customItemPicker",
+						"customPicker",
+						"subjugateMinigame"
+						);
+			}
+		}, DOCKSCREEN_BACKGROUND_ID {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"hero",
+						"image",
+						"none",
+						"object",
+						"schematic"
+						);
+			}
+		}, DOCKSCREEN_DATA_FROM {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"player",
+						"source",
+						"station"
+						);
+			}
+		}, FONT {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"Small",
+						"SmallBold",
+						"Medium",
+						"MediumBold",
+						"Large",
+						"LargeBold",
+						"Header",
+						"HeaderBold",
+						"SubTitle",
+						"SubTitleBold",
+						"SubTitleHeavyBold",
+						"Title",
+						"LogoTitle",
+						"ConsoleMediumHeavy"
+						);
+			}
+		}, ALIGN_HORIZONTAL {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"left",
+						"center",
+						"right"
+						);
+			}
+		}, ALIGN_VERTICAL {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"top",
+						"center",
+						"bottom"
+						);
 			}
 		};
 		public boolean isValid(String value) {
@@ -427,6 +423,16 @@ public class Attribute {
 				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
 			return null;
+		}
+		public JComboBox<String> createComboBox(boolean editable, String value, String... choices) {
+			JComboBox<String> field = new JComboBox<String>();
+			for(String s : choices) {
+				field.addItem(s);
+			}
+			field.setEditable(editable);
+			field.setFont(Window.FONT_MEDIUM);
+			field.setSelectedItem(value);
+			return field;
 		}
 	}
 	private String name;

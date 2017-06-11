@@ -44,6 +44,51 @@ public class SubElementFactory {
 			return result;
 		}
 	}
+	public static enum DisplayElements implements SubElementType {
+		Group,
+		Text,
+		Image;
+		@Override
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			case Group:
+				e.addAttributes(
+						new Attribute("left", INTEGER),
+						new Attribute("top", INTEGER),
+						new Attribute("width", INTEGER),
+						new Attribute("height", INTEGER),
+						new Attribute("center", INTEGER),
+						new Attribute("vcenter", INTEGER)
+						);
+				break;
+			case Text:
+				e.addAttributes(
+						new Attribute("id", STRING),
+						new Attribute("left", INTEGER),
+						new Attribute("right", INTEGER),
+						new Attribute("top", INTEGER),
+						new Attribute("bottom", INTEGER),
+						new Attribute("font", FONT),
+						new Attribute("color", HEX_COLOR),
+						new Attribute("align", ALIGN_HORIZONTAL)
+						);
+				break;
+			case Image:
+				e.addAttributes(
+						new Attribute("left", INTEGER),
+						new Attribute("right", INTEGER),
+						new Attribute("top", INTEGER),
+						new Attribute("bottom", INTEGER),
+						new Attribute("align", ALIGN_HORIZONTAL),
+						new Attribute("valign", ALIGN_VERTICAL),
+						new Attribute("transparent", BOOLEAN)
+						);
+				break;
+			}
+			return e;
+		}
+	}
 	public static enum MiscElements implements SubElementType {
 		Data,
 		;
@@ -72,101 +117,19 @@ public class SubElementFactory {
 		@Override
 		public DesignElement create() {
 			DesignElement e = new DesignElement(name());
-			// TODO Auto-generated method stub
-			switch(this) {
-			case AcceptDonation:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("actualPrice", BOOLEAN)
-						);
-				break;
-			case Buy:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ)
-						);
-				break;
-			case BuyShip:
-				break;
-			case Custom:
-				break;
-			case EnhanceItem:
-				break;
-			case InstallDevice:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("upgradeInstallOnly", BOOLEAN),
-						new Attribute("messageID", STRING)
-						);
-				break;
-			case Refuel:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("messageID", STRING)
-						);
-				break;
-			case RemoveDevice:
-				
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("messageID", STRING)
-						);
-				break;
-			case RepairArmor:
-				
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("messageID", STRING)
-						);
-				break;
-			case RepairItem:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("messageID", STRING)
-						);
-				break;
-			case ReplaceArmor:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("messageID", STRING)
-						);
-				break;
-			case Sell:
-				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("inventoryAdj", WHOLE),
-						new Attribute("levelFrequency", LEVEL_FREQUENCY),
-						new Attribute("priceAdj", PRICE_ADJ),
-						new Attribute("noDescription", BOOLEAN)
-						);
-				break;
-			case SellShip:
-				break;
-			case UpgradeDevice:
-				break;
-			default:
-				break;
-			
-			}
+			e.addAttributes(
+					new Attribute("actualPrice", BOOLEAN),
+					new Attribute("criteria", STRING),
+					new Attribute("inventoryAdj", WHOLE),
+					new Attribute("messageID", STRING),
+					new Attribute("priceAdj", PRICE_ADJ),					
+					new Attribute("noDescription", BOOLEAN),
+					new Attribute("upgradeInstallOnly", BOOLEAN),
+					new Attribute("levelFrequency", LEVEL_FREQUENCY)
+					);
+			//All trade elements have the same attributes
 			return e;
 		}
-	}
-	public static enum SpaceObjectElements implements SubElementType {
-		DockingPorts,
-		;
-
-			@Override
-			public DesignElement create() {
-				// TODO Auto-generated method stub
-				return new DesignElement(name());
-			}
 	}
 	public static enum SovereignElements implements SubElementType {
 		//Relationships,

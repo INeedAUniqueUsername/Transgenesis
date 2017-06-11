@@ -28,7 +28,15 @@ public class AttributeFactory {
 					new Attribute("welcomeMessage", STRING)
 			};
 		case DockScreen:
-			break;
+			return new Attribute[] {
+				new Attribute("unid", UNID),
+				new Attribute("name", STRING),
+				new Attribute("desc", STRING),
+				new Attribute("type", DOCKSCREEN_TYPE),
+				new Attribute("inherit", TYPE_INHERITED),
+				new Attribute("backgroundID", ValueType.DOCKSCREEN_BACKGROUND_ID),
+				new Attribute("nestedScreen", BOOLEAN),
+			};
 		case EconomyType:
 			return new Attribute[] {
 					new Attribute("id", STRING),
