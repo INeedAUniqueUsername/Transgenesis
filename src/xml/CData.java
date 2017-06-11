@@ -1,5 +1,5 @@
 package xml;
 
-public class CData extends Element {
+public class CData extends DesignElement {
 
 }

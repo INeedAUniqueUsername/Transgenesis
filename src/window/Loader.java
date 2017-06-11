@@ -3,7 +3,9 @@ package window;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,21 +14,30 @@ import java.util.function.Consumer;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.Comment;
+import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.XMLEvent;
 
+import org.xml.sax.InputSource;
+
 import designType.TypeFactory.Types;
-import designType.subElements.SubElement;
+import designType.subElements.SubElementType;
 import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
-import xml.Element;
+import xml.DesignElement;
 
 public class Loader {
+	private static final String AMPERSAND_PLACEHOLDER;
+	static {
+		SecureRandom random = new SecureRandom();
+		AMPERSAND_PLACEHOLDER = new BigInteger(130, random).toString(32);
+	}
 	public static int successes = 0;
 	public static List<TranscendenceMod> loadAllMods(File path) {
 		List<TranscendenceMod> result = new ArrayList<TranscendenceMod>();
@@ -45,14 +56,31 @@ public class Loader {
 		try {
 			System.out.println("Beginning Read");
 			byte[] bytes = Files.readAllBytes(path.toPath());
+			String lines = new String(bytes);
+			lines = lines.replace("&", "&amp;");
+			bytes = lines.getBytes();
 			//String lines = new String(bytes, Charset.defaultCharset());
 			
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
 			inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+			inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
+			
+			inputFactory.setXMLResolver(new XMLResolver() {
+
+				@Override
+				public Object resolveEntity(String arg0, String arg1, String arg2, String arg3)
+						throws XMLStreamException {
+					// TODO Auto-generated method stub
+					System.exit(0);
+					int a = 1/0;
+					return new InputSource();
+				}
+				
+			});
 			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
 			
-			LinkedList<Element> elementStack = new LinkedList<Element>();	//The last one is the current element we are looking at
+			LinkedList<DesignElement> elementStack = new LinkedList<DesignElement>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
 			Read: while (reader.hasNext()) {
 			    XMLEvent event = reader.nextEvent();
@@ -78,11 +106,14 @@ public class Loader {
 			    }
 			    */
 			    EventType: switch(event.getEventType()) {
+			    case XMLEvent.ENTITY_DECLARATION:
+			    	EntityDeclaration b;
+			    	break;
 			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
 			    	System.out.println("Element name: " + name);
-			    	Consumer<Element> addAttributes =((Element e) -> {
-			    		Element element = elementStack.getLast();
+			    	Consumer<DesignElement> addAttributes =((DesignElement e) -> {
+			    		DesignElement element = elementStack.getLast();
 				    	//Now add all the attributes
 				    	Iterator<Attribute> attributes = event.asStartElement().getAttributes();
 				    	while(attributes.hasNext()) {
@@ -95,6 +126,7 @@ public class Loader {
 			    	try {
 			    		Extensions result = Extensions.valueOf(name);
 			    		mod = result.create();
+			    		mod.setPath(path);
 			    		elementStack.addLast(mod);
 			    		addAttributes.accept(mod);
 			    		System.out.println("Extension Found");
@@ -103,7 +135,7 @@ public class Loader {
 			    	try {
 			    		//Check if we have a DesignType
 				    	Types result = Types.valueOf(name);
-			    		Element element = result.create();
+			    		DesignElement element = result.create();
 			    		elementStack.getLast().addSubElements(element);
 			    		elementStack.addLast(element);
 			    		addAttributes.accept(element);
@@ -114,27 +146,28 @@ public class Loader {
 			    	
 			    	//Otherwise, we have some kind of subelement for our current DesignType
 			    	ElementName: switch(name) {
-			    	//Note: category cannot equal null at this point because extensions cannot have Events
+			    	/*
 			    	case "Events":
 			    		System.out.println("Events Found");
 			    		Element element = SubElementFactory.createEvents(category);
 			    		elementStack.add(element);
 			    		elementStack.getLast().addSubElements(element);
 			    		break ElementName;
+			    	*/
 			    	default:
 			    		if(elementStack.size() == 0) {
 			    			System.out.println("Skipping Start: First element is unrecognized");
 			    			break ElementName;
 			    		}
-			    		element = elementStack.getLast();
+			    		DesignElement element = elementStack.getLast();
 			    		if(element == null) {
 			    			System.out.println("Null Element Found");
 			    			break ElementName;
 			    		}
-			    		Element add = element.getAddableElement(name);
+			    		DesignElement add = element.getAddableElement(name);
 			    		if(add == null) {
 			    			System.out.println("Adding generic element: " + name);
-			    			add = new Element(name);
+			    			add = new DesignElement(name);
 			    		} else {
 			    			System.out.println("Adding identified element: " + name);
 			    		}
@@ -153,10 +186,15 @@ public class Loader {
 			    	}
 			    	break EventType;
 			    case XMLEvent.CHARACTERS:
-			    	elementStack.getLast().appendText(((Characters) event).getData());
+			    	if(elementStack.size() > 0) {
+			    		elementStack.getLast().appendText(((Characters) event).getData());
+			    	}
 			    	break;
 			    case XMLEvent.COMMENT:
-			    	elementStack.getLast().appendText(((Comment) event).getText());
+			    	if(elementStack.size() > 0) {
+			    		elementStack.getLast().appendText(((Comment) event).getText());
+			    	}
+			    	
 			    	break;
 			    }
 			    

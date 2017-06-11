@@ -14,172 +14,62 @@ public class Attribute {
 	public enum ValueType {
 		UNID {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			public String getInputValue(JComponent field) {
-				return (String) ((JComboBox<String>) field).getSelectedItem();
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		TYPE_ANY {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		TYPE_IMAGE {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 			
 		},
 		TYPE_MOD {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 			
 		},
 		TYPE_SOVEREIGN {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		TYPE_SYSTEM_MAP {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not Supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 			
 		},
 		TYPE_INHERITED {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
 				//WIP
-				field.setEditable(true);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
+				JComboBox<String> field = createComboBox(true, value);
 				return field;
-			}
-			public String getInputValue(JComponent field) {
-				return (String) ((JComboBox<String>) field).getSelectedItem();
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		BOOLEAN {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
+				JComboBox<String> field = createComboBox(false, value);
 				field.addItem("true");
 				field.addItem("false");
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
 				return field;
-			}
-			public String getInputValue(JComponent field) {
-				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
 			@Override
 			public boolean isValid(String value) {
@@ -224,18 +114,6 @@ public class Attribute {
 		            }
 				});
 				return field;
-			}
-
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
 			}
 		},
 		WHOLE {
@@ -295,107 +173,33 @@ public class Attribute {
 			}
 		},
 		HEX_COLOR {
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		STRING {
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				return true;
-			}
 			
 		},
 		FILENAME {
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
-			}
 		},
 		ALIGNMENT {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
-			}
-
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
+				return createComboBox(false, value,
+						"constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"
+						);
 			}
 		},
 		DISPOSITION {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				for(String s : new String[] {"friend", "neutral", "enemy"}) {
-					field.addItem(s);
-				}
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
-			}
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
+				return createComboBox(false, value,
+						"friend", "neutral", "enemy"
+						);
 			}
 			
 		},
 		BLENDING {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = new JComboBox<String>();
-				field.addItem("brighten");
-				field.addItem("");
-				field.setEditable(false);
-				field.setFont(Window.FONT_MEDIUM);
-				field.setSelectedItem(value);
-				return field;
-			}
-
-			@Override
-			public boolean isValid(String value) {
-				// TODO Auto-generated method stub
-				try {
-					throw new Exception("Not supported");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return false;
+				return createComboBox(false, value,
+						"",
+						"brighten"
+						);
 			}
 		},
 		DICE_RANGE {
@@ -474,8 +278,138 @@ public class Attribute {
 				field.setColumns(1);
 				return field;
 			}
+		}, LEVEL_FREQUENCY {
+			public JComponent getInputField(String value) {
+				JTextField field = (JTextField) super.getInputField(value);
+				field.addKeyListener(new KeyAdapter() {
+					public void keyTyped(KeyEvent e) {
+		                String c = "" + e.getKeyChar();
+		               if(c.matches("c|u|r|v| ")) {
+		            	   e.consume();
+		               }
+		            }
+				});
+				field.setColumns(1);
+				return field;
+			}
+		}, FREQUENCY {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"common", "uncommon", "rare", "veryRare", "notRandom"
+						);
+			}
+		}, UNIQUE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"inSystem", "inUniverse"
+						);
+			}
+		}, SCALE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"star", "world", "structure", "ship", "flotsam"
+						);
+			}
+		}, TILE_SIZE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"small",
+						"medium",
+						"large",
+						"huge"
+						);
+			}
+		}, SYSTEMTYPE_BACKGROUND {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"none"
+						);
+			}
+		}, PRICE_ADJ {
+			
+		}, TYPE_STATION {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value);
+			}
+		}, DOCKSCREEN_TYPE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"",
+						"canvas",
+						"itemPicker",
+						"deviceSelector",
+						"weaponsSelector",
+						"armorSelector",
+						"miscSelector",
+						"customItemPicker",
+						"customPicker",
+						"subjugateMinigame"
+						);
+			}
+		}, DOCKSCREEN_BACKGROUND_ID {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"hero",
+						"image",
+						"none",
+						"object",
+						"schematic"
+						);
+			}
+		}, DOCKSCREEN_DATA_FROM {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"player",
+						"source",
+						"station"
+						);
+			}
+		}, FONT {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"Small",
+						"SmallBold",
+						"Medium",
+						"MediumBold",
+						"Large",
+						"LargeBold",
+						"Header",
+						"HeaderBold",
+						"SubTitle",
+						"SubTitleBold",
+						"SubTitleHeavyBold",
+						"Title",
+						"LogoTitle",
+						"ConsoleMediumHeavy"
+						);
+			}
+		}, ALIGN_HORIZONTAL {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"left",
+						"center",
+						"right"
+						);
+			}
+		}, ALIGN_VERTICAL {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"top",
+						"center",
+						"bottom"
+						);
+			}
 		};
-		public abstract boolean isValid(String value);
+		public boolean isValid(String value) {
+			// TODO Auto-generated method stub
+			try {
+				throw new Exception("Not supported");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return false;
+		};
 		public JComponent getInputField(String value) {
 			JTextField field = new JTextField();
 			field.setFont(Window.FONT_MEDIUM);
@@ -489,6 +423,16 @@ public class Attribute {
 				return (String) ((JComboBox<String>) field).getSelectedItem();
 			}
 			return null;
+		}
+		public JComboBox<String> createComboBox(boolean editable, String value, String... choices) {
+			JComboBox<String> field = new JComboBox<String>();
+			for(String s : choices) {
+				field.addItem(s);
+			}
+			field.setEditable(editable);
+			field.setFont(Window.FONT_MEDIUM);
+			field.setSelectedItem(value);
+			return field;
 		}
 	}
 	private String name;
