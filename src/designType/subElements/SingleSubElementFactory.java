@@ -7,6 +7,7 @@ import javax.swing.JTextArea;
 import designType.TypeFactory.Types;
 import designType.subElements.SubElementFactory.AdventureDescElements;
 import designType.subElements.SubElementFactory.DisplayElements;
+import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.MiscElements;
 import designType.subElements.SubElementFactory.SovereignElements;
 import designType.subElements.SubElementFactory.TradeElements;
@@ -299,7 +300,24 @@ public class SingleSubElementFactory {
 		case EffectType:			break;
 		case Image:					break;
 		case ItemTable:				break;
-		case ItemType:				break;
+		case ItemType:
+			DesignElement invoke = new DesignElement("Invoke");
+			invoke.addAttributes(
+					new Attribute("key", CHARACTER),
+					new Attribute("installedOnly", BOOLEAN),
+					new Attribute("uninstalledOnly", BOOLEAN),
+					new Attribute("enabledOnly", BOOLEAN),
+					new Attribute("completeArmorOnly", BOOLEAN),
+					new Attribute("asArmorSet", BOOLEAN)
+					);
+			DesignElement onRefuel = new DesignElement("OnRefuel");
+			DesignElement components = new DesignElement("Components");
+			components.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+			//WIP
+			//Add Armor, Devices, etc
+			return new DesignElement[] {
+					invoke, onRefuel, components
+			};
 		case MissionType:			break;
 		case NameGenerator:			break;
 		case OverlayType:			break;
@@ -314,10 +332,10 @@ public class SingleSubElementFactory {
 		case ShipTable:				break;
 		case Sound:					break;
 		case Sovereign:
-			DesignElement e = new DesignElement("Relationships");
-			e.addOptionalMultipleSubElements(SovereignElements.Relationship);
+			DesignElement relationships = new DesignElement("Relationships");
+			relationships.addOptionalMultipleSubElements(SovereignElements.Relationship);
 			return new DesignElement[] {
-					
+					relationships
 			};
 		case SpaceEnvironmentType:	break;
 		case StationType:			break;
@@ -332,6 +350,23 @@ public class SingleSubElementFactory {
 		};
 	}
 	public static DesignElement[] createSpaceObjectSubElements() {
+		DesignElement names = new DesignElement("Names");
+		names.addAttributes(
+				SubElementFactory.createNameAttributes()
+				);
+		
+		DesignElement items = new DesignElement("Items");
+		items.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+		
+		DesignElement devices = new DesignElement("Devices");
+		
+		DesignElement image = new DesignElement("Image");
+		image.addAttributes(SubElementFactory.createImageAttributes());
+		
+		DesignElement heroImage = new DesignElement("HeroImage");
+		heroImage.addAttributes(SubElementFactory.createImageAttributes());
+		
+		
 		DesignElement dockingPorts = new DesignElement("DockingPorts");
 		dockingPorts.addAttributes(
 				new Attribute("bringToFront", STRING),

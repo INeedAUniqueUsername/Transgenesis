@@ -89,6 +89,83 @@ public class SubElementFactory {
 			return e;
 		}
 	}
+	public static enum ItemGeneratorElements implements SubElementType {
+		Item,
+		Table,
+		RandomItem,
+		Group, Components, Items, AverageValue,
+		Lookup,
+		LevelTable,
+		LocationCriteria,
+		Null;
+
+		@Override
+		public DesignElement create() {
+			// TODO Auto-generated method stub
+			DesignElement e = new DesignElement(name());
+			if(!this.equals(Null)) {
+				e.addAttributes(
+						new Attribute("chance", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
+						new Attribute("count", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
+						new Attribute("criteria", STRING),					//LocationCriteria
+						new Attribute("levelFrequency", LEVEL_FREQUENCY)	//LevelTable
+						);
+			}
+			switch(this) {
+			case Item:
+				e.addAttributes(
+						new Attribute("item", ValueType.TYPE_ITEM),
+						new Attribute("damaged", WHOLE),
+						new Attribute("debugOnly", BOOLEAN),
+						
+						new Attribute("enhanced", WHOLE),
+						new Attribute("enhancement", STRING)
+						);
+				break;
+			case Table:
+				e.addOptionalMultipleSubElements(
+						ItemGeneratorElements.values()
+						);
+				break;
+			case RandomItem:
+				e.addAttributes(
+						new Attribute("criteria", STRING),
+						new Attribute("attributes", STRING),
+						new Attribute("modifiers", STRING),
+						new Attribute("categories", STRING),
+						new Attribute("levelFrequency", LEVEL_FREQUENCY),
+						new Attribute("level", WHOLE),
+						new Attribute("levelCurve", WHOLE),
+						new Attribute("damaged", WHOLE),
+						
+						new Attribute("enhanced", WHOLE),
+						new Attribute("enhancement", STRING)
+						);
+				break;
+			case Group:
+			case Components:
+			case Items:
+			case AverageValue:
+				e.addAttributes(
+						new Attribute("levelValue", ValueType.LEVEL_VALUE),
+						new Attribute("value", WHOLE)
+						);
+				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				break;
+			case Lookup:
+				e.addAttributes(new Attribute("table", ValueType.TYPE_ITEM_TABLE));
+				break;
+			case LevelTable:
+				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				break;
+			case LocationCriteria:
+				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				break;
+			}
+			
+			return e;
+		}
+	}
 	public static enum MiscElements implements SubElementType {
 		Data,
 		;
@@ -166,13 +243,13 @@ public class SubElementFactory {
 		EncounterType,
 		Encounter,
 		Encounters,
-		Events,
+		//Events,
 		HeroImage,
 		Image,
 		ImageEffect,
 		ImageLookup,
 		ImageVariants,
-		Items,
+		//Items,
 		Names,
 		Reinforcements,
 		Satellites,
@@ -222,14 +299,9 @@ public class SubElementFactory {
 				break;
 			case Encounters:
 				break;
-			case Events:
-				break;
-			case HeroImage:
-				e.addAttributes(createImageAttributes());
-				break;
-			case Image:
-				
-				break;
+			//case Events:				break;
+			//case HeroImage:			break;
+			//case Image:				break;
 			case ImageComposite:
 				break;
 			case ImageEffect:
@@ -238,10 +310,8 @@ public class SubElementFactory {
 				break;
 			case ImageVariants:
 				break;
-			case Items:
-				break;
-			case Names:
-				break;
+			//case Items:				break;
+			//case Names:				break;
 			case Reinforcements:
 				break;
 			case Satellites:
@@ -379,6 +449,18 @@ public class SubElementFactory {
 				new Attribute("rotationOffset", INTEGER),
 				new Attribute("xOffset", INTEGER),
 				new Attribute("yOffset", INTEGER)
+		};
+	}
+	public static Attribute[] createNameAttributes() {
+		return new Attribute[] {
+				new Attribute("definiteArticle", BOOLEAN),
+				new Attribute("firstPlural", BOOLEAN),
+				new Attribute("esPlural", BOOLEAN),
+				new Attribute("customPlural", BOOLEAN),
+				new Attribute("secondPlural", BOOLEAN),
+				new Attribute("reverseArticle", BOOLEAN),
+				new Attribute("noArticle", BOOLEAN),
+				new Attribute("personalName", BOOLEAN)
 		};
 	}
 }

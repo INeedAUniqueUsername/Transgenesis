@@ -81,8 +81,8 @@ public class Frame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
-		String dir = JOptionPane.showInputDialog("Specify mod directory");
+		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
+		//String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new DesignElement(dir));
 		for(TranscendenceMod tm : mods) {

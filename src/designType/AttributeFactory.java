@@ -59,7 +59,36 @@ public class AttributeFactory {
 		case ItemTable:
 			break;
 		case ItemType:
-			break;
+			return new Attribute[] {
+					new Attribute("ammoCharges", BOOLEAN),
+					new Attribute("charges", WHOLE),
+					new Attribute("data", STRING),
+					new Attribute("enhancement", STRING),
+					new Attribute("frequency", FREQUENCY),
+					new Attribute("level", WHOLE),
+					new Attribute("massBonusPerCharge", WHOLE),
+					new Attribute("noSaleIfUsed", BOOLEAN),
+					new Attribute("name", STRING),
+					new Attribute("numberAppearing", WHOLE),
+					new Attribute("pluralName", STRING),
+					new Attribute("reverseArticle", BOOLEAN),
+					new Attribute("secondPlural", BOOLEAN),
+					new Attribute("showReference", BOOLEAN),
+					new Attribute("sortName", STRING),
+					new Attribute("UNID", UNID),
+					new Attribute("unknownType", TYPE_ITEM),
+					new Attribute("useAsArmorSet", BOOLEAN),
+					new Attribute("useCompleteArmorOnly", BOOLEAN),
+					new Attribute("useEnabledOnly", BOOLEAN),
+					new Attribute("useInstalledOnly", BOOLEAN),
+					new Attribute("useKey", CHARACTER),
+					new Attribute("useScreen", ValueType.TYPE_DOCKSCREEN),
+					new Attribute("useUninstalledOnly", BOOLEAN),
+					new Attribute("value", WHOLE),
+					new Attribute("valueBonusPerCharge", WHOLE),
+					new Attribute("valueCharges", BOOLEAN),
+					new Attribute("virtual", BOOLEAN),
+			};
 		case MissionType:
 			return new Attribute[] {
 					new Attribute("allowPlayerDelete", BOOLEAN, "false"),

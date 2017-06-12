@@ -399,6 +399,37 @@ public class Attribute {
 						"bottom"
 						);
 			}
+		}, TYPE_ITEM {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				return field;
+			}
+		}, LEVEL_VALUE {
+			public JComponent getInputField(String value) {
+				JTextField field = (JTextField) super.getInputField(value);
+				field.addKeyListener(new KeyAdapter() {
+					public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		               if(!Character.isDigit(c) || c != ',') {
+		            	   e.consume();
+		               }
+		            }
+				});
+				return field;
+			}
+		}, TYPE_ITEM_TABLE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				return field;
+			}
+		}, TYPE_DOCKSCREEN {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				return field;
+			}
 		};
 		public boolean isValid(String value) {
 			// TODO Auto-generated method stub
