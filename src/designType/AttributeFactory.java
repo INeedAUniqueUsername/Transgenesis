@@ -109,12 +109,16 @@ public class AttributeFactory {
 			break;
 		case OverlayType:
 			return new Attribute[] {
-					new Attribute("disarm", BOOLEAN, "false"),
-					new Attribute("paralyze", BOOLEAN, "false"),
-					new Attribute("spin", BOOLEAN, "false"),
-					new Attribute("drag", INTEGER, "100"),
-					new Attribute("absorbAdj", INTEGER_SEQUENCE, "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0"),
-					new Attribute("weaponSuppress", STRING, "")
+					new Attribute("ignoreSourceRotation", BOOLEAN),
+					new Attribute("absorbAdj", INTEGER_SEQUENCE),
+					new Attribute("weaponBonusAdj", INTEGER_SEQUENCE),
+					new Attribute("weaponSuppress", STRING),
+					new Attribute("shieldOverlay", BOOLEAN),
+					new Attribute("disarm", BOOLEAN),
+					new Attribute("paralyze", BOOLEAN),
+					new Attribute("disableShipScreen", BOOLEAN),
+					new Attribute("spin", BOOLEAN),
+					new Attribute("drag", WHOLE)
 			};
 		case Power:
 			return new Attribute[] {

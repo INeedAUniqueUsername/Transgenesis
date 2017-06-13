@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 import javax.xml.stream.XMLEventReader;
@@ -82,6 +83,7 @@ public class Loader {
 			
 			LinkedList<DesignElement> elementStack = new LinkedList<DesignElement>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
+			TreeMap<String, String> unid_map = new TreeMap<>();
 			Read: while (reader.hasNext()) {
 			    XMLEvent event = reader.nextEvent();
 			    /*
@@ -107,7 +109,10 @@ public class Loader {
 			    */
 			    EventType: switch(event.getEventType()) {
 			    case XMLEvent.ENTITY_DECLARATION:
-			    	EntityDeclaration b;
+			    	EntityDeclaration b = (EntityDeclaration) event;
+			    	unid_map.put(b.getName(), b.getReplacementText());
+			    	System.out.println("Entity: " + b.getName() + "=" + b.getReplacementText());
+			    	System.exit(0);
 			    	break;
 			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
@@ -192,13 +197,14 @@ public class Loader {
 			    	break;
 			    case XMLEvent.COMMENT:
 			    	if(elementStack.size() > 0) {
-			    		elementStack.getLast().appendText(((Comment) event).getText());
+			    		elementStack.getLast().appendText("<!--" + ((Comment) event).getText() + "-->");
 			    	}
 			    	
 			    	break;
 			    }
 			    
 			}
+			mod.setUNIDMap(unid_map);
 			
 			/*
 			lines = lines.replaceAll("&", "AMPERSAND");
@@ -214,6 +220,8 @@ public class Loader {
 		    xmlReader.parse(new InputSource(new StringReader(lines)));
 		    */
 		} catch (IOException | XMLStreamException e) {
+			System.out.println("Encountered error; mod loading cancelled");
+			mod = null;
 			e.printStackTrace();
 		}
 		return mod;

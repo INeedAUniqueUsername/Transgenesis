@@ -6,13 +6,19 @@ import java.util.TreeMap;
 import xml.Attribute;
 import xml.DesignElement;
 public class TranscendenceMod extends DesignElement {
-	TreeMap<String, String> unid_index;
-	File path;
+	private TreeMap<String, String> unid_index;
+	private File path;
 	public TranscendenceMod(String name) {
 		super(name);
+		unid_index = new TreeMap<String, String>();
 		path = null;
 	}
-	
+	public void addUNID(String entity, String unid) {
+		unid_index.put(entity, unid);
+	}
+	public void setUNIDMap(TreeMap<String, String> unid_map) {
+		unid_index = unid_map;
+	}
 	public String getDisplayName() {
 		for(Attribute a : new Attribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
 			if(a == null) {
@@ -28,7 +34,7 @@ public class TranscendenceMod extends DesignElement {
 		}
 		return super.getDisplayName();
 	}
-
+	
 	public void setPath(File absolutePath) {
 		// TODO Auto-generated method stub
 		path = absolutePath;

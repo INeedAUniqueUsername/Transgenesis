@@ -166,12 +166,23 @@ public class SubElementFactory {
 			return e;
 		}
 	}
+	public static enum EffectElements implements SubElementType {
+		;
+
+		@Override
+		public DesignElement create() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
 	public static enum MiscElements implements SubElementType {
 		Data,
 		;
 		public DesignElement create() {
 			DesignElement e = new DesignElement(name());
 			e.addAttributes(new Attribute("id", STRING));
+			e.addAttributes(new Attribute("data", STRING));
 			return e;
 		}
 	}
@@ -462,5 +473,10 @@ public class SubElementFactory {
 				new Attribute("noArticle", BOOLEAN),
 				new Attribute("personalName", BOOLEAN)
 		};
+	}
+	
+	//WIP
+	public static DesignElement createEffects() {
+		return new DesignElement("Effects");
 	}
 }

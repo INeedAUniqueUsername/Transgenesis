@@ -45,12 +45,13 @@ public class DesignElement {
 	private final String name;
 	private final TreeMap<String, Attribute> attributes;		
 	private final List<DesignElement> subElements;
-	String text;
+	private String text;
 	
 	private final List<Attribute> requiredAttributes;				//Must be defined
 	private final List<DesignElement> requiredSingleSubElements;			//Must have 1 of each
 	private final List<DesignElement> optionalSingleSubElements;			//Can have 0 or 1 of each
 	private final List<SubElementType> optionalMultipleSubElements;		//Can have 0, 1, or more of each
+	
 	public DesignElement() {
 		this.name = getClass().getSimpleName();
 		
@@ -72,6 +73,16 @@ public class DesignElement {
 		requiredSingleSubElements = new ArrayList<DesignElement>();
 		optionalSingleSubElements = new ArrayList<DesignElement>();
 		optionalMultipleSubElements = new ArrayList<SubElementType>();
+	}
+	public DesignElement(DesignElement source, String name) {
+		this.name = name;
+		attributes = source.attributes;
+		subElements = source.subElements;
+		text = "";
+		requiredAttributes = source.requiredAttributes;
+		requiredSingleSubElements = source.requiredSingleSubElements;
+		optionalSingleSubElements = source.optionalSingleSubElements;
+		optionalMultipleSubElements = source.optionalMultipleSubElements;
 	}
 	public void addOptionalSingleSubElements(DesignElement...subelements) {
 		optionalSingleSubElements.addAll(Arrays.asList(subelements));
@@ -127,6 +138,9 @@ public class DesignElement {
 	}
 	public List<Attribute> getAttributes() {
 		return new ArrayList<Attribute>(attributes.values());
+	}
+	public TreeMap<String, Attribute> getAttributesMap() {
+		return attributes;
 	}
 	public List<DesignElement> getSubElements() {
 		return subElements;

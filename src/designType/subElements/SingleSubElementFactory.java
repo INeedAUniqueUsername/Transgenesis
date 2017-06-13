@@ -7,6 +7,7 @@ import javax.swing.JTextArea;
 import designType.TypeFactory.Types;
 import designType.subElements.SubElementFactory.AdventureDescElements;
 import designType.subElements.SubElementFactory.DisplayElements;
+import designType.subElements.SubElementFactory.EffectElements;
 import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.MiscElements;
 import designType.subElements.SubElementFactory.SovereignElements;
@@ -313,14 +314,32 @@ public class SingleSubElementFactory {
 			DesignElement onRefuel = new DesignElement("OnRefuel");
 			DesignElement components = new DesignElement("Components");
 			components.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+			
+			DesignElement initialData = new DesignElement("InitialData");
+			initialData.addOptionalMultipleSubElements(MiscElements.Data);
 			//WIP
 			//Add Armor, Devices, etc
 			return new DesignElement[] {
-					invoke, onRefuel, components
+					invoke, onRefuel, components, initialData
 			};
 		case MissionType:			break;
 		case NameGenerator:			break;
-		case OverlayType:			break;
+		case OverlayType:
+			DesignElement effect = new DesignElement(SubElementFactory.createEffects, "Effect");
+			DesignElement hitEffect = new DesignElement(EffectElements.values(), "HitEffect");
+			DesignElement effectWhenHit = new DesignElement(EffectElements.values(), "EffectWhenHit");
+			effectWhenHit.addAttributes(new Attribute("altEffect", BOOLEAN));
+			DesignElement counter = new DesignElement("Counter");
+			counter.addAttributes(
+					new Attribute("style", ValueType.OVERLAY_COUNTER_STTYLE),
+					new Attribute("label", STRING),
+					new Attribute("max", WHOLE),
+					new Attribute("color", HEX_COLOR),
+					new Attribute("showOnMap", BOOLEAN)
+					);
+			return new DesignElement[] {
+				effect, hitEffect, effectWhenHit, counter
+			};
 		case Power:
 			return new DesignElement[] {
 					new DesignElement("OnShow"),
@@ -366,6 +385,8 @@ public class SingleSubElementFactory {
 		DesignElement heroImage = new DesignElement("HeroImage");
 		heroImage.addAttributes(SubElementFactory.createImageAttributes());
 		
+		DesignElement initialData = new DesignElement("InitialData");
+		initialData.addOptionalMultipleSubElements(MiscElements.Data);
 		
 		DesignElement dockingPorts = new DesignElement("DockingPorts");
 		dockingPorts.addAttributes(
@@ -400,7 +421,6 @@ public class SingleSubElementFactory {
 	public static enum DataElements implements SubElementType {
 		StaticData,
 		GlobalData,
-		InitialData,
 		;
 		@Override
 		public DesignElement create() {

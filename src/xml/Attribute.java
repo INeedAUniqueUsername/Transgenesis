@@ -430,6 +430,12 @@ public class Attribute {
 				JComboBox<String> field = createComboBox(true, value);
 				return field;
 			}
+		}, OVERLAY_COUNTER_STTYLE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value, "commandBarProgress", "flag", "progress", "radius");
+				return field;
+			}
 		};
 		public boolean isValid(String value) {
 			// TODO Auto-generated method stub
