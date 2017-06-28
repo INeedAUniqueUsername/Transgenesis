@@ -7,14 +7,101 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 
+import designType.Types;
 import window.Frame;
 import window.Window;
-import xml.Attribute;
+import xml.DesignAttribute;
 import xml.DesignElement;
-import xml.Attribute.ValueType;
-import static xml.Attribute.ValueType.*;
-
+import xml.RenameableElement;
+import xml.DesignAttribute.ValueType;
+import static xml.DesignAttribute.ValueType.*;
+import static xml.DesignAttribute.*;
 public class SubElementFactory {
+	public enum DockScreensElements implements SubElementType {
+		DockScreen_Named, Pane_Named, Action;
+		
+		@Override
+		public DesignElement create() {
+			DesignElement e = null;
+			switch(this) {
+			case DockScreen_Named:
+				e = new RenameableElement("DockScreen");
+				e.addOptionalSingleSubElements(SingleSubElementFactory.createSingleSubElementsForType(Types.DockScreen));
+				break;
+			case Pane_Named:
+				e = new RenameableElement("Pane");
+				e.addAttributes(
+						att("layout", LAYOUT),
+						att("desc", STRING),
+						att("noListNavigation", BOOLEAN),
+						att("showCounter", BOOLEAN),
+						att("showTextInput", BOOLEAN)
+						);
+				DesignElement controls = new DesignElement("Controls");
+				for(String name : new String[] {"Counter", "ItemDisplay", "ItemListDisplay", "Text", "TextInput"}) {
+					DesignElement subelement = new DesignElement(name);
+					subelement.addAttributes(
+							att("id", STRING),
+							att("style", STYLE_CONTROLS)
+							);
+					controls.addOptionalSingleSubElements(subelement);
+				}
+				DesignElement actions = new DesignElement("Actions");
+				actions.addOptionalMultipleSubElements(DockScreensElements.Action);
+				e.addOptionalSingleSubElements(
+						new DesignElement("OnPaneInit"),
+						new DesignElement("Initialize"),
+						controls,
+						actions
+						);
+				break;
+			case Action:
+				e = new DesignElement("Action");
+				e.addAttributes(
+						att("name", STRING),
+						att("id", STRING),
+						att("descID", STRING),
+						att("prevKey", BOOLEAN),
+						att("nextKey", BOOLEAN),
+						att("default", BOOLEAN),
+						att("cancel", BOOLEAN),
+						att("key", CHARACTER),
+						att("minor", BOOLEAN)
+						
+						);
+				DesignElement navigate = new DesignElement("Navigate");
+				navigate.addAttributes(att("screen", STRING));
+				DesignElement showPane = new DesignElement("ShowPane");
+				showPane.addAttributes(att("pane", STRING));
+				e.addOptionalSingleSubElements(
+						navigate,
+						showPane,
+						new DesignElement("Exit")
+						);
+				break;
+			}
+			return e;
+		}
+	}
+	public enum DisplayAttributesElements implements SubElementType {
+		ItemAttribute;
+
+		@Override
+		public DesignElement create() {
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			case ItemAttribute:
+				e.addAttributes(
+						att("label", STRING),
+						att("criteria", STRING),
+						att("labelType", LABEL_TYPE)
+						);
+				break;
+			};
+			return e;
+		}
+		
+	}
 	public static enum AdventureDescElements implements SubElementType {
 		EncounterOverrides,
 
@@ -28,13 +115,13 @@ public class SubElementFactory {
 			switch(this) {
 			case EncounterOverrides:
 				result = StationTypeElements.Encounter.create();
-				result.addAttributes(new Attribute("unid", TYPE_STATION));
+				result.addAttributes(att("unid", TYPE_STATION));
 				break;
 			case ArmorDamageAdj:
 			case ShieldDamageAdj:
 				result.addAttributes(
-						new Attribute("level", WHOLE),
-						new Attribute("damageAdj", STRING)
+						att("level", WHOLE),
+						att("damageAdj", STRING)
 						);
 				break;
 			default:
@@ -54,35 +141,35 @@ public class SubElementFactory {
 			switch(this) {
 			case Group:
 				e.addAttributes(
-						new Attribute("left", INTEGER),
-						new Attribute("top", INTEGER),
-						new Attribute("width", INTEGER),
-						new Attribute("height", INTEGER),
-						new Attribute("center", INTEGER),
-						new Attribute("vcenter", INTEGER)
+						att("left", INTEGER),
+						att("top", INTEGER),
+						att("width", INTEGER),
+						att("height", INTEGER),
+						att("center", INTEGER),
+						att("vcenter", INTEGER)
 						);
 				break;
 			case Text:
 				e.addAttributes(
-						new Attribute("id", STRING),
-						new Attribute("left", INTEGER),
-						new Attribute("right", INTEGER),
-						new Attribute("top", INTEGER),
-						new Attribute("bottom", INTEGER),
-						new Attribute("font", FONT),
-						new Attribute("color", HEX_COLOR),
-						new Attribute("align", ALIGN_HORIZONTAL)
+						att("id", STRING),
+						att("left", INTEGER),
+						att("right", INTEGER),
+						att("top", INTEGER),
+						att("bottom", INTEGER),
+						att("font", FONT),
+						att("color", HEX_COLOR),
+						att("align", ALIGN_HORIZONTAL)
 						);
 				break;
 			case Image:
 				e.addAttributes(
-						new Attribute("left", INTEGER),
-						new Attribute("right", INTEGER),
-						new Attribute("top", INTEGER),
-						new Attribute("bottom", INTEGER),
-						new Attribute("align", ALIGN_HORIZONTAL),
-						new Attribute("valign", ALIGN_VERTICAL),
-						new Attribute("transparent", BOOLEAN)
+						att("left", INTEGER),
+						att("right", INTEGER),
+						att("top", INTEGER),
+						att("bottom", INTEGER),
+						att("align", ALIGN_HORIZONTAL),
+						att("valign", ALIGN_VERTICAL),
+						att("transparent", BOOLEAN)
 						);
 				break;
 			}
@@ -105,21 +192,21 @@ public class SubElementFactory {
 			DesignElement e = new DesignElement(name());
 			if(!this.equals(Null)) {
 				e.addAttributes(
-						new Attribute("chance", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
-						new Attribute("count", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
-						new Attribute("criteria", STRING),					//LocationCriteria
-						new Attribute("levelFrequency", LEVEL_FREQUENCY)	//LevelTable
+						att("chance", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
+						att("count", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
+						att("criteria", STRING),					//LocationCriteria
+						att("levelFrequency", LEVEL_FREQUENCY)	//LevelTable
 						);
 			}
 			switch(this) {
 			case Item:
 				e.addAttributes(
-						new Attribute("item", ValueType.TYPE_ITEM),
-						new Attribute("damaged", WHOLE),
-						new Attribute("debugOnly", BOOLEAN),
+						att("item", ValueType.TYPE_ITEM),
+						att("damaged", WHOLE),
+						att("debugOnly", BOOLEAN),
 						
-						new Attribute("enhanced", WHOLE),
-						new Attribute("enhancement", STRING)
+						att("enhanced", WHOLE),
+						att("enhancement", STRING)
 						);
 				break;
 			case Table:
@@ -129,17 +216,17 @@ public class SubElementFactory {
 				break;
 			case RandomItem:
 				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("attributes", STRING),
-						new Attribute("modifiers", STRING),
-						new Attribute("categories", STRING),
-						new Attribute("levelFrequency", LEVEL_FREQUENCY),
-						new Attribute("level", WHOLE),
-						new Attribute("levelCurve", WHOLE),
-						new Attribute("damaged", WHOLE),
+						att("criteria", STRING),
+						att("attributes", STRING),
+						att("modifiers", STRING),
+						att("categories", STRING),
+						att("levelFrequency", LEVEL_FREQUENCY),
+						att("level", WHOLE),
+						att("levelCurve", WHOLE),
+						att("damaged", WHOLE),
 						
-						new Attribute("enhanced", WHOLE),
-						new Attribute("enhancement", STRING)
+						att("enhanced", WHOLE),
+						att("enhancement", STRING)
 						);
 				break;
 			case Group:
@@ -147,13 +234,13 @@ public class SubElementFactory {
 			case Items:
 			case AverageValue:
 				e.addAttributes(
-						new Attribute("levelValue", ValueType.LEVEL_VALUE),
-						new Attribute("value", WHOLE)
+						att("levelValue", ValueType.LEVEL_VALUE),
+						att("value", WHOLE)
 						);
 				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
 				break;
 			case Lookup:
-				e.addAttributes(new Attribute("table", ValueType.TYPE_ITEM_TABLE));
+				e.addAttributes(att("table", ValueType.TYPE_ITEM_TABLE));
 				break;
 			case LevelTable:
 				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
@@ -180,9 +267,9 @@ public class SubElementFactory {
 		Data,
 		;
 		public DesignElement create() {
-			DesignElement e = new DesignElement(name());
-			e.addAttributes(new Attribute("id", STRING));
-			e.addAttributes(new Attribute("data", STRING));
+			DesignElement e = new RenameableElement(name());
+			e.addAttributes(att("id", STRING));
+			e.addAttributes(att("data", STRING));
 			return e;
 		}
 	}
@@ -206,14 +293,14 @@ public class SubElementFactory {
 		public DesignElement create() {
 			DesignElement e = new DesignElement(name());
 			e.addAttributes(
-					new Attribute("actualPrice", BOOLEAN),
-					new Attribute("criteria", STRING),
-					new Attribute("inventoryAdj", WHOLE),
-					new Attribute("messageID", STRING),
-					new Attribute("priceAdj", PRICE_ADJ),					
-					new Attribute("noDescription", BOOLEAN),
-					new Attribute("upgradeInstallOnly", BOOLEAN),
-					new Attribute("levelFrequency", LEVEL_FREQUENCY)
+					att("actualPrice", BOOLEAN),
+					att("criteria", STRING),
+					att("inventoryAdj", WHOLE),
+					att("messageID", STRING),
+					att("priceAdj", PRICE_ADJ),					
+					att("noDescription", BOOLEAN),
+					att("upgradeInstallOnly", BOOLEAN),
+					att("levelFrequency", LEVEL_FREQUENCY)
 					);
 			//All trade elements have the same attributes
 			return e;
@@ -232,9 +319,9 @@ public class SubElementFactory {
 			switch(this) {
 			case Relationship:
 				e.addAttributes(
-						new Attribute("sovereign", TYPE_SOVEREIGN),
-						new Attribute("disposition", DISPOSITION),
-						new Attribute("mutual", BOOLEAN)
+						att("sovereign", TYPE_SOVEREIGN),
+						att("disposition", DISPOSITION),
+						att("mutual", BOOLEAN)
 						);
 				break;
 			}
@@ -249,7 +336,6 @@ public class SubElementFactory {
 		Construction,
 		Devices,
 		
-		DockScreens,
 		EncounterGroup,
 		EncounterType,
 		Encounter,
@@ -283,22 +369,20 @@ public class SubElementFactory {
 				break;
 			case Devices:
 				break;
-			case DockScreens:
-				break;
 			case EncounterGroup:
 				break;
 			case EncounterType:
 				break;
 			case Encounter:
 				e.addAttributes(
-						new Attribute("enemyExclusionRadius", WHOLE),
-						new Attribute("exclusionRadius", WHOLE),
-						new Attribute("levelFrequency", LEVEL_FREQUENCY),
-						new Attribute("locationCriteria", STRING),
-						new Attribute("maxAppearing", WHOLE),
-						new Attribute("minAppearing", WHOLE),
-						new Attribute("systemCriteria", STRING),
-						new Attribute("unique", UNIQUE)
+						att("enemyExclusionRadius", WHOLE),
+						att("exclusionRadius", WHOLE),
+						att("levelFrequency", LEVEL_FREQUENCY),
+						att("locationCriteria", STRING),
+						att("maxAppearing", WHOLE),
+						att("minAppearing", WHOLE),
+						att("systemCriteria", STRING),
+						att("unique", UNIQUE)
 						);
 				DesignElement criteria = new DesignElement("Criteria");
 				criteria.addOptionalMultipleSubElements(
@@ -354,29 +438,29 @@ public class SubElementFactory {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Attributes:
-				e.addAttributes(new Attribute("criteria", STRING));
+				e.addAttributes(att("criteria", STRING));
 				break;
 			case Chance:
-				e.addAttributes(new Attribute("chance", WHOLE));
+				e.addAttributes(att("chance", WHOLE));
 				break;
 			case DistanceBetweenNodes:
 				e.addAttributes(
-						new Attribute("min", WHOLE),
-						new Attribute("max", WHOLE)
+						att("min", WHOLE),
+						att("max", WHOLE)
 						);
 				break;
 			case DistanceTo:
 				e.addAttributes(
-						new Attribute("criteria", STRING),
-						new Attribute("nodeID", STRING),
-						new Attribute("min", WHOLE),
-						new Attribute("max", WHOLE)
+						att("criteria", STRING),
+						att("nodeID", STRING),
+						att("min", WHOLE),
+						att("max", WHOLE)
 						);
 				break;
 			case StargateCount:
 				e.addAttributes(
-						new Attribute("min", WHOLE),
-						new Attribute("max", WHOLE)
+						att("min", WHOLE),
+						att("max", WHOLE)
 						);
 				break;
 			default:
@@ -393,10 +477,10 @@ public class SubElementFactory {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Library:
-				e.addAttributes(new Attribute("unid", TYPE_MOD));
+				e.addAttributes(att("unid", TYPE_MOD));
 				break;
 			case Module:
-				e.addAttributes(new Attribute("filename", STRING));
+				e.addAttributes(att("filename", STRING));
 				break;
 			}
 			return e;
@@ -441,37 +525,37 @@ public class SubElementFactory {
 		break;
 	}
 	*/
-	public static Attribute[] createImageAttributes() {
-		return new Attribute[] {
-				new Attribute("imageID", TYPE_IMAGE),
-				new Attribute("imageX", WHOLE),
-				new Attribute("imageY", WHOLE),
-				new Attribute("imageWidth", WHOLE),
-				new Attribute("imageHeight", WHOLE),
-				new Attribute("imageFrameCount", WHOLE),
-				new Attribute("rotationCount", WHOLE),
-				new Attribute("rotationColumns", WHOLE),
-				new Attribute("animationColumns", WHOLE),
-				new Attribute("imageTicksPerFrame", WHOLE),
-				new Attribute("flashTicks", WHOLE),
-				new Attribute("blending", BLENDING),
-				new Attribute("viewportRatio", DECIMAL),
-				new Attribute("viewportSize", INTEGER),
-				new Attribute("rotationOffset", INTEGER),
-				new Attribute("xOffset", INTEGER),
-				new Attribute("yOffset", INTEGER)
+	public static DesignAttribute[] createImageAttributes() {
+		return new DesignAttribute[] {
+				att("imageID", TYPE_IMAGE),
+				att("imageX", WHOLE),
+				att("imageY", WHOLE),
+				att("imageWidth", WHOLE),
+				att("imageHeight", WHOLE),
+				att("imageFrameCount", WHOLE),
+				att("rotationCount", WHOLE),
+				att("rotationColumns", WHOLE),
+				att("animationColumns", WHOLE),
+				att("imageTicksPerFrame", WHOLE),
+				att("flashTicks", WHOLE),
+				att("blending", BLENDING),
+				att("viewportRatio", DECIMAL),
+				att("viewportSize", INTEGER),
+				att("rotationOffset", INTEGER),
+				att("xOffset", INTEGER),
+				att("yOffset", INTEGER)
 		};
 	}
-	public static Attribute[] createNameAttributes() {
-		return new Attribute[] {
-				new Attribute("definiteArticle", BOOLEAN),
-				new Attribute("firstPlural", BOOLEAN),
-				new Attribute("esPlural", BOOLEAN),
-				new Attribute("customPlural", BOOLEAN),
-				new Attribute("secondPlural", BOOLEAN),
-				new Attribute("reverseArticle", BOOLEAN),
-				new Attribute("noArticle", BOOLEAN),
-				new Attribute("personalName", BOOLEAN)
+	public static DesignAttribute[] createNameAttributes() {
+		return new DesignAttribute[] {
+				att("definiteArticle", BOOLEAN),
+				att("firstPlural", BOOLEAN),
+				att("esPlural", BOOLEAN),
+				att("customPlural", BOOLEAN),
+				att("secondPlural", BOOLEAN),
+				att("reverseArticle", BOOLEAN),
+				att("noArticle", BOOLEAN),
+				att("personalName", BOOLEAN)
 		};
 	}
 	

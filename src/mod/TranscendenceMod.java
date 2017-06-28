@@ -3,7 +3,7 @@ package mod;
 import java.io.File;
 import java.util.TreeMap;
 
-import xml.Attribute;
+import xml.DesignAttribute;
 import xml.DesignElement;
 public class TranscendenceMod extends DesignElement {
 	private TreeMap<String, String> unid_index;
@@ -20,7 +20,7 @@ public class TranscendenceMod extends DesignElement {
 		unid_index = unid_map;
 	}
 	public String getDisplayName() {
-		for(Attribute a : new Attribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
+		for(DesignAttribute a : new DesignAttribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
 			if(a == null) {
 				continue;
 			}

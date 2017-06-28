@@ -4,9 +4,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import designType.TypeFactory.Types;
+import designType.Types;
 import designType.subElements.SubElementFactory.AdventureDescElements;
 import designType.subElements.SubElementFactory.DisplayElements;
+import designType.subElements.SubElementFactory.DockScreensElements;
 import designType.subElements.SubElementFactory.EffectElements;
 import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.MiscElements;
@@ -14,11 +15,12 @@ import designType.subElements.SubElementFactory.SovereignElements;
 import designType.subElements.SubElementFactory.TradeElements;
 import window.Frame;
 import window.Window;
-import xml.Attribute;
-import xml.Attribute.ValueType;
-import xml.DesignElement;
-import static xml.Attribute.ValueType.*;
+import xml.DesignAttribute;
+import xml.DesignAttribute.ValueType;
 
+import xml.DesignElement;
+import static xml.DesignAttribute.ValueType.*;
+import static xml.DesignAttribute.*;
 public class SingleSubElementFactory {
 
 	//Done
@@ -54,7 +56,28 @@ public class SingleSubElementFactory {
 		case EffectType:			break;
 		case Image:					break;
 		case ItemTable:				break;
-		case ItemType:				break;
+		case ItemType:
+			e.addOptionalSingleSubElements(
+					new Event("CanBeInstalled"),
+					new Event("CanBeUninstalled"),
+					new Event("OnAddedAsEnhancement"),
+					new Event("OnDisable"),
+					new Event("OnEnable"),
+					
+					new Event("GetDescription"),
+					new Event("GetName"),
+					new Event("GetTradePrice"),
+					
+					new Event("OnInstall"),
+					new Event("OnObjDestroyed"),
+					new Event("OnReactorOverload"),
+					
+					new Event("OnRefuel"),
+					
+					new Event("OnRemovedAsEnhancement"),
+					new Event("OnUninstall")
+					);
+			break;
 		case MissionType:
 			e.addOptionalSingleSubElements(
 					new Event("OnCreate"),
@@ -254,18 +277,18 @@ public class SingleSubElementFactory {
 			DesignElement list = new DesignElement("List");
 			for(DesignElement e : new DesignElement[] {listOptions, list}) {
 				e.addAttributes(
-						new Attribute("dataFrom", ValueType.DOCKSCREEN_DATA_FROM),
-						new Attribute("criteria", STRING),
-						new Attribute("list", STRING),
-						new Attribute("initialItem", STRING),
-						new Attribute("rowHeight", WHOLE),
-						new Attribute("noArmorSpeedDisplay", BOOLEAN),
-						new Attribute("slotName", STRING),
-						new Attribute("noEmptySlots", BOOLEAN),
-						new Attribute("posX", INTEGER),
-						new Attribute("posY", INTEGER),
-						new Attribute("width", WHOLE),
-						new Attribute("height", WHOLE)
+						att("dataFrom", ValueType.DOCKSCREEN_DATA_FROM),
+						att("criteria", STRING),
+						att("list", STRING),
+						att("initialItem", STRING),
+						att("rowHeight", WHOLE),
+						att("noArmorSpeedDisplay", BOOLEAN),
+						att("slotName", STRING),
+						att("noEmptySlots", BOOLEAN),
+						att("posX", INTEGER),
+						att("posY", INTEGER),
+						att("width", WHOLE),
+						att("height", WHOLE)
 						);
 			}
 			Event onScreenInit = new Event("OnScreenInit");
@@ -274,10 +297,10 @@ public class SingleSubElementFactory {
 			Event onScreenUpdate = new Event("OnScreenUpdate");
 			DesignElement display = new DesignElement("Display");
 			display.addAttributes(
-					new Attribute("display", STRING),
-					new Attribute("animate", STRING),
-					new Attribute("type", DOCKSCREEN_TYPE),
-					new Attribute("dataFrom", DOCKSCREEN_DATA_FROM)
+					att("display", STRING),
+					att("animate", STRING),
+					att("type", DOCKSCREEN_TYPE),
+					att("dataFrom", DOCKSCREEN_DATA_FROM)
 					);
 			display.addOptionalSingleSubElements(
 					new Event("OnDisplayInit")
@@ -287,13 +310,14 @@ public class SingleSubElementFactory {
 					);
 			DesignElement canvas = new DesignElement("Canvas");
 			canvas.addAttributes(
-					new Attribute("left", INTEGER),
-					new Attribute("right", INTEGER),
-					new Attribute("top", INTEGER),
-					new Attribute("bottom", INTEGER)
+					att("left", INTEGER),
+					att("right", INTEGER),
+					att("top", INTEGER),
+					att("bottom", INTEGER)
 					);
 			//WIP
 			DesignElement panes = new DesignElement("Panes");
+			panes.addOptionalMultipleSubElements(DockScreensElements.Pane_Named);
 			return new DesignElement[] {
 				listOptions, list, onScreenInit, onInit, initialPane, onScreenUpdate, display, canvas, panes
 			};
@@ -302,40 +326,195 @@ public class SingleSubElementFactory {
 		case Image:					break;
 		case ItemTable:				break;
 		case ItemType:
-			DesignElement invoke = new DesignElement("Invoke");
-			invoke.addAttributes(
-					new Attribute("key", CHARACTER),
-					new Attribute("installedOnly", BOOLEAN),
-					new Attribute("uninstalledOnly", BOOLEAN),
-					new Attribute("enabledOnly", BOOLEAN),
-					new Attribute("completeArmorOnly", BOOLEAN),
-					new Attribute("asArmorSet", BOOLEAN)
+			DesignElement
+			armor = new DesignElement("Armor"),
+			autoDefenseDevice = new DesignElement("AutpDefenseDevice"),
+			cargoHoldDevice = new DesignElement("CargoHoldDevice"),
+			components = new DesignElement("Components"),
+			cyberDeckDevice = new DesignElement("CyberDeckDevice"),
+			driveDevice = new DesignElement("DriveDevice"),
+			enhancerDevice = new DesignElement("EnhancerDevice"),
+			image = new DesignElement("Image"),
+			initialData = new DesignElement("InitialData"),
+			invoke = new DesignElement("Invoke"),
+			miscellaneousDevice = new DesignElement("MiscellaneousDevice"),
+			missile = new DesignElement("Missile"),
+			names = new DesignElement("Names"),
+			reactorDevice = new DesignElement("ReactorDevice"),
+			repairerDevice = new DesignElement("RepairerDevice"),
+			shields = new DesignElement("Shields"),
+			solarDevice = new DesignElement("SolarDevice"),
+			weapon = new DesignElement("Weapon");
+			armor.addAttributes(
+					att("blindingDamageAdj", WHOLE),
+					att("blindingImmune", BOOLEAN),
+					att("chargeDecay", WHOLE),
+					att("chargeRegen", WHOLE),
+					att("completeBonus", WHOLE),
+					att("damageAdjLevel", INTEGER_SEQUENCE),
+					att("decay", WHOLE),
+					att("decayRate", WHOLE),
+					att("deviceCriteria", STRING),
+					att("deviceDamageAdj", WHOLE),
+					att("deviceDamageImmune", BOOLEAN),
+					att("deviceHPBonus", WHOLE),
+					att("distribute", WHOLE),
+					att("disintegrationImmune", BOOLEAN),
+					att("enhancementType", HEX_NUMBER),
+					att("EMPDamageAdj", WHOLE),
+					att("EMPImmune", BOOLEAN),
+					att("idlePowerUse", WHOLE),
+					att("installCost", WHOLE),
+					att("installCostAdj", WHOLE),
+					att("maxHPBonus", WHOLE),
+					att("maxSpeedBonus", WHOLE),
+					att("photoRecharge", BOOLEAN),
+					att("photoRepair", BOOLEAN),
+					att("powerUse", WHOLE),
+					att("radiationImmune", BOOLEAN),
+					att("reflect", STRING),
+					att("regen", WHOLE),
+					att("repairCost", WHOLE),
+					att("repairCostAdj", WHOLE),
+					att("repairRate", WHOLE),
+					att("repairTech", WHOLE),
+					att("shatterImmune", BOOLEAN),
+					att("shieldInterference", BOOLEAN),
+					att("stealth", WHOLE),
+					//att("unid", ),
+					att("useHealerToRegen", BOOLEAN)
 					);
-			DesignElement onRefuel = new DesignElement("OnRefuel");
-			DesignElement components = new DesignElement("Components");
+			autoDefenseDevice.addAttributes(
+					att("fireRate", WHOLE),
+					att("weapon", TYPE_WEAPON),
+					att("interceptRange", WHOLE),
+					att("targetCriteria", STRING),
+					att("target", STRING, "missiles")
+					);
+			cargoHoldDevice.addAttributes(
+					att("cargoSpace", INTEGER)
+					);
+			components.addOptionalMultipleSubElements(
+					ItemGeneratorElements.values()
+					);
+			cyberDeckDevice.addAttributes(
+					att("range", WHOLE),
+					att("attackChance", WHOLE),
+					att("aiLevel", WHOLE),
+					att("program", PROGRAM),
+					att("programName", STRING)
+					);
+			driveDevice.addAttributes(
+					att("maxSpeed", WHOLE),
+					att("maxSpeedInc", WHOLE),
+					att("powerUse", WHOLE),
+					att("thrust", DECIMAL),
+					att("inertialessDrive", BOOLEAN),
+					att("rotationAccel", DECIMAL),
+					att("rotationStopAccel", DECIMAL),
+					att("maxRotationRate", DECIMAL)
+					);
+			enhancerDevice.addAttributes(
+					att("W.I.P.", STRING)
+					);
+			image.addAttributes(SubElementFactory.createImageAttributes());
+			
+			invoke.addAttributes(
+					att("key", CHARACTER),
+					att("installedOnly", BOOLEAN),
+					att("uninstalledOnly", BOOLEAN),
+					att("enabledOnly", BOOLEAN),
+					att("completeArmorOnly", BOOLEAN),
+					att("asArmorSet", BOOLEAN)
+					);
+			miscellaneousDevice.addAttributes(
+					att("powerUse", WHOLE),
+					att("powerToActivate", WHOLE),
+					att("capacitorPowerUse", WHOLE),
+					att("powerRating", WHOLE)
+					);
+			missile.addAttributes(att("W.I.P.", STRING));
+			reactorDevice.addAttributes(
+					att("fuelCapacity", WHOLE),
+					att("fuelCriteria", STRING),
+					att("maxFuel", WHOLE),
+					att("maxFuelTech", WHOLE),
+					att("minFuelTech", WHOLE),
+					att("maxPower", WHOLE),
+					att("maxPowerBonusPerCharge", WHOLE),
+					att("noFuel", BOOLEAN),
+					att("reactorEfficiency", WHOLE),
+					att("reactorPower", WHOLE)
+					);
+			shields.addAttributes(
+					att("absorbAdj", WHOLE),
+					att("armorShield", WHOLE),
+					att("damageAdj", STRING),
+					att("damageAdjLevel", STRING),
+					att("depletionDelay", WHOLE),
+					att("hitEffect", TYPE_EFFECT),
+					att("hitPoints", WHOLE),
+					att("idlePowerUse", WHOLE),
+					att("hasNonRegenHP", BOOLEAN),
+					att("hpBonus", WHOLE),
+					att("HPBonusPerCharge", WHOLE),
+					att("maxCharges", WHOLE),
+					att("powerBonusPerCharge", WHOLE),
+					att("powerUse", WHOLE),
+					att("reflect", STRING),
+					att("regen", WHOLE),
+					att("regenHP", WHOLE),
+					att("regenHPBonusPerCharge", WHOLE),
+					att("regenTime", WHOLE),
+					att("weaponSuppress", STRING),
+					att("maxHPBonus", WHOLE)
+					);
+			solarDevice.addAttributes(
+					att("refuel", WHOLE),
+					att("powerGen", WHOLE)
+					);
+			weapon.addAttributes();
+			//WIP: Add device-specific events
 			components.addOptionalMultipleSubElements(ItemGeneratorElements.values());
 			
-			DesignElement initialData = new DesignElement("InitialData");
 			initialData.addOptionalMultipleSubElements(MiscElements.Data);
 			//WIP
+			
 			//Add Armor, Devices, etc
 			return new DesignElement[] {
-					invoke, onRefuel, components, initialData
+					armor,
+					autoDefenseDevice,
+					cargoHoldDevice,
+					components,
+					cyberDeckDevice,
+					driveDevice,
+					enhancerDevice,
+					image,
+					initialData,
+					invoke,
+					miscellaneousDevice,
+					missile,
+					names,
+					reactorDevice,
+					repairerDevice,
+					shields,
+					solarDevice,
+					weapon
 			};
 		case MissionType:			break;
 		case NameGenerator:			break;
 		case OverlayType:
-			DesignElement effect = new DesignElement(SubElementFactory.createEffects, "Effect");
-			DesignElement hitEffect = new DesignElement(EffectElements.values(), "HitEffect");
-			DesignElement effectWhenHit = new DesignElement(EffectElements.values(), "EffectWhenHit");
-			effectWhenHit.addAttributes(new Attribute("altEffect", BOOLEAN));
+			DesignElement effect = new DesignElement(SubElementFactory.createEffects(), "Effect");
+			DesignElement hitEffect = new DesignElement(SubElementFactory.createEffects(), "HitEffect");
+			DesignElement effectWhenHit = new DesignElement(SubElementFactory.createEffects(), "EffectWhenHit");
+			effectWhenHit.addAttributes(att("altEffect", BOOLEAN));
 			DesignElement counter = new DesignElement("Counter");
 			counter.addAttributes(
-					new Attribute("style", ValueType.OVERLAY_COUNTER_STTYLE),
-					new Attribute("label", STRING),
-					new Attribute("max", WHOLE),
-					new Attribute("color", HEX_COLOR),
-					new Attribute("showOnMap", BOOLEAN)
+					att("style", ValueType.OVERLAY_COUNTER_STTYLE),
+					att("label", STRING),
+					att("max", WHOLE),
+					att("color", HEX_COLOR),
+					att("showOnMap", BOOLEAN)
 					);
 			return new DesignElement[] {
 				effect, hitEffect, effectWhenHit, counter
@@ -390,22 +569,22 @@ public class SingleSubElementFactory {
 		
 		DesignElement dockingPorts = new DesignElement("DockingPorts");
 		dockingPorts.addAttributes(
-				new Attribute("bringToFront", STRING),
-				new Attribute("sendToBack", STRING),
-				new Attribute("maxDist", WHOLE),
-				new Attribute("portAngle", INTEGER),
-				new Attribute("portCount", WHOLE),
-				new Attribute("portRadius", INTEGER),
-				new Attribute("rotation", INTEGER),
-				new Attribute("x", INTEGER),
-				new Attribute("y", INTEGER)
+				att("bringToFront", STRING),
+				att("sendToBack", STRING),
+				att("maxDist", WHOLE),
+				att("portAngle", INTEGER),
+				att("portCount", WHOLE),
+				att("portRadius", INTEGER),
+				att("rotation", INTEGER),
+				att("x", INTEGER),
+				att("y", INTEGER)
 				);
 		DesignElement trade = new DesignElement("Trade");
 		trade.addAttributes(
-				new Attribute("currency", STRING),
-				new Attribute("creditConversion", WHOLE),
-				new Attribute("max", WHOLE),
-				new Attribute("replenish", WHOLE)
+				att("currency", STRING),
+				att("creditConversion", WHOLE),
+				att("max", WHOLE),
+				att("replenish", WHOLE)
 				);
 		trade.addOptionalMultipleSubElements(TradeElements.values());
 		
@@ -441,7 +620,7 @@ class Text extends DesignElement {
 	public Text(String id) {
 		super();
 		displayName = id;
-		addAttributes(new Attribute("id", STRING, id));
+		addAttributes(att("id", STRING, id));
 	}
 	public String getDisplayName() {
 		return displayName;
@@ -456,7 +635,7 @@ class Text extends DesignElement {
 		fieldPanel.removeAll();
 		subElementPanel.removeAll();
 		
-		for(Attribute a : getAttributes()) {
+		for(DesignAttribute a : getAttributes()) {
 			JLabel label = new JLabel(a.getName() + "=");
 			label.setFont(Window.FONT_MEDIUM);
 			labelPanel.add(label);

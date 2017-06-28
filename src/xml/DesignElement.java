@@ -39,26 +39,30 @@ import org.w3c.dom.Element;
 import designType.subElements.SubElementType;
 import window.Frame;
 import window.Window;
-import xml.Attribute.ValueType;
+import xml.DesignAttribute.ValueType;
 
 public class DesignElement {
-	private final String name;
-	private final TreeMap<String, Attribute> attributes;		
+	private String name;
+	private final TreeMap<String, DesignAttribute> attributes;		
 	private final List<DesignElement> subElements;
 	private String text;
 	
-	private final List<Attribute> requiredAttributes;				//Must be defined
+	private final List<DesignAttribute> requiredAttributes;				//Must be defined
 	private final List<DesignElement> requiredSingleSubElements;			//Must have 1 of each
 	private final List<DesignElement> optionalSingleSubElements;			//Can have 0 or 1 of each
 	private final List<SubElementType> optionalMultipleSubElements;		//Can have 0, 1, or more of each
 	
+	public static DesignElement ele(String name) {
+		return new DesignElement(name);
+	}
+	
 	public DesignElement() {
 		this.name = getClass().getSimpleName();
 		
-		attributes = new TreeMap<String, Attribute>(String.CASE_INSENSITIVE_ORDER);
+		attributes = new TreeMap<String, DesignAttribute>(String.CASE_INSENSITIVE_ORDER);
 		subElements = new ArrayList<DesignElement>();
 		text = "";
-		requiredAttributes = new ArrayList<Attribute>();
+		requiredAttributes = new ArrayList<DesignAttribute>();
 		requiredSingleSubElements = new ArrayList<DesignElement>();
 		optionalSingleSubElements = new ArrayList<DesignElement>();
 		optionalMultipleSubElements = new ArrayList<SubElementType>();
@@ -66,10 +70,10 @@ public class DesignElement {
 	public DesignElement(String name) {
 		this.name = name;
 		
-		attributes = new TreeMap<String, Attribute>(String.CASE_INSENSITIVE_ORDER);
+		attributes = new TreeMap<String, DesignAttribute>(String.CASE_INSENSITIVE_ORDER);
 		subElements = new ArrayList<DesignElement>();
 		text = "";
-		requiredAttributes = new ArrayList<Attribute>();
+		requiredAttributes = new ArrayList<DesignAttribute>();
 		requiredSingleSubElements = new ArrayList<DesignElement>();
 		optionalSingleSubElements = new ArrayList<DesignElement>();
 		optionalMultipleSubElements = new ArrayList<SubElementType>();
@@ -84,6 +88,9 @@ public class DesignElement {
 		optionalSingleSubElements = source.optionalSingleSubElements;
 		optionalMultipleSubElements = source.optionalMultipleSubElements;
 	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public void addOptionalSingleSubElements(DesignElement...subelements) {
 		optionalSingleSubElements.addAll(Arrays.asList(subelements));
 	}
@@ -91,8 +98,8 @@ public class DesignElement {
 		optionalMultipleSubElements.addAll(Arrays.asList(subelements));
 	}
 	
-	public void addAttributes(Attribute...attributes) {
-		for(Attribute a : attributes) {
+	public void addAttributes(DesignAttribute...attributes) {
+		for(DesignAttribute a : attributes) {
 			this.attributes.put(a.getName(), a);
 		}
 	}
@@ -107,17 +114,17 @@ public class DesignElement {
 	}
 	
 	public void setAttribute(String name, String value) {
-		Attribute a = attributes.get(name);
+		DesignAttribute a = attributes.get(name);
 		if(a == null) {
 			System.out.println("Unknown attribute: " + name);
-			attributes.put(name, new Attribute(name, ValueType.STRING, value));
+			attributes.put(name, new DesignAttribute(name, ValueType.STRING, value));
 		} else {
 			attributes.get(name).setValue(value);
 		}
 	}
 	
 	public boolean validate() {
-		for(Attribute a : requiredAttributes) {
+		for(DesignAttribute a : requiredAttributes) {
 			if(a == null || !a.getValue().equals("") || !a.getValueType().isValid(a.getValue())) {
 				return false;
 			}
@@ -136,10 +143,10 @@ public class DesignElement {
 	public String getDisplayName() {
 		return name;
 	}
-	public List<Attribute> getAttributes() {
-		return new ArrayList<Attribute>(attributes.values());
+	public List<DesignAttribute> getAttributes() {
+		return new ArrayList<DesignAttribute>(attributes.values());
 	}
-	public TreeMap<String, Attribute> getAttributesMap() {
+	public TreeMap<String, DesignAttribute> getAttributesMap() {
 		return attributes;
 	}
 	public List<DesignElement> getSubElements() {
@@ -149,7 +156,7 @@ public class DesignElement {
 		return text;
 	}
 	
-	public Attribute getAttributeByName(String name) {
+	public DesignAttribute getAttributeByName(String name) {
 		return attributes.get(name);
 	}
 	public List<DesignElement> getSubElementsByName(String name) {
@@ -242,7 +249,7 @@ public class DesignElement {
 	}
 	public Element getXML(Document doc) {
 		Element child = doc.createElement(getName());
-		for(Attribute a : getAttributes()) {
+		for(DesignAttribute a : getAttributes()) {
 			if(a.getValue().isEmpty()) {
 				continue;
 			}
@@ -299,13 +306,13 @@ public class DesignElement {
 		fieldPanel.removeAll();
 		subElementPanel.removeAll();
 		
-		List<Attribute> attributes = getAttributes();
+		List<DesignAttribute> attributes = getAttributes();
 		if(attributes.size() == 0) {
 			JLabel label = new JLabel("No attributes");
 			label.setFont(Window.FONT_LARGE);
 			labelPanel.add(label);
 		} else {
-			for(Attribute a : attributes) {
+			for(DesignAttribute a : attributes) {
 				JLabel label = new JLabel(a.getName() + "=");
 				label.setFont(Window.FONT_MEDIUM);
 				labelPanel.add(label);
@@ -347,7 +354,7 @@ public class DesignElement {
 		return result;
 	}
 	public void copyFields(DesignElement result) {
-		for(Attribute a : attributes.values()) {
+		for(DesignAttribute a : attributes.values()) {
 			if(requiredAttributes.contains(a)) {
 				result.addAttributes(a.clone());
 			} else {

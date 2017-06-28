@@ -1,58 +1,14 @@
 package designType;
 
-import designType.subElements.SubElementType;
 import designType.subElements.SingleSubElementFactory;
 import designType.subElements.SingleSubElementFactory.DataElements;
-import xml.Attribute;
+import designType.subElements.SubElementFactory.DisplayAttributesElements;
+import designType.subElements.SubElementFactory.DockScreensElements;
+import xml.DesignAttribute;
 import xml.DesignElement;
-import static xml.Attribute.ValueType;
+import static xml.DesignAttribute.ValueType;
+import static xml.DesignAttribute.*;
 public final class TypeFactory {
-	//@Override
-	/*
-	public int compareTo(Object arg0) {
-		if(arg0 instanceof Type) {
-			int unid = Integer.valueOf(getAttributeByName("UNID").getValue());
-			int unid_other = Integer.valueOf(((Type) arg0).getAttributeByName("UNID").getValue());
-			if(unid > unid_other) {
-				return 1;
-			} else if(unid < unid_other) {
-				return -1;
-			}
-		}
-		return 0;
-	}
-	*/
-	public static enum Types implements SubElementType {
-		AdventureDesc,
-		DockScreen,
-		EconomyType,
-		EffectType,
-		Image,
-		ItemTable,
-		ItemType,
-		MissionType,
-		NameGenerator,
-		OverlayType,
-		Power,
-		ShipClass,
-		ShipClassOverride,
-		ShipTable,
-		Sound,
-		Sovereign,
-		SpaceEnvironmentType,
-		StationType,
-		SystemMap,
-		SystemTable,
-		SystemType,
-		TemplateType,
-		Type,
-		;
-		
-		@Override
-		public DesignElement create() {
-			return createDesignType(this);
-		}
-	}
 	//\#define ([A-Z]*_*)*\s+CONSTLIT\(\"(.+)\"\)
 	public static DesignElement createDesignType(Types t) {
 		DesignElement e = new Type(t.name());
@@ -107,19 +63,25 @@ public final class TypeFactory {
 			break;
 		}
 		
-		
-		
-		e.addAttributes(new Attribute("UNID", ValueType.UNID, ""));
 		e.addAttributes(
-				new Attribute("attributes", ValueType.STRING, ""),
-				new Attribute("inherit", ValueType.TYPE_INHERITED, "")
+				att("UNID", ValueType.UNID),
+				att("attributes", ValueType.STRING),
+				att("inherit", ValueType.TYPE_INHERITED)
 				);
-		//All DesignTypes can have Language and Events
+		DesignElement dockScreens = new DesignElement("DockScreens");
+		dockScreens.addOptionalMultipleSubElements(DockScreensElements.DockScreen_Named);
+		DesignElement displayAttributes = new DesignElement("DisplayAttributes");
+		displayAttributes.addOptionalMultipleSubElements(DisplayAttributesElements.ItemAttribute);
+		DesignElement attributeDesc = new DesignElement("AttributeDesc");
+		attributeDesc.addOptionalMultipleSubElements(DisplayAttributesElements.ItemAttribute);
 		e.addOptionalSingleSubElements(
+				DataElements.StaticData.create(),
+				DataElements.GlobalData.create(),
 				SingleSubElementFactory.createLanguage(t),
 				SingleSubElementFactory.createEvents(t),
-				DataElements.StaticData.create(),
-				DataElements.GlobalData.create()
+				dockScreens,
+				displayAttributes,
+				attributeDesc
 				);
 		
 		return e;

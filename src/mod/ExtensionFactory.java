@@ -1,13 +1,12 @@
 package mod;
 
-import designType.TypeFactory;
-import designType.TypeFactory.Types;
+import designType.Types;
 import designType.subElements.SubElementFactory.ExtensionElements;
 import designType.subElements.SubElementType;
-import xml.Attribute;
+import xml.DesignAttribute;
 import xml.DesignElement;
-import xml.Attribute.ValueType;
-
+import xml.DesignAttribute.ValueType;
+import static xml.DesignAttribute.*;
 public class ExtensionFactory {
 	//Done
 	public static enum Extensions implements SubElementType {
@@ -24,26 +23,26 @@ public class ExtensionFactory {
 			//TranscendenceAdventure is an extension with an AdventureDesc
 			case TranscendenceAdventure:
 				e.addSubElements(
-						TypeFactory.Types.AdventureDesc.create()
+						Types.AdventureDesc.create()
 						);
 			case TranscendenceExtension:
 			case TranscendenceLibrary:
 				e.addAttributes(
-						new Attribute("apiVersion", ValueType.INTEGER, ""),
-						new Attribute("autoInclude", ValueType.BOOLEAN, "false"),
-						new Attribute("autoIncludeForCompatibility", ValueType.BOOLEAN, "false"),
-						new Attribute("coverImageID", ValueType.TYPE_IMAGE, ""),
-						new Attribute("credits", ValueType.STRING, ""),
-						new Attribute("debugOnly", ValueType.BOOLEAN, "false"),
-						new Attribute("extends", ValueType.TYPE_MOD, ""),
-						new Attribute("extensionAPIVersion", ValueType.INTEGER, ""),
-						new Attribute("hidden", ValueType.BOOLEAN, "false"),
-						new Attribute("name", ValueType.STRING, ""),
-						new Attribute("private", ValueType.BOOLEAN, "false"),
-						new Attribute("release", ValueType.INTEGER, "1"),
-						new Attribute("UNID", ValueType.UNID, ""),
-						new Attribute("usesXML", ValueType.BOOLEAN, "false"),
-						new Attribute("version", ValueType.STRING, "1.0")
+						att("apiVersion", ValueType.INTEGER, ""),
+						att("autoInclude", ValueType.BOOLEAN, ""),//"false"),
+						att("autoIncludeForCompatibility", ValueType.BOOLEAN, ""),//"false"),
+						att("coverImageID", ValueType.TYPE_IMAGE, ""),
+						att("credits", ValueType.STRING, ""),
+						att("debugOnly", ValueType.BOOLEAN, ""),//"false"),
+						att("extends", ValueType.TYPE_MOD, ""),
+						att("extensionAPIVersion", ValueType.INTEGER, ""),
+						att("hidden", ValueType.BOOLEAN, ""),//"false"),
+						att("name", ValueType.STRING, ""),
+						att("private", ValueType.BOOLEAN, ""),//"false"),
+						att("release", ValueType.INTEGER, ""),//"1"),
+						att("UNID", ValueType.UNID, ""),
+						att("usesXML", ValueType.BOOLEAN, ""),//"false"),
+						att("version", ValueType.STRING, "")//"1.0")
 						);
 				
 				e.addOptionalMultipleSubElements(ExtensionElements.Module, ExtensionElements.Library);

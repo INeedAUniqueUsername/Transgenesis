@@ -44,10 +44,9 @@ import net.miginfocom.swing.MigLayout;
 import com.jcabi.xml.XMLDocument;
 
 import designType.TypeFactory;
-import designType.TypeFactory.Types;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
-import xml.Attribute;
+import xml.DesignAttribute;
 import xml.DesignElement;
 
 public class Frame extends JFrame {
@@ -297,7 +296,7 @@ public class Frame extends JFrame {
 		repaint();
 	}
 	public void setAttributes(DesignElement e) {
-		List<Attribute> attributes = e.getAttributes();
+		List<DesignAttribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();
 		for(int i = 0; i < attributes.size(); i++) {
 			String value = "";

@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 import window.Window;
 
-public class Attribute {
+public class DesignAttribute {
 	public enum ValueType {
 		UNID {
 			public JComponent getInputField(String value) {
@@ -66,9 +66,7 @@ public class Attribute {
 		},
 		BOOLEAN {
 			public JComponent getInputField(String value) {
-				JComboBox<String> field = createComboBox(false, value);
-				field.addItem("true");
-				field.addItem("false");
+				JComboBox<String> field = createComboBox(false, value, "", "true", "false");
 				return field;
 			}
 			@Override
@@ -174,6 +172,20 @@ public class Attribute {
 		},
 		HEX_COLOR {
 		},
+		HEX_NUMBER {
+			public JComponent getInputField(String value) {
+				JTextField field = (JTextField) super.getInputField(value);
+				field.addKeyListener(new KeyAdapter() {
+					public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		               if(!Character.isDigit(c) || (c == 'x' && field.getText().contains("x"))) {
+		            	   e.consume();
+		               }
+		            }
+				});
+				return field;
+			}
+		},
 		STRING {
 			
 		},
@@ -182,14 +194,14 @@ public class Attribute {
 		ALIGNMENT {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
-						"constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"
+						"", "constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"
 						);
 			}
 		},
 		DISPOSITION {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
-						"friend", "neutral", "enemy"
+						"", "friend", "neutral", "enemy"
 						);
 			}
 			
@@ -295,24 +307,25 @@ public class Attribute {
 		}, FREQUENCY {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
-						"common", "uncommon", "rare", "veryRare", "notRandom"
+						"", "common", "uncommon", "rare", "veryRare", "notRandom"
 						);
 			}
 		}, UNIQUE {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
-						"inSystem", "inUniverse"
+						"", "inSystem", "inUniverse"
 						);
 			}
 		}, SCALE {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
-						"star", "world", "structure", "ship", "flotsam"
+						"", "star", "world", "structure", "ship", "flotsam"
 						);
 			}
 		}, TILE_SIZE {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
+						"",
 						"small",
 						"medium",
 						"large",
@@ -322,11 +335,20 @@ public class Attribute {
 		}, SYSTEMTYPE_BACKGROUND {
 			public JComponent getInputField(String value) {
 				return createComboBox(true, value,
+						"",
 						"none"
 						);
 			}
 		}, PRICE_ADJ {
 			
+		}, TYPE_WEAPON {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value);
+			}
+		}, TYPE_EFFECT {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value);
+			}
 		}, TYPE_STATION {
 			public JComponent getInputField(String value) {
 				return createComboBox(true, value);
@@ -349,6 +371,7 @@ public class Attribute {
 		}, DOCKSCREEN_BACKGROUND_ID {
 			public JComponent getInputField(String value) {
 				return createComboBox(true, value,
+						"",
 						"hero",
 						"image",
 						"none",
@@ -359,6 +382,7 @@ public class Attribute {
 		}, DOCKSCREEN_DATA_FROM {
 			public JComponent getInputField(String value) {
 				return createComboBox(true, value,
+						"",
 						"player",
 						"source",
 						"station"
@@ -367,6 +391,7 @@ public class Attribute {
 		}, FONT {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
+						"",
 						"Small",
 						"SmallBold",
 						"Medium",
@@ -386,6 +411,7 @@ public class Attribute {
 		}, ALIGN_HORIZONTAL {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
+						"",
 						"left",
 						"center",
 						"right"
@@ -394,6 +420,7 @@ public class Attribute {
 		}, ALIGN_VERTICAL {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
+						"",
 						"top",
 						"center",
 						"bottom"
@@ -433,10 +460,36 @@ public class Attribute {
 		}, OVERLAY_COUNTER_STTYLE {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "commandBarProgress", "flag", "progress", "radius");
+				JComboBox<String> field = createComboBox(true, value, "", "commandBarProgress", "flag", "progress", "radius");
 				return field;
 			}
-		};
+		}, LABEL_TYPE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value, "", "advantage", "neutral", "disadvantage");
+				return field;
+			}
+		}, LAYOUT {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value, "", "bottomBar", "left", "right");
+				return field;
+			}
+		}, STYLE_CONTROLS {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value, "", "default", "warning");
+				return field;
+			}
+		}, PROGRAM {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value, "", "ShieldsDown", "Disarm", "Reboot");
+				return field;
+			}
+		}
+		
+		;
 		public boolean isValid(String value) {
 			// TODO Auto-generated method stub
 			try {
@@ -475,10 +528,16 @@ public class Attribute {
 	private String name;
 	private ValueType valueType;
 	private String value;
-	public Attribute(String name, ValueType valueType) {
+	public static DesignAttribute att(String name, ValueType valueType) {
+		return new DesignAttribute(name, valueType);
+	}
+	public static DesignAttribute att(String name, ValueType valueType, String value) {
+		return new DesignAttribute(name, valueType, value);
+	}
+	public DesignAttribute(String name, ValueType valueType) {
 		this(name, valueType, "");
 	}
-	public Attribute(String name, ValueType valueType, String value) {
+	public DesignAttribute(String name, ValueType valueType, String value) {
 		this.name = name;
 		this.valueType = valueType;
 		this.value = value;
@@ -508,8 +567,8 @@ public class Attribute {
 		
 		return false;
 	}
-	public Attribute clone() {
-		return new Attribute(name, valueType, value);
+	public DesignAttribute clone() {
+		return new DesignAttribute(name, valueType, value);
 	}
 	
 }
