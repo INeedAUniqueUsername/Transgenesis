@@ -17,13 +17,13 @@ public class ExtensionFactory {
 		;
 
 		@Override
-		public TranscendenceMod create() {
+		public TranscendenceMod get() {
 			TranscendenceMod e = new TranscendenceMod(name());
 			switch(this) {
 			//TranscendenceAdventure is an extension with an AdventureDesc
 			case TranscendenceAdventure:
 				e.addSubElements(
-						Types.AdventureDesc.create()
+						Types.AdventureDesc.get()
 						);
 			case TranscendenceExtension:
 			case TranscendenceLibrary:
@@ -34,7 +34,7 @@ public class ExtensionFactory {
 						att("coverImageID", ValueType.TYPE_IMAGE, ""),
 						att("credits", ValueType.STRING, ""),
 						att("debugOnly", ValueType.BOOLEAN, ""),//"false"),
-						att("extends", ValueType.TYPE_MOD, ""),
+						//att("extends", ValueType.TYPE_MOD, ""),
 						att("extensionAPIVersion", ValueType.INTEGER, ""),
 						att("hidden", ValueType.BOOLEAN, ""),//"false"),
 						att("name", ValueType.STRING, ""),

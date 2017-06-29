@@ -66,7 +66,8 @@ public final class TypeFactory {
 		e.addAttributes(
 				att("UNID", ValueType.UNID),
 				att("attributes", ValueType.STRING),
-				att("inherit", ValueType.TYPE_INHERITED)
+				att("inherit", ValueType.TYPE_INHERITED),
+				att("extends", ValueType.STRING)
 				);
 		DesignElement dockScreens = new DesignElement("DockScreens");
 		dockScreens.addOptionalMultipleSubElements(DockScreensElements.DockScreen_Named);
@@ -75,8 +76,8 @@ public final class TypeFactory {
 		DesignElement attributeDesc = new DesignElement("AttributeDesc");
 		attributeDesc.addOptionalMultipleSubElements(DisplayAttributesElements.ItemAttribute);
 		e.addOptionalSingleSubElements(
-				DataElements.StaticData.create(),
-				DataElements.GlobalData.create(),
+				DataElements.StaticData.get(),
+				DataElements.GlobalData.get(),
 				SingleSubElementFactory.createLanguage(t),
 				SingleSubElementFactory.createEvents(t),
 				dockScreens,

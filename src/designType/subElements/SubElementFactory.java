@@ -21,7 +21,7 @@ public class SubElementFactory {
 		DockScreen_Named, Pane_Named, Action;
 		
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = null;
 			switch(this) {
 			case DockScreen_Named:
@@ -87,7 +87,7 @@ public class SubElementFactory {
 		ItemAttribute;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case ItemAttribute:
@@ -110,11 +110,11 @@ public class SubElementFactory {
 		
 		;
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement result = new DesignElement(name());
 			switch(this) {
 			case EncounterOverrides:
-				result = StationTypeElements.Encounter.create();
+				result = StationTypeElements.Encounter.get();
 				result.addAttributes(att("unid", TYPE_STATION));
 				break;
 			case ArmorDamageAdj:
@@ -136,7 +136,7 @@ public class SubElementFactory {
 		Text,
 		Image;
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Group:
@@ -176,6 +176,75 @@ public class SubElementFactory {
 			return e;
 		}
 	}
+	public static enum DeviceTableElements implements SubElementType {
+		Device, Item,
+		DeviceSlot,
+		Table,
+		Group, Devices,
+		LevelTable,
+		Null;
+
+		@Override
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
+			if(!this.equals(Null)) {
+				e.addAttributes(
+						att("chance", WHOLE),						//Table
+						att("levelFrequency", LEVEL_FREQUENCY)	//LevelTable
+						);
+			}
+			switch(this) {
+			case Device:
+			case Item:
+				e.addAttributes(
+						att("deviceID", ValueType.TYPE_DEVICE),
+						att("count", WHOLE),
+						att("level", WHOLE),
+						att("posAngle", INTEGER),
+						att("posRadius", INTEGER),
+						att("posZ", INTEGER),
+						att("external", BOOLEAN),
+						att("omnidirectional", BOOLEAN),
+						att("minFireArc", INTEGER),
+						att("maxFireArc", INTEGER),
+						att("linkedFire", ValueType.LINKED_FIRE_OPTIONS),
+						att("secondaryWeapon", BOOLEAN),
+						att("hpBonus", INTEGER)
+						);
+				e.addOptionalMultipleSubElements(
+						ItemGeneratorElements.values()
+						);
+				break;
+			case DeviceSlot:
+				e.addAttributes(
+						att("criteria", STRING),
+						att("maxCount", WHOLE),
+						
+						att("posAngle", INTEGER),
+						att("posRadius", INTEGER),
+						att("posZ", INTEGER),
+						att("external", BOOLEAN),
+						att("omnidirectional", BOOLEAN),
+						att("minFireArc", INTEGER),
+						att("maxFireArc", INTEGER),
+						att("linkedFire", ValueType.LINKED_FIRE_OPTIONS),
+						att("secondaryWeapon", BOOLEAN),
+						att("hpBonus", INTEGER)
+						);
+				break;
+			case Group:
+			case Devices:
+			case Table:
+			case LevelTable:
+				e.addOptionalMultipleSubElements(DeviceTableElements.values());
+				break;
+			case Null:
+				break;
+			}
+			return e;
+		}
+		
+	}
 	public static enum ItemGeneratorElements implements SubElementType {
 		Item,
 		Table,
@@ -187,7 +256,7 @@ public class SubElementFactory {
 		Null;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
 			DesignElement e = new DesignElement(name());
 			if(!this.equals(Null)) {
@@ -257,7 +326,7 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -266,7 +335,7 @@ public class SubElementFactory {
 	public static enum MiscElements implements SubElementType {
 		Data,
 		;
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new RenameableElement(name());
 			e.addAttributes(att("id", STRING));
 			e.addAttributes(att("data", STRING));
@@ -290,7 +359,7 @@ public class SubElementFactory {
 		Custom,;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			e.addAttributes(
 					att("actualPrice", BOOLEAN),
@@ -313,7 +382,7 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
 			DesignElement e = new DesignElement(name());
 			switch(this) {
@@ -334,40 +403,42 @@ public class SubElementFactory {
 		Communications,
 		ImageComposite,
 		Construction,
-		Devices,
+		//Devices,
 		
 		EncounterGroup,
 		EncounterType,
 		Encounter,
 		Encounters,
 		//Events,
-		HeroImage,
-		Image,
+		//HeroImage,
+		//Image,
 		ImageEffect,
 		ImageLookup,
 		ImageVariants,
 		//Items,
-		Names,
 		Reinforcements,
 		Satellites,
-		Ships,
-			Ship,
+		Ships, //Ship
 		Station,
 		Table,
 		;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Animations:
+				e.addOptionalMultipleSubElements(() -> {
+					DesignElement animation = new DesignElement("Animation");
+					animation.addAttributes(att("x", INTEGER), att("y", INTEGER));
+					animation.addAttributes(createImageAttributes());
+					return animation;
+				});
 				break;
 			case Communications:
 				break;
 			case Construction:
-				break;
-			case Devices:
 				break;
 			case EncounterGroup:
 				break;
@@ -393,10 +464,10 @@ public class SubElementFactory {
 						);
 				break;
 			case Encounters:
+				e.addAttributes(att("frequency", FREQUENCY));
+				e.addOptionalMultipleSubElements(ShipGeneratorElements.values());
+				
 				break;
-			//case Events:				break;
-			//case HeroImage:			break;
-			//case Image:				break;
 			case ImageComposite:
 				break;
 			case ImageEffect:
@@ -405,15 +476,22 @@ public class SubElementFactory {
 				break;
 			case ImageVariants:
 				break;
-			//case Items:				break;
-			//case Names:				break;
 			case Reinforcements:
+				e.addAttributes(
+						att("minShips", DICE_RANGE),
+						att("buildReinforcements", BOOLEAN)
+						);
+				e.addOptionalMultipleSubElements(ShipGeneratorElements.values());
 				break;
 			case Satellites:
 				break;
-			case Ship:
-				break;
 			case Ships:
+				e.addAttributes(
+						att("challenge", DICE_RANGE),
+						att("standingCount", DICE_RANGE),
+						att("minShips", DICE_RANGE),
+						att("buildReinforcements", BOOLEAN)
+						);
 				break;
 			case Station:
 				break;
@@ -426,6 +504,16 @@ public class SubElementFactory {
 			return e;
 		}
 	}
+	public static enum ShipGeneratorElements implements SubElementType {
+		;
+
+		@Override
+		public DesignElement get() {
+			// TODO Auto-generated method stub
+			return new DesignElement("W.I.P.");
+		}
+		
+	}
 	public static enum SystemCriteria implements SubElementType {
 		Attributes,
 		Chance,
@@ -434,7 +522,7 @@ public class SubElementFactory {
 		StargateCount,;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Attributes:
@@ -473,7 +561,7 @@ public class SubElementFactory {
 		Module, Library;
 
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Library:
@@ -489,7 +577,7 @@ public class SubElementFactory {
 	public static enum SpaceEnvironmentElements implements SubElementType {
 		Image,
 		EdgeMask,;
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(this.name());
 			e.addAttributes(createImageAttributes());
 			return e;

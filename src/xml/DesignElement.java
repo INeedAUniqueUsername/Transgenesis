@@ -280,7 +280,7 @@ public class DesignElement {
 		};
 		requiredSingleSubElements.forEach(singleCheck);
 		optionalSingleSubElements.forEach(singleCheck);
-		optionalMultipleSubElements.forEach((SubElementType e) -> addableElements.add(e.create()));
+		optionalMultipleSubElements.forEach((SubElementType e) -> addableElements.add(e.get()));
 		return addableElements;
 	}
 	public DesignElement getAddableElement(String name) {
@@ -288,7 +288,7 @@ public class DesignElement {
 		addableElements.addAll(requiredSingleSubElements);
 		addableElements.addAll(optionalSingleSubElements);
 		optionalMultipleSubElements.forEach((SubElementType s) -> {
-			addableElements.add(s.create());
+			addableElements.add(s.get());
 		});
 		for(DesignElement e : addableElements) {
 			if(e.getName().equalsIgnoreCase(name)) {
@@ -373,5 +373,51 @@ public class DesignElement {
 		for(SubElementType e : optionalMultipleSubElements) {
 			result.addOptionalMultipleSubElements(e);
 		}
+	}
+	public static ArrayList<DesignElement> seen = new ArrayList<>();
+	public String toMinistryMarkdown(int level) {
+		String result = "";
+		result += /*bullet(level) +*/ name;
+		//Make sure that we don't get infinite recursion
+		if(seen.indexOf(this) != -1) {
+			return result;
+		}
+		System.out.println(name);
+		seen.add(this);
+		for(DesignAttribute a : attributes.values()) {
+			result += line(bullet(level+1) + a.toMinistryMarkdown());
+		}
+		for(DesignElement e : subElements) {
+			result += line(bullet(level+1) + "1" + " " + e.toMinistryMarkdown(level+1));
+		}
+		for(DesignElement e : optionalSingleSubElements) {
+			result += line(bullet(level+1) + "0|1" + " " + e.toMinistryMarkdown(level+1));
+		}
+		for(SubElementType e : optionalMultipleSubElements) {
+			result += line(bullet(level+1) + "0|+" + " " + e.get().toMinistryMarkdown(level+1));
+		}
+		return result;
+	}
+	public static String line(String line) {
+		return line.isEmpty() ? "" : "\n" + line;
+	}
+	public static String bullet(int level) {
+		String result = "";
+		for(int i = 0; i < level; i++) {
+			result += "*";
+		}
+		return result + " ";
+	}
+	public boolean equals(Object o) {
+		if(o instanceof DesignElement) {
+			DesignElement e = (DesignElement) o;
+			return
+					name.equals(e.name) &&
+					attributes.equals(e.attributes) &&
+					subElements.equals(e.subElements) &&
+					optionalSingleSubElements.equals(e.optionalSingleSubElements) &&
+					optionalMultipleSubElements.equals(e.optionalMultipleSubElements);
+		}
+		return false;
 	}
 }

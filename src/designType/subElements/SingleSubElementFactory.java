@@ -6,6 +6,7 @@ import javax.swing.JTextArea;
 
 import designType.Types;
 import designType.subElements.SubElementFactory.AdventureDescElements;
+import designType.subElements.SubElementFactory.DeviceTableElements;
 import designType.subElements.SubElementFactory.DisplayElements;
 import designType.subElements.SubElementFactory.DockScreensElements;
 import designType.subElements.SubElementFactory.EffectElements;
@@ -20,6 +21,10 @@ import xml.DesignAttribute.ValueType;
 
 import xml.DesignElement;
 import static xml.DesignAttribute.ValueType.*;
+import static xml.DesignElement.ele;
+import static xml.DesignAttribute.att;
+import java.util.function.Supplier;
+
 import static xml.DesignAttribute.*;
 public class SingleSubElementFactory {
 
@@ -27,22 +32,32 @@ public class SingleSubElementFactory {
 	public static DesignElement createEvents(Types type) {
 		DesignElement e = new DesignElement("Events");
 		e.addOptionalSingleSubElements(
-					new Event("GetGlobalAchievements"),
-					new Event("GetGlobalDockScreen"),
-					new Event("GetGlobalPlayerPriceAdj"),
-					new Event("OnGlobalPaneInit"),
-					new Event("OnGlobalMarkImages"),
-	
-					new Event("OnGlobalObjDestroyed"),
-					new Event("OnGlobalPlayerBoughtItem"),
-					new Event("OnGlobalPlayerSoldItem"),
-					new Event("OnGlobalSystemStarted"),
-					new Event("OnGlobalSystemStopped"),
-	
-					new Event("OnGlobalUniverseCreated"),
-					new Event("OnGlobalUniverseLoad"),
-					new Event("OnGlobalUniverseSave"),
-					new Event("OnGlobalUpdate")
+				new Event("GetCreatePos"),
+				new Event("GetGlobalAchievements"),
+				new Event("GetGlobalDockScreen"),
+				new Event("GetGlobalPlayerPriceAdj"),
+				new Event("GetGlobalResurrectPotential"),
+				new Event("OnGlobalEndDiagnostics"),
+				new Event("OnGlobalMarkImages"),
+				new Event("OnGlobalObjDestroyed"),
+				new Event("OnGlobalPaneInit"),
+				new Event("OnGlobalPlayerBoughtItem"),
+				new Event("OnGlobalPlayerChangedShips"),
+				new Event("OnGlobalPlayerEnteredSystem"),
+				new Event("OnGlobalPlayerLeftSystem"),
+				new Event("OnGlobalPlayerSoldItem"),
+				new Event("OnGlobalResurrect"),
+				new Event("OnGlobalTopologyCreated"),
+				new Event("OnGlobalStartDiagnostics"),
+				new Event("OnGlobalSystemDiagnostics"),
+				new Event("OnGlobalSystemCreated"),
+				new Event("OnGlobalSystemStarted"),
+				new Event("OnGlobalSystemStopped"),
+				new Event("OnGlobalUniverseCreated"),
+				new Event("OnGlobalUniverseLoad"),
+				new Event("OnGlobalUniverseSave"),
+				new Event("OnGlobalUpdate"),
+				new Event("OnRandomEncounter")
 				);
 		switch(type) {
 		case AdventureDesc:
@@ -111,6 +126,7 @@ public class SingleSubElementFactory {
 			e.addOptionalSingleSubElements(
 					new Event("CanDockAsPlayer"),
 					new Event("CanInstallItem"),
+					new Event("CanRemoveItem"),
 					new Event("GetDockScreen"),
 					new Event("GetExplosionType"),
 					new Event("GetPlayerPriceAdj"),
@@ -328,7 +344,7 @@ public class SingleSubElementFactory {
 		case ItemType:
 			DesignElement
 			armor = new DesignElement("Armor"),
-			autoDefenseDevice = new DesignElement("AutpDefenseDevice"),
+			autoDefenseDevice = new DesignElement("AutoDefenseDevice"),
 			cargoHoldDevice = new DesignElement("CargoHoldDevice"),
 			components = new DesignElement("Components"),
 			cyberDeckDevice = new DesignElement("CyberDeckDevice"),
@@ -552,12 +568,12 @@ public class SingleSubElementFactory {
 		names.addAttributes(
 				SubElementFactory.createNameAttributes()
 				);
-		
 		DesignElement items = new DesignElement("Items");
 		items.addOptionalMultipleSubElements(ItemGeneratorElements.values());
-		
 		DesignElement devices = new DesignElement("Devices");
-		
+		devices.addOptionalMultipleSubElements(
+				DeviceTableElements.values()
+				);
 		DesignElement image = new DesignElement("Image");
 		image.addAttributes(SubElementFactory.createImageAttributes());
 		
@@ -602,7 +618,7 @@ public class SingleSubElementFactory {
 		GlobalData,
 		;
 		@Override
-		public DesignElement create() {
+		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			e.addOptionalMultipleSubElements(MiscElements.Data);
 			return e;

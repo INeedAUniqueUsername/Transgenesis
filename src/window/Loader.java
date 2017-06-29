@@ -130,7 +130,7 @@ public class Loader {
 			    	//Check if we have an extension
 			    	try {
 			    		Extensions result = Extensions.valueOf(name);
-			    		mod = result.create();
+			    		mod = result.get();
 			    		mod.setPath(path);
 			    		elementStack.addLast(mod);
 			    		addAttributes.accept(mod);
@@ -140,7 +140,7 @@ public class Loader {
 			    	try {
 			    		//Check if we have a DesignType
 				    	Types result = Types.valueOf(name);
-			    		DesignElement element = result.create();
+			    		DesignElement element = result.get();
 			    		elementStack.getLast().addSubElements(element);
 			    		elementStack.addLast(element);
 			    		addAttributes.accept(element);

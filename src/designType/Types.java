@@ -45,7 +45,7 @@ public enum Types implements SubElementType {
 	;
 	
 	@Override
-	public DesignElement create() {
+	public DesignElement get() {
 		return TypeFactory.createDesignType(this);
 	}
 }

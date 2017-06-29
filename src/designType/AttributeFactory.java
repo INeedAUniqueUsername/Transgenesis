@@ -29,11 +29,9 @@ public class AttributeFactory {
 			};
 		case DockScreen:
 			return new DesignAttribute[] {
-				att("unid", UNID),
 				att("name", STRING),
 				att("desc", STRING),
 				att("type", DOCKSCREEN_TYPE),
-				att("inherit", TYPE_INHERITED),
 				att("backgroundID", ValueType.DOCKSCREEN_BACKGROUND_ID),
 				att("nestedScreen", BOOLEAN),
 			};
@@ -76,7 +74,6 @@ public class AttributeFactory {
 					att("secondPlural", BOOLEAN),
 					att("showReference", BOOLEAN),
 					att("sortName", STRING),
-					att("UNID", UNID),
 					att("unknownType", TYPE_ITEM),
 					att("useAsArmorSet", BOOLEAN),
 					att("useCompleteArmorOnly", BOOLEAN),

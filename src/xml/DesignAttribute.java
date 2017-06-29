@@ -106,7 +106,7 @@ public class DesignAttribute {
 				field.addKeyListener(new KeyAdapter() {
 					public void keyTyped(KeyEvent e) {
 		               char c = e.getKeyChar();
-		               if(!Character.isDigit(c) || c != ',' || c != ' ') {
+		               if(!Character.isDigit(c) && c != ',' && c != ';' && c != ' ') {
 		            	   e.consume();
 		               }
 		            }
@@ -487,6 +487,18 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(true, value, "", "ShieldsDown", "Disarm", "Reboot");
 				return field;
 			}
+		}, LINKED_FIRE_OPTIONS {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value, "", "always", "targetInRange", "whenInFireArc");
+				return field;
+			}
+		}, TYPE_DEVICE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				return field;
+			}
 		}
 		
 		;
@@ -569,6 +581,16 @@ public class DesignAttribute {
 	}
 	public DesignAttribute clone() {
 		return new DesignAttribute(name, valueType, value);
+	}
+	public String toMinistryMarkdown() {
+		return "**" + name + "=**" + " " + "[" + valueType.toString().toLowerCase() + "]" + " " + value;
+	}
+	public boolean equals(Object o) {
+		if(o instanceof DesignAttribute) {
+			DesignAttribute a = (DesignAttribute) o;
+			return name.equals(a.getName()) && valueType.equals(a.getValueType()) && value.equals(a.getValue());
+		}
+		return false;
 	}
 	
 }

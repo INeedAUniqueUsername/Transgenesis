@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -75,6 +77,14 @@ public class Frame extends JFrame {
 	private final JButton xmlButton;
 	//JPanel subelementPanel;
 	public Frame() {
+		try {
+			FileWriter fw = new FileWriter("XML Hierarchy.txt");
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(DesignElement.bullet(1) + ExtensionFactory.Extensions.TranscendenceAdventure.get().toMinistryMarkdown(1));
+			System.exit(0);
+		} catch(Exception e) {
+			
+		}
 		
 		setTitle("TransGenesis");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,7 +101,7 @@ public class Frame extends JFrame {
 				origin.add(tm.toTreeNode());
 			}
 		}
-		origin.add(ExtensionFactory.Extensions.TranscendenceAdventure.create().toTreeNode());
+		origin.add(ExtensionFactory.Extensions.TranscendenceAdventure.get().toTreeNode());
 		
 		elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
