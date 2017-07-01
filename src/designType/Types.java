@@ -24,6 +24,7 @@ public enum Types implements SubElementType {
 	EconomyType,
 	EffectType,
 	Image,
+	ImageComposite,
 	ItemTable,
 	ItemType,
 	MissionType,

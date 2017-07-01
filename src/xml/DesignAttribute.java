@@ -460,43 +460,61 @@ public class DesignAttribute {
 		}, OVERLAY_COUNTER_STTYLE {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "", "commandBarProgress", "flag", "progress", "radius");
+				JComboBox<String> field = createComboBox(false, value, "", "commandBarProgress", "flag", "progress", "radius");
 				return field;
 			}
 		}, LABEL_TYPE {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "", "advantage", "neutral", "disadvantage");
+				JComboBox<String> field = createComboBox(false, value, "", "advantage", "neutral", "disadvantage");
 				return field;
 			}
 		}, LAYOUT {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "", "bottomBar", "left", "right");
+				JComboBox<String> field = createComboBox(false, value, "", "bottomBar", "left", "right");
 				return field;
 			}
 		}, STYLE_CONTROLS {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "", "default", "warning");
+				JComboBox<String> field = createComboBox(false, value, "", "default", "warning");
 				return field;
 			}
 		}, PROGRAM {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "", "ShieldsDown", "Disarm", "Reboot");
+				JComboBox<String> field = createComboBox(false, value, "", "ShieldsDown", "Disarm", "Reboot");
 				return field;
 			}
 		}, LINKED_FIRE_OPTIONS {
 			public JComponent getInputField(String value) {
 				//WIP
-				JComboBox<String> field = createComboBox(true, value, "", "always", "targetInRange", "whenInFireArc");
+				JComboBox<String> field = createComboBox(false, value, "", "always", "targetInRange", "whenInFireArc");
 				return field;
 			}
 		}, TYPE_DEVICE {
 			public JComponent getInputField(String value) {
 				//WIP
+				JComboBox<String> field = createComboBox(true, value, "");
+				return field;
+			}
+		}, CATEGORY_DEVICE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "", "cargoHold", "drive", "launcher", "miscDevice", "reactor", "shields", "weapon");
+				return field;
+			}
+		}, TYPE_OVERLAY {
+			public JComponent getInputField(String value) {
+				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				return field;
+			}
+		}, SATELLITE_OVERLAP_CHECK {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "", "true", "planetoids", "asteroids");
 				return field;
 			}
 		}

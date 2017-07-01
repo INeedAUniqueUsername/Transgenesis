@@ -162,7 +162,7 @@ public class DesignElement {
 	public List<DesignElement> getSubElementsByName(String name) {
 		List<DesignElement> result = new ArrayList<DesignElement>();
 		for(DesignElement e : subElements) {
-			if(e.getName().equals(name)) {
+			if(e.getName().equalsIgnoreCase(name)) {
 				result.add(e);
 			}
 		}
@@ -375,6 +375,9 @@ public class DesignElement {
 		}
 	}
 	public static ArrayList<DesignElement> seen = new ArrayList<>();
+	public String toMinistryMarkdown() {
+		return bulletWiki(1) + toMinistryMarkdown(1);
+	}
 	public String toMinistryMarkdown(int level) {
 		String result = "";
 		result += /*bullet(level) +*/ name;
@@ -385,28 +388,35 @@ public class DesignElement {
 		System.out.println(name);
 		seen.add(this);
 		for(DesignAttribute a : attributes.values()) {
-			result += line(bullet(level+1) + a.toMinistryMarkdown());
+			result += line(bulletWiki(level+1) + a.toMinistryMarkdown());
 		}
 		for(DesignElement e : subElements) {
-			result += line(bullet(level+1) + "1" + " " + e.toMinistryMarkdown(level+1));
+			result += line(bulletWiki(level+1) + "1" + " " + e.toMinistryMarkdown(level+1));
 		}
 		for(DesignElement e : optionalSingleSubElements) {
-			result += line(bullet(level+1) + "0|1" + " " + e.toMinistryMarkdown(level+1));
+			result += line(bulletWiki(level+1) + "0|1" + " " + e.toMinistryMarkdown(level+1));
 		}
 		for(SubElementType e : optionalMultipleSubElements) {
-			result += line(bullet(level+1) + "0|+" + " " + e.get().toMinistryMarkdown(level+1));
+			result += line(bulletWiki(level+1) + "0|+" + " " + e.get().toMinistryMarkdown(level+1));
 		}
 		return result;
 	}
 	public static String line(String line) {
 		return line.isEmpty() ? "" : "\n" + line;
 	}
-	public static String bullet(int level) {
+	public static String bulletMinistry(int level) {
 		String result = "";
 		for(int i = 0; i < level; i++) {
 			result += "*";
 		}
 		return result + " ";
+	}
+	public static String bulletWiki(int level) {
+		String result = "";
+		for(int i = 0; i < level; i++) {
+			result += "  ";
+		}
+		return result + "* ";
 	}
 	public boolean equals(Object o) {
 		if(o instanceof DesignElement) {

@@ -173,7 +173,7 @@ public class AttributeFactory {
 					att("dockScreen", STRING),
 					att("dockingPorts", INTEGER),
 					att("enemyExclusionRadius", INTEGER),
-					att("ejactaAdj", INTEGER),
+					att("ejectaAdj", INTEGER),
 					att("ejectaType", TYPE_ANY),
 					att("explosionType", TYPE_ANY),
 					att("fireRateAdj", INTEGER),
@@ -255,5 +255,26 @@ public class AttributeFactory {
 		
 		}
 		return new DesignAttribute[] {};
+	}
+	public static void addDeviceContent(DesignElement e) {
+		e.addAttributes(
+				att("deviceSlots", WHOLE),
+				att("category", CATEGORY_DEVICE),
+				att("deviceSlotCategory", CATEGORY_DEVICE),
+				att("overlayType", TYPE_OVERLAY),
+				att("maxHPBonus", WHOLE),
+				att("external", BOOLEAN)
+		);
+		e.addOptionalMultipleSubElements(
+				() -> {
+					DesignElement enhanceAbilities = new DesignElement("EnhanceAbilities");
+					enhanceAbilities.addAttributes(
+							att("criteria", STRING),
+							att("type", STRING),
+							att("enhancement", STRING)
+							);
+					return enhanceAbilities;
+				}
+		);
 	}
 }

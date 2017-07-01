@@ -7,7 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 
+import designType.TypeFactory;
 import designType.Types;
+import designType.subElements.SubElementFactory.SystemGroupElements;
 import window.Frame;
 import window.Window;
 import xml.DesignAttribute;
@@ -17,6 +19,16 @@ import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.ValueType.*;
 import static xml.DesignAttribute.*;
 public class SubElementFactory {
+	public enum SystemGroupElements implements SubElementType {
+		;
+
+		@Override
+		public DesignElement get() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+	}
 	public enum DockScreensElements implements SubElementType {
 		DockScreen_Named, Pane_Named, Action;
 		
@@ -26,7 +38,7 @@ public class SubElementFactory {
 			switch(this) {
 			case DockScreen_Named:
 				e = new RenameableElement("DockScreen");
-				e.addOptionalSingleSubElements(SingleSubElementFactory.createSingleSubElementsForType(Types.DockScreen));
+				e.addOptionalSingleSubElements(TypeFactory.createSubElementsForType(Types.DockScreen));
 				break;
 			case Pane_Named:
 				e = new RenameableElement("Pane");
@@ -114,7 +126,7 @@ public class SubElementFactory {
 			DesignElement result = new DesignElement(name());
 			switch(this) {
 			case EncounterOverrides:
-				result = StationTypeElements.Encounter.get();
+				result = Types.StationType.get().getOptionalSingleByName("Encounter");
 				result.addAttributes(att("unid", TYPE_STATION));
 				break;
 			case ArmorDamageAdj:
@@ -332,16 +344,6 @@ public class SubElementFactory {
 		}
 		
 	}
-	public static enum MiscElements implements SubElementType {
-		Data,
-		;
-		public DesignElement get() {
-			DesignElement e = new RenameableElement(name());
-			e.addAttributes(att("id", STRING));
-			e.addAttributes(att("data", STRING));
-			return e;
-		}
-	}
 	public static enum TradeElements implements SubElementType {
 		AcceptDonation,
 		Buy,
@@ -397,112 +399,6 @@ public class SubElementFactory {
 			return e;
 		}
 		
-	}
-	public static enum StationTypeElements implements SubElementType {
-		Animations,
-		Communications,
-		ImageComposite,
-		Construction,
-		//Devices,
-		
-		EncounterGroup,
-		EncounterType,
-		Encounter,
-		Encounters,
-		//Events,
-		//HeroImage,
-		//Image,
-		ImageEffect,
-		ImageLookup,
-		ImageVariants,
-		//Items,
-		Reinforcements,
-		Satellites,
-		Ships, //Ship
-		Station,
-		Table,
-		;
-
-		@Override
-		public DesignElement get() {
-			// TODO Auto-generated method stub
-			DesignElement e = new DesignElement(name());
-			switch(this) {
-			case Animations:
-				e.addOptionalMultipleSubElements(() -> {
-					DesignElement animation = new DesignElement("Animation");
-					animation.addAttributes(att("x", INTEGER), att("y", INTEGER));
-					animation.addAttributes(createImageAttributes());
-					return animation;
-				});
-				break;
-			case Communications:
-				break;
-			case Construction:
-				break;
-			case EncounterGroup:
-				break;
-			case EncounterType:
-				break;
-			case Encounter:
-				e.addAttributes(
-						att("enemyExclusionRadius", WHOLE),
-						att("exclusionRadius", WHOLE),
-						att("levelFrequency", LEVEL_FREQUENCY),
-						att("locationCriteria", STRING),
-						att("maxAppearing", WHOLE),
-						att("minAppearing", WHOLE),
-						att("systemCriteria", STRING),
-						att("unique", UNIQUE)
-						);
-				DesignElement criteria = new DesignElement("Criteria");
-				criteria.addOptionalMultipleSubElements(
-						SystemCriteria.values()
-						);
-				e.addOptionalSingleSubElements(
-						criteria
-						);
-				break;
-			case Encounters:
-				e.addAttributes(att("frequency", FREQUENCY));
-				e.addOptionalMultipleSubElements(ShipGeneratorElements.values());
-				
-				break;
-			case ImageComposite:
-				break;
-			case ImageEffect:
-				break;
-			case ImageLookup:
-				break;
-			case ImageVariants:
-				break;
-			case Reinforcements:
-				e.addAttributes(
-						att("minShips", DICE_RANGE),
-						att("buildReinforcements", BOOLEAN)
-						);
-				e.addOptionalMultipleSubElements(ShipGeneratorElements.values());
-				break;
-			case Satellites:
-				break;
-			case Ships:
-				e.addAttributes(
-						att("challenge", DICE_RANGE),
-						att("standingCount", DICE_RANGE),
-						att("minShips", DICE_RANGE),
-						att("buildReinforcements", BOOLEAN)
-						);
-				break;
-			case Station:
-				break;
-			case Table:
-				break;
-			default:
-				break;
-			
-			}
-			return e;
-		}
 	}
 	public static enum ShipGeneratorElements implements SubElementType {
 		;
@@ -574,15 +470,6 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public static enum SpaceEnvironmentElements implements SubElementType {
-		Image,
-		EdgeMask,;
-		public DesignElement get() {
-			DesignElement e = new DesignElement(this.name());
-			e.addAttributes(createImageAttributes());
-			return e;
-		}
-	}
 	
 	/*
 	switch(s) {
@@ -613,7 +500,7 @@ public class SubElementFactory {
 		break;
 	}
 	*/
-	public static DesignAttribute[] createImageAttributes() {
+	public static DesignAttribute[] createImageDescAttributes() {
 		return new DesignAttribute[] {
 				att("imageID", TYPE_IMAGE),
 				att("imageX", WHOLE),

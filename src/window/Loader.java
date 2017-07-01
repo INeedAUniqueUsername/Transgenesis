@@ -34,12 +34,12 @@ import mod.TranscendenceMod;
 import xml.DesignElement;
 
 public class Loader {
-	private static final String AMPERSAND_PLACEHOLDER;
-	static {
-		SecureRandom random = new SecureRandom();
-		AMPERSAND_PLACEHOLDER = new BigInteger(130, random).toString(32);
-	}
 	public static int successes = 0;
+	
+	public static void loadDefinitions() {
+		File definitions = new File("definitions.txt");
+	}
+	
 	public static List<TranscendenceMod> loadAllMods(File path) {
 		List<TranscendenceMod> result = new ArrayList<TranscendenceMod>();
 		if(path.isDirectory()) {
