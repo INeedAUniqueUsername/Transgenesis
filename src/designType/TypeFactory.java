@@ -40,10 +40,11 @@ public final class TypeFactory {
 		}
 		
 		e.addAttributes(
-				att("UNID", ValueType.UNID),
-				att("attributes", ValueType.STRING),
-				att("inherit", ValueType.TYPE_INHERITED),
-				att("extends", ValueType.STRING)
+				att("UNID", UNID),
+				att("attributes", STRING),
+				att("inherit", TYPE_INHERITED),
+				att("extends", STRING),
+				att("obsolete", WHOLE)
 				);
 		DesignElement communications = new DesignElement("Communications");
 		communications.addOptionalMultipleSubElements(
@@ -429,7 +430,6 @@ public final class TypeFactory {
 				encounters.addAttributes(att("frequency", FREQUENCY));
 				encounters.addOptionalMultipleSubElements(ShipGeneratorElements.values());
 				
-			//Image
 				//shipwreckid
 			//WIP
 			DesignElement imageComposite = ele("ImageComposite");
