@@ -4,6 +4,7 @@ import designType.subElements.DataElements;
 import designType.subElements.Event;
 import designType.subElements.Events;
 import designType.subElements.Language;
+import designType.subElements.SpaceObject;
 import designType.subElements.SubElementFactory;
 import designType.subElements.SubElementFactory.AdventureDescElements;
 import designType.subElements.SubElementFactory.DisplayAttributesElements;
@@ -21,6 +22,11 @@ import static xml.DesignAttribute.ValueType.*;
 import static designType.AttributeFactory.addDeviceContent;
 import static xml.DesignAttribute.*;
 import static xml.DesignElement.*;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
 public final class TypeFactory {
 	//\#define ([A-Z]*_*)*\s+CONSTLIT\(\"(.+)\"\)
 	public static DesignElement createDesignType(Types t) {
@@ -46,10 +52,10 @@ public final class TypeFactory {
 				att("extends", STRING),
 				att("obsolete", WHOLE)
 				);
-		DesignElement communications = new DesignElement("Communications");
+		DesignElement communications = ele("Communications");
 		communications.addOptionalMultipleSubElements(
 				() -> {
-					DesignElement message = new DesignElement("Message");
+					DesignElement message = ele("Message");
 					message.addAttributes(
 							att("id", STRING),
 							att("name", STRING),
@@ -62,11 +68,11 @@ public final class TypeFactory {
 					return message;
 				}
 				);
-		DesignElement dockScreens = new DesignElement("DockScreens");
+		DesignElement dockScreens = ele("DockScreens");
 		dockScreens.addOptionalMultipleSubElements(DockScreensElements.DockScreen_Named);
-		DesignElement displayAttributes = new DesignElement("DisplayAttributes");
+		DesignElement displayAttributes = ele("DisplayAttributes");
 		displayAttributes.addOptionalMultipleSubElements(DisplayAttributesElements.ItemAttribute);
-		DesignElement attributeDesc = new DesignElement("AttributeDesc");
+		DesignElement attributeDesc = ele("AttributeDesc");
 		attributeDesc.addOptionalMultipleSubElements(DisplayAttributesElements.ItemAttribute);
 		e.addOptionalSingleSubElements(
 				communications,
@@ -85,9 +91,9 @@ public final class TypeFactory {
 	public static DesignElement[] createSubElementsForType(Types t) {
 		switch(t) {
 		case AdventureDesc:
-			DesignElement encounterOverrides = new DesignElement("EncounterOverrides");
+			DesignElement encounterOverrides = ele("EncounterOverrides");
 			encounterOverrides.addOptionalMultipleSubElements(AdventureDescElements.EncounterOverrides);
-			DesignElement constants = new DesignElement("Constants");
+			DesignElement constants = ele("Constants");
 			constants.addOptionalMultipleSubElements(
 					AdventureDescElements.ArmorDamageAdj,
 					AdventureDescElements.ShieldDamageAdj
@@ -97,8 +103,8 @@ public final class TypeFactory {
 			}
 			;
 		case DockScreen:
-			DesignElement listOptions = new DesignElement("ListOptions");
-			DesignElement list = new DesignElement("List");
+			DesignElement listOptions = ele("ListOptions");
+			DesignElement list = ele("List");
 			for(DesignElement e : new DesignElement[] {listOptions, list}) {
 				e.addAttributes(
 						att("dataFrom", ValueType.DOCKSCREEN_DATA_FROM),
@@ -119,7 +125,7 @@ public final class TypeFactory {
 			Event onInit = new Event("OnInit");
 			Event initialPane = new Event("InitialPane");
 			Event onScreenUpdate = new Event("OnScreenUpdate");
-			DesignElement display = new DesignElement("Display");
+			DesignElement display = ele("Display");
 			display.addAttributes(
 					att("display", STRING),
 					att("animate", STRING),
@@ -132,7 +138,7 @@ public final class TypeFactory {
 			display.addOptionalMultipleSubElements(
 					DisplayElements.values()
 					);
-			DesignElement canvas = new DesignElement("Canvas");
+			DesignElement canvas = ele("Canvas");
 			canvas.addAttributes(
 					att("left", INTEGER),
 					att("right", INTEGER),
@@ -140,7 +146,7 @@ public final class TypeFactory {
 					att("bottom", INTEGER)
 					);
 			//WIP
-			DesignElement panes = new DesignElement("Panes");
+			DesignElement panes = ele("Panes");
 			panes.addOptionalMultipleSubElements(DockScreensElements.Pane_Named);
 			return new DesignElement[] {
 				listOptions, list, onScreenInit, onInit, initialPane, onScreenUpdate, display, canvas, panes
@@ -151,24 +157,24 @@ public final class TypeFactory {
 		case ItemTable:				break;
 		case ItemType:
 			DesignElement
-			armor = new DesignElement("Armor"),
-			autoDefenseDevice = new DesignElement("AutoDefenseDevice"),
-			cargoHoldDevice = new DesignElement("CargoHoldDevice"),
-			components = new DesignElement("Components"),
-			cyberDeckDevice = new DesignElement("CyberDeckDevice"),
-			driveDevice = new DesignElement("DriveDevice"),
-			enhancerDevice = new DesignElement("EnhancerDevice"),
-			image = new DesignElement("Image"),
+			armor = ele("Armor"),
+			autoDefenseDevice = ele("AutoDefenseDevice"),
+			cargoHoldDevice = ele("CargoHoldDevice"),
+			components = ele("Components"),
+			cyberDeckDevice = ele("CyberDeckDevice"),
+			driveDevice = ele("DriveDevice"),
+			enhancerDevice = ele("EnhancerDevice"),
+			image = ele("Image"),
 			initialData = DataElements.InitialData.get(),
-			invoke = new DesignElement("Invoke"),
-			miscellaneousDevice = new DesignElement("MiscellaneousDevice"),
-			missile = new DesignElement("Missile"),
-			names = new DesignElement("Names"),
-			reactorDevice = new DesignElement("ReactorDevice"),
-			repairerDevice = new DesignElement("RepairerDevice"),
-			shields = new DesignElement("Shields"),
-			solarDevice = new DesignElement("SolarDevice"),
-			weapon = new DesignElement("Weapon");
+			invoke = ele("Invoke"),
+			miscellaneousDevice = ele("MiscellaneousDevice"),
+			missile = ele("Missile"),
+			names = ele("Names"),
+			reactorDevice = ele("ReactorDevice"),
+			repairerDevice = ele("RepairerDevice"),
+			shields = ele("Shields"),
+			solarDevice = ele("SolarDevice"),
+			weapon = ele("Weapon");
 			armor.addAttributes(
 					att("blindingDamageAdj", WHOLE),
 					att("blindingImmune", BOOLEAN),
@@ -306,7 +312,6 @@ public final class TypeFactory {
 			weapon.addAttributes();
 			//WIP: Add device-specific events
 			components.addOptionalMultipleSubElements(ItemGeneratorElements.values());
-			//WIP
 			
 			
 			for(DesignElement e : new DesignElement[] {
@@ -349,11 +354,12 @@ public final class TypeFactory {
 		case MissionType:			break;
 		case NameGenerator:			break;
 		case OverlayType:
-			DesignElement effect = new DesignElement(SubElementFactory.createEffects(), "Effect");
-			DesignElement hitEffect = new DesignElement(SubElementFactory.createEffects(), "HitEffect");
-			DesignElement effectWhenHit = new DesignElement(SubElementFactory.createEffects(), "EffectWhenHit");
+			DesignElement effect = new DesignElement(SubElementFactory.createEffects(), "Effect"),
+			hitEffect = new DesignElement(SubElementFactory.createEffects(), "HitEffect"),
+			effectWhenHit = new DesignElement(SubElementFactory.createEffects(), "EffectWhenHit"),
+			counter = ele("Counter");
+			
 			effectWhenHit.addAttributes(att("altEffect", BOOLEAN));
-			DesignElement counter = new DesignElement("Counter");
 			counter.addAttributes(
 					att("style", ValueType.OVERLAY_COUNTER_STTYLE),
 					att("label", STRING),
@@ -361,21 +367,26 @@ public final class TypeFactory {
 					att("color", HEX_COLOR),
 					att("showOnMap", BOOLEAN)
 					);
+			
 			return new DesignElement[] {
 				effect, hitEffect, effectWhenHit, counter
 			};
 		case Power:
 			return new DesignElement[] {
-					new DesignElement("OnShow"),
-					new DesignElement("OnInvokedByPlayer"),
-					new DesignElement("OnInvoke"),
-					new DesignElement("OnDestroyCheck")	
+					ele("OnShow"),
+					ele("OnInvokedByPlayer"),
+					ele("OnInvoke"),
+					ele("OnDestroyCheck")	
 			};
-		case ShipClass:				break;
+		case ShipClass:
+			
+			List<DesignElement> result = new ArrayList<>(Arrays.asList());
+			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
+			return result.toArray(new DesignElement[0]);
 		case ShipTable:				break;
 		case Sound:					break;
 		case Sovereign:
-			DesignElement relationships = new DesignElement("Relationships");
+			DesignElement relationships = ele("Relationships");
 				relationships.addOptionalMultipleSubElements(SovereignElements.Relationship);
 			return new DesignElement[] {
 					relationships
@@ -391,7 +402,7 @@ public final class TypeFactory {
 		case StationType:
 			DesignElement animations = ele("Animations");
 				animations.addOptionalMultipleSubElements(() -> {
-					DesignElement animation = new DesignElement("Animation");
+					DesignElement animation = ele("Animation");
 					animation.addAttributes(att("x", INTEGER), att("y", INTEGER));
 					animation.addAttributes(SubElementFactory.createImageDescAttributes());
 					return animation;
@@ -419,7 +430,7 @@ public final class TypeFactory {
 						att("systemCriteria", STRING),
 						att("unique", UNIQUE)
 						);
-				DesignElement criteria = new DesignElement("Criteria");
+				DesignElement criteria = ele("Criteria");
 				criteria.addOptionalMultipleSubElements(
 						SystemCriteria.values()
 						);
@@ -430,7 +441,6 @@ public final class TypeFactory {
 				encounters.addAttributes(att("frequency", FREQUENCY));
 				encounters.addOptionalMultipleSubElements(ShipGeneratorElements.values());
 				
-				//shipwreckid
 			//WIP
 			DesignElement imageComposite = ele("ImageComposite");
 			DesignElement imageEffect = ele("ImageEffect");
@@ -457,8 +467,8 @@ public final class TypeFactory {
 						att("minShips", DICE_RANGE),
 						att("buildReinforcements", BOOLEAN)
 						);
-			return new DesignElement[] {
-					animations,
+				ships.addOptionalMultipleSubElements(ShipGeneratorElements.values());
+			result = new ArrayList<DesignElement>(Arrays.asList(animations,
 					construction,
 					encounterGroup,
 					encounterType,
@@ -470,8 +480,9 @@ public final class TypeFactory {
 					imageVariants,
 					reinforcements,
 					satellites,
-					ships
-			};
+					ships));
+			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
+			return result.toArray(new DesignElement[0]);
 		case SystemMap:				break;
 		case SystemTable:			break;
 		case SystemType:			break;

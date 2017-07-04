@@ -207,7 +207,7 @@ public class AttributeFactory {
 					att("regen", INTEGER),
 					att("repairRate", INTEGER),
 					att("reverseArticle", BOOLEAN),
-					att("scale", SCALE),
+					att("scale", SCALE_SIZE),
 					att("shipEncounter", BOOLEAN),
 					att("shipRegen", INTEGER),
 					att("shipRepairRate", INTEGER),

@@ -9,8 +9,11 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import javax.swing.Action;
@@ -19,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.plaf.synth.SynthSpinnerUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -221,10 +225,10 @@ public class DesignElement {
 		return result;
 	}
 	*/
-	public String getXML() {
+	public String getXMLOutput() {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-			doc.appendChild(getXML(doc));
+			doc.appendChild(getOutput(doc));
 			
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
@@ -247,7 +251,87 @@ public class DesignElement {
 		}
 		return null;
 	}
-	public Element getXML(Document doc) {
+	public String getXMLDefinition() {
+		try {
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			doc.appendChild(getDefinition(doc));
+			
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(doc), new StreamResult(writer));
+			
+			StreamResult result = new StreamResult(new StringWriter());
+			DOMSource source = new DOMSource(doc);
+			transformer.transform(source, result);
+			return result.getWriter().toString();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public Element getDefinition(Document doc) {
+		return getDefinition(doc, "", new HashMap<DesignElement, String>());
+	}
+	//Format of seen: element, id
+	public Element getDefinition(Document doc, String parentName, HashMap<DesignElement, String> seen) {
+		String id = seen.get(this);
+		Element result;
+		//Check if we already defined an element just like this one
+		if(id == null) {
+			//Add a definition of this element
+			id = parentName + "_" + name;
+			seen.put(this, id);
+			
+			System.out.println("-Defining: " + id);
+			System.out.println("--Hashcode: " + hashCode());
+			System.out.println("---Attributes: " + attributes);
+			System.out.println("----Subelements (RequiredSingle): " + subElements);
+			System.out.println("-----Subelements (OptionalSingle): " + optionalSingleSubElements);
+			System.out.println("------Subelements (OptionalMultiple: " + optionalMultipleSubElements);
+			
+			result = doc.createElement("ElementDefinition");
+			result.setAttribute("id", id);
+			result.setAttribute("name", name);
+			Element child;
+			for(DesignAttribute a : getAttributes()) {
+				child = a.getDefinition(doc);
+				result.appendChild(child);
+			}
+			for(DesignElement e : subElements) {
+				child = e.getDefinition(doc, name, seen);
+				child.setAttribute("category", "requiredSingle");
+				result.appendChild(child);
+			}
+			for(DesignElement e : optionalSingleSubElements) {
+				child = e.getDefinition(doc, name, seen);
+				child.setAttribute("category", "optionalSingle");
+				result.appendChild(child);
+			}
+			//Recursion issue, probably due to the fact that attributes that are equal still have different hash codes
+			for(SubElementType s : optionalMultipleSubElements) {
+				DesignElement e = s.get();
+				child = e.getDefinition(doc, name, seen);
+				child.setAttribute("category", "optionalMultiple");
+				result.appendChild(child);
+			}
+		} else {
+			System.out.println("--Referencing: " + id);
+			//Make a reference to the original element
+			result = doc.createElement("ElementReference");
+			result.setAttribute("id", id);
+			result.setAttribute("name", name);
+		}
+		return result;
+	}
+	public Element getOutput(Document doc) {
 		Element child = doc.createElement(getName());
 		for(DesignAttribute a : getAttributes()) {
 			if(a.getValue().isEmpty()) {
@@ -259,7 +343,7 @@ public class DesignElement {
 		}
 		for(DesignElement e : getSubElements()) {
 			System.out.println("Child");
-			child.appendChild(e.getXML(doc));
+			child.appendChild(e.getOutput(doc));
 		}
 		return child;
 	}
@@ -429,5 +513,14 @@ public class DesignElement {
 					optionalMultipleSubElements.equals(e.optionalMultipleSubElements);
 		}
 		return false;
+	}
+	public int hashCode() {
+		return Objects.hash(
+				name,
+				attributes,
+				subElements,
+				optionalSingleSubElements,
+				optionalMultipleSubElements
+				);
 	}
 }

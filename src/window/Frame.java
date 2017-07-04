@@ -51,6 +51,7 @@ import net.miginfocom.swing.MigLayout;
 import designType.TypeFactory;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
+import mod.ExtensionFactory.Extensions;
 import xml.DesignAttribute;
 import xml.DesignElement;
 
@@ -81,6 +82,25 @@ public class Frame extends JFrame {
 	//JPanel subelementPanel;
 	public Frame() {
 		try {
+			FileWriter fw = new FileWriter("XML Definitions.txt");
+			BufferedWriter bw = new BufferedWriter(fw);
+			DesignElement hierarchy = new DesignElement("Hierarchy");
+			hierarchy.addSubElements(
+					ExtensionFactory.Extensions.TranscendenceAdventure.get(),
+					ExtensionFactory.Extensions.TranscendenceExtension.get(),
+					ExtensionFactory.Extensions.TranscendenceLibrary.get(),
+					ExtensionFactory.Extensions.TranscendenceModule.get()
+					);
+			bw.write(hierarchy.getXMLDefinition());
+			bw.close();
+			fw.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			System.exit(0);
+		}
+		
+		try {
 			//https://stackoverflow.com/questions/5640334/how-do-i-preserve-line-breaks-when-using-jsoup-to-convert-html-to-plain-text
 			//https://stackoverflow.com/questions/11154145/jsoup-how-to-extract-this-text
 			Document d = Jsoup.connect("http://wiki.kronosaur.com/modding/xml/effecttype").get();
@@ -101,7 +121,6 @@ public class Frame extends JFrame {
 			bw.write(ExtensionFactory.Extensions.TranscendenceAdventure.get().toMinistryMarkdown());
 			bw.close();
 			fw.close();
-			System.out.println("Close");
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -240,7 +259,7 @@ public class Frame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(selected != null) {
 					setAttributes(selected);
-					JTextArea ta = new JTextArea(selected.getXML());
+					JTextArea ta = new JTextArea(selected.getXMLOutput());
 					ta.setFont(Window.FONT_MEDIUM);
 					ta.setTabSize(4);
 					ta.setEditable(false);

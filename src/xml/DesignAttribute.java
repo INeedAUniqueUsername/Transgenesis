@@ -3,10 +3,14 @@ package xml;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import window.Window;
 
@@ -316,10 +320,16 @@ public class DesignAttribute {
 						"", "inSystem", "inUniverse"
 						);
 			}
-		}, SCALE {
+		}, SCALE_SIZE {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
 						"", "star", "world", "structure", "ship", "flotsam"
+						);
+			}
+		}, SCALE_DISTANCE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"", "pixel", "light-second", "light-minute"
 						);
 			}
 		}, TILE_SIZE {
@@ -339,7 +349,22 @@ public class DesignAttribute {
 						"none"
 						);
 			}
-		}, PRICE_ADJ {
+		}, SHAPE_SPACE_ENVIRONMENT {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"",
+						"circular",
+						"arc"
+						);
+			}
+		}, PAINT_LAYER {
+			public JComponent getInputField(String value) {
+				return createComboBox(true, value,
+						"",
+						"overhang"
+						);
+			}
+		},PRICE_ADJ {
 			
 		}, TYPE_WEAPON {
 			public JComponent getInputField(String value) {
@@ -517,6 +542,12 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(false, value, "", "true", "planetoids", "asteroids");
 				return field;
 			}
+		}, TYPE_SHIPCLASS {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "");
+				return field;
+			}
 		}
 		
 		;
@@ -601,7 +632,7 @@ public class DesignAttribute {
 		return new DesignAttribute(name, valueType, value);
 	}
 	public String toMinistryMarkdown() {
-		return "**" + name + "=**" + " " + "[" + valueType.toString().toLowerCase() + "]" + " " + value;
+		return "**" + name + "=**" + " " + "[" + valueType.toString().toLowerCase() + "]" + " " + "\"" + value + "\"";
 	}
 	public boolean equals(Object o) {
 		if(o instanceof DesignAttribute) {
@@ -609,6 +640,19 @@ public class DesignAttribute {
 			return name.equals(a.getName()) && valueType.equals(a.getValueType()) && value.equals(a.getValue());
 		}
 		return false;
+	}
+	public int hashCode() {
+		return Objects.hash(name, valueType, value);
+	}
+	public String toString() {
+		return toMinistryMarkdown() + " " + hashCode();
+	}
+	public Element getDefinition(Document doc) {
+		Element result = doc.createElement("Attribute");
+		result.setAttribute("name", name);
+		result.setAttribute("valueType", valueType.name());
+		result.setAttribute("value", value);
+		return result;
 	}
 	
 }

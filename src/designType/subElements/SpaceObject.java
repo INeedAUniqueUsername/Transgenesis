@@ -5,15 +5,17 @@ import static xml.DesignAttribute.ValueType.INTEGER;
 import static xml.DesignAttribute.ValueType.STRING;
 import static xml.DesignAttribute.ValueType.WHOLE;
 
+import designType.Types;
 import designType.subElements.SubElementFactory.DeviceTableElements;
 import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.TradeElements;
+import xml.DesignAttribute.ValueType;
 import xml.DesignElement;
 
 public final class SpaceObject {
 	private SpaceObject() {}
 
-	public static DesignElement[] createSpaceObjectSubElements() {
+	public static DesignElement[] createSpaceObjectSubElements(Types t) {
 		DesignElement names = new DesignElement("Names");
 		names.addAttributes(
 				SubElementFactory.createNameAttributes()
@@ -26,6 +28,10 @@ public final class SpaceObject {
 				);
 		DesignElement image = new DesignElement("Image");
 		image.addAttributes(SubElementFactory.createImageDescAttributes());
+		if(t == Types.StationType) {
+			image.addAttributes(att("shipwreckID", ValueType.TYPE_SHIPCLASS));
+		}
+		
 		
 		DesignElement heroImage = new DesignElement("HeroImage");
 		heroImage.addAttributes(SubElementFactory.createImageDescAttributes());
