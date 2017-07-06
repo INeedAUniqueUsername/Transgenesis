@@ -1,12 +1,12 @@
 package designType.subElements;
 
 import designType.Types;
-import xml.DesignElement;
+import xml.DesignElementOld;
 
 public final class Events {
 	private Events() {}
-	public static DesignElement createEvents(Types type) {
-		DesignElement e = new DesignElement("Events");
+	public static DesignElementOld createEvents(Types type) {
+		DesignElementOld e = new DesignElementOld("Events");
 		e.addOptionalSingleSubElements(
 				new Event("GetCreatePos"),
 				new Event("GetGlobalAchievements"),

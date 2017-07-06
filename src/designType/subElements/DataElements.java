@@ -3,7 +3,7 @@ package designType.subElements;
 import static xml.DesignAttribute.att;
 import static xml.DesignAttribute.ValueType.STRING;
 
-import xml.DesignElement;
+import xml.DesignElementOld;
 import xml.RenameableElement;
 
 //Done
@@ -13,10 +13,10 @@ public enum DataElements implements SubElementType {
 	InitialData
 	;
 	@Override
-	public DesignElement get() {
-		DesignElement e = new DesignElement(name());
+	public DesignElementOld get() {
+		DesignElementOld e = new DesignElementOld(name());
 		e.addOptionalMultipleSubElements(() -> {
-			DesignElement data = new RenameableElement("Data");
+			DesignElementOld data = new RenameableElement("Data");
 			data.addAttributes(
 					att("id", STRING),
 					att("data", STRING)

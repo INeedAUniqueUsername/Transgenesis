@@ -54,6 +54,7 @@ import mod.TranscendenceMod;
 import mod.ExtensionFactory.Extensions;
 import xml.DesignAttribute;
 import xml.DesignElement;
+import xml.DesignElementOld;
 
 public class Frame extends JFrame {
 	
@@ -70,7 +71,7 @@ public class Frame extends JFrame {
 	private final DefaultTreeCellRenderer elementTreeCellRenderer;
 	
 	private final List<TranscendenceMod> mods;
-	private DesignElement selected;
+	private DesignElementOld selected;
 	
 	JLabel documentation;
 	private final JPanel labelPanel;
@@ -81,10 +82,12 @@ public class Frame extends JFrame {
 	private final JButton xmlButton;
 	//JPanel subelementPanel;
 	public Frame() {
+		DesignElement.getDefinitions();
+		System.exit(0);
 		try {
 			FileWriter fw = new FileWriter("XML Definitions.txt");
 			BufferedWriter bw = new BufferedWriter(fw);
-			DesignElement hierarchy = new DesignElement("Hierarchy");
+			DesignElementOld hierarchy = new DesignElementOld("Hierarchy");
 			hierarchy.addSubElements(
 					ExtensionFactory.Extensions.TranscendenceAdventure.get(),
 					ExtensionFactory.Extensions.TranscendenceExtension.get(),
@@ -134,7 +137,7 @@ public class Frame extends JFrame {
 		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\Extensions";
 		//String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
-		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new DesignElement(dir));
+		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new DesignElementOld(dir));
 		for(TranscendenceMod tm : mods) {
 			if(tm == null) {
 				System.out.println("Null extension found");
@@ -159,7 +162,7 @@ public class Frame extends JFrame {
 			                    tree, value, sel,
 			                    expanded, leaf, row,
 			                    hasFocus);
-			    DesignElement element = (DesignElement) ((DefaultMutableTreeNode) value).getUserObject();
+			    DesignElementOld element = (DesignElementOld) ((DefaultMutableTreeNode) value).getUserObject();
 			    
 			    return this;
 			}
@@ -185,7 +188,7 @@ public class Frame extends JFrame {
 	    		}
 	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	    				elementTree.getLastSelectedPathComponent();
-	    		DesignElement element = (DesignElement) node.getUserObject();
+	    		DesignElementOld element = (DesignElementOld) node.getUserObject();
 	    		selectElement(element);
 	    	}
 	    });
@@ -336,7 +339,7 @@ public class Frame extends JFrame {
 		result.getVerticalScrollBar().setUnitIncrement(16);
 		return result;
 	}
-	public void selectElement(DesignElement e) {
+	public void selectElement(DesignElementOld e) {
 		System.out.println("Initialize from element: " + e.getName());
 		Dimension size = getSize();
 		int state = getExtendedState();
@@ -346,7 +349,7 @@ public class Frame extends JFrame {
 		pack();
 		repaint();
 	}
-	public void setAttributes(DesignElement e) {
+	public void setAttributes(DesignElementOld e) {
 		List<DesignAttribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();
 		for(int i = 0; i < attributes.size(); i++) {
@@ -368,12 +371,12 @@ public class Frame extends JFrame {
 		return result;
 	}
 	
-	public void updateTreeText(DesignElement se)
+	public void updateTreeText(DesignElementOld se)
 	{
 		elementTreeModel.nodeChanged(getNode(se));
 	}
 	
-	public DefaultMutableTreeNode getNode(DesignElement element)
+	public DefaultMutableTreeNode getNode(DesignElementOld element)
 	{
 		DefaultMutableTreeNode theNode = null;
 		for (Enumeration<DefaultMutableTreeNode> e = (Enumeration<DefaultMutableTreeNode>) ((DefaultMutableTreeNode) elementTreeModel.getRoot()).depthFirstEnumeration(); e.hasMoreElements() && theNode == null;) {
@@ -392,7 +395,7 @@ public class Frame extends JFrame {
 	        elementTree.expandRow(i);
 	    }
 	}
-	public void addElement(DesignElement se)
+	public void addElement(DesignElementOld se)
 	{
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se), parent = (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent();
 		elementTreeModel.insertNodeInto(node, parent, 0);

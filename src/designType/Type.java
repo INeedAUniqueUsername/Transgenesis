@@ -1,8 +1,8 @@
 package designType;
 
-import xml.DesignElement;
+import xml.DesignElementOld;
 
-public class Type extends DesignElement {
+public class Type extends DesignElementOld {
 	public Type(String name) {
 		super(name);
 	}

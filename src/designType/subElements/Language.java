@@ -11,26 +11,26 @@ import designType.Types;
 import window.Frame;
 import window.Window;
 import xml.DesignAttribute;
-import xml.DesignElement;
+import xml.DesignElementOld;
 
 public final class Language {
 
 	//Done
-	public static DesignElement createLanguage(Types t) {
-		DesignElement e = new DesignElement("Language");
+	public static DesignElementOld createLanguage(Types t) {
+		DesignElementOld e = new DesignElementOld("Language");
 		e.addOptionalMultipleSubElements(
 				() -> {
-					DesignElement text = new DesignElement("Text");
+					DesignElementOld text = new DesignElementOld("Text");
 					text.addAttributes(att("id", STRING));
 					return text;
 				},
 				() -> {
-					DesignElement string = new DesignElement("String");
+					DesignElementOld string = new DesignElementOld("String");
 					string.addAttributes(att("id", STRING));
 					return string;
 				},
 				() -> {
-					DesignElement message = new DesignElement("Message");
+					DesignElementOld message = new DesignElementOld("Message");
 					message.addAttributes(
 							att("id", STRING),
 							att("text", STRING)
@@ -114,7 +114,7 @@ public final class Language {
 	}
 
 }
-class Text extends DesignElement {
+class Text extends DesignElementOld {
 	String displayName;
 	public Text(String id) {
 		super();

@@ -10,35 +10,35 @@ import designType.subElements.SubElementFactory.DeviceTableElements;
 import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.TradeElements;
 import xml.DesignAttribute.ValueType;
-import xml.DesignElement;
+import xml.DesignElementOld;
 
 public final class SpaceObject {
 	private SpaceObject() {}
 
-	public static DesignElement[] createSpaceObjectSubElements(Types t) {
-		DesignElement names = new DesignElement("Names");
+	public static DesignElementOld[] createSpaceObjectSubElements(Types t) {
+		DesignElementOld names = new DesignElementOld("Names");
 		names.addAttributes(
 				SubElementFactory.createNameAttributes()
 				);
-		DesignElement items = new DesignElement("Items");
+		DesignElementOld items = new DesignElementOld("Items");
 		items.addOptionalMultipleSubElements(ItemGeneratorElements.values());
-		DesignElement devices = new DesignElement("Devices");
+		DesignElementOld devices = new DesignElementOld("Devices");
 		devices.addOptionalMultipleSubElements(
 				DeviceTableElements.values()
 				);
-		DesignElement image = new DesignElement("Image");
+		DesignElementOld image = new DesignElementOld("Image");
 		image.addAttributes(SubElementFactory.createImageDescAttributes());
 		if(t == Types.StationType) {
 			image.addAttributes(att("shipwreckID", ValueType.TYPE_SHIPCLASS));
 		}
 		
 		
-		DesignElement heroImage = new DesignElement("HeroImage");
+		DesignElementOld heroImage = new DesignElementOld("HeroImage");
 		heroImage.addAttributes(SubElementFactory.createImageDescAttributes());
 		
-		DesignElement initialData = DataElements.InitialData.get();
+		DesignElementOld initialData = DataElements.InitialData.get();
 		
-		DesignElement dockingPorts = new DesignElement("DockingPorts");
+		DesignElementOld dockingPorts = new DesignElementOld("DockingPorts");
 		dockingPorts.addAttributes(
 				att("bringToFront", STRING),
 				att("sendToBack", STRING),
@@ -50,7 +50,7 @@ public final class SpaceObject {
 				att("x", INTEGER),
 				att("y", INTEGER)
 				);
-		DesignElement trade = new DesignElement("Trade");
+		DesignElementOld trade = new DesignElementOld("Trade");
 		trade.addAttributes(
 				att("currency", STRING),
 				att("creditConversion", WHOLE),
@@ -64,7 +64,7 @@ public final class SpaceObject {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new DesignElement[] {
+		return new DesignElementOld[] {
 				names, items, devices, image, heroImage, initialData, dockingPorts, trade
 		};
 	}

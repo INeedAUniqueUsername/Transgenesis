@@ -2,8 +2,8 @@ package designType.subElements;
 
 import java.util.function.Supplier;
 
-import xml.DesignElement;
+import xml.DesignElementOld;
 
-public interface SubElementType extends Supplier<DesignElement> {
-	public DesignElement get();
+public interface SubElementType extends Supplier<DesignElementOld> {
+	public DesignElementOld get();
 }

@@ -1,8 +1,8 @@
 package designType.subElements;
 
-import xml.DesignElement;
+import xml.DesignElementOld;
 
-public class Event extends DesignElement {
+public class Event extends DesignElementOld {
 	public Event(String name) {
 		super(name);
 	}

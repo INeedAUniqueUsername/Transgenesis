@@ -31,14 +31,10 @@ import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
-import xml.DesignElement;
+import xml.DesignElementOld;
 
 public class Loader {
 	public static int successes = 0;
-	
-	public static void loadDefinitions() {
-		File definitions = new File("definitions.txt");
-	}
 	
 	public static List<TranscendenceMod> loadAllMods(File path) {
 		List<TranscendenceMod> result = new ArrayList<TranscendenceMod>();
@@ -81,7 +77,7 @@ public class Loader {
 			});
 			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
 			
-			LinkedList<DesignElement> elementStack = new LinkedList<DesignElement>();	//The last one is the current element we are looking at
+			LinkedList<DesignElementOld> elementStack = new LinkedList<DesignElementOld>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
 			TreeMap<String, String> unid_map = new TreeMap<>();
 			Read: while (reader.hasNext()) {
@@ -117,8 +113,8 @@ public class Loader {
 			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
 			    	System.out.println("Element name: " + name);
-			    	Consumer<DesignElement> addAttributes =((DesignElement e) -> {
-			    		DesignElement element = elementStack.getLast();
+			    	Consumer<DesignElementOld> addAttributes =((DesignElementOld e) -> {
+			    		DesignElementOld element = elementStack.getLast();
 				    	//Now add all the attributes
 				    	Iterator<Attribute> attributes = event.asStartElement().getAttributes();
 				    	while(attributes.hasNext()) {
@@ -140,7 +136,7 @@ public class Loader {
 			    	try {
 			    		//Check if we have a DesignType
 				    	Types result = Types.valueOf(name);
-			    		DesignElement element = result.get();
+			    		DesignElementOld element = result.get();
 			    		elementStack.getLast().addSubElements(element);
 			    		elementStack.addLast(element);
 			    		addAttributes.accept(element);
@@ -164,15 +160,15 @@ public class Loader {
 			    			System.out.println("Skipping Start: First element is unrecognized");
 			    			break ElementName;
 			    		}
-			    		DesignElement element = elementStack.getLast();
+			    		DesignElementOld element = elementStack.getLast();
 			    		if(element == null) {
 			    			System.out.println("Null Element Found");
 			    			break ElementName;
 			    		}
-			    		DesignElement add = element.getAddableElement(name);
+			    		DesignElementOld add = element.getAddableElement(name);
 			    		if(add == null) {
 			    			System.out.println("Adding generic element: " + name);
-			    			add = new DesignElement(name);
+			    			add = new DesignElementOld(name);
 			    		} else {
 			    			System.out.println("Adding identified element: " + name);
 			    		}
