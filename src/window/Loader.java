@@ -200,7 +200,7 @@ public class Loader {
 			    }
 			    
 			}
-			mod.setUNIDMap(unid_map);
+			//mod.setUNIDMap(unid_map);
 			
 			/*
 			lines = lines.replaceAll("&", "AMPERSAND");

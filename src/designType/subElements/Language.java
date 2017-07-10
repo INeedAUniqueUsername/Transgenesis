@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import designType.Types;
-import window.Frame;
+import window.FrameOld;
 import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElementOld;
@@ -125,7 +125,7 @@ class Text extends DesignElementOld {
 		return displayName;
 	}
 	//Make uneditable
-	public void initializeFrame(Frame frame) {
+	public void initializeFrame(FrameOld frame) {
 		JPanel labelPanel = frame.getAttributeLabelPanel();
 		JPanel fieldPanel = frame.getAttributeFieldPanel();
 		JPanel subElementPanel = frame.getSubElementPanel();

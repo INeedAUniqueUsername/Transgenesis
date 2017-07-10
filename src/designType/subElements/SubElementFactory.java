@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionEvent;
 import designType.TypeFactory;
 import designType.Types;
 import designType.subElements.SubElementFactory.SystemGroupElements;
-import window.Frame;
+import window.FrameOld;
 import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElementOld;

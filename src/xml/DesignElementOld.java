@@ -22,12 +22,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.plaf.synth.SynthSpinnerUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -41,7 +43,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import designType.subElements.SubElementType;
-import window.Frame;
+import window.FrameOld;
 import window.Window;
 import xml.DesignAttribute.ValueType;
 
@@ -280,26 +282,57 @@ public class DesignElementOld {
 	public Element getDefinition(Document doc) {
 		return getDefinition(doc, "", new HashMap<DesignElementOld, String>());
 	}
+	public boolean isCodeBlock() {
+		return attributes.isEmpty() && subElements.isEmpty() && optionalSingleSubElements.isEmpty() && optionalMultipleSubElements.isEmpty();
+	}
+	public boolean isSubSet(DesignElementOld e) {
+		return
+				attributes.values().containsAll(e.getAttributes()) &&
+				subElements.containsAll(e.subElements) &&
+				optionalSingleSubElements.containsAll(e.optionalSingleSubElements) &&
+				optionalMultipleSubElements.containsAll(e.optionalMultipleSubElements);
+	}
 	//Format of seen: element, id
 	public Element getDefinition(Document doc, String parentName, HashMap<DesignElementOld, String> seen) {
-		String id = seen.get(this);
-		Element result;
+		String inherit = null;
+		//Prevent code blocks from inheriting from other code blocks
+		if(!isCodeBlock()) {
+			//See if we can inherit from an element with identical attributes/subelements
+			inherit = seen.get(this);
+			/*
+			if(inherit != null) {
+				subElements.clear();
+				optionalSingleSubElements.clear();
+				optionalMultipleSubElements.clear();
+			} else {
+				//See if we can inherit from a partial match
+				for(DesignElementOld other : seen.keySet()) {
+					if(!other.isCodeBlock() && isSubSet(other)) {
+						inherit = seen.get(other);
+						//Remove duplicate attributes/subelements
+						subElements.removeIf((DesignElementOld sub) -> {
+							return other.subElements.contains(sub);
+						});
+						optionalSingleSubElements.removeIf((DesignElementOld sub) -> {
+							return other.optionalSingleSubElements.contains(sub);
+						});
+						optionalMultipleSubElements.removeIf((SubElementType sub) -> {
+							return other.optionalMultipleSubElements.contains(sub);
+						});
+					}
+				}
+			}
+			*/
+			
+		}
+		Element result = doc.createElement("Element");
 		//Check if we already defined an element just like this one
-		if(id == null) {
+		result.setAttribute("name", name);
+		if(inherit == null) {
 			//Add a definition of this element
-			id = parentName + "_" + name;
+			String id = parentName + "_" + name;
 			seen.put(this, id);
 			
-			System.out.println("-Defining: " + id);
-			System.out.println("--Hashcode: " + hashCode());
-			System.out.println("---Attributes: " + attributes);
-			System.out.println("----Subelements (RequiredSingle): " + subElements);
-			System.out.println("-----Subelements (OptionalSingle): " + optionalSingleSubElements);
-			System.out.println("------Subelements (OptionalMultiple: " + optionalMultipleSubElements);
-			
-			result = doc.createElement("ElementDefinition");
-			result.setAttribute("id", id);
-			result.setAttribute("name", name);
 			Element child;
 			for(DesignAttribute a : getAttributes()) {
 				child = a.getDefinition(doc);
@@ -307,27 +340,23 @@ public class DesignElementOld {
 			}
 			for(DesignElementOld e : subElements) {
 				child = e.getDefinition(doc, name, seen);
-				child.setAttribute("category", "requiredSingle");
+				child.setAttribute("category", "1");
 				result.appendChild(child);
 			}
 			for(DesignElementOld e : optionalSingleSubElements) {
 				child = e.getDefinition(doc, name, seen);
-				child.setAttribute("category", "optionalSingle");
+				child.setAttribute("category", "?");
 				result.appendChild(child);
 			}
 			//Recursion issue, probably due to the fact that attributes that are equal still have different hash codes
 			for(SubElementType s : optionalMultipleSubElements) {
 				DesignElementOld e = s.get();
 				child = e.getDefinition(doc, name, seen);
-				child.setAttribute("category", "optionalMultiple");
+				child.setAttribute("category", "*");
 				result.appendChild(child);
 			}
 		} else {
-			System.out.println("--Referencing: " + id);
-			//Make a reference to the original element
-			result = doc.createElement("ElementReference");
-			result.setAttribute("id", id);
-			result.setAttribute("name", name);
+			result.setAttribute("inherit", inherit);
 		}
 		return result;
 	}
@@ -381,14 +410,18 @@ public class DesignElementOld {
 		}
 		return null;
 	}
-	public void initializeFrame(Frame frame) {
-		JPanel labelPanel = frame.getAttributeLabelPanel();
-		JPanel fieldPanel = frame.getAttributeFieldPanel();
-		JPanel subElementPanel = frame.getSubElementPanel();
-		JTextArea textArea = frame.getTextArea();
+	public void initializeFrame(FrameOld frame) {
+		JTextField nameField = frame.nameField;
+		JPanel labelPanel = frame.labelPanel;
+		JPanel fieldPanel = frame.fieldPanel;
+		JPanel subElementPanel = frame.subElementPanel;
+		JTextArea textArea = frame.textArea;
 		labelPanel.removeAll();
 		fieldPanel.removeAll();
 		subElementPanel.removeAll();
+		
+		nameField.setText(name);
+		nameField.setEditable(false);
 		
 		List<DesignAttribute> attributes = getAttributes();
 		if(attributes.size() == 0) {
@@ -506,7 +539,7 @@ public class DesignElementOld {
 		if(o instanceof DesignElementOld) {
 			DesignElementOld e = (DesignElementOld) o;
 			return
-					name.equals(e.name) &&
+					//name.equals(e.name) &&
 					attributes.equals(e.attributes) &&
 					subElements.equals(e.subElements) &&
 					optionalSingleSubElements.equals(e.optionalSingleSubElements) &&
@@ -516,7 +549,7 @@ public class DesignElementOld {
 	}
 	public int hashCode() {
 		return Objects.hash(
-				name,
+				//name,
 				attributes,
 				subElements,
 				optionalSingleSubElements,

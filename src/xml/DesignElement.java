@@ -1,11 +1,19 @@
 package xml;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,6 +24,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import window.FrameOld;
+import window.Window;
 import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.*;
 
@@ -23,6 +33,9 @@ public class DesignElement {
 	public static HashMap<String, DesignElement> DEFINITIONS;
 	public static void getDefinitions() {
 		DEFINITIONS = new HashMap<>();
+		if(true) {
+			return;
+		}
 		System.out.println("Loading definitions");
 		try {
 			File file = new File("C:\\Users\\Alex\\workspace\\TransGenesis\\Unimplemented Definitions");
@@ -69,20 +82,31 @@ public class DesignElement {
 				switch(sub.getAttribute("category")) {
 				case "":
 				case "1":
+				case "requiredSingle":
 					result.requiredSingleIDs.add(sub_id);
 					break;
 				case "+":
+				case "requiredMultiple":
 					result.requiredMultipleIDs.add(sub_id);
 					break;
 				case "?":
+				case "optionalSingle":
 					result.optionalSingleIDs.add(sub_id);
 					break;
 				case "*":
+				case "optionalMultiple":
 					result.optionalMultipleIDs.add(sub_id);
+					break;
+				case "virtual":
+				default:
 					break;
 				}
 				break;
 			}
+		}
+		String id_custom = e.getAttribute("id");
+		if(id_custom != null) {
+			DEFINITIONS.put(id_custom, result);
 		}
 		Element parent = (Element) e.getParentNode();
 		if(parent == null) {
@@ -112,6 +136,37 @@ public class DesignElement {
 		requiredMultipleIDs = new ArrayList<>();
 		optionalSingleIDs = new ArrayList<>();
 		optionalMultipleIDs = new ArrayList<>();
+	}
+	public void initialize() {
+		inherit();
+		//Set base to null so that we don't inherit again
+		base = null;
+		for(String id : requiredSingleIDs) {
+			if(!hasSubElementID(id)) {
+				subElements.add(retrieve(id));
+			}
+		}
+		for(String id : requiredMultipleIDs) {
+			if(!hasSubElementID(id)) {
+				subElements.add(retrieve(id));
+			}
+		}
+	}
+	public DesignElement retrieve(String id) {
+		DesignElement result = DEFINITIONS.get(id).clone();
+		result.initialize();
+		return result;
+	}
+	public boolean hasSubElementID(String id) {
+		return getSubElementByName(DEFINITIONS.get(id).getName()) != null;
+	}
+	public DesignElement getSubElementByName(String name) {
+		for(DesignElement e : subElements) {
+			if(e.getName().equals(name)) {
+				return e;
+			}
+		}
+		return null;
 	}
 	public void setName(String name) {
 		this.name = name;
@@ -164,6 +219,75 @@ public class DesignElement {
 	public String toString() {
 		return getDisplayName();
 	}
+	
+	public void initializeFrame(FrameOld frame) {
+		JPanel labelPanel = frame.labelPanel;
+		JPanel fieldPanel = frame.fieldPanel;
+		JPanel subElementPanel = frame.subElementPanel;
+		JTextArea textArea = frame.textArea;
+		labelPanel.removeAll();
+		fieldPanel.removeAll();
+		subElementPanel.removeAll();
+		
+		List<DesignAttribute> attributes = getAttributes();
+		if(attributes.size() == 0) {
+			JLabel label = new JLabel("No attributes");
+			label.setFont(Window.FONT_LARGE);
+			labelPanel.add(label);
+		} else {
+			for(DesignAttribute a : attributes) {
+				JLabel label = new JLabel(a.getName() + "=");
+				label.setFont(Window.FONT_MEDIUM);
+				labelPanel.add(label);
+				JComponent inputField = a.getValueType().getInputField(a.getValue());
+				fieldPanel.add(inputField);
+			}
+		}
+		DesignElement me = this;
+		ArrayList<String> addableSubElements = getAddableElements();
+		
+		if(addableSubElements.size() == 0) {
+			JLabel label = new JLabel("No subelements");
+			label.setFont(Window.FONT_LARGE);
+			subElementPanel.add(label);
+		} else {
+			for(String addableID : addableSubElements) {
+				DesignElement addable = retrieve(addableID);
+				JButton button = new JButton(addable.getDisplayName());
+				button.setFont(Window.FONT_MEDIUM);
+				button.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						System.out.println("Create new element");
+						subElements.add(addable);
+						frame.addElement(addable);
+						System.out.println("Created new element");
+					}
+				});
+				subElementPanel.add(button);
+			}
+		}
+		
+		textArea.setText(getText());
+	}
+	
+	private ArrayList<String> getAddableElements() {
+		ArrayList<String> result = new ArrayList<String>();
+		for(String id : requiredMultipleIDs) {
+			result.add(id);
+		}
+		for(String id : optionalSingleIDs) {
+			if(!hasSubElementID(id)) {
+				result.add(id);
+			}
+		}
+		for(String id : optionalMultipleIDs) {
+			result.add(id);
+		}
+		return result;
+	}
 	public DesignElement clone() {
 		DesignElement result = new DesignElement(name);
 		result.base = base;
@@ -192,6 +316,10 @@ public class DesignElement {
 		DesignElement baseElement = DEFINITIONS.get(base);
 		if(baseElement == null) {
 			return;
+		}
+		//Inherit name if we don't have one already
+		if(name == null) {
+			name = baseElement.name;
 		}
 		text = baseElement.text;
 		for(DesignAttribute a : attributes.values()) {

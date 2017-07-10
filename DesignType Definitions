@@ -1,0 +1,2024 @@
+<Element name="Hierarchy">
+    <Element category="1" name="TranscendenceAdventure" inherit="Hierarchy_TranscendenceExtension">
+        <Element category="1" name="AdventureDesc">
+            <Attribute name="adventureUNID" valueType="UNID"/>
+            <Attribute name="attributes" valueType="STRING"/>
+            <Attribute name="backgroundID" valueType="TYPE_IMAGE"/>
+            <Attribute name="desc" valueType="STRING"/>
+            <Attribute name="extends" valueType="STRING"/>
+            <Attribute name="include10StartingShips" valueType="BOOLEAN"/>
+            <Attribute name="inherit" valueType="TYPE_INHERITED"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Attribute name="obsolete" valueType="WHOLE"/>
+            <Attribute name="startingMap" valueType="TYPE_SYSTEM_MAP"/>
+            <Attribute name="startingPos" valueType="STRING"/>
+            <Attribute name="startingShipCriteria" valueType="STRING"/>
+            <Attribute name="startingSystem" valueType="STRING"/>
+            <Attribute name="UNID" valueType="UNID"/>
+            <Attribute name="welcomeMessage" valueType="STRING"/>
+            <Element category="?" name="EncounterOverrides">
+                <Element category="*" name="Encounter">
+                    <Attribute name="enemyExclusionRadius" valueType="WHOLE"/>
+                    <Attribute name="exclusionRadius" valueType="WHOLE"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="locationCriteria" valueType="STRING"/>
+                    <Attribute name="maxAppearing" valueType="WHOLE"/>
+                    <Attribute name="minAppearing" valueType="WHOLE"/>
+                    <Attribute name="systemCriteria" valueType="STRING"/>
+                    <Attribute name="unid" valueType="TYPE_STATION"/>
+                    <Attribute name="unique" valueType="UNIQUE"/>
+                    <Element category="?" inherit="Encounter_Criteria" name="Criteria"/>
+                </Element>
+            </Element>
+            <Element category="?" name="Constants">
+                <Element category="*" name="ArmorDamageAdj">
+                    <Attribute name="damageAdj" valueType="STRING"/>
+                    <Attribute name="level" valueType="WHOLE"/>
+                </Element>
+                <Element category="*" name="ShieldDamageAdj">
+                    <Attribute name="damageAdj" valueType="STRING"/>
+                    <Attribute name="level" valueType="WHOLE"/>
+                </Element>
+            </Element>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_GlobalData"/>
+            <Element category="?" name="Language">
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="description" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="Text">
+                    <Attribute name="id" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="String">
+                    <Attribute name="id" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="Message">
+                    <Attribute name="id" valueType="STRING"/>
+                    <Attribute name="text" valueType="STRING"/>
+                </Element>
+            </Element>
+            <Element category="?" inherit="DesignType_Events"/>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_AttributeDesc"/>
+        </Element>
+
+    </Element>
+	<Element category="mod" name="TranscendenceExtension" inherit="Hierarchy_TranscendenceLibrary"/>
+    <Element category="mod" name="TranscendenceLibrary" inherit="Hierarchy_TranscendenceModule">
+        <Attribute name="apiVersion" valueType="INTEGER"/>
+        <Attribute name="autoInclude" valueType="BOOLEAN"/>
+        <Attribute name="autoIncludeForCompatibility" valueType="BOOLEAN"/>
+        <Attribute name="coverImageID" valueType="TYPE_IMAGE"/>
+        <Attribute name="credits" valueType="STRING"/>
+        <Attribute name="debugOnly" valueType="BOOLEAN"/>
+        <Attribute name="extensionAPIVersion" valueType="INTEGER"/>
+        <Attribute name="hidden" valueType="BOOLEAN"/>
+        <Attribute name="name" valueType="STRING"/>
+        <Attribute name="private" valueType="BOOLEAN"/>
+        <Attribute name="release" valueType="INTEGER"/>
+        <Attribute name="UNID" valueType="UNID"/>
+        <Attribute name="usesXML" valueType="BOOLEAN"/>
+        <Attribute name="version" valueType="STRING"/>
+        <Element category="*" name="Module">
+            <Attribute name="filename" valueType="STRING"/>
+        </Element>
+        <Element category="*" name="Library">
+            <Attribute name="unid" valueType="TYPE_MOD"/>
+        </Element>
+    </Element>
+    <Element category="mod" name="TranscendenceModule">
+        <Element category="?" name="Globals"/>
+        <Element category="*" name="DockScreen" inherit="DesignType">
+            <Attribute name="backgroundID" valueType="DOCKSCREEN_BACKGROUND_ID"/>
+            <Attribute name="desc" valueType="STRING"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Attribute name="nestedScreen" valueType="BOOLEAN"/>
+            <Attribute name="type" valueType="DOCKSCREEN_TYPE"/>
+            <Element category="?" name="ListOptions">
+                <Attribute name="criteria" valueType="STRING"/>
+                <Attribute name="dataFrom" valueType="DOCKSCREEN_DATA_FROM"/>
+                <Attribute name="height" valueType="WHOLE"/>
+                <Attribute name="initialItem" valueType="STRING"/>
+                <Attribute name="list" valueType="STRING"/>
+                <Attribute name="noArmorSpeedDisplay" valueType="BOOLEAN"/>
+                <Attribute name="noEmptySlots" valueType="BOOLEAN"/>
+                <Attribute name="posX" valueType="INTEGER"/>
+                <Attribute name="posY" valueType="INTEGER"/>
+                <Attribute name="rowHeight" valueType="WHOLE"/>
+                <Attribute name="slotName" valueType="STRING"/>
+                <Attribute name="width" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="List">
+                <Attribute name="criteria" valueType="STRING"/>
+                <Attribute name="dataFrom" valueType="DOCKSCREEN_DATA_FROM"/>
+                <Attribute name="height" valueType="WHOLE"/>
+                <Attribute name="initialItem" valueType="STRING"/>
+                <Attribute name="list" valueType="STRING"/>
+                <Attribute name="noArmorSpeedDisplay" valueType="BOOLEAN"/>
+                <Attribute name="noEmptySlots" valueType="BOOLEAN"/>
+                <Attribute name="posX" valueType="INTEGER"/>
+                <Attribute name="posY" valueType="INTEGER"/>
+                <Attribute name="rowHeight" valueType="WHOLE"/>
+                <Attribute name="slotName" valueType="STRING"/>
+                <Attribute name="width" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="OnScreenInit"/>
+            <Element category="?" name="OnInit"/>
+            <Element category="?" name="InitialPane"/>
+            <Element category="?" name="OnScreenUpdate"/>
+            <Element category="?" name="Display">
+                <Attribute name="animate" valueType="STRING"/>
+                <Attribute name="dataFrom" valueType="DOCKSCREEN_DATA_FROM"/>
+                <Attribute name="display" valueType="STRING"/>
+                <Attribute name="type" valueType="DOCKSCREEN_TYPE"/>
+                <Element category="?" name="OnDisplayInit"/>
+                <Element category="*" name="Group">
+                    <Attribute name="center" valueType="INTEGER"/>
+                    <Attribute name="height" valueType="INTEGER"/>
+                    <Attribute name="left" valueType="INTEGER"/>
+                    <Attribute name="top" valueType="INTEGER"/>
+                    <Attribute name="vcenter" valueType="INTEGER"/>
+                    <Attribute name="width" valueType="INTEGER"/>
+                </Element>
+                <Element category="*" name="Text">
+                    <Attribute name="align" valueType="ALIGN_HORIZONTAL"/>
+                    <Attribute name="bottom" valueType="INTEGER"/>
+                    <Attribute name="color" valueType="HEX_COLOR"/>
+                    <Attribute name="font" valueType="FONT"/>
+                    <Attribute name="id" valueType="STRING"/>
+                    <Attribute name="left" valueType="INTEGER"/>
+                    <Attribute name="right" valueType="INTEGER"/>
+                    <Attribute name="top" valueType="INTEGER"/>
+                </Element>
+                <Element category="*" name="Image">
+                    <Attribute name="align" valueType="ALIGN_HORIZONTAL"/>
+                    <Attribute name="bottom" valueType="INTEGER"/>
+                    <Attribute name="left" valueType="INTEGER"/>
+                    <Attribute name="right" valueType="INTEGER"/>
+                    <Attribute name="top" valueType="INTEGER"/>
+                    <Attribute name="transparent" valueType="BOOLEAN"/>
+                    <Attribute name="valign" valueType="ALIGN_VERTICAL"/>
+                </Element>
+            </Element>
+            <Element category="?" name="Canvas">
+                <Attribute name="bottom" valueType="INTEGER"/>
+                <Attribute name="left" valueType="INTEGER"/>
+                <Attribute name="right" valueType="INTEGER"/>
+                <Attribute name="top" valueType="INTEGER"/>
+            </Element>
+            <Element category="?" name="Panes">
+                <Element category="*" name="Pane">
+                    <Attribute name="desc" valueType="STRING"/>
+                    <Attribute name="layout" valueType="LAYOUT"/>
+                    <Attribute name="noListNavigation" valueType="BOOLEAN"/>
+                    <Attribute name="showCounter" valueType="BOOLEAN"/>
+                    <Attribute name="showTextInput" valueType="BOOLEAN"/>
+                    <Element category="?" name="OnPaneInit"/>
+                    <Element category="?" name="Initialize"/>
+                    <Element category="?" name="Controls">
+                        <Element category="?" name="Counter">
+                            <Attribute name="id" valueType="STRING"/>
+                            <Attribute name="style" valueType="STYLE_CONTROLS"/>
+                        </Element>
+                        <Element category="?" name="ItemDisplay">
+                            <Attribute name="id" valueType="STRING"/>
+                            <Attribute name="style" valueType="STYLE_CONTROLS"/>
+                        </Element>
+                        <Element category="?" name="ItemListDisplay">
+                            <Attribute name="id" valueType="STRING"/>
+                            <Attribute name="style" valueType="STYLE_CONTROLS"/>
+                        </Element>
+                        <Element category="?" name="Text">
+                            <Attribute name="id" valueType="STRING"/>
+                            <Attribute name="style" valueType="STYLE_CONTROLS"/>
+                        </Element>
+                        <Element category="?" name="TextInput">
+                            <Attribute name="id" valueType="STRING"/>
+                            <Attribute name="style" valueType="STYLE_CONTROLS"/>
+                        </Element>
+                    </Element>
+                    <Element category="?" name="Actions">
+                        <Element category="*" name="Action">
+                            <Attribute name="cancel" valueType="BOOLEAN"/>
+                            <Attribute name="default" valueType="BOOLEAN"/>
+                            <Attribute name="descID" valueType="STRING"/>
+                            <Attribute name="id" valueType="STRING"/>
+                            <Attribute name="key" valueType="CHARACTER"/>
+                            <Attribute name="minor" valueType="BOOLEAN"/>
+                            <Attribute name="name" valueType="STRING"/>
+                            <Attribute name="nextKey" valueType="BOOLEAN"/>
+                            <Attribute name="prevKey" valueType="BOOLEAN"/>
+                            <Element category="?" name="Navigate">
+                                <Attribute name="screen" valueType="STRING"/>
+                            </Element>
+                            <Element category="?" name="ShowPane">
+                                <Attribute name="pane" valueType="STRING"/>
+                            </Element>
+                            <Element category="?" name="Exit"/>
+                        </Element>
+                    </Element>
+                </Element>
+            </Element>
+        </Element>
+        <Element category="*" name="EconomyType" inherit="DesignType">
+            <Attribute name="conversion" valueType="INTEGER"/>
+            <Attribute name="currency" valueType="STRING"/>
+            <Attribute name="id" valueType="STRING"/>
+        </Element>
+        <Element category="*" name="EffectType"	inherit="DesignType">
+			<Attribute name="W.I.P." valueType="STRING"/>
+        </Element>
+        <Element category="*" name="Image">
+            <Attribute name="backColor" valueType="HEX_COLOR"/>
+            <Attribute name="bitmap" valueType="FILENAME"/>
+            <Attribute name="bitmask" valueType="FILENAME"/>
+            <Attribute name="hitMask" valueType="FILENAME"/>
+            <Attribute name="loadOnUse" valueType="BOOLEAN"/>
+            <Attribute name="noPM" valueType="BOOLEAN"/>
+            <Attribute name="shadowMask" valueType="FILENAME"/>
+            <Attribute name="sprite" valueType="BOOLEAN"/>
+        </Element>
+        <Element category="*" name="ImageComposite" inherit="DesignType"/>
+        <Element category="*" name="ItemTable" inherit="DesignType"/>
+        <Element category="*" name="ItemType">
+            <Attribute name="ammoCharges" valueType="BOOLEAN"/>
+            <Attribute name="charges" valueType="WHOLE"/>
+            <Attribute name="data" valueType="STRING"/>
+            <Attribute name="enhancement" valueType="STRING"/>
+            <Attribute name="frequency" valueType="FREQUENCY"/>
+            <Attribute name="level" valueType="WHOLE"/>
+            <Attribute name="massBonusPerCharge" valueType="WHOLE"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Attribute name="noSaleIfUsed" valueType="BOOLEAN"/>
+            <Attribute name="numberAppearing" valueType="WHOLE"/>
+            <Attribute name="pluralName" valueType="STRING"/>
+            <Attribute name="randomDamaged" valueType="BOOLEAN"/>
+            <Attribute name="reverseArticle" valueType="BOOLEAN"/>
+            <Attribute name="secondPlural" valueType="BOOLEAN"/>
+            <Attribute name="showReference" valueType="BOOLEAN"/>
+            <Attribute name="sortName" valueType="STRING"/>
+            <Attribute name="unknownType" valueType="TYPE_ITEM"/>
+            <Attribute name="useAsArmorSet" valueType="BOOLEAN"/>
+            <Attribute name="useCompleteArmorOnly" valueType="BOOLEAN"/>
+            <Attribute name="useEnabledOnly" valueType="BOOLEAN"/>
+            <Attribute name="useInstalledOnly" valueType="BOOLEAN"/>
+            <Attribute name="useKey" valueType="CHARACTER"/>
+            <Attribute name="useScreen" valueType="TYPE_DOCKSCREEN"/>
+            <Attribute name="useUninstalledOnly" valueType="BOOLEAN"/>
+            <Attribute name="value" valueType="WHOLE"/>
+            <Attribute name="valueBonusPerCharge" valueType="WHOLE"/>
+            <Attribute name="valueCharges" valueType="BOOLEAN"/>
+            <Attribute name="virtual" valueType="BOOLEAN"/>
+			<Element category="virtual" name="DeviceType">
+                <Attribute name="category" valueType="CATEGORY_DEVICE"/>
+                <Attribute name="deviceSlotCategory" valueType="CATEGORY_DEVICE"/>
+                <Attribute name="deviceSlots" valueType="WHOLE"/>
+                <Attribute name="external" valueType="BOOLEAN"/>
+				<Attribute name="maxHPBonus" valueType="WHOLE"/>
+                <Attribute name="overlayType" valueType="TYPE_OVERLAY"/>
+                <Element category="*" name="EnhanceAbilities">
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="type" valueType="STRING"/>
+                </Element>
+			</Element>
+            <Element category="?" name="Armor">
+                <Attribute name="blindingDamageAdj" valueType="WHOLE"/>
+                <Attribute name="blindingImmune" valueType="BOOLEAN"/>
+                <Attribute name="chargeDecay" valueType="WHOLE"/>
+                <Attribute name="chargeRegen" valueType="WHOLE"/>
+                <Attribute name="completeBonus" valueType="WHOLE"/>
+                <Attribute name="damageAdjLevel" valueType="INTEGER_SEQUENCE"/>
+                <Attribute name="decay" valueType="WHOLE"/>
+                <Attribute name="decayRate" valueType="WHOLE"/>
+                <Attribute name="deviceCriteria" valueType="STRING"/>
+                <Attribute name="deviceDamageAdj" valueType="WHOLE"/>
+                <Attribute name="deviceDamageImmune" valueType="BOOLEAN"/>
+                <Attribute name="deviceHPBonus" valueType="WHOLE"/>
+                <Attribute name="disintegrationImmune" valueType="BOOLEAN"/>
+                <Attribute name="distribute" valueType="WHOLE"/>
+                <Attribute name="EMPDamageAdj" valueType="WHOLE"/>
+                <Attribute name="EMPImmune" valueType="BOOLEAN"/>
+                <Attribute name="enhancementType" valueType="HEX_NUMBER"/>
+                <Attribute name="idlePowerUse" valueType="WHOLE"/>
+                <Attribute name="installCost" valueType="WHOLE"/>
+                <Attribute name="installCostAdj" valueType="WHOLE"/>
+                <Attribute name="maxHPBonus" valueType="WHOLE"/>
+                <Attribute name="maxSpeedBonus" valueType="WHOLE"/>
+                <Attribute name="photoRecharge" valueType="BOOLEAN"/>
+                <Attribute name="photoRepair" valueType="BOOLEAN"/>
+                <Attribute name="powerUse" valueType="WHOLE"/>
+                <Attribute name="radiationImmune" valueType="BOOLEAN"/>
+                <Attribute name="reflect" valueType="STRING"/>
+                <Attribute name="regen" valueType="WHOLE"/>
+                <Attribute name="repairCost" valueType="WHOLE"/>
+                <Attribute name="repairCostAdj" valueType="WHOLE"/>
+                <Attribute name="repairRate" valueType="WHOLE"/>
+                <Attribute name="repairTech" valueType="WHOLE"/>
+                <Attribute name="shatterImmune" valueType="BOOLEAN"/>
+                <Attribute name="shieldInterference" valueType="BOOLEAN"/>
+                <Attribute name="stealth" valueType="WHOLE"/>
+                <Attribute name="useHealerToRegen" valueType="BOOLEAN"/>
+            </Element>
+            <Element category="?" name="AutoDefenseDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="fireRate" valueType="WHOLE"/>
+                <Attribute name="interceptRange" valueType="WHOLE"/>
+                <Attribute name="target" value="missiles" valueType="STRING"/>
+                <Attribute name="targetCriteria" valueType="STRING"/>
+                <Attribute name="weapon" valueType="TYPE_WEAPON"/>
+            </Element>
+            <Element category="?" name="CargoHoldDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="cargoSpace" valueType="INTEGER"/>
+            </Element>
+			;W.I.P.: Clean up
+            <Element category="?" name="Components">
+                <Element category="*" name="Item">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="damaged" valueType="WHOLE"/>
+                    <Attribute name="debugOnly" valueType="BOOLEAN"/>
+                    <Attribute name="enhanced" valueType="WHOLE"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="item" valueType="TYPE_ITEM"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                </Element>
+                <Element category="*" name="Table">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Element category="*" name="Item">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="damaged" valueType="WHOLE"/>
+                        <Attribute name="debugOnly" valueType="BOOLEAN"/>
+                        <Attribute name="enhanced" valueType="WHOLE"/>
+                        <Attribute name="enhancement" valueType="STRING"/>
+                        <Attribute name="item" valueType="TYPE_ITEM"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    </Element>
+                    <Element category="*" inherit="Components_Table" name="Table"/>
+                    <Element category="*" name="RandomItem">
+                        <Attribute name="attributes" valueType="STRING"/>
+                        <Attribute name="categories" valueType="STRING"/>
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="damaged" valueType="WHOLE"/>
+                        <Attribute name="enhanced" valueType="WHOLE"/>
+                        <Attribute name="enhancement" valueType="STRING"/>
+                        <Attribute name="level" valueType="WHOLE"/>
+                        <Attribute name="levelCurve" valueType="WHOLE"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        <Attribute name="modifiers" valueType="STRING"/>
+                    </Element>
+                    <Element category="*" name="Group">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        <Attribute name="levelValue" valueType="LEVEL_VALUE"/>
+                        <Attribute name="value" valueType="WHOLE"/>
+                        <Element category="*" name="Item">
+                            <Attribute name="chance" valueType="WHOLE"/>
+                            <Attribute name="count" valueType="WHOLE"/>
+                            <Attribute name="criteria" valueType="STRING"/>
+                            <Attribute name="damaged" valueType="WHOLE"/>
+                            <Attribute name="debugOnly" valueType="BOOLEAN"/>
+                            <Attribute name="enhanced" valueType="WHOLE"/>
+                            <Attribute name="enhancement" valueType="STRING"/>
+                            <Attribute name="item" valueType="TYPE_ITEM"/>
+                            <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        </Element>
+                        <Element category="*" inherit="Components_Table" name="Table"/>
+                        <Element category="*" name="RandomItem">
+                            <Attribute name="attributes" valueType="STRING"/>
+                            <Attribute name="categories" valueType="STRING"/>
+                            <Attribute name="chance" valueType="WHOLE"/>
+                            <Attribute name="count" valueType="WHOLE"/>
+                            <Attribute name="criteria" valueType="STRING"/>
+                            <Attribute name="damaged" valueType="WHOLE"/>
+                            <Attribute name="enhanced" valueType="WHOLE"/>
+                            <Attribute name="enhancement" valueType="STRING"/>
+                            <Attribute name="level" valueType="WHOLE"/>
+                            <Attribute name="levelCurve" valueType="WHOLE"/>
+                            <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                            <Attribute name="modifiers" valueType="STRING"/>
+                        </Element>
+                        <Element category="*" inherit="Table_Group" name="Group"/>
+                        <Element category="*" inherit="Table_Group" name="Components"/>
+                        <Element category="*" inherit="Table_Group" name="Items"/>
+                        <Element category="*" inherit="Table_Group" name="AverageValue"/>
+                        <Element category="*" name="Lookup">
+                            <Attribute name="chance" valueType="WHOLE"/>
+                            <Attribute name="count" valueType="WHOLE"/>
+                            <Attribute name="criteria" valueType="STRING"/>
+                            <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                            <Attribute name="table" valueType="TYPE_ITEM_TABLE"/>
+                        </Element>
+                        <Element category="*" inherit="Components_Table" name="LevelTable"/>
+                        <Element category="*" inherit="Components_Table" name="LocationCriteria"/>
+                        <Element category="*" name="Null"/>
+                    </Element>
+                    <Element category="*" inherit="Table_Group" name="Components"/>
+                    <Element category="*" inherit="Table_Group" name="Items"/>
+                    <Element category="*" inherit="Table_Group" name="AverageValue"/>
+                    <Element category="*" name="Lookup">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        <Attribute name="table" valueType="TYPE_ITEM_TABLE"/>
+                    </Element>
+                    <Element category="*" inherit="Components_Table" name="LevelTable"/>
+                    <Element category="*" inherit="Components_Table" name="LocationCriteria"/>
+                    <Element category="*" name="Null"/>
+                </Element>
+                <Element category="*" name="RandomItem">
+                    <Attribute name="attributes" valueType="STRING"/>
+                    <Attribute name="categories" valueType="STRING"/>
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="damaged" valueType="WHOLE"/>
+                    <Attribute name="enhanced" valueType="WHOLE"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="level" valueType="WHOLE"/>
+                    <Attribute name="levelCurve" valueType="WHOLE"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="modifiers" valueType="STRING"/>
+                </Element>
+                <Element category="*" inherit="Table_Group" name="Group"/>
+                <Element category="*" inherit="Table_Group" name="Components"/>
+                <Element category="*" inherit="Table_Group" name="Items"/>
+                <Element category="*" inherit="Table_Group" name="AverageValue"/>
+                <Element category="*" name="Lookup">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="table" valueType="TYPE_ITEM_TABLE"/>
+                </Element>
+                <Element category="*" inherit="Components_Table" name="LevelTable"/>
+                <Element category="*" inherit="Components_Table" name="LocationCriteria"/>
+                <Element category="*" name="Null"/>
+                <Element category="*" name="Item">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="damaged" valueType="WHOLE"/>
+                    <Attribute name="debugOnly" valueType="BOOLEAN"/>
+                    <Attribute name="enhanced" valueType="WHOLE"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="item" valueType="TYPE_ITEM"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                </Element>
+                <Element category="*" inherit="Components_Table" name="Table"/>
+                <Element category="*" name="RandomItem">
+                    <Attribute name="attributes" valueType="STRING"/>
+                    <Attribute name="categories" valueType="STRING"/>
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="damaged" valueType="WHOLE"/>
+                    <Attribute name="enhanced" valueType="WHOLE"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="level" valueType="WHOLE"/>
+                    <Attribute name="levelCurve" valueType="WHOLE"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="modifiers" valueType="STRING"/>
+                </Element>
+                <Element category="*" inherit="Table_Group" name="Group"/>
+                <Element category="*" inherit="Table_Group" name="Components"/>
+                <Element category="*" inherit="Table_Group" name="Items"/>
+                <Element category="*" inherit="Table_Group" name="AverageValue"/>
+                <Element category="*" name="Lookup">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="table" valueType="TYPE_ITEM_TABLE"/>
+                </Element>
+                <Element category="*" inherit="Components_Table" name="LevelTable"/>
+                <Element category="*" inherit="Components_Table" name="LocationCriteria"/>
+                <Element category="*" name="Null"/>
+            </Element>
+            <Element category="?" name="CyberDeckDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="aiLevel" valueType="WHOLE"/>
+                <Attribute name="attackChance" valueType="WHOLE"/>
+                <Attribute name="program" valueType="PROGRAM"/>
+                <Attribute name="programName" valueType="STRING"/>
+                <Attribute name="range" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="DriveDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="inertialessDrive" valueType="BOOLEAN"/>
+                <Attribute name="maxRotationRate" valueType="DECIMAL"/>
+                <Attribute name="maxSpeed" valueType="WHOLE"/>
+                <Attribute name="maxSpeedInc" valueType="WHOLE"/>
+                <Attribute name="powerUse" valueType="WHOLE"/>
+                <Attribute name="rotationAccel" valueType="DECIMAL"/>
+                <Attribute name="rotationStopAccel" valueType="DECIMAL"/>
+                <Attribute name="thrust" valueType="DECIMAL"/>
+            </Element>
+            <Element category="?" name="EnhancerDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="activateAdj" valueType="WHOLE"/>
+                <Attribute name="criteria" valueType="STRING"/>
+                <Attribute name="damageAdj" valueType="INTEGER_SEQUENCE"/>
+                <Attribute name="hpBonus" valueType="WHOLE"/>
+                <Attribute name="maxActivateDelay" valueType="INTEGER"/>
+                <Attribute name="maxHPBonus" valueType="WHOLE"/>
+                <Attribute name="minActivateDelay" valueType="INTEGER"/>
+                <Attribute name="overlayType" valueType="TYPE_OVERLAY"/>
+                <Attribute name="powerUse" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="Image">
+                <Attribute name="animationColumns" valueType="WHOLE"/>
+                <Attribute name="blending" valueType="BLENDING"/>
+                <Attribute name="flashTicks" valueType="WHOLE"/>
+                <Attribute name="imageFrameCount" valueType="WHOLE"/>
+                <Attribute name="imageHeight" valueType="WHOLE"/>
+                <Attribute name="imageID" valueType="TYPE_IMAGE"/>
+                <Attribute name="imageTicksPerFrame" valueType="WHOLE"/>
+                <Attribute name="imageWidth" valueType="WHOLE"/>
+                <Attribute name="imageX" valueType="WHOLE"/>
+                <Attribute name="imageY" valueType="WHOLE"/>
+                <Attribute name="rotationColumns" valueType="WHOLE"/>
+                <Attribute name="rotationCount" valueType="WHOLE"/>
+                <Attribute name="rotationOffset" valueType="INTEGER"/>
+                <Attribute name="viewportRatio" valueType="DECIMAL"/>
+                <Attribute name="viewportSize" valueType="INTEGER"/>
+                <Attribute name="xOffset" valueType="INTEGER"/>
+                <Attribute name="yOffset" valueType="INTEGER"/>
+            </Element>
+            <Element category="?" inherit="DesignType_StaticData" name="InitialData"/>
+            <Element category="?" name="Invoke">
+                <Attribute name="asArmorSet" valueType="BOOLEAN"/>
+                <Attribute name="completeArmorOnly" valueType="BOOLEAN"/>
+                <Attribute name="enabledOnly" valueType="BOOLEAN"/>
+                <Attribute name="installedOnly" valueType="BOOLEAN"/>
+                <Attribute name="key" valueType="CHARACTER"/>
+                <Attribute name="uninstalledOnly" valueType="BOOLEAN"/>
+            </Element>
+            <Element category="?" name="MiscellaneousDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="capacitorPowerUse" valueType="WHOLE"/>
+                <Attribute name="powerRating" valueType="WHOLE"/>
+                <Attribute name="powerToActivate" valueType="WHOLE"/>
+                <Attribute name="powerUse" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="Missile" inherit="Itemtype_DeviceType">
+                <Attribute name="W.I.P." valueType="STRING"/>
+            </Element>
+            <Element category="?" name="Names"/>
+            <Element category="?" name="ReactorDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="fuelCapacity" valueType="WHOLE"/>
+                <Attribute name="fuelCriteria" valueType="STRING"/>
+                <Attribute name="maxFuel" valueType="WHOLE"/>
+                <Attribute name="maxFuelTech" valueType="WHOLE"/>
+                <Attribute name="maxHPBonus" valueType="WHOLE"/>
+                <Attribute name="maxPower" valueType="WHOLE"/>
+                <Attribute name="maxPowerBonusPerCharge" valueType="WHOLE"/>
+                <Attribute name="minFuelTech" valueType="WHOLE"/>
+                <Attribute name="noFuel" valueType="BOOLEAN"/>
+                <Attribute name="reactorEfficiency" valueType="WHOLE"/>
+                <Attribute name="reactorPower" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="RepairerDevice" inherit="Itemtype_DeviceType">
+			    <Attribute name="W.I.P." valueType="STRING"/>
+            </Element>
+            <Element category="?" name="Shields" inherit="Itemtype_DeviceType">
+                <Attribute name="absorbAdj" valueType="WHOLE"/>
+                <Attribute name="armorShield" valueType="WHOLE"/>
+                <Attribute name="category" valueType="CATEGORY_DEVICE"/>
+                <Attribute name="damageAdj" valueType="STRING"/>
+                <Attribute name="damageAdjLevel" valueType="STRING"/>
+                <Attribute name="depletionDelay" valueType="WHOLE"/>
+                <Attribute name="hasNonRegenHP" valueType="BOOLEAN"/>
+                <Attribute name="hitEffect" valueType="TYPE_EFFECT"/>
+                <Attribute name="hitPoints" valueType="WHOLE"/>
+                <Attribute name="hpBonus" valueType="WHOLE"/>
+                <Attribute name="HPBonusPerCharge" valueType="WHOLE"/>
+                <Attribute name="idlePowerUse" valueType="WHOLE"/>
+                <Attribute name="maxCharges" valueType="WHOLE"/>
+                <Attribute name="powerBonusPerCharge" valueType="WHOLE"/>
+                <Attribute name="powerUse" valueType="WHOLE"/>
+                <Attribute name="reflect" valueType="STRING"/>
+                <Attribute name="regen" valueType="WHOLE"/>
+                <Attribute name="regenHP" valueType="WHOLE"/>
+                <Attribute name="regenHPBonusPerCharge" valueType="WHOLE"/>
+                <Attribute name="regenTime" valueType="WHOLE"/>
+                <Attribute name="weaponSuppress" valueType="STRING"/>
+            </Element>
+            <Element category="?" name="SolarDevice" inherit="Itemtype_DeviceType">
+                <Attribute name="category" valueType="CATEGORY_DEVICE"/>
+                <Attribute name="deviceSlotCategory" valueType="CATEGORY_DEVICE"/>
+                <Attribute name="deviceSlots" valueType="WHOLE"/>
+                <Attribute name="external" valueType="BOOLEAN"/>
+                <Attribute name="maxHPBonus" valueType="WHOLE"/>
+                <Attribute name="overlayType" valueType="TYPE_OVERLAY"/>
+                <Attribute name="powerGen" valueType="WHOLE"/>
+                <Attribute name="refuel" valueType="WHOLE"/>
+                <Element category="*" name="EnhanceAbilities">
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="type" valueType="STRING"/>
+                </Element>
+            </Element>
+            <Element category="?" name="Weapon" inherit="Itemtype_DeviceType"/>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" name="Events" inherit="DesignType_Events">
+                <Element category="?" name="CanBeInstalled"/>
+                <Element category="?" name="CanBeUninstalled"/>
+                <Element category="?" name="OnAddedAsEnhancement"/>
+                <Element category="?" name="OnDisable"/>
+                <Element category="?" name="OnEnable"/>
+                <Element category="?" name="GetDescription"/>
+                <Element category="?" name="GetName"/>
+                <Element category="?" name="GetTradePrice"/>
+                <Element category="?" name="OnInstall"/>
+                <Element category="?" name="OnObjDestroyed"/>
+                <Element category="?" name="OnReactorOverload"/>
+                <Element category="?" name="OnRefuel"/>
+                <Element category="?" name="OnRemovedAsEnhancement"/>
+                <Element category="?" name="OnUninstall"/>
+            </Element>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+        </Element>
+        <Element category="*" name="MissionType">
+            <Attribute name="allowPlayerDelete" value="false" valueType="BOOLEAN"/>
+            <Attribute name="debriefAfterOutOfSystem" value="false" valueType="BOOLEAN"/>
+            <Attribute name="expireTime" valueType="INTEGER"/>
+            <Attribute name="failureAfterOutOfSystem" value="false" valueType="BOOLEAN"/>
+            <Attribute name="forceUndockAfterDebrief" value="false" valueType="BOOLEAN"/>
+            <Attribute name="level" valueType="WHOLE"/>
+            <Attribute name="maxAppearing" valueType="WHOLE"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Attribute name="noDebrief" value="false" valueType="BOOLEAN"/>
+            <Attribute name="noDecline" value="false" valueType="BOOLEAN"/>
+            <Attribute name="noFailureOnOwnerDestroyed" value="false" valueType="BOOLEAN"/>
+            <Attribute name="noStats" value="false" valueType="BOOLEAN"/>
+            <Attribute name="priority" value="1" valueType="WHOLE"/>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" name="Language">
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="Name" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="Summary" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="Intro" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="Briefing" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="AcceptReply" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="DeclineReply" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="InProgress" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="SuccessMsg" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="FailureMsg" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="SuccessDebrief" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="FailureDebrief" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="AlreadyDebriefed" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="Unavailable" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="Text">
+                    <Attribute name="id" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="String">
+                    <Attribute name="id" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="Message">
+                    <Attribute name="id" valueType="STRING"/>
+                    <Attribute name="text" valueType="STRING"/>
+                </Element>
+            </Element>
+            <Element category="?" name="Events" inherit="DesignType_Events">
+				<Attribute name="W.I.P." valueType="STRING"/>
+			</Element>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+        </Element>
+        <Element category="*" name="NameGenerator" inherit="DesignType"/>
+        <Element category="*" name="OverlayType">
+            <Attribute name="absorbAdj" valueType="INTEGER_SEQUENCE"/>
+            <Attribute name="disableShipScreen" valueType="BOOLEAN"/>
+            <Attribute name="disarm" valueType="BOOLEAN"/>
+            <Attribute name="drag" valueType="WHOLE"/>
+            <Attribute name="ignoreSourceRotation" valueType="BOOLEAN"/>
+            <Attribute name="paralyze" valueType="BOOLEAN"/>
+            <Attribute name="shieldOverlay" valueType="BOOLEAN"/>
+            <Attribute name="spin" valueType="BOOLEAN"/>
+            <Attribute name="weaponBonusAdj" valueType="INTEGER_SEQUENCE"/>
+            <Attribute name="weaponSuppress" valueType="STRING"/>
+            <Element category="?" name="Effect" inherit="ImageDesc"/>
+            <Element category="?" name="HitEffect" inherit="ImageDesc"/>
+            <Element category="?" name="EffectWhenHit" inherit="ImageDesc">
+                <Attribute name="altEffect" valueType="BOOLEAN"/>
+            </Element>
+            <Element category="?" name="Counter">
+                <Attribute name="color" valueType="HEX_COLOR"/>
+                <Attribute name="label" valueType="STRING"/>
+                <Attribute name="max" valueType="WHOLE"/>
+                <Attribute name="showOnMap" valueType="BOOLEAN"/>
+                <Attribute name="style" valueType="OVERLAY_COUNTER_STTYLE"/>
+            </Element>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" inherit="DesignType_Events">
+                <Element category="?" name="OnCreate"/>
+                <Element category="?" name="OnUpdate"/>
+                <Element category="?" name="OnDamage"/>
+                <Element category="?" name="OnDestroy"/>
+                <Element category="?" name="OnObjDestroyed"/>
+            </Element>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+        </Element>
+        <Element category="*" name="Power" inherit="DesignType">
+            <Attribute name="key" valueType="CHARACTER"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Element category="?" name="OnShow"/>
+            <Element category="?" name="OnInvokedByPlayer"/>
+            <Element category="?" name="OnInvoke"/>
+            <Element category="?" name="OnDestroyCheck"/>
+        </Element>
+        <Element category="*" name="ShipClass" inherit="DesignType">
+            <Attribute name="W.I.P." valueType="STRING"/>
+            <Element category="?" name="Names">
+                <Attribute name="customPlural" valueType="BOOLEAN"/>
+                <Attribute name="definiteArticle" valueType="BOOLEAN"/>
+                <Attribute name="esPlural" valueType="BOOLEAN"/>
+                <Attribute name="firstPlural" valueType="BOOLEAN"/>
+                <Attribute name="noArticle" valueType="BOOLEAN"/>
+                <Attribute name="personalName" valueType="BOOLEAN"/>
+                <Attribute name="reverseArticle" valueType="BOOLEAN"/>
+                <Attribute name="secondPlural" valueType="BOOLEAN"/>
+            </Element>
+			;W.I.P.: Clean up
+            <Element category="?" name="Items">
+                <Element category="*" name="Item">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="damaged" valueType="WHOLE"/>
+                    <Attribute name="debugOnly" valueType="BOOLEAN"/>
+                    <Attribute name="enhanced" valueType="WHOLE"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="item" valueType="TYPE_ITEM"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                </Element>
+                <Element category="*" inherit="Components_Table" name="Table"/>
+                <Element category="*" name="RandomItem">
+                    <Attribute name="attributes" valueType="STRING"/>
+                    <Attribute name="categories" valueType="STRING"/>
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="damaged" valueType="WHOLE"/>
+                    <Attribute name="enhanced" valueType="WHOLE"/>
+                    <Attribute name="enhancement" valueType="STRING"/>
+                    <Attribute name="level" valueType="WHOLE"/>
+                    <Attribute name="levelCurve" valueType="WHOLE"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="modifiers" valueType="STRING"/>
+                </Element>
+                <Element category="*" inherit="Table_Group" name="Group"/>
+                <Element category="*" inherit="Table_Group" name="Components"/>
+                <Element category="*" inherit="Table_Group" name="Items"/>
+                <Element category="*" inherit="Table_Group" name="AverageValue"/>
+                <Element category="*" name="Lookup">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="table" valueType="TYPE_ITEM_TABLE"/>
+                </Element>
+                <Element category="*" inherit="Components_Table" name="LevelTable"/>
+                <Element category="*" inherit="Components_Table" name="LocationCriteria"/>
+                <Element category="*" name="Null"/>
+            </Element>
+			;W.I.P.: Clean up
+            <Element category="?" name="Devices">
+                <Element category="*" name="Device">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="count" valueType="WHOLE"/>
+                    <Attribute name="deviceID" valueType="TYPE_DEVICE"/>
+                    <Attribute name="external" valueType="BOOLEAN"/>
+                    <Attribute name="hpBonus" valueType="INTEGER"/>
+                    <Attribute name="level" valueType="WHOLE"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="linkedFire" valueType="LINKED_FIRE_OPTIONS"/>
+                    <Attribute name="maxFireArc" valueType="INTEGER"/>
+                    <Attribute name="minFireArc" valueType="INTEGER"/>
+                    <Attribute name="omnidirectional" valueType="BOOLEAN"/>
+                    <Attribute name="posAngle" valueType="INTEGER"/>
+                    <Attribute name="posRadius" valueType="INTEGER"/>
+                    <Attribute name="posZ" valueType="INTEGER"/>
+                    <Attribute name="secondaryWeapon" valueType="BOOLEAN"/>
+                    <Element category="*" name="Item">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="damaged" valueType="WHOLE"/>
+                        <Attribute name="debugOnly" valueType="BOOLEAN"/>
+                        <Attribute name="enhanced" valueType="WHOLE"/>
+                        <Attribute name="enhancement" valueType="STRING"/>
+                        <Attribute name="item" valueType="TYPE_ITEM"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    </Element>
+                    <Element category="*" inherit="Components_Table" name="Table"/>
+                    <Element category="*" name="RandomItem">
+                        <Attribute name="attributes" valueType="STRING"/>
+                        <Attribute name="categories" valueType="STRING"/>
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="damaged" valueType="WHOLE"/>
+                        <Attribute name="enhanced" valueType="WHOLE"/>
+                        <Attribute name="enhancement" valueType="STRING"/>
+                        <Attribute name="level" valueType="WHOLE"/>
+                        <Attribute name="levelCurve" valueType="WHOLE"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        <Attribute name="modifiers" valueType="STRING"/>
+                    </Element>
+                    <Element category="*" inherit="Table_Group" name="Group"/>
+                    <Element category="*" inherit="Table_Group" name="Components"/>
+                    <Element category="*" inherit="Table_Group" name="Items"/>
+                    <Element category="*" inherit="Table_Group" name="AverageValue"/>
+                    <Element category="*" name="Lookup">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="count" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        <Attribute name="table" valueType="TYPE_ITEM_TABLE"/>
+                    </Element>
+                    <Element category="*" inherit="Components_Table" name="LevelTable"/>
+                    <Element category="*" inherit="Components_Table" name="LocationCriteria"/>
+                    <Element category="*" name="Null"/>
+                </Element>
+                <Element category="*" inherit="Devices_Device" name="Item"/>
+                <Element category="*" name="DeviceSlot">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="criteria" valueType="STRING"/>
+                    <Attribute name="external" valueType="BOOLEAN"/>
+                    <Attribute name="hpBonus" valueType="INTEGER"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Attribute name="linkedFire" valueType="LINKED_FIRE_OPTIONS"/>
+                    <Attribute name="maxCount" valueType="WHOLE"/>
+                    <Attribute name="maxFireArc" valueType="INTEGER"/>
+                    <Attribute name="minFireArc" valueType="INTEGER"/>
+                    <Attribute name="omnidirectional" valueType="BOOLEAN"/>
+                    <Attribute name="posAngle" valueType="INTEGER"/>
+                    <Attribute name="posRadius" valueType="INTEGER"/>
+                    <Attribute name="posZ" valueType="INTEGER"/>
+                    <Attribute name="secondaryWeapon" valueType="BOOLEAN"/>
+                </Element>
+                <Element category="*" name="Table">
+                    <Attribute name="chance" valueType="WHOLE"/>
+                    <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                    <Element category="*" inherit="Devices_Device" name="Device"/>
+                    <Element category="*" inherit="Devices_Device" name="Item"/>
+                    <Element category="*" name="DeviceSlot">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="external" valueType="BOOLEAN"/>
+                        <Attribute name="hpBonus" valueType="INTEGER"/>
+                        <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                        <Attribute name="linkedFire" valueType="LINKED_FIRE_OPTIONS"/>
+                        <Attribute name="maxCount" valueType="WHOLE"/>
+                        <Attribute name="maxFireArc" valueType="INTEGER"/>
+                        <Attribute name="minFireArc" valueType="INTEGER"/>
+                        <Attribute name="omnidirectional" valueType="BOOLEAN"/>
+                        <Attribute name="posAngle" valueType="INTEGER"/>
+                        <Attribute name="posRadius" valueType="INTEGER"/>
+                        <Attribute name="posZ" valueType="INTEGER"/>
+                        <Attribute name="secondaryWeapon" valueType="BOOLEAN"/>
+                    </Element>
+                    <Element category="*" inherit="Devices_Table" name="Table"/>
+                    <Element category="*" inherit="Devices_Table" name="Group"/>
+                    <Element category="*" inherit="Devices_Table" name="Devices"/>
+                    <Element category="*" inherit="Devices_Table" name="LevelTable"/>
+                    <Element category="*" name="Null"/>
+                </Element>
+                <Element category="*" inherit="Devices_Table" name="Group"/>
+                <Element category="*" inherit="Devices_Table" name="Devices"/>
+                <Element category="*" inherit="Devices_Table" name="LevelTable"/>
+                <Element category="*" name="Null"/>
+            </Element>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" name="Events" inherit="DesignType_Events">
+                <Element category="?" name="CanDockAsPlayer"/>
+                <Element category="?" name="CanInstallItem"/>
+                <Element category="?" name="CanRemoveItem"/>
+                <Element category="?" name="GetDockScreen"/>
+                <Element category="?" name="GetExplosionType"/>
+                <Element category="?" name="GetPlayerPriceAdj"/>
+                <Element category="?" name="OnAttacked"/>
+                <Element category="?" name="OnAttackedByPlayer"/>
+                <Element category="?" name="OnCreate"/>
+                <Element category="?" name="OnCreateOrders"/>
+                <Element category="?" name="OnDamage"/>
+                <Element category="?" name="OnDataTransfer"/>
+                <Element category="?" name="OnDeselected"/>
+                <Element category="?" name="OnDestroy"/>
+                <Element category="?" name="OnDockObjAdj"/>
+                <Element category="?" name="OnEnteredGate"/>
+                <Element category="?" name="OnEnteredSystem"/>
+                <Element category="?" name="OnLoad"/>
+                <Element category="?" name="OnMining"/>
+                <Element category="?" name="OnObjBlacklistedPlayer"/>
+                <Element category="?" name="OnObjDestroyed"/>
+                <Element category="?" name="OnObjDocked"/>
+                <Element category="?" name="OnObjEnteredGate"/>
+                <Element category="?" name="OnObjJumped"/>
+                <Element category="?" name="OnObjJumpPosAdj"/>
+                <Element category="?" name="OnObjReconned"/>
+                <Element category="?" name="OnOrderChanged"/>
+                <Element category="?" name="OnOrdersCompleted"/>
+                <Element category="?" name="OnEventHandlerInit"/>
+                <Element category="?" name="OnMissionAccepted"/>
+                <Element category="?" name="OnMissionCompleted"/>
+                <Element category="?" name="OnPlayerBlacklisted"/>
+                <Element category="?" name="OnPlayerEnteredShip"/>
+                <Element category="?" name="OnPlayerEnteredSystem"/>
+                <Element category="?" name="OnPlayerLeftShip"/>
+                <Element category="?" name="OnPlayerLeftSystem"/>
+                <Element category="?" name="OnRandomEncounter"/>
+                <Element category="?" name="OnSelected"/>
+                <Element category="?" name="OnSubordinateAttacked"/>
+                <Element category="?" name="OnSystemExplosion"/>
+                <Element category="?" name="OnSystemObjAttacked"/>
+                <Element category="?" name="OnSystemObjDestroyed"/>
+                <Element category="?" name="OnSystemWeaponFire"/>
+                <Element category="?" name="OnTranslateMessage"/>
+                <Element category="?" name="OnUpdate"/>
+            </Element>
+            <Element category="?" inherit="DesignType_DockScreens" name="DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes" name="DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes" name="AttributeDesc"/>
+        </Element>
+        <Element category="*" name="ShipClassOverride" inherit="DesignType"/>
+        <Element category="*" name="ShipTable" inherit="DesignType"/>
+        <Element category="*" name="Sound" inherit="DesignType">
+            <Attribute name="filename" valueType="FILENAME"/>
+        </Element>
+        <Element category="*" name="Sovereign">
+            <Attribute name="adjective" valueType="STRING"/>
+            <Attribute name="alignment" valueType="ALIGNMENT"/>
+            <Attribute name="attributes" valueType="STRING"/>
+            <Attribute name="demonym" valueType="STRING"/>
+            <Attribute name="extends" valueType="STRING"/>
+            <Attribute name="inherit" valueType="TYPE_INHERITED"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Attribute name="obsolete" valueType="WHOLE"/>
+            <Attribute name="plural" valueType="STRING"/>
+            <Attribute name="shortName" valueType="STRING"/>
+            <Attribute name="UNID" valueType="UNID"/>
+            <Element category="?" name="Relationships">
+                <Element category="*" name="Relationship">
+                    <Attribute name="disposition" valueType="DISPOSITION"/>
+                    <Attribute name="mutual" valueType="BOOLEAN"/>
+                    <Attribute name="sovereign" valueType="TYPE_SOVEREIGN"/>
+                </Element>
+            </Element>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_GlobalData"/>
+            <Element category="?" name="Language">
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="AttackTarget" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="AttackTargetBroadcast" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="HitByFriendlyFire" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="QueryEscortStatus" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="QueryFleetStatus" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="EscortAttacked" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="EscortReportingIn" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="WatchYourTargets" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="NiceShooting" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="FormUp" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="BreakAndAttack" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="QueryComms" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="AbortAttack" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="Wait" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="QueryWaitStatus" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="AttackInFormation" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="DeterTarget" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="QueryAttackStatus" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="DockingSequenceEngaged" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="HitByHostileFire" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="DestroyedByFriendlyFire" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="DestroyedByHostileFire" valueType="STRING"/>
+                </Element>
+                <Element category="?" name="Text">
+                    <Attribute name="id" value="BaseDestroyedByTarget" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="Text">
+                    <Attribute name="id" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="String">
+                    <Attribute name="id" valueType="STRING"/>
+                </Element>
+                <Element category="*" name="Message">
+                    <Attribute name="id" valueType="STRING"/>
+                    <Attribute name="text" valueType="STRING"/>
+                </Element>
+            </Element>
+            <Element category="?" inherit="DesignType_Events"/>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+        </Element>
+        <Element category="*" name="SpaceEnvironmentType" inherit="DesignType">
+            <Attribute name="autoEdges" valueType="BOOLEAN"/>
+            <Attribute name="dragFactor" valueType="WHOLE"/>
+            <Attribute name="lrsJammer" value="false" valueType="BOOLEAN"/>
+            <Attribute name="mapColor" valueType="HEX_COLOR"/>
+            <Attribute name="opacity" valueType="WHOLE"/>
+            <Attribute name="shieldJammer" value="false" valueType="BOOLEAN"/>
+            <Attribute name="srsJammer" value="false" valueType="BOOLEAN"/>
+            <Element category="?" name="Image" inherit="ImageDesc"/>
+            <Element category="?" name="EdgeMask" inherit="ImageDesc"/>
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_GlobalData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" name="Events" inherit="DesignType_Events">
+                <Element category="?" name="OnObjUpdate"/>
+            </Element>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_AttributeDesc"/>
+        </Element>
+        <Element category="*" name="StationType" inherit="DesignType">
+            <Attribute name="abandonedScreen" valueType="STRING"/>
+            <Attribute name="alertWhenAttacked" valueType="STRING"/>
+            <Attribute name="alertWhenDestroyed" valueType="STRING"/>
+            <Attribute name="allowEnemyDocking" valueType="STRING"/>
+            <Attribute name="armorID" valueType="STRING"/>
+            <Attribute name="attributes" valueType="STRING"/>
+            <Attribute name="backgroundPlane" valueType="STRING"/>
+            <Attribute name="barrier" valueType="BOOLEAN"/>
+            <Attribute name="barrierEffect" valueType="STRING"/>
+            <Attribute name="beacon" valueType="STRING"/>
+            <Attribute name="canAttack" valueType="BOOLEAN"/>
+            <Attribute name="chance" valueType="STRING"/>
+            <Attribute name="constructionRate" valueType="INTEGER"/>
+            <Attribute name="controllingSovereign" valueType="TYPE_SOVEREIGN"/>
+            <Attribute name="count" valueType="INTEGER"/>
+            <Attribute name="defaultBackgroundID" valueType="STRING"/>
+            <Attribute name="destEntryPoint&#9;" valueType="STRING"/>
+            <Attribute name="destNodeID" valueType="STRING"/>
+            <Attribute name="destroyWhenEmpty" valueType="BOOLEAN"/>
+            <Attribute name="dockingPorts" valueType="INTEGER"/>
+            <Attribute name="dockScreen" valueType="STRING"/>
+            <Attribute name="ejectaAdj" valueType="INTEGER"/>
+            <Attribute name="ejectaType" valueType="TYPE_ANY"/>
+            <Attribute name="enemyExclusionRadius" valueType="INTEGER"/>
+            <Attribute name="explosionType" valueType="TYPE_ANY"/>
+            <Attribute name="extends" valueType="STRING"/>
+            <Attribute name="fireRateAdj" valueType="INTEGER"/>
+            <Attribute name="frequency" valueType="FREQUENCY"/>
+            <Attribute name="gateEffect" valueType="TYPE_ANY"/>
+            <Attribute name="gravityRadius" valueType="INTEGER"/>
+            <Attribute name="hitPoints" valueType="INTEGER"/>
+            <Attribute name="immutable" valueType="BOOLEAN"/>
+            <Attribute name="inactive" valueType="BOOLEAN"/>
+            <Attribute name="inherit" valueType="TYPE_INHERITED"/>
+            <Attribute name="largeDamageCount" valueType="INTEGER"/>
+            <Attribute name="largeDamageHeight" valueType="INTEGER"/>
+            <Attribute name="largeDamageImageID" valueType="TYPE_IMAGE"/>
+            <Attribute name="largeDamageWidth" valueType="INTEGER"/>
+            <Attribute name="level" valueType="INTEGER"/>
+            <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+            <Attribute name="locationCriteria" valueType="STRING"/>
+            <Attribute name="mass" valueType="INTEGER"/>
+            <Attribute name="maxHitPoints" valueType="INTEGER"/>
+            <Attribute name="maxLightRadius" valueType="INTEGER"/>
+            <Attribute name="maxStructuralHitPoints" valueType="INTEGER"/>
+            <Attribute name="mediumDamageCount" valueType="INTEGER"/>
+            <Attribute name="mediumDamageHeight" valueType="INTEGER"/>
+            <Attribute name="mediumDamageImageID" valueType="TYPE_IMAGE"/>
+            <Attribute name="mediumDamageWidth" valueType="INTEGER"/>
+            <Attribute name="minShips" valueType="INTEGER"/>
+            <Attribute name="mobile" valueType="BOOLEAN"/>
+            <Attribute name="multiHull" valueType="BOOLEAN"/>
+            <Attribute name="name" valueType="STRING"/>
+            <Attribute name="noBlacklist" valueType="BOOLEAN"/>
+            <Attribute name="noFriendlyFire" valueType="BOOLEAN"/>
+            <Attribute name="noFriendlyTarget" valueType="BOOLEAN"/>
+            <Attribute name="noMapDetails" valueType="BOOLEAN"/>
+            <Attribute name="noMapIcon" valueType="BOOLEAN"/>
+            <Attribute name="noMapLabel" valueType="BOOLEAN"/>
+            <Attribute name="obsolete" valueType="WHOLE"/>
+            <Attribute name="paintLayer" valueType="STRING"/>
+            <Attribute name="radioactive" valueType="BOOLEAN"/>
+            <Attribute name="randomEncounters" valueType="FREQUENCY"/>
+            <Attribute name="regen" valueType="INTEGER"/>
+            <Attribute name="repairRate" valueType="INTEGER"/>
+            <Attribute name="reverseArticle" valueType="BOOLEAN"/>
+            <Attribute name="scale" valueType="SCALE_SIZE"/>
+            <Attribute name="shipEncounter" valueType="BOOLEAN"/>
+            <Attribute name="shipRegen" valueType="INTEGER"/>
+            <Attribute name="shipRepairRate" valueType="INTEGER"/>
+            <Attribute name="sign" valueType="BOOLEAN"/>
+            <Attribute name="size" valueType="INTEGER"/>
+            <Attribute name="sovereign" valueType="TYPE_SOVEREIGN"/>
+            <Attribute name="spaceColor" valueType="STRING"/>
+            <Attribute name="stealth" valueType="INTEGER"/>
+            <Attribute name="structuralHitPoints" valueType="STRING"/>
+            <Attribute name="timeStopImmune" valueType="BOOLEAN"/>
+            <Attribute name="UNID" valueType="UNID"/>
+            <Attribute name="unique" valueType="UNIQUE"/>
+            <Attribute name="virtual" valueType="BOOLEAN"/>
+            <Attribute name="x" valueType="INTEGER"/>
+            <Attribute name="y" valueType="INTEGER"/>
+            <Element category="?" name="Animations">
+                <Element category="*" name="Animation">
+                    <Attribute name="animationColumns" valueType="WHOLE"/>
+                    <Attribute name="blending" valueType="BLENDING"/>
+                    <Attribute name="flashTicks" valueType="WHOLE"/>
+                    <Attribute name="imageFrameCount" valueType="WHOLE"/>
+                    <Attribute name="imageHeight" valueType="WHOLE"/>
+                    <Attribute name="imageID" valueType="TYPE_IMAGE"/>
+                    <Attribute name="imageTicksPerFrame" valueType="WHOLE"/>
+                    <Attribute name="imageWidth" valueType="WHOLE"/>
+                    <Attribute name="imageX" valueType="WHOLE"/>
+                    <Attribute name="imageY" valueType="WHOLE"/>
+                    <Attribute name="rotationColumns" valueType="WHOLE"/>
+                    <Attribute name="rotationCount" valueType="WHOLE"/>
+                    <Attribute name="rotationOffset" valueType="INTEGER"/>
+                    <Attribute name="viewportRatio" valueType="DECIMAL"/>
+                    <Attribute name="viewportSize" valueType="INTEGER"/>
+                    <Attribute name="x" valueType="INTEGER"/>
+                    <Attribute name="xOffset" valueType="INTEGER"/>
+                    <Attribute name="y" valueType="INTEGER"/>
+                    <Attribute name="yOffset" valueType="INTEGER"/>
+                </Element>
+            </Element>
+            <Element category="?" name="Construction">
+                <Attribute name="constructionRate" valueType="WHOLE"/>
+                <Attribute name="maxConstruction" valueType="WHOLE"/>
+            </Element>
+            <Element category="?" name="EncounterGroup"/>
+            <Element category="?" name="EncounterType"/>
+            <Element category="?" name="Encounter">
+                <Attribute name="enemyExclusionRadius" valueType="WHOLE"/>
+                <Attribute name="exclusionRadius" valueType="WHOLE"/>
+                <Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+                <Attribute name="locationCriteria" valueType="STRING"/>
+                <Attribute name="maxAppearing" valueType="WHOLE"/>
+                <Attribute name="minAppearing" valueType="WHOLE"/>
+                <Attribute name="systemCriteria" valueType="STRING"/>
+                <Attribute name="unique" valueType="UNIQUE"/>
+                <Element category="?" name="Criteria">
+                    <Element category="*" name="Attributes">
+                        <Attribute name="criteria" valueType="STRING"/>
+                    </Element>
+                    <Element category="*" name="Chance">
+                        <Attribute name="chance" valueType="WHOLE"/>
+                    </Element>
+                    <Element category="*" name="DistanceBetweenNodes">
+                        <Attribute name="max" valueType="WHOLE"/>
+                        <Attribute name="min" valueType="WHOLE"/>
+                    </Element>
+                    <Element category="*" name="DistanceTo">
+                        <Attribute name="criteria" valueType="STRING"/>
+                        <Attribute name="max" valueType="WHOLE"/>
+                        <Attribute name="min" valueType="WHOLE"/>
+                        <Attribute name="nodeID" valueType="STRING"/>
+                    </Element>
+                    <Element category="*" name="StargateCount">
+                        <Attribute name="max" valueType="WHOLE"/>
+                        <Attribute name="min" valueType="WHOLE"/>
+                    </Element>
+                </Element>
+            </Element>
+            <Element category="?" name="Encounters">
+                <Attribute name="frequency" valueType="FREQUENCY"/>
+            </Element>
+            <Element category="?" name="ImageComposite"/>
+            <Element category="?" name="ImageEffect"/>
+            <Element category="?" name="ImageLookup"/>
+            <Element category="?" name="ImageVariants"/>
+            <Element category="?" name="Reinforcements">
+                <Attribute name="buildReinforcements" valueType="BOOLEAN"/>
+                <Attribute name="minShips" valueType="DICE_RANGE"/>
+            </Element>
+            <Element category="?" name="Satellites">
+                <Attribute name="overlapCheck" valueType="SATELLITE_OVERLAP_CHECK"/>
+            </Element>
+            <Element category="?" name="Ships">
+                <Attribute name="buildReinforcements" valueType="BOOLEAN"/>
+                <Attribute name="challenge" valueType="DICE_RANGE"/>
+                <Attribute name="minShips" valueType="DICE_RANGE"/>
+                <Attribute name="standingCount" valueType="DICE_RANGE"/>
+            </Element>
+            
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_GlobalData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" inherit="DesignType_Events">
+				<Attribute name="W.I.P." valueType="STRING"/>
+			</Element>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_AttributeDesc"/>
+        </Element>
+        <Element category="*" name="SystemMap" inherit="DesignType">
+			<Attribute name="W.I.P." valueType="STRING"/>
+		</Element>
+        <Element category="*" name="SystemTable" inherit="DesignType">
+			<Attribute name="W.I.P." valueType="STRING"/>
+		</Element>
+	
+		
+		<Element category="*" name="SystemType">
+			<Attribute name="attributes" valueType="STRING"/>
+			<Attribute name="backgroundID" valueType="TYPE_IMAGE"/>
+			<Attribute name="extends" valueType="STRING"/>
+			<Attribute name="inherit" valueType="TYPE_INHERITED"/>
+			<Attribute name="noExtraEncounters" valueType="BOOLEAN"/>
+			<Attribute name="noRandomEncounters" valueType="BOOLEAN"/>
+			<Attribute name="obsolete" valueType="WHOLE"/>
+			<Attribute name="spaceEnvironmentTileSize" valueType="TILE_SIZE"/>
+			<Attribute name="spaceScale" valueType="INTEGER"/>
+			<Attribute name="timeScale" valueType="INTEGER"/>
+			<Attribute name="UNID" valueType="UNID"/>
+			<Element	name="SystemGroup"	category="1">
+				<Element	name="AntiTrojan"	inherit="SystemType_SystemGroup"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="offset"	valueType="DICE_RANGE"/>
+				</Element>
+				<Element	name="ArcDistribution"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="count"	valueType="DICE_RANGE"/>
+					<Attribute	name="radialWidth"	valueType="WHOLE"/>
+					<Attribute	name="radialEdgeWidth"	valueType="WHOLE"/>
+					<Attribute	name="scale"		valueType="SCALE_DISTANCE"/>
+				</Element>
+				<Element	name="AddAttribute"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="attributes"	valueType="STRING"/>
+				</Element>
+				<Element	name="AddTerritory"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="id"			valueType="STRING"/>
+					<Attribute	name="minRadius"	valueType="WHOLE"/>
+					<Attribute	name="maxRadius"	valueType="WHOLE"/>
+					<Attribute	name="criteria"		valueType="STRING"/>
+					<Attribute	name="attributes"	valueType="STRING"/>
+				</Element>
+				<Element	name="Code"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+				</Element>
+				<Element	name="FillLocations"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="percentFull"	valueType="WHOLE"/>
+					<Attribute	name="count"	valueType="WHOLE"/>
+					<Attribute	name="percentEnemies"	valueType="WHOLE"/>
+					<Attribute	name="stationCriteria"	valueType="STRING"/>
+				</Element>
+				<Element	name="Group"	category="*"	inherit="SystemType_SystemGroup">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+				</Element>
+				<Element	name="Label"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="attributes"	valueType="STRING"/>
+				</Element>
+				;WIP
+				<Element	name="LevelTable"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Element	category="*"	inherit="SystemGroup_AntiTrojan">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_ArcDistribution">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Code">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Group">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_LevelTable">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Lookup">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Null">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Offset">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Orbitals">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Particles">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Primary">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Siblings">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_SpaceEnvironment">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Station">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Table">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Trojan">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Variants">
+						<Attribute	name="levelFrequency"	valueType="STRING"/>
+					</Element>
+				</Element>
+				;WIP
+				<Element	name="LocationCriteriaTable"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Element	category="*"	inherit="SystemGroup_AntiTrojan">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_ArcDistribution">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Code">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Group">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_LevelTable">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Lookup">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Null">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Offset">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Orbitals">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Particles">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Primary">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Siblings">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_SpaceEnvironment">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Station">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Table">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Trojan">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Variants">
+						<Attribute	name="criteria"	valueType="STRING"/>
+					</Element>
+				</Element>
+				<Element	name="Lookup"	category="*">
+					<Attribute	name="table"	valueType="STRING"/>
+				</Element>
+				<Element	name="Marker"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="objName"	valueType="STRING"/>
+					<Attribute	name="showOrbit"	valueType="BOOLEAN"/>
+				</Element>
+				<Element	name="Null"	category="*"/>
+				<Element	name="Offset"	inherit="SystemType_SystemGroup"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="count"		valueType="DICE_RANGE"/>
+					<Attribute	name="scale"		valueType="SCALE_DISTANCE"/>
+					<Attribute	name="radius"		valueType="DICE_RANGE"/>
+					<Attribute	name="angle"		valueType="DICE_RANGE"/>
+					<Attribute	name="x"			valueType="DICE_RANGE"/>
+					<Attribute	name="y"			valueType="DICE_RANGE"/>
+				</Element>
+				<Element	name="Orbitals"	inherit="SystemType_SystemGroup"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="count"		valueType="DICE_RANGE"/>
+					<Attribute	name="distance"		valueType="DICE_RANGE"/>
+					<Attribute	name="bodeDistanceStart"	valueType="DICE_RANGE"/>
+					<Attribute	name="bodeDistanceEnd"	valueType="DICE_RANGE"/>
+					<Attribute	name="angle"		valueType="DICE_RANGE"/>
+					<Attribute	name="eccentricity"	valueType="DICE_RANGE"/>
+					<Attribute	name="rotation"		valueType="DICE_RANGE"/>
+					<Attribute	name="noOverlap"	valueType="BOOLEAN"/>
+					<Attribute	name="exclusionRadius"	valueType="WHOLE"/>
+					<Attribute	name="scale"		valueType="SCALE_DISTANCE"/>
+				</Element>
+				<Element	name="Particles"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="name"	valueType="STRING"/>
+					<Attribute	name="noWake"	valueType="BOOLEAN"/>
+					<Attribute	name="radius"	valueType="WHOLE"/>
+					<Attribute	name="minRadius"	valueType="WHOLE"/>
+					<Attribute	name="dampening"	valueType="WHOLE"/>
+					<Attribute	name="damage"		valueType="STRING"/>
+					<Attribute	name="count"	valueType="DICE_RANGE"/>
+					<Element	category="?"	inherit="ImageDesc"/>
+				</Element>
+				<Element	name="PlaceRandomStation"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="count"	valueType="DICE_RANGE"/>
+					<Attribute	name="stationCriteria"	valueType="STRING"/>
+					<Attribute	name="separateEnemies"	valueType="BOOLEAN"/>
+					<Attribute	name="separateEnemies"	valueType="BOOLEAN"/>
+				</Element>
+				<Element	name="Primary"	inherit="SystemType_SystemGroup"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+				</Element>
+				<Element	category="*"	inherit="SystemType_SystemGroup"	name="RandomLocation">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="locationCriteria" valueType="STRING"/>
+					<Attribute	name="minDist" valueType="WHOLE"/>
+					<Attribute	name="maxDist" valueType="WHOLE"/>
+					<Attribute	name="percentFull"	valueType="WHOLE"/>
+					<Attribute	name="count"	valueType="DICE_RANGE"/>
+				</Element>
+				<Element	name="RandomStation"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="stationCriteria"	valueType="STRING"/>
+					<Attribute	name="locationAttribs"	valueType="STRING"/>
+					<Attribute	name="includeAll"	valueType="BOOLEAN"/>
+					<Attribute	name="noSatellites"	valueType="BOOLEAN"/>
+					<Attribute	name="showOrbit"	valueType="BOOLEAN"/>
+					<Attribute	name="imageVariant"	valueType="WHOLE"/>
+					<Attribute	name="paintLayer"	valueType="PAINT_LAYER"/>
+					<Attribute	name="objName"		valueType="STRING"/>
+					<Attribute	name="noMapLabel"	valueType="BOOLEAN"/>
+					
+					<Attribute	name="noConstruction"	valueType="BOOLEAN"/>
+					<Attribute	name="noReinforcements"	valueType="BOOLEAN"/>
+					<Element	category="?"	inherit="StaticData_Data"/>
+					<Element	category="?"	inherit="StationType_Satellites"/>
+					<Element	category="?"	inherit="StationType_Ships"/>
+					<Element	category="?"	inherit="Events_OnCreate"/>
+				</Element>
+				<Element	name="Siblings"	inherit="SystemType_SystemGroup"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="distribution"	valueType="DICE_RANGE"/>
+					<Attribute	name="minRadius"	valueType="DICE_RANGE"/>
+					<Attribute	name="radiusInc"	valueType="DICE_RANGE"/>
+					<Attribute	name="radiusDec"	valueType="DICE_RANGE"/>
+					<Attribute	name="angle"		valueType="DICE_RANGE"/>
+					<Attribute	name="arcInc"		valueType="DICE_RANGE"/>
+					<Attribute	name="angleAdj"		valueType="DICE_RANGE"/>
+					<Attribute	name="angleInc"		valueType="DICE_RANGE"/>
+				</Element>
+				<Element	name="Ship"		inherit="ShipTable_Ship"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="count"	valueType="DICE_RANGE"/>
+				</Element>
+				;WIP
+				<Element	name="SpaceEnvironment"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="type"	valueType="TYPE_SPACE_ENVIRONMENT"/>
+					<Attribute	name="shape"	valueType="SHAPE_SPACE_ENVIRONMENT"/>
+					<Attribute	name="patches"	valueType="WHOLE"/>
+					<Attribute	name="patchFrequency"	valueType="WHOLE"/>
+					<Attribute	name="encountersCount"		valueType="DICE_RANGE"/>
+					;One SystemGroup element
+				</Element>
+				<Element	name="Stargate"	inherit="SystemType_Station"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="objName"	valueType="STRING"/>
+				</Element>
+				
+				<Element	name="Table"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Element	category="*"	inherit="SystemGroup_AntiTrojan">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_ArcDistribution">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Code">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Group">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_LevelTable">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Lookup">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Null">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Offset">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Orbitals">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Particles">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Primary">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Siblings">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_SpaceEnvironment">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Station">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Table">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Trojan">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+					<Element	category="*"	inherit="SystemGroup_Variants">
+						<Attribute	name="chance"	valueType="STRING"/>
+					</Element>
+				</Element>
+				
+				<Element	name="Variant"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+					<Attribute	name="variant"	valueType="STRING"/>
+				</Element>
+				<Element	name="Variants"	inherit="SystemGroup_VariantTable"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+				</Element>
+				<Element	name="VariantTable"	category="*">
+					<Attribute	name="debugOnly"	valueType="BOOLEAN"/>
+					<Attribute	name="probability"		valueType="WHOLE"/>
+				</Element>
+				
+			</Element>
+			<Element	name="Tables"	category="?">
+				<Element	category="*"	inherit="SystemType_SystemGroup"	name="*"/>
+			</Element>
+			<Element category="?" inherit="DesignType_Communications"/>
+			<Element category="?" inherit="DesignType_StaticData"/>
+			<Element category="?" inherit="DesignType_GlobalData"/>
+			<Element category="?" inherit="DesignType_Language"/>
+			<Element category="?" name="Events" inherit="DesignType_Events">
+				<Element category="?" name="OnCreate"/>
+				<Element category="?" name="OnObjJumpPosAdj"/>
+			</Element>
+			<Element category="?" inherit="DesignType_DockScreens"/>
+			<Element category="?" inherit="DesignType_DisplayAttributes"/>
+			<Element category="?" inherit="DesignType_AttributeDesc"/>
+		</Element>
+		
+		
+        <Element category="*" name="TemplateType" inherit="DesignType">
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_GlobalData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" inherit="DesignType_Events">
+				<Element category="?" name="GetTypeSource"/>
+			</Element>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_AttributeDesc"/>
+        </Element>
+        <Element category="*" name="Type" inherit="DesignType"/>
+    </Element>
+	
+<!--
+            <Element category="?" inherit="DesignType_Communications"/>
+            <Element category="?" inherit="DesignType_StaticData"/>
+            <Element category="?" inherit="DesignType_GlobalData"/>
+            <Element category="?" inherit="DesignType_Language"/>
+            <Element category="?" inherit="DesignType_Events"/>
+            <Element category="?" inherit="DesignType_DockScreens"/>
+            <Element category="?" inherit="DesignType_DisplayAttributes"/>
+            <Element category="?" inherit="DesignType_AttributeDesc"/>
+-->
+
+	<Element category="virtual" id="ImageDesc">
+		<Attribute name="animationColumns" valueType="WHOLE"/>
+		<Attribute name="blending" valueType="BLENDING"/>
+		<Attribute name="flashTicks" valueType="WHOLE"/>
+		<Attribute name="imageFrameCount" valueType="WHOLE"/>
+		<Attribute name="imageHeight" valueType="WHOLE"/>
+		<Attribute name="imageID" valueType="TYPE_IMAGE"/>
+		<Attribute name="imageTicksPerFrame" valueType="WHOLE"/>
+		<Attribute name="imageWidth" valueType="WHOLE"/>
+		<Attribute name="imageX" valueType="WHOLE"/>
+		<Attribute name="imageY" valueType="WHOLE"/>
+		<Attribute name="rotationColumns" valueType="WHOLE"/>
+		<Attribute name="rotationCount" valueType="WHOLE"/>
+		<Attribute name="rotationOffset" valueType="INTEGER"/>
+		<Attribute name="viewportRatio" valueType="DECIMAL"/>
+		<Attribute name="viewportSize" valueType="INTEGER"/>
+		<Attribute name="xOffset" valueType="INTEGER"/>
+		<Attribute name="yOffset" valueType="INTEGER"/>
+	</Element>
+	<Element category="virtual" id="SpaceObject">
+		<Element category="?" name="Names">
+			<Attribute name="customPlural" valueType="BOOLEAN"/>
+			<Attribute name="definiteArticle" valueType="BOOLEAN"/>
+			<Attribute name="esPlural" valueType="BOOLEAN"/>
+			<Attribute name="firstPlural" valueType="BOOLEAN"/>
+			<Attribute name="noArticle" valueType="BOOLEAN"/>
+			<Attribute name="personalName" valueType="BOOLEAN"/>
+			<Attribute name="reverseArticle" valueType="BOOLEAN"/>
+			<Attribute name="secondPlural" valueType="BOOLEAN"/>
+		</Element>
+		<Element category="?" name="Image" inherit="ImageDesc"/>
+        <Element category="?" name="HeroImage" inherit="ImageDesc"/>
+		<Element category="?" inherit="DesignType_StaticData" name="InitialData"/>
+		<Element category="?" name="DockingPorts">
+			<Attribute name="bringToFront" valueType="STRING"/>
+			<Attribute name="maxDist" valueType="WHOLE"/>
+			<Attribute name="portAngle" valueType="INTEGER"/>
+			<Attribute name="portCount" valueType="WHOLE"/>
+			<Attribute name="portRadius" valueType="INTEGER"/>
+			<Attribute name="rotation" valueType="INTEGER"/>
+			<Attribute name="sendToBack" valueType="STRING"/>
+			<Attribute name="x" valueType="INTEGER"/>
+			<Attribute name="y" valueType="INTEGER"/>
+		</Element>
+		<Element category="?" name="Trade">
+			<Attribute name="creditConversion" valueType="WHOLE"/>
+			<Attribute name="currency" valueType="STRING"/>
+			<Attribute name="max" valueType="WHOLE"/>
+			<Attribute name="replenish" valueType="WHOLE"/>
+			<Element category="*" name="AcceptDonation">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="Buy">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="Sell">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="Refuel">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="RepairArmor">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="ReplaceArmor">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="InstallDevice">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="UpgradeDevice">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="RemoveDevice">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="EnhanceItem">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="RepairItem">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="BuyShip">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="SellShip">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+			<Element category="*" name="Custom">
+				<Attribute name="actualPrice" valueType="BOOLEAN"/>
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="inventoryAdj" valueType="WHOLE"/>
+				<Attribute name="levelFrequency" valueType="LEVEL_FREQUENCY"/>
+				<Attribute name="messageID" valueType="STRING"/>
+				<Attribute name="noDescription" valueType="BOOLEAN"/>
+				<Attribute name="priceAdj" valueType="PRICE_ADJ"/>
+				<Attribute name="upgradeInstallOnly" valueType="BOOLEAN"/>
+			</Element>
+		</Element>
+	</Element>
+	;DesignType default subelements
+	
+	<Element category="virtual" id="DesignType">
+		<Element category="virtual" name="Communications">
+			<Element category="*" name="Message">
+				<Attribute name="id" valueType="STRING"/>
+				<Attribute name="key" valueType="CHARACTER"/>
+				<Attribute name="name" valueType="STRING"/>
+				<Element category="?" name="OnShow"/>
+				<Element category="?" name="Invoke"/>
+			</Element>
+		</Element>
+		<Element category="virtual" name="StaticData">
+			<Element category="*" name="Data">
+				<Attribute name="data" valueType="STRING"/>
+				<Attribute name="id" valueType="STRING"/>
+			</Element>
+		</Element>
+		<Element category="virtual" name="GlobalData" inherit="DesignType_StaticData"/>
+		<Element category="virtual" name="Language">
+			<Element category="*" name="Text">
+				<Attribute name="id" valueType="STRING"/>
+			</Element>
+			<Element category="*" name="String">
+				<Attribute name="id" valueType="STRING"/>
+			</Element>
+			<Element category="*" name="Message">
+				<Attribute name="id" valueType="STRING"/>
+				<Attribute name="text" valueType="STRING"/>
+			</Element>
+		</Element>
+		<Element category="virtual" name="Events">
+			<Element category="?" name="GetCreatePos"/>
+			<Element category="?" name="GetGlobalAchievements"/>
+			<Element category="?" name="GetGlobalDockScreen"/>
+			<Element category="?" name="GetGlobalPlayerPriceAdj"/>
+			<Element category="?" name="GetGlobalResurrectPotential"/>
+			<Element category="?" name="OnGlobalEndDiagnostics"/>
+			<Element category="?" name="OnGlobalMarkImages"/>
+			<Element category="?" name="OnGlobalObjDestroyed"/>
+			<Element category="?" name="OnGlobalPaneInit"/>
+			<Element category="?" name="OnGlobalPlayerBoughtItem"/>
+			<Element category="?" name="OnGlobalPlayerChangedShips"/>
+			<Element category="?" name="OnGlobalPlayerEnteredSystem"/>
+			<Element category="?" name="OnGlobalPlayerLeftSystem"/>
+			<Element category="?" name="OnGlobalPlayerSoldItem"/>
+			<Element category="?" name="OnGlobalResurrect"/>
+			<Element category="?" name="OnGlobalTopologyCreated"/>
+			<Element category="?" name="OnGlobalStartDiagnostics"/>
+			<Element category="?" name="OnGlobalSystemDiagnostics"/>
+			<Element category="?" name="OnGlobalSystemCreated"/>
+			<Element category="?" name="OnGlobalSystemStarted"/>
+			<Element category="?" name="OnGlobalSystemStopped"/>
+			<Element category="?" name="OnGlobalUniverseCreated"/>
+			<Element category="?" name="OnGlobalUniverseLoad"/>
+			<Element category="?" name="OnGlobalUniverseSave"/>
+			<Element category="?" name="OnGlobalUpdate"/>
+			<Element category="?" name="OnRandomEncounter"/>
+		</Element>
+		<Element category="virtual" name="DockScreens">
+			<Element category="*" name="DockScreen">
+				<Element category="?" name="ListOptions">
+					<Attribute name="criteria" valueType="STRING"/>
+					<Attribute name="dataFrom" valueType="DOCKSCREEN_DATA_FROM"/>
+					<Attribute name="height" valueType="WHOLE"/>
+					<Attribute name="initialItem" valueType="STRING"/>
+					<Attribute name="list" valueType="STRING"/>
+					<Attribute name="noArmorSpeedDisplay" valueType="BOOLEAN"/>
+					<Attribute name="noEmptySlots" valueType="BOOLEAN"/>
+					<Attribute name="posX" valueType="INTEGER"/>
+					<Attribute name="posY" valueType="INTEGER"/>
+					<Attribute name="rowHeight" valueType="WHOLE"/>
+					<Attribute name="slotName" valueType="STRING"/>
+					<Attribute name="width" valueType="WHOLE"/>
+				</Element>
+				<Element category="?" name="List">
+					<Attribute name="criteria" valueType="STRING"/>
+					<Attribute name="dataFrom" valueType="DOCKSCREEN_DATA_FROM"/>
+					<Attribute name="height" valueType="WHOLE"/>
+					<Attribute name="initialItem" valueType="STRING"/>
+					<Attribute name="list" valueType="STRING"/>
+					<Attribute name="noArmorSpeedDisplay" valueType="BOOLEAN"/>
+					<Attribute name="noEmptySlots" valueType="BOOLEAN"/>
+					<Attribute name="posX" valueType="INTEGER"/>
+					<Attribute name="posY" valueType="INTEGER"/>
+					<Attribute name="rowHeight" valueType="WHOLE"/>
+					<Attribute name="slotName" valueType="STRING"/>
+					<Attribute name="width" valueType="WHOLE"/>
+				</Element>
+				<Element category="?" name="OnScreenInit"/>
+				<Element category="?" name="OnInit"/>
+				<Element category="?" name="InitialPane"/>
+				<Element category="?" name="OnScreenUpdate"/>
+				<Element category="?" inherit="DockScreen_Display" name="Display"/>
+				<Element category="?" name="Canvas">
+					<Attribute name="bottom" valueType="INTEGER"/>
+					<Attribute name="left" valueType="INTEGER"/>
+					<Attribute name="right" valueType="INTEGER"/>
+					<Attribute name="top" valueType="INTEGER"/>
+				</Element>
+				<Element category="?" inherit="DockScreen_Panes" name="Panes"/>
+			</Element>
+		</Element>
+		<Element category="virtual" name="DisplayAttributes">
+			<Element category="*" name="ItemAttribute">
+				<Attribute name="criteria" valueType="STRING"/>
+				<Attribute name="label" valueType="STRING"/>
+				<Attribute name="labelType" valueType="LABEL_TYPE"/>
+			</Element>
+		</Element>
+		<Element category="virtual" name="AttributeDesc" inherit="DockScreen_DisplayAttributes"/>
+	</Element>
+</Element>

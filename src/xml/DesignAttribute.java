@@ -53,6 +53,14 @@ public class DesignAttribute {
 				return field;
 			}
 		},
+		TYPE_SPACE_ENVIRONMENT {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				return field;
+			}
+			
+		},
 		TYPE_SYSTEM_MAP {
 			public JComponent getInputField(String value) {
 				//WIP
@@ -87,6 +95,7 @@ public class DesignAttribute {
 		                char c = e.getKeyChar();
 		               if(!Character.isDigit(c) || (c == '-' && field.getText().contains("-"))) {
 		            	   e.consume();
+		            	   
 		               }
 		            }
 				});
@@ -651,7 +660,10 @@ public class DesignAttribute {
 		Element result = doc.createElement("Attribute");
 		result.setAttribute("name", name);
 		result.setAttribute("valueType", valueType.name());
-		result.setAttribute("value", value);
+		if(!value.isEmpty()) {
+			result.setAttribute("value", value);
+		}
+		
 		return result;
 	}
 	
