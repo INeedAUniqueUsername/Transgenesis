@@ -13,7 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import window.Window;
-
+import static window.Window.Fonts.*;
 public class DesignAttribute {
 	public enum ValueType {
 		UNID {
@@ -572,7 +572,7 @@ public class DesignAttribute {
 		};
 		public JComponent getInputField(String value) {
 			JTextField field = new JTextField();
-			field.setFont(Window.FONT_MEDIUM);
+			field.setFont(Medium.f);
 			field.setText(value);
 			return field;
 		}
@@ -590,7 +590,7 @@ public class DesignAttribute {
 				field.addItem(s);
 			}
 			field.setEditable(editable);
-			field.setFont(Window.FONT_MEDIUM);
+			field.setFont(Medium.f);
 			field.setSelectedItem(value);
 			return field;
 		}

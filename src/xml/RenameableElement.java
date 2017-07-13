@@ -1,5 +1,6 @@
 package xml;
 
+import panels.XMLPanel;
 import window.FrameOld;
 
 public class RenameableElement extends DesignElementOld {
@@ -7,7 +8,9 @@ public class RenameableElement extends DesignElementOld {
 	public RenameableElement(String name) {
 		super(name);
 	}
-	public void initializeFrame(FrameOld f) {
-		f.textArea.setEditable(true);
+	public void initializeFrame(XMLPanel panel) {
+		super.initializeFrame(panel);
+		panel.nameField.setEditable(true);
+		
 	}
 }

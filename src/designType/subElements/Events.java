@@ -2,6 +2,7 @@ package designType.subElements;
 
 import designType.Types;
 import xml.DesignElementOld;
+import xml.RenameableElement;
 
 public final class Events {
 	private Events() {}
@@ -35,6 +36,9 @@ public final class Events {
 				new Event("OnGlobalUpdate"),
 				new Event("OnRandomEncounter")
 				);
+		e.addOptionalMultipleSubElements(() -> {
+			return new RenameableElement("(Custom Event - Insert Name Here)");
+		});
 		switch(type) {
 		case AdventureDesc:
 			e.addOptionalSingleSubElements(

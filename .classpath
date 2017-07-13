@@ -28,5 +28,10 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/TransGenesis/Jsoup/jsoup-1.10.3-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="commons-collections4-4.1/commons-collections4-4.1.jar" sourcepath="commons-collections4-4.1-src">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TransGenesis/commons-collections4-4.1/commons-collections4-4.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

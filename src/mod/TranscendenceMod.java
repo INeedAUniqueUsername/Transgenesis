@@ -1,28 +1,36 @@
 package mod;
 
+import java.awt.event.ActionEvent;
+import static window.Window.Fonts.*;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.TreeMap;
 
+import javax.swing.JButton;
+
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.TreeBidiMap;
+
+import net.miginfocom.layout.CC;
+import panels.UNIDManager;
+import panels.XMLPanel;
+import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElementOld;
 public class TranscendenceMod extends DesignElementOld {
-	private TreeMap<String, String> unid_index;
+	public final UNIDManager unids;
 	private File path;
 	public TranscendenceMod(String name) {
 		super(name);
-		unid_index = new TreeMap<String, String>();
+		unids = new UNIDManager();
 		path = null;
 	}
-	public void addUNID(String unid, String entity) {
-		unid_index.put(unid, entity);
-	}
-	public void setUNIDMap(TreeMap<String, String> unid_map) {
-		unid_index = unid_map;
-	}
 	public String getXMLOutput() {
-		return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" + super.getXMLOutput();
+		return
+				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
+				super.getXMLOutput();
 	}
 	public String getDisplayName() {
 		for(DesignAttribute a : new DesignAttribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
@@ -58,5 +66,26 @@ public class TranscendenceMod extends DesignElementOld {
 		} finally {
 			
 		}
+	}
+	
+	public void initializeFrame(XMLPanel panel) {
+		super.initializeFrame(panel);
+		JButton button = new JButton("Manage UNIDs");
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getSource() == button) {
+					panel.removeSelf();
+					panel.frame.add(unids.getPanel(panel));
+					panel.frame.pack();
+				}
+			}});
+		button.setFont(Large.f);
+		panel.add(button, new CC()
+				.x("75%")
+				.y("0%")
+				.width("25%")
+				.height("5%")
+				);
 	}
 }

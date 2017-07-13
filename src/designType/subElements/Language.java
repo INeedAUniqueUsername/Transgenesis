@@ -8,11 +8,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import designType.Types;
+import panels.XMLPanel;
 import window.FrameOld;
 import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElementOld;
-
+import static window.Window.Fonts.*;
 public final class Language {
 
 	//Done
@@ -125,21 +126,21 @@ class Text extends DesignElementOld {
 		return displayName;
 	}
 	//Make uneditable
-	public void initializeFrame(FrameOld frame) {
-		JPanel labelPanel = frame.getAttributeLabelPanel();
-		JPanel fieldPanel = frame.getAttributeFieldPanel();
-		JPanel subElementPanel = frame.getSubElementPanel();
-		JTextArea textArea = frame.getTextArea();
+	public void initializeFrame(XMLPanel panel) {
+		JPanel labelPanel = panel.labelPanel;
+		JPanel fieldPanel = panel.fieldPanel;
+		JPanel subElementPanel = panel.subElementPanel;
+		JTextArea textArea = panel.textArea;
 		labelPanel.removeAll();
 		fieldPanel.removeAll();
 		subElementPanel.removeAll();
 		
 		for(DesignAttribute a : getAttributes()) {
 			JLabel label = new JLabel(a.getName() + "=");
-			label.setFont(Window.FONT_MEDIUM);
+			label.setFont(Medium.f);
 			labelPanel.add(label);
 			JLabel value = new JLabel(a.getValue());
-			value.setFont(Window.FONT_MEDIUM);
+			value.setFont(Medium.f);
 			fieldPanel.add(value);
 		}
 		

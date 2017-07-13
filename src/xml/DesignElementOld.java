@@ -43,10 +43,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import designType.subElements.SubElementType;
+import panels.XMLPanel;
 import window.FrameOld;
 import window.Window;
 import xml.DesignAttribute.ValueType;
-
+import static window.Window.Fonts.*;
 public class DesignElementOld {
 	private String name;
 	private final TreeMap<String, DesignAttribute> attributes;		
@@ -231,7 +232,6 @@ public class DesignElementOld {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			doc.appendChild(getOutput(doc));
-			
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -243,7 +243,7 @@ public class DesignElementOld {
 			StreamResult result = new StreamResult(new StringWriter());
 			DOMSource source = new DOMSource(doc);
 			transformer.transform(source, result);
-			return result.getWriter().toString();
+			return result.getWriter().toString().replaceAll("&amp;amp;", "&");
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -410,12 +410,12 @@ public class DesignElementOld {
 		}
 		return null;
 	}
-	public void initializeFrame(FrameOld frame) {
-		JTextField nameField = frame.nameField;
-		JPanel labelPanel = frame.labelPanel;
-		JPanel fieldPanel = frame.fieldPanel;
-		JPanel subElementPanel = frame.subElementPanel;
-		JTextArea textArea = frame.textArea;
+	public void initializeFrame(XMLPanel panel) {
+		JTextField nameField = panel.nameField;
+		JPanel labelPanel = panel.labelPanel;
+		JPanel fieldPanel = panel.fieldPanel;
+		JPanel subElementPanel = panel.subElementPanel;
+		JTextArea textArea = panel.textArea;
 		labelPanel.removeAll();
 		fieldPanel.removeAll();
 		subElementPanel.removeAll();
@@ -426,12 +426,12 @@ public class DesignElementOld {
 		List<DesignAttribute> attributes = getAttributes();
 		if(attributes.size() == 0) {
 			JLabel label = new JLabel("No attributes");
-			label.setFont(Window.FONT_LARGE);
+			label.setFont(Large.f);
 			labelPanel.add(label);
 		} else {
 			for(DesignAttribute a : attributes) {
 				JLabel label = new JLabel(a.getName() + "=");
-				label.setFont(Window.FONT_MEDIUM);
+				label.setFont(Medium.f);
 				labelPanel.add(label);
 				JComponent inputField = a.getValueType().getInputField(a.getValue());
 				fieldPanel.add(inputField);
@@ -442,12 +442,12 @@ public class DesignElementOld {
 		
 		if(addableSubElements.size() == 0) {
 			JLabel label = new JLabel("No subelements");
-			label.setFont(Window.FONT_LARGE);
+			label.setFont(Large.f);
 			subElementPanel.add(label);
 		} else {
 			for(DesignElementOld addable : addableSubElements) {
 				JButton button = new JButton(addable.getDisplayName());
-				button.setFont(Window.FONT_MEDIUM);
+				button.setFont(Medium.f);
 				button.addActionListener(new ActionListener() {
 
 					@Override
@@ -455,7 +455,7 @@ public class DesignElementOld {
 						// TODO Auto-generated method stub
 						System.out.println("Create new element");
 						subElements.add(addable);
-						frame.addElement(addable);
+						panel.addElement(addable);
 						System.out.println("Created new element");
 					}
 				});
@@ -539,7 +539,7 @@ public class DesignElementOld {
 		if(o instanceof DesignElementOld) {
 			DesignElementOld e = (DesignElementOld) o;
 			return
-					//name.equals(e.name) &&
+					name.equals(e.name) &&
 					attributes.equals(e.attributes) &&
 					subElements.equals(e.subElements) &&
 					optionalSingleSubElements.equals(e.optionalSingleSubElements) &&
@@ -549,7 +549,7 @@ public class DesignElementOld {
 	}
 	public int hashCode() {
 		return Objects.hash(
-				//name,
+				name,
 				attributes,
 				subElements,
 				optionalSingleSubElements,
