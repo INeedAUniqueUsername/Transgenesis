@@ -70,8 +70,8 @@ public class XMLPanel extends JPanel {
 	public XMLPanel(FrameOld frame) {
 		this.frame = frame;
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
-		//String dir = JOptionPane.showInputDialog("Specify mod directory");
+		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
+		String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
 		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new DesignElementOld(dir));
 		for(TranscendenceMod tm : mods) {
@@ -182,14 +182,14 @@ public class XMLPanel extends JPanel {
 		JScrollPane textPanel = createScrollPane(textArea);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
-		JButton saveButton = new JButton("Save");
+		JButton saveButton = createJButton("Save");
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(selected != null) {
 					setData(selected);
 					DefaultMutableTreeNode node = getNode(selected);
-					DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+					DefaultMutableTreeNode parent = node;
 					TranscendenceMod mod = null;
 					while(parent != null && mod == null) {
 						DesignElementOld parentElement = (DesignElementOld) parent.getUserObject();
@@ -293,7 +293,6 @@ public class XMLPanel extends JPanel {
 	public void selectElement(DesignElementOld e) {
 		System.out.println("Initialize from element: " + e.getName());
 		Dimension size = getSize();
-		int state = frame.getExtendedState();
 		selected = e;
 		setPreferredSize(size);
 		resetLayout();
@@ -338,7 +337,6 @@ public class XMLPanel extends JPanel {
 		    }
 		}
 		System.out.println("Found Node: " + theNode.toString());
-		System.out.println("Found Parent: " + theNode.getParent().toString());
 		return theNode;
 	}
 	public void expandTreeNodes() {
@@ -370,6 +368,17 @@ public class XMLPanel extends JPanel {
 		JTextField result = new JTextField(text);
 		result.setFont(Medium.f);
 		result.setEditable(editable);
+		return result;
+	}
+	public static JTextArea createTextArea(String text, boolean editable) {
+		JTextArea result = new JTextArea(text);
+		result.setFont(Medium.f);
+		result.setEditable(editable);
+		return result;
+	}
+	public static JButton createJButton(String text) {
+		JButton result = new JButton(text);
+		result.setFont(Medium.f);
 		return result;
 	}
 }

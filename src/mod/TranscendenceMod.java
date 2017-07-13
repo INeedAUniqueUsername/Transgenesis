@@ -30,6 +30,10 @@ public class TranscendenceMod extends DesignElementOld {
 	public String getXMLOutput() {
 		return
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
+				"<!DOCTYPE TranscendenceExtension" + "\n" +
+				"[" + "\n" +
+				unids.getXMLOutput() + "\n" +
+				"]>" + "\n" +
 				super.getXMLOutput();
 	}
 	public String getDisplayName() {
@@ -75,8 +79,8 @@ public class TranscendenceMod extends DesignElementOld {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == button) {
-					panel.removeSelf();
 					panel.frame.add(unids.getPanel(panel));
+					panel.removeSelf();
 					panel.frame.pack();
 				}
 			}});
