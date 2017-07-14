@@ -5,10 +5,13 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static panels.XMLPanel.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,61 +39,111 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 
 public class UNIDManager {
-	LinkedList<EntityElement> elements;
+	XMLPanel editor;
+	JScrollPane pane = null;
+	ArrayList<EntityElement> elements;
 	public UNIDManager() {
-		elements = new LinkedList<>();
+		elements = new ArrayList<>();
 	}
-	public JComponent getPanel(XMLPanel editor) {
-		JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(editor));
-		JPanel panel = new JPanel();
-		JScrollPane result = createScrollPane(panel);
-		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+	public void setEditor(XMLPanel editor) {
+		this.editor = editor;
+	}
+	public JScrollPane initializeFrame() {
+		System.out.println("Initialize Frame");
+		JPanel container = new JPanel();
+		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		//panel.setPreferredSize(frame.getSize());
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
-		JButton exit = createJButton("Exit");
-		exit.addActionListener(new ActionListener() {
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+		JScrollPane result = createScrollPane(container);
+		JButton exitButton = createJButton("Exit");
+		exitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				saveAllData();
-				JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(panel));
+				JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(container));
 				frame.remove(result);
 				frame.add(editor);
 				frame.pack();
 			}
 		});
-		panel.add(exit);
+		container.add(exitButton);
 		JButton addEntry = createJButton("New Type Entry");
 		addEntry.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == addEntry) {
-					EntityEntry entry = new EntityEntry();
-					elements.add(entry);
-					panel.add(entry.initializePanel(), new CC().spanX().wrap());
-					JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(panel));
-					frame.pack();;
+					elements.add(new EntityEntry());
+					refreshFrame();
 				}
 			}
 		});
-		panel.add(addEntry);
+		container.add(addEntry);
 		JButton addRange = createJButton("New Type Range");
 		addRange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == addRange) {
-					EntityRange range = new EntityRange();
-					elements.add(range);
-					panel.add(range.initializePanel(), new CC().spanX().wrap());
-					JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(panel));
-					frame.pack();
+					elements.add(new EntityRange());
+					refreshFrame();
 				}
 			}
 		});
-		panel.add(addRange);
-		for(EntityElement e : elements) {
-			JComponent elementComponent = e.initializePanel();
-			panel.add(elementComponent, new CC().wrap());
+		container.add(addRange);
+		for(int i = 0; i < elements.size(); i++) {
+			System.out.println("Preparing Element " + i);
+			int index = i;
+			JPanel buttons = new JPanel();
+			buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+			JButton moveUpButton = createJButton("Move Up");
+			moveUpButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(arg0.getSource() == moveUpButton) {
+						Collections.swap(elements, index, index-1);
+						refreshFrame();
+					}
+				}
+			});
+			moveUpButton.setEnabled(index > 0);
+			buttons.add(moveUpButton);
+			
+			JButton deleteButton = createJButton("Delete");
+			deleteButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(e.getSource() == deleteButton) {
+						elements.remove(index);
+						refreshFrame();
+					}
+				}
+			});
+			buttons.add(deleteButton);
+			
+			JButton moveDownButton = createJButton("Move Down");
+			moveDownButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(arg0.getSource() == moveDownButton) {
+						Collections.swap(elements, index, index+1);
+						refreshFrame();
+					}
+				}
+			});
+			moveDownButton.setEnabled(index < elements.size() - 1);
+			buttons.add(moveDownButton);
+			
+			JPanel row = new JPanel();
+			row.add(buttons);
+			row.add(elements.get(i).initializePanel());
+			container.add(row, new CC().wrap());
 		}
 		return result;
+	}
+	public void refreshFrame() {
+		System.out.println("Refreshing Frame");
+		saveAllData();
+		if(pane != null) {
+			editor.frame.remove(pane);
+		}
+		editor.frame.add(pane = initializeFrame());
+		System.out.println("Packing");
+		editor.frame.pack();
+		
 	}
 	public void saveAllData() {
 		for(EntityElement e : elements) {
@@ -139,6 +192,29 @@ interface EntityElement {
 			entryMap.put(unid, entry);
 		}
 	}
+	public static JPanel createContainerPanel() {
+		JPanel container = new JPanel();
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		return container;
+	}
+	public default JTextField createEntityField(String entity, boolean editable) {
+		JTextField result = createTextField(entity, editable);
+		result.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if(
+                		//Do not allow entities to start with a digit
+                		(result.getText().isEmpty() && Character.isDigit(c)) ||
+                		//Do not allow special characters
+                		!(Character.isAlphabetic(c) || Character.isDigit(c))
+                		) {
+                	e.consume();
+                	}
+			}
+		});
+		return result;
+	}
 }
 //Specifies a single entity that will get an automatically-generated UNID
 class Entity implements EntityElement {
@@ -154,14 +230,14 @@ class Entity implements EntityElement {
 	public Entity(String entity) {
 		comment = COMMENT_DEFAULT;
 		this.entity = entity;
+		field_comment = createTextArea(COMMENT_DEFAULT, true);
+		field_entity = createTextField(entity, true);
 	}
 	@Override
 	public JPanel initializePanel() {
-		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		JPanel container = EntityElement.createContainerPanel();
 		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
-		container.add(field_entity = createTextField(entity, true));
+		container.add(field_entity = createEntityField(entity, true));
 		return container;
 	}
 	@Override
@@ -183,16 +259,15 @@ class EntityEntry extends Entity {
 	public EntityEntry(String unid, String entity) {
 		super(entity);
 		this.unid = unid;
+		field_unid = createTextField(unid, true);
 	}
 	public JPanel initializePanel() {
-		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		JPanel container = EntityElement.createContainerPanel();
 		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
 		subrow.add(field_unid = createTextField(unid, true));
-		subrow.add(field_entity = createTextField(entity, true));
+		subrow.add(field_entity = createEntityField(entity, true));
 		container.add(subrow);
 		return container;
 	}
@@ -219,11 +294,23 @@ class EntityGroup implements EntityElement {
 		field_comment = new JTextArea(comment);
 		field_entities = new LinkedList<JTextField>();
 	}
+	public void createAddEntityButton(JPanel container) {
+		JButton addEntity = createJButton("New Sub-Entity");
+		addEntity.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				entities.add(ENTITY_DEFAULT);
+				JTextField field_entity = createEntityField("[Entity]", true);
+				field_entities.add(field_entity);
+				container.add(field_entity);
+				((JFrame) SwingUtilities.getWindowAncestor(container)).pack();
+			}
+		});
+		container.add(addEntity);
+	}
 	@Override
 	public JPanel initializePanel() {
-		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		JPanel container = EntityElement.createContainerPanel();
 		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
 		field_entities.clear();;
 		for(String entity : entities) {
@@ -231,17 +318,8 @@ class EntityGroup implements EntityElement {
 			field_entities.add(field_entity);
 			container.add(field_entity);
 		}
-		JButton addEntity = createJButton("New Sub-Entry");
-		addEntity.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				entities.add(ENTITY_DEFAULT);
-				JTextField field_entity = new JTextField();
-				field_entities.add(field_entity);
-				container.add(field_entity);
-				((JFrame) SwingUtilities.getWindowAncestor(container)).pack();
-			}
-		});
+		createAddEntityButton(container);
+		
 		return container;
 	}
 	@Override
@@ -268,11 +346,11 @@ class EntityRange extends EntityGroup {
 		super();
 		this.unid_min = unid_min;
 		this.unid_max = unid_max;
+		field_unid_min = createTextField(UNID_DEFAULT, true);
+		field_unid_max = createTextField(UNID_DEFAULT, true);
 	}
 	public JPanel initializePanel() {
-		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		JPanel container = EntityElement.createContainerPanel();
 		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
@@ -281,22 +359,11 @@ class EntityRange extends EntityGroup {
 		container.add(subrow);
 		field_entities.clear();
 		for(String entity : entities) {
-			JTextField field_entity = createTextField(entity, true);
+			JTextField field_entity = createEntityField(entity, true);
 			field_entities.add(field_entity);
 			container.add(field_entity);
 		}
-		JButton addEntity = createJButton("New Sub-Entity");
-		addEntity.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				entities.add(ENTITY_DEFAULT);
-				JTextField field_entity = createTextField("[Entity]", true);
-				field_entities.add(field_entity);
-				container.add(field_entity);
-				((JFrame) SwingUtilities.getWindowAncestor(container)).pack();
-			}
-		});
-		container.add(addEntity);
+		createAddEntityButton(container);
 		return container;
 	}
 	public void saveData() {

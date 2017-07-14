@@ -9,6 +9,9 @@ import java.io.FileWriter;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.TreeBidiMap;
@@ -73,23 +76,31 @@ public class TranscendenceMod extends DesignElementOld {
 	}
 	
 	public void initializeFrame(XMLPanel panel) {
-		super.initializeFrame(panel);
-		JButton button = new JButton("Manage UNIDs");
-		button.addActionListener(new ActionListener() {
+		JButton manageUNIDs = new JButton("Manage UNIDs");
+		manageUNIDs.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(arg0.getSource() == button) {
-					panel.frame.add(unids.getPanel(panel));
-					panel.removeSelf();
+				if(arg0.getSource() == manageUNIDs) {
+					panel.frame.remove(panel);
+					unids.setEditor(panel);
+					unids.refreshFrame();
 					panel.frame.pack();
 				}
 			}});
-		button.setFont(Large.f);
-		panel.add(button, new CC()
+		manageUNIDs.setFont(Large.f);
+		JLabel filePath = XMLPanel.createLabel(path.getAbsolutePath());
+		panel.add(manageUNIDs, new CC()
 				.x("75%")
 				.y("0%")
-				.width("25%")
+				.width("15%")
 				.height("5%")
 				);
+		panel.add(filePath, new CC()
+				.x("25%")
+				.y("5%")
+				.minWidth("75%").maxWidth("75%")
+				.minHeight("5%").maxHeight("5%")
+				);
+		super.initializeFrame(panel);
 	}
 }

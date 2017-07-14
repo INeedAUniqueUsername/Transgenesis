@@ -34,6 +34,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import designType.subElements.SubElementType;
+import mod.ExtensionFactory.Extensions;
 import mod.TranscendenceMod;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
@@ -66,14 +68,15 @@ public class XMLPanel extends JPanel {
 	public final JPanel fieldPanel;
 	public final JPanel subElementPanel;
 	public final JTextArea textArea;
+	public final DefaultMutableTreeNode origin;
 	//JPanel subelementPanel;
 	public XMLPanel(FrameOld frame) {
 		this.frame = frame;
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
-		String dir = JOptionPane.showInputDialog("Specify mod directory");
+		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
+		//String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
-		DefaultMutableTreeNode origin = new DefaultMutableTreeNode(new DesignElementOld(dir));
+		origin = new DefaultMutableTreeNode(new DesignElementOld(dir));
 		for(TranscendenceMod tm : mods) {
 			if(tm == null) {
 				System.out.println("Null extension found");
@@ -168,16 +171,12 @@ public class XMLPanel extends JPanel {
 	public void resetLayout() {
 		removeAll();
 		setLayout(new MigLayout());
-		JScrollPane documentationScroll = createScrollPane(documentation);
 		
 		JPanel attributePanel = new JPanel();
 		attributePanel.setLayout(new GridLayout(0, 2));
 		attributePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
-		JScrollPane attributeScroll = createScrollPane(attributePanel);
-		
-		JScrollPane subElementScroll = createScrollPane(subElementPanel);
 		
 		JScrollPane textPanel = createScrollPane(textArea);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -224,12 +223,55 @@ public class XMLPanel extends JPanel {
 		xmlButton.setFont(Large.f);
 		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
 		
+		int yPercent = 0;
+		for(Extensions extension : Extensions.values()) {
+			JButton b = createJButton("New " + extension.name());
+			b.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					if(e.getSource() == b) {
+						TranscendenceMod mod = extension.get();
+						mod.setPath(new File(JOptionPane.showInputDialog("Specify file path")));
+						DefaultMutableTreeNode node = new DefaultMutableTreeNode(mod);
+						elementTreeModel.insertNodeInto(node, origin, 0);
+						elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
+					}
+				}
+				
+			});
+			add(b, new CC().x("0%").y(yPercent + "%").width("25%").height("3%"));
+			yPercent += 3;
+		}
+		
+		JButton deleteButton = createJButton("Delete Element");
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getSource() == deleteButton && selected != null) {
+					DefaultMutableTreeNode node = getNode(selected),
+							parent = (DefaultMutableTreeNode) node.getParent();
+					if(parent == null) {
+						selected = null;
+					} else {
+						DesignElementOld parentElement = (DesignElementOld) parent.getUserObject();
+						parentElement.getSubElements().remove(selected);
+						if(parent.getChildCount() > 1) {
+							selectElement((DesignElementOld) ((DefaultMutableTreeNode) parent.getChildAt(1)).getUserObject());
+						} else if(parent.getUserObject() instanceof DesignElementOld) {
+							selectElement((DesignElementOld) parent.getUserObject());
+						}
+					}
+					elementTreeModel.removeNodeFromParent(node);
+				}
+			}
+			
+		});
+		
 		add(elementTreePane,
 				new CC()
 				.x("0%")
-				.y("0%")
+				.y("15%")
 				.minWidth("25%").maxWidth("25%")
-				.minHeight("90%").maxHeight("90%")
+				.minHeight("75%").maxHeight("75%")
 				);
 		add(xmlButton,
 				new CC()
@@ -245,31 +287,37 @@ public class XMLPanel extends JPanel {
 				.minWidth("25%").maxWidth("25%")
 				.minHeight("5%").maxHeight("5%")
 				);
-		add(nameField, new CC()
+		add(createScrollPane(nameField), new CC()
 				.x("25%")
 				.y("0%")
 				.minWidth("50%").maxWidth("50%")
 				.minHeight("5%").maxHeight("5%")
 				);
-		add(documentationScroll, new CC()
+		add(deleteButton, new CC()
+				.x("90%")
+				.y("0%")
+				.width("10%")
+				.height("5%")
+				);
+		add(createScrollPane(documentation), new CC()
 				.x("25%")
-				.y("5%")
+				.y("10%")
 				.minWidth("75%").maxWidth("75%")
 				.minHeight("15%").maxHeight("15%")
 				);
-		add(attributeScroll,
+		add(createScrollPane(attributePanel),
 				new CC()
 				.x("25%")
-				.y("20%")
+				.y("25%")
 				.minWidth("55%").maxWidth("55%")
-				.maxHeight("50%")
+				.maxHeight("45%")
 				);
-		add(subElementScroll,
+		add(createScrollPane(subElementPanel),
 				new CC()
 				.x("80%")
-				.y("20%")
+				.y("25%")
 				.minWidth("20%").maxWidth("20%")
-				.maxHeight("50%")
+				.maxHeight("45%")
 				);
 		textPanel.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent arg0) {
@@ -321,8 +369,7 @@ public class XMLPanel extends JPanel {
 		e.setText(textArea.getText());
 		updateTreeText(e);
 	}
-	public void updateTreeText(DesignElementOld se)
-	{
+	public void updateTreeText(DesignElementOld se) {
 		elementTreeModel.nodeChanged(getNode(se));
 	}
 	
@@ -336,7 +383,11 @@ public class XMLPanel extends JPanel {
 		        break;
 		    }
 		}
-		System.out.println("Found Node: " + theNode.toString());
+		if(theNode == null) {
+			System.out.println("Could not find node");
+		} else {
+			System.out.println("Found Node: " + theNode.toString());
+		}
 		return theNode;
 	}
 	public void expandTreeNodes() {

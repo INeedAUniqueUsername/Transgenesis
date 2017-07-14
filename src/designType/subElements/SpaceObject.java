@@ -59,11 +59,6 @@ public final class SpaceObject {
 				);
 		trade.addOptionalMultipleSubElements(TradeElements.values());
 		
-		try {
-			throw new Exception("") {};
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return new DesignElementOld[] {
 				names, items, devices, image, heroImage, initialData, dockingPorts, trade
 		};
