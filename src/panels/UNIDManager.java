@@ -3,10 +3,12 @@ package panels;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import static panels.XMLPanel.*;
 
@@ -26,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -53,7 +56,9 @@ public class UNIDManager {
 		JPanel container = new JPanel();
 		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		//panel.setPreferredSize(frame.getSize());
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+		container.setLayout(new MigLayout());
+		JPanel buttons = new JPanel();
+		buttons.setLayout(new GridLayout(3, 1));
 		JScrollPane result = createScrollPane(container);
 		JButton exitButton = createJButton("Exit");
 		exitButton.addActionListener(new ActionListener() {
@@ -66,7 +71,7 @@ public class UNIDManager {
 				frame.pack();
 			}
 		});
-		container.add(exitButton);
+		buttons.add(exitButton);
 		JButton addEntry = createJButton("New Type Entry");
 		addEntry.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -76,7 +81,7 @@ public class UNIDManager {
 				}
 			}
 		});
-		container.add(addEntry);
+		buttons.add(addEntry);
 		JButton addRange = createJButton("New Type Range");
 		addRange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -86,12 +91,13 @@ public class UNIDManager {
 				}
 			}
 		});
-		container.add(addRange);
+		buttons.add(addRange);
+		container.add(buttons, new CC().x("5%").width("90%").wrap());
 		for(int i = 0; i < elements.size(); i++) {
-			System.out.println("Preparing Element " + i);
 			int index = i;
-			JPanel buttons = new JPanel();
-			buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+			JPanel elementButtons = new JPanel();
+			//buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+			elementButtons.setLayout(new GridLayout(3, 0));
 			JButton moveUpButton = createJButton("Move Up");
 			moveUpButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -102,7 +108,7 @@ public class UNIDManager {
 				}
 			});
 			moveUpButton.setEnabled(index > 0);
-			buttons.add(moveUpButton);
+			elementButtons.add(moveUpButton);
 			
 			JButton deleteButton = createJButton("Delete");
 			deleteButton.addActionListener(new ActionListener() {
@@ -113,7 +119,7 @@ public class UNIDManager {
 					}
 				}
 			});
-			buttons.add(deleteButton);
+			elementButtons.add(deleteButton);
 			
 			JButton moveDownButton = createJButton("Move Down");
 			moveDownButton.addActionListener(new ActionListener() {
@@ -125,25 +131,35 @@ public class UNIDManager {
 				}
 			});
 			moveDownButton.setEnabled(index < elements.size() - 1);
-			buttons.add(moveDownButton);
+			elementButtons.add(moveDownButton);
 			
 			JPanel row = new JPanel();
-			row.add(buttons);
-			row.add(elements.get(i).initializePanel());
-			container.add(row, new CC().wrap());
+			row.setLayout(new MigLayout());
+			row.add(elementButtons, new CC().width("20%"));
+			row.add(elements.get(i).initializePanel(), new CC().width("80%"));
+			container.add(row, new CC().x("5%").width("90%").wrap());
 		}
 		return result;
 	}
 	public void refreshFrame() {
 		System.out.println("Refreshing Frame");
 		saveAllData();
+		
+		Point scrolling = new Point(0, 0);
+		Dimension size = editor.getSize();
 		if(pane != null) {
 			editor.frame.remove(pane);
+			scrolling = pane.getViewport().getViewPosition();
+			System.out.println(scrolling.toString());
+			size = pane.getSize();
 		}
-		editor.frame.add(pane = initializeFrame());
-		System.out.println("Packing");
-		editor.frame.pack();
 		
+		editor.frame.add(pane = initializeFrame());
+		pane.setPreferredSize(size);
+		
+		editor.frame.pack();
+		System.out.println("Packing");
+		pane.getViewport().setViewPosition(scrolling);
 	}
 	public void saveAllData() {
 		for(EntityElement e : elements) {
@@ -198,7 +214,7 @@ interface EntityElement {
 		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		return container;
 	}
-	public default JTextField createEntityField(String entity, boolean editable) {
+	public static JTextField createEntityField(String entity, boolean editable) {
 		JTextField result = createTextField(entity, editable);
 		result.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
@@ -236,8 +252,8 @@ class Entity implements EntityElement {
 	@Override
 	public JPanel initializePanel() {
 		JPanel container = EntityElement.createContainerPanel();
-		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
-		container.add(field_entity = createEntityField(entity, true));
+		container.add((field_comment = createTextArea(comment, true)));
+		container.add(field_entity = EntityElement.createEntityField(entity, true));
 		return container;
 	}
 	@Override
@@ -263,11 +279,11 @@ class EntityEntry extends Entity {
 	}
 	public JPanel initializePanel() {
 		JPanel container = EntityElement.createContainerPanel();
-		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
+		container.add((field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
 		subrow.add(field_unid = createTextField(unid, true));
-		subrow.add(field_entity = createEntityField(entity, true));
+		subrow.add(field_entity = EntityElement.createEntityField(entity, true));
 		container.add(subrow);
 		return container;
 	}
@@ -311,16 +327,43 @@ class EntityGroup implements EntityElement {
 	@Override
 	public JPanel initializePanel() {
 		JPanel container = EntityElement.createContainerPanel();
-		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
+		container.add((field_comment = createTextArea(comment, true)));
 		field_entities.clear();;
 		for(String entity : entities) {
-			JTextField field_entity = createTextField(entity, true);
+			JTextField field_entity = createEntityField(entity, true);
 			field_entities.add(field_entity);
 			container.add(field_entity);
 		}
 		createAddEntityButton(container);
 		
 		return container;
+	}
+	public JTextField createEntityField(String entity, boolean editable) {
+		JTextField result = EntityElement.createEntityField(entity, editable);
+		result.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if(
+                		//Do not allow entities to start with a digit
+                		(result.getText().isEmpty() && Character.isDigit(c)) ||
+                		//Do not allow special characters
+                		!(Character.isAlphabetic(c) || Character.isDigit(c))
+                		) {
+                	e.consume();
+                } else if(result.getText().isEmpty() && e.getKeyCode() == e.VK_BACK_SPACE) {
+                	//If empty and pressing backspace, delete
+                	int index = field_entities.indexOf(result);
+                	field_entities.remove(index);
+                	entities.remove(index);
+                } else if(e.getKeyCode() == e.VK_ENTER) {
+                	//If pressing enter, insert a new entity entry and field
+                	int index = field_entities.indexOf(result);
+                	field_entities.add(index, createEntityField(ENTITY_DEFAULT, true));
+                	entities.add(index, ENTITY_DEFAULT);
+                }
+			}
+		});
+		return result;
 	}
 	@Override
 	public void saveData() {
@@ -351,7 +394,7 @@ class EntityRange extends EntityGroup {
 	}
 	public JPanel initializePanel() {
 		JPanel container = EntityElement.createContainerPanel();
-		container.add(createScrollPane(field_comment = createTextArea(comment, true)));
+		container.add((field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
 		subrow.add(field_unid_min = createTextField(unid_min, true));
