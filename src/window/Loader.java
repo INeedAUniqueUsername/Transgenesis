@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLResolver;
@@ -31,6 +32,7 @@ import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
+import panels.UNIDManager;
 import xml.DesignElementOld;
 
 public class Loader {
@@ -79,7 +81,7 @@ public class Loader {
 			
 			LinkedList<DesignElementOld> elementStack = new LinkedList<DesignElementOld>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
-			TreeMap<String, String> unid_map = new TreeMap<>();
+			UNIDManager unids = new UNIDManager();
 			Read: while (reader.hasNext()) {
 			    XMLEvent event = reader.nextEvent();
 			    /*
@@ -106,7 +108,8 @@ public class Loader {
 			    EventType: switch(event.getEventType()) {
 			    case XMLEvent.ENTITY_DECLARATION:
 			    	EntityDeclaration b = (EntityDeclaration) event;
-			    	unid_map.put(b.getName(), b.getReplacementText());
+			    	//unids.createFromXML(b);
+			    	//unid_map.put(b.getName(), b.getReplacementText());
 			    	System.out.println("Entity: " + b.getName() + "=" + b.getReplacementText());
 			    	System.exit(0);
 			    	break;
@@ -144,17 +147,16 @@ public class Loader {
 			    		System.out.println("DesignType Found");
 			    		continue Read;
 			    	} catch(Exception e) { System.out.println("Not a DesignType"); }
+			    	//If we're looking at a MetaData entry that contains UNID data, then read that
+			    	if(
+			    			elementStack.getLast().getName().equals("Data") &&
+			    			elementStack.getLast().getAttributeByName("id").equals("TransGenesis")
+			    			) {
+			    		unids.createFromXML(event.asStartElement());
+			    	}
 			    	
-			    	//Otherwise, we have some kind of subelement for our current DesignType
+			    	//Otherwise, assume that we are making a DesignType and currently looking at a subelement
 			    	ElementName: switch(name) {
-			    	/*
-			    	case "Events":
-			    		System.out.println("Events Found");
-			    		Element element = SubElementFactory.createEvents(category);
-			    		elementStack.add(element);
-			    		elementStack.getLast().addSubElements(element);
-			    		break ElementName;
-			    	*/
 			    	default:
 			    		if(elementStack.size() == 0) {
 			    			System.out.println("Skipping Start: First element is unrecognized");
@@ -201,6 +203,7 @@ public class Loader {
 			    
 			}
 			//mod.setUNIDMap(unid_map);
+			mod.setUNIDs(unids);
 			
 			/*
 			lines = lines.replaceAll("&", "AMPERSAND");

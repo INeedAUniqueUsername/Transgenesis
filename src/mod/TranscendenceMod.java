@@ -6,15 +6,25 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.StringWriter;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.TreeBidiMap;
+import org.w3c.dom.Document;
 
 import net.miginfocom.layout.CC;
 import panels.UNIDManager;
@@ -23,7 +33,7 @@ import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElementOld;
 public class TranscendenceMod extends DesignElementOld {
-	public final UNIDManager unids;
+	public UNIDManager unids;
 	private File path;
 	public TranscendenceMod(String name) {
 		super(name);
@@ -33,11 +43,13 @@ public class TranscendenceMod extends DesignElementOld {
 	public String getXMLOutput() {
 		return
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
-				"<!DOCTYPE TranscendenceExtension" + "\n" +
+				"<!DOCTYPE" + getName() + "\n" +
 				"[" + "\n" +
 				unids.getXMLOutput() + "\n" +
 				"]>" + "\n" +
-				super.getXMLOutput();
+				super.getXMLOutput() +
+				unids.getXMLMetaData()
+				;
 	}
 	public String getDisplayName() {
 		for(DesignAttribute a : new DesignAttribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
@@ -54,7 +66,9 @@ public class TranscendenceMod extends DesignElementOld {
 		}
 		return super.getDisplayName();
 	}
-	
+	public void setUNIDs(UNIDManager unids) {
+		this.unids = unids;
+	}
 	public void setPath(File absolutePath) {
 		// TODO Auto-generated method stub
 		path = absolutePath;

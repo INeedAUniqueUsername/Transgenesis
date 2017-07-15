@@ -11,8 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import static panels.XMLPanel.*;
-
+import static java.awt.event.KeyEvent.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,20 +34,47 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.events.StartElement;
+import javax.xml.transform.TransformerException;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.TreeBidiMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import mod.TranscendenceMod;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+import xml.DesignElementOld;
 
 public class UNIDManager {
 	XMLPanel editor;
 	JScrollPane pane = null;
-	ArrayList<EntityElement> elements;
+	ArrayList<TypeElement> elements;
 	public UNIDManager() {
 		elements = new ArrayList<>();
+	}
+	public void createFromXML(StartElement event) {
+		switch(event.getName().getLocalPart()) {
+		case "TypeEntry":
+			elements.add(new TypeEntry(
+					event.getAttributeByName(new QName("comment")).getValue(),
+					event.getAttributeByName(new QName("unid")).getValue(),
+					event.getAttributeByName(new QName("type")).getValue()
+					));
+			break;
+		case "TypeRange":
+			elements.add(new TypeRange(
+					event.getAttributeByName(new QName("comment")).getValue(),
+					event.getAttributeByName(new QName("unid_min")).getValue(),
+					event.getAttributeByName(new QName("unid_max")).getValue(),
+					event.getAttributeByName(new QName("types")).getValue().split("; ")
+					));
+			break;
+		}
 	}
 	public void setEditor(XMLPanel editor) {
 		this.editor = editor;
@@ -68,6 +96,7 @@ public class UNIDManager {
 				JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(container));
 				frame.remove(result);
 				frame.add(editor);
+				editor.selectElement(editor.getSelected());
 				frame.pack();
 			}
 		});
@@ -76,7 +105,7 @@ public class UNIDManager {
 		addEntry.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == addEntry) {
-					elements.add(new EntityEntry());
+					elements.add(new TypeEntry());
 					refreshFrame();
 				}
 			}
@@ -86,7 +115,7 @@ public class UNIDManager {
 		addRange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == addRange) {
-					elements.add(new EntityRange());
+					elements.add(new TypeRange());
 					refreshFrame();
 				}
 			}
@@ -162,26 +191,26 @@ public class UNIDManager {
 		pane.getViewport().setViewPosition(scrolling);
 	}
 	public void saveAllData() {
-		for(EntityElement e : elements) {
+		for(TypeElement e : elements) {
 			e.saveData();
 		}
 	}
 	public String getXMLOutput() {
 		//UNID, Entity
 		BidiMap<String, String> map = new TreeBidiMap<>();
-		LinkedList<EntityElement> definedUNIDs = new LinkedList<>();
-		LinkedList<EntityElement> generatedUNIDs = new LinkedList<>();
-		for(EntityElement e : elements) {
-			if(e instanceof EntityEntry || e instanceof EntityRange) {
+		LinkedList<TypeElement> definedUNIDs = new LinkedList<>();
+		LinkedList<TypeElement> generatedUNIDs = new LinkedList<>();
+		for(TypeElement e : elements) {
+			if(e instanceof TypeEntry || e instanceof TypeRange) {
 				definedUNIDs.add(e);
 			} else {
 				generatedUNIDs.add(e);
 			}
 		}
-		definedUNIDs.forEach((EntityElement e) -> {
+		definedUNIDs.forEach((TypeElement e) -> {
 			e.output(map);
 		});
-		generatedUNIDs.forEach((EntityElement e) -> {
+		generatedUNIDs.forEach((TypeElement e) -> {
 			e.output(map);
 		});
 		String result = "";
@@ -190,10 +219,32 @@ public class UNIDManager {
 		}
 		return result;
 	}
+	public String getXMLMetaData() {
+		Document doc;
+		try {
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			Element metadata = doc.createElement("MetaData");
+			Element data = doc.createElement("Data");
+			data.setAttribute("id", "TransGenesis");
+			doc.appendChild(metadata);
+			metadata.appendChild(data);
+			for(TypeElement e : elements) {
+				metadata.appendChild(e.getXMLOutput(doc));
+			}
+			return DesignElementOld.docToString(doc);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
 }
 
-interface EntityElement {
+interface TypeElement {
 	public JPanel initializePanel();
+	public Element getXMLOutput(Document doc);
 	public void saveData();
 	public void output(BidiMap<String, String> entryMap);
 	public static String COMMENT_DEFAULT = "[Comment]";
@@ -214,13 +265,13 @@ interface EntityElement {
 		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		return container;
 	}
-	public static JTextField createEntityField(String entity, boolean editable) {
-		JTextField result = createTextField(entity, editable);
+	public static JTextField createEntityField(String type, boolean editable) {
+		JTextField result = createTextField(type, editable);
 		result.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if(
-                		//Do not allow entities to start with a digit
+                		//Do not allow types to start with a digit
                 		(result.getText().isEmpty() && Character.isDigit(c)) ||
                 		//Do not allow special characters
                 		!(Character.isAlphabetic(c) || Character.isDigit(c))
@@ -232,58 +283,70 @@ interface EntityElement {
 		return result;
 	}
 }
-//Specifies a single entity that will get an automatically-generated UNID
-class Entity implements EntityElement {
+//Specifies a single type that will get an automatically-generated UNID
+class Type implements TypeElement {
 	protected String comment;
-	protected String entity;
+	protected String type;
 	
 	//Retrieve user input from JTextField variables when saving
 	protected JTextArea field_comment;
-	protected JTextField field_entity;
-	public Entity() {
-		this(ENTITY_DEFAULT);
+	protected JTextField field_type;
+	public Type() {
+		this(ENTITY_DEFAULT, COMMENT_DEFAULT);
 	}
-	public Entity(String entity) {
-		comment = COMMENT_DEFAULT;
-		this.entity = entity;
-		field_comment = createTextArea(COMMENT_DEFAULT, true);
-		field_entity = createTextField(entity, true);
+	public Type(String type, String comment) {
+		this.comment = comment;
+		this.type = type;
+		field_comment = createTextArea(comment, true);
+		field_type = createTextField(type, true);
 	}
 	@Override
 	public JPanel initializePanel() {
-		JPanel container = EntityElement.createContainerPanel();
+		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
-		container.add(field_entity = EntityElement.createEntityField(entity, true));
+		container.add(field_type = TypeElement.createEntityField(type, true));
 		return container;
 	}
 	@Override
 	public void saveData() {
 		comment = field_comment.getText();
-		entity = field_entity.getText();
+		type = field_type.getText();
 	}
 	@Override
 	public void output(BidiMap<String, String> entryMap) {
 	}
+	@Override
+	public Element getXMLOutput(Document doc) {
+		Element result = doc.createElement("Type");
+		result.setAttribute("comment", comment);
+		result.setAttribute("type", type);
+		return result;
+	}
 }
-//Specifies a single entity bound to a UNID
-class EntityEntry extends Entity {
+//Specifies a single type bound to a UNID
+class TypeEntry extends Type {
 	private String unid;
 	JTextField field_unid;
-	public EntityEntry() {
-		this(UNID_DEFAULT, ENTITY_DEFAULT);
+	public TypeEntry() {
+		this(UNID_DEFAULT);
 	}
-	public EntityEntry(String unid, String entity) {
-		super(entity);
+	public TypeEntry(String unid) {
+		super();
+		this.unid = unid;
+		field_unid = createTextField(unid, true);
+	}
+	public TypeEntry(String comment, String unid, String type) {
+		super(comment, type);
 		this.unid = unid;
 		field_unid = createTextField(unid, true);
 	}
 	public JPanel initializePanel() {
-		JPanel container = EntityElement.createContainerPanel();
+		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
 		subrow.add(field_unid = createTextField(unid, true));
-		subrow.add(field_entity = EntityElement.createEntityField(entity, true));
+		subrow.add(field_type = TypeElement.createEntityField(type, true));
 		container.add(subrow);
 		return container;
 	}
@@ -293,73 +356,126 @@ class EntityEntry extends Entity {
 		unid = field_unid.getText();
 	}
 	public void output(BidiMap<String, String> entryMap) {
-		EntityElement.store(entryMap, unid, entity);
+		TypeElement.store(entryMap, unid, type);
+	}
+	public Element getXMLOutput(Document doc) {
+		Element result = doc.createElement("TypeEntry");
+		result.setAttribute("comment", comment);
+		result.setAttribute("unid", unid);
+		result.setAttribute("type", type);
+		return result;
 	}
 }
-//Specifies a group of entities that will get automatically-generated UNIDs
-class EntityGroup implements EntityElement {
+//Specifies a group of types that will get automatically-generated UNIDs
+class TypeGroup implements TypeElement {
 	protected String comment;
-	public final List<String> entities;
+	public final List<String> types;
 	
 	protected JTextArea field_comment;
-	protected List<JTextField> field_entities;
+	protected List<JTextField> field_types;
 	
-	public EntityGroup() {
-		entities = new LinkedList<String>();
-		comment = COMMENT_DEFAULT;
-		field_comment = new JTextArea(comment);
-		field_entities = new LinkedList<JTextField>();
+	public TypeGroup() {
+		this(COMMENT_DEFAULT, new String[] {"[Insert Type here. Press Enter to add another Type and Backspace to remove the Type.]"});
 	}
+	public TypeGroup(String comment, String[] types) {
+		this.comment = comment;
+		this.types = new ArrayList<String>();
+		this.types.addAll(Arrays.asList(types));
+		
+		field_comment = new JTextArea(comment);
+		field_types = new LinkedList<JTextField>();
+	}
+	/*
 	public void createAddEntityButton(JPanel container) {
 		JButton addEntity = createJButton("New Sub-Entity");
 		addEntity.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				entities.add(ENTITY_DEFAULT);
-				JTextField field_entity = createEntityField("[Entity]", true);
-				field_entities.add(field_entity);
-				container.add(field_entity);
+				types.add(ENTITY_DEFAULT);
+				JTextField field_type = createEntityField(container, ENTITY_DEFAULT, true);
+				field_types.add(field_type);
+				container.add(field_type);
 				((JFrame) SwingUtilities.getWindowAncestor(container)).pack();
 			}
 		});
 		container.add(addEntity);
 	}
+	*/
 	@Override
 	public JPanel initializePanel() {
-		JPanel container = EntityElement.createContainerPanel();
+		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
-		field_entities.clear();;
-		for(String entity : entities) {
-			JTextField field_entity = createEntityField(entity, true);
-			field_entities.add(field_entity);
-			container.add(field_entity);
+		field_types.clear();;
+		for(String type : types) {
+			JTextField field_type = createEntityField(container, type, true);
+			field_types.add(field_type);
+			container.add(field_type);
 		}
-		createAddEntityButton(container);
+		//createAddEntityButton(container);
 		
 		return container;
 	}
-	public JTextField createEntityField(String entity, boolean editable) {
-		JTextField result = EntityElement.createEntityField(entity, editable);
-		result.addKeyListener(new KeyAdapter() {
+	public JTextField createEntityField(JPanel panel, String type, boolean editable) {
+		JTextField result = TypeElement.createEntityField(type, editable);
+		result.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				int index = field_types.indexOf(result);
+				System.out.println("Field Index: " + index);
+				//Fields are stacked with 0 at the bottom
+                switch(e.getKeyCode()) {
+                case VK_UP:
+                	//Move focus up
+                	field_types.get((index-1)%field_types.size()).requestFocus();
+                	break;
+                case VK_DOWN:
+                	field_types.get((index+1)%field_types.size()).requestFocus();
+                	break;
+                case VK_BACK_SPACE:
+                	if(result.getText().length() == 0 && index > 0) {
+                		System.out.println("Backspace");
+                    	//If empty and pressing backspace, delete
+                    	field_types.remove(index);
+                    	types.remove(index);
+                    	panel.remove(result);
+                    	//If we are second to last or earlier, then shift focus to the component that took this index. Otherwise, shift focus to previous component
+                    	field_types.get(
+                    			(index < field_types.size() - 1) ? index : index - 1
+                    			).requestFocus();
+                    	((JFrame) SwingUtilities.getWindowAncestor(panel)).pack();
+                	}
+                	break;
+                case VK_ENTER:
+                	System.out.println("Enter");
+                	//If pressing enter, insert a new type entry and field after this
+                	JTextField field = createEntityField(panel, "", true);
+                	int index_next = index+1;
+                	field_types.add(index_next, field);
+                	types.add(index_next, "");
+                	panel.add(field);
+                	//Move focus to the next component
+                	field.requestFocus();
+                	((JFrame) SwingUtilities.getWindowAncestor(panel)).pack();
+                	break;
+                }
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
 			public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if(
-                		//Do not allow entities to start with a digit
+				char c = e.getKeyChar();
+				if(
+                		//Do not allow types to start with a digit
                 		(result.getText().isEmpty() && Character.isDigit(c)) ||
                 		//Do not allow special characters
                 		!(Character.isAlphabetic(c) || Character.isDigit(c))
                 		) {
                 	e.consume();
-                } else if(result.getText().isEmpty() && e.getKeyCode() == e.VK_BACK_SPACE) {
-                	//If empty and pressing backspace, delete
-                	int index = field_entities.indexOf(result);
-                	field_entities.remove(index);
-                	entities.remove(index);
-                } else if(e.getKeyCode() == e.VK_ENTER) {
-                	//If pressing enter, insert a new entity entry and field
-                	int index = field_entities.indexOf(result);
-                	field_entities.add(index, createEntityField(ENTITY_DEFAULT, true));
-                	entities.add(index, ENTITY_DEFAULT);
+                	System.out.println("Consumed");
                 }
 			}
 		});
@@ -368,51 +484,80 @@ class EntityGroup implements EntityElement {
 	@Override
 	public void saveData() {
 		comment = field_comment.getText();
-		entities.clear();
-		field_entities.forEach((JTextField field_entity) -> {
-			entities.add(field_entity.getText());
-		});
+		for(int i = 0; i < field_types.size(); i++) {
+			types.set(i, field_types.get(i).getText());
+		}
 	}
 	@Override
-	public void output(BidiMap<String, String> entryMap) {
-		
+	public void output(BidiMap<String, String> entryMap) {}
+	@Override
+	public Element getXMLOutput(Document doc) {
+		Element result = doc.createElement("TypeGroup");
+		result.setAttribute("comment", comment);
+		result.setAttribute("types", listToString(types));
+		return result;
+	}
+	public String listToString(List<String> list) {
+		String result = "";
+		String last = list.remove(list.size()-1);
+		for(String s : list) {
+			result += s + " ";
+		}
+		result += last;
+		return result;
 	}
 }
-//Specifies a group of entities bound to a range of UNIDs on an interval
-class EntityRange extends EntityGroup {
+//Specifies a group of types bound to a range of UNIDs on an interval
+class TypeRange extends TypeGroup {
 	private String unid_min, unid_max;
 	private JTextField field_unid_min, field_unid_max;
-	public EntityRange() {
+	public TypeRange() {
 		this("[Min UNID]", "[Max UNID]");
 	}
-	public EntityRange(String unid_min, String unid_max) {
+	public TypeRange(String unid_min, String unid_max) {
 		super();
 		this.unid_min = unid_min;
 		this.unid_max = unid_max;
 		field_unid_min = createTextField(UNID_DEFAULT, true);
 		field_unid_max = createTextField(UNID_DEFAULT, true);
 	}
+	public TypeRange(String comment, String unid_min, String unid_max, String... types) {
+		super(comment, types);
+		this.unid_min = unid_min;
+		this.unid_max = unid_max;
+		field_unid_min = createTextField(UNID_DEFAULT, true);
+		field_unid_max = createTextField(UNID_DEFAULT, true);
+	}
 	public JPanel initializePanel() {
-		JPanel container = EntityElement.createContainerPanel();
+		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
 		subrow.add(field_unid_min = createTextField(unid_min, true));
 		subrow.add(field_unid_max = createTextField(unid_max, true));
 		container.add(subrow);
-		field_entities.clear();
-		for(String entity : entities) {
-			JTextField field_entity = createEntityField(entity, true);
-			field_entities.add(field_entity);
-			container.add(field_entity);
+		System.out.println("Entity Count: " + types.size());
+		field_types.clear();
+		for(String type : types) {
+			JTextField field_type = createEntityField(container, type, true);
+			field_types.add(field_type);
+			container.add(field_type);
 		}
-		createAddEntityButton(container);
+		//createAddEntityButton(container);
 		return container;
 	}
 	public void saveData() {
 		super.saveData();
 		unid_min = (field_unid_min.getText());
 		unid_max = (field_unid_max.getText());
+	}
+	public Element getXMLOutput(Document doc) {
+		Element result = doc.createElement("TypeRange");
+		result.setAttribute("comment", comment);
+		result.setAttribute("unid_min", unid_min);
+		result.setAttribute("unid_max", unid_max);
+		result.setAttribute("types", listToString(types));
+		return result;
 	}
 	public void output(BidiMap<String, String> entryMap) {
 		int min = -1, max = -1;
@@ -426,8 +571,8 @@ class EntityRange extends EntityGroup {
 		} catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Invalid Maximum UNID: " + unid_max);
 		}
-		for(int i = 0; i < entities.size() && i < (max - min) + 1; i++) {
-			EntityElement.store(entryMap, "" + (min + i), entities.get(i));
+		for(int i = 0; i < types.size() && i < (max - min) + 1; i++) {
+			TypeElement.store(entryMap, "" + (min + i), types.get(i));
 		}
 	}
 }

@@ -338,6 +338,9 @@ public class XMLPanel extends JPanel {
 				.minHeight("30%").maxHeight("80%")
 				);
 	}
+	public DesignElementOld getSelected() {
+		return selected;
+	}
 	public void selectElement(DesignElementOld e) {
 		System.out.println("Initialize from element: " + e.getName());
 		Dimension size = getSize();
