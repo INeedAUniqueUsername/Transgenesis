@@ -73,8 +73,8 @@ public class XMLPanel extends JPanel {
 	public XMLPanel(FrameOld frame) {
 		this.frame = frame;
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
-		//String dir = JOptionPane.showInputDialog("Specify mod directory");
+		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
+		String dir = JOptionPane.showInputDialog("Specify mod directory");
 		mods = Loader.loadAllMods(new File(dir));
 		origin = new DefaultMutableTreeNode(new DesignElementOld(dir));
 		for(TranscendenceMod tm : mods) {
