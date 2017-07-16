@@ -65,23 +65,10 @@ public class Loader {
 			inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
 			inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
 			
-			inputFactory.setXMLResolver(new XMLResolver() {
-
-				@Override
-				public Object resolveEntity(String arg0, String arg1, String arg2, String arg3)
-						throws XMLStreamException {
-					// TODO Auto-generated method stub
-					System.exit(0);
-					int a = 1/0;
-					return new InputSource();
-				}
-				
-			});
 			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
 			
 			LinkedList<DesignElementOld> elementStack = new LinkedList<DesignElementOld>();	//The last one is the current element we are looking at
 			Types category = null;			//Current category of DesignType
-			UNIDManager unids = new UNIDManager();
 			Read: while (reader.hasNext()) {
 			    XMLEvent event = reader.nextEvent();
 			    /*
@@ -147,13 +134,6 @@ public class Loader {
 			    		System.out.println("DesignType Found");
 			    		continue Read;
 			    	} catch(Exception e) { System.out.println("Not a DesignType"); }
-			    	//If we're looking at a MetaData entry that contains UNID data, then read that
-			    	if(
-			    			elementStack.getLast().getName().equals("Data") &&
-			    			elementStack.getLast().getAttributeByName("id").equals("TransGenesis")
-			    			) {
-			    		unids.createFromXML(event.asStartElement());
-			    	}
 			    	
 			    	//Otherwise, assume that we are making a DesignType and currently looking at a subelement
 			    	ElementName: switch(name) {
@@ -185,7 +165,7 @@ public class Loader {
 			    	if(elementStack.size() == 0) {
 			    		System.out.println("Skipping End: First element is unrecognized");
 			    	} else {
-			    		elementStack.removeLast();
+			    		elementStack.removeLast().finalizeLoad();
 			    	}
 			    	break EventType;
 			    case XMLEvent.CHARACTERS:
@@ -202,22 +182,9 @@ public class Loader {
 			    }
 			    
 			}
-			//mod.setUNIDMap(unid_map);
-			mod.setUNIDs(unids);
-			
-			/*
-			lines = lines.replaceAll("&", "AMPERSAND");
-			
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-		    spf.setNamespaceAware(true);
-		    spf.setValidating(false);
-		    SAXParser saxParser = spf.newSAXParser();
-		    XMLReader xmlReader = saxParser.getXMLReader();
-		    
-		    xmlReader.setContentHandler(new Parser());
-		    //xmlReader.parse(convertToFileURL(path.getAbsolutePath()));
-		    xmlReader.parse(new InputSource(new StringReader(lines)));
-		    */
+			if(mod != null) {
+				mod.setUNIDs(new UNIDManager(path));
+			}
 		} catch (IOException | XMLStreamException e) {
 			System.out.println("Encountered error; mod loading cancelled");
 			mod = null;

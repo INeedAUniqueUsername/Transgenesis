@@ -43,13 +43,17 @@ public class TranscendenceMod extends DesignElementOld {
 	public String getXMLOutput() {
 		return
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
-				"<!DOCTYPE" + getName() + "\n" +
+				"<!DOCTYPE" + " " + getName() + "\n" +
 				"[" + "\n" +
 				unids.getXMLOutput() + "\n" +
 				"]>" + "\n" +
-				super.getXMLOutput() +
-				unids.getXMLMetaData()
+				super.getXMLOutput()
 				;
+	}
+	public String getXMLMetaData() {
+		return
+				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
+				unids.getXMLMetaData();
 	}
 	public String getDisplayName() {
 		for(DesignAttribute a : new DesignAttribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
@@ -75,13 +79,23 @@ public class TranscendenceMod extends DesignElementOld {
 	}
 	public void save() {
 		System.out.println("File saved!");
+		File path_metadata = new File(path.getAbsolutePath() + ".dat");
 		path.delete();
+		path_metadata.delete();
 		try {
 			FileWriter fw = new FileWriter(path);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(getXMLOutput());
 			bw.close();
 			fw.close();
+			
+			fw = new FileWriter(path_metadata);
+			bw = new BufferedWriter(fw);
+			bw.write(getXMLMetaData());
+			bw.close();
+			fw.close();
+			
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {

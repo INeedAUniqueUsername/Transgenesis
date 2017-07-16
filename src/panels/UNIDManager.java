@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.file.Files;
 
 import static panels.XMLPanel.*;
 import static java.awt.event.KeyEvent.*;
@@ -16,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -37,19 +42,29 @@ import javax.swing.SwingUtilities;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.Comment;
+import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.TreeBidiMap;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import designType.Types;
 import mod.TranscendenceMod;
+import mod.ExtensionFactory.Extensions;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import xml.DesignElementOld;
-
 public class UNIDManager {
 	XMLPanel editor;
 	JScrollPane pane = null;
@@ -57,7 +72,79 @@ public class UNIDManager {
 	public UNIDManager() {
 		elements = new ArrayList<>();
 	}
+	public UNIDManager(File modFile) {
+		this();
+		initializeElements(modFile);
+	}
+	public void initializeElements(File modFile) {
+		try {
+			File read = new File(modFile.getAbsolutePath() + ".dat");
+			if(!read.exists()) {
+				System.out.println("Metadata not found");
+				read = modFile;
+				return;
+			}
+			System.out.println(read.getAbsolutePath());
+			System.out.println("Found metadata");
+			byte[] bytes = Files.readAllBytes(read.toPath());
+			String lines = new String(bytes);
+			lines = lines.replace("&", "&amp;");
+			bytes = lines.getBytes();
+			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+			inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
+			inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, false);
+			inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, true);
+			XMLEventReader reader = inputFactory.createXMLEventReader(new ByteArrayInputStream(bytes));
+			boolean active = false;
+			Read: while (reader.hasNext()) {
+			    XMLEvent event = reader.nextEvent();
+			    
+			    EventType: switch(event.getEventType()) {
+			    case XMLEvent.ENTITY_DECLARATION:
+			    	createFromXML((EntityDeclaration) event);
+			    	break;
+			    case XMLEvent.START_ELEMENT:
+			    	System.out.println("StartElement");
+			    	StartElement start = event.asStartElement();
+			    	if(
+			    			"Data".equals(start.getName().getLocalPart()) &&
+			    			"TransGenesis".equals(start.getAttributeByName(new QName("id")).getValue())
+			    			) {
+			    		System.out.println("Found Data");
+			    		active = true;
+			    		continue Read;
+			    	} else if(active) {
+			    		System.out.println("Reading Data");
+			    		createFromXML(start);
+			    	}
+			    	break EventType;
+			    case XMLEvent.END_ELEMENT:
+			    	EndElement end = event.asEndElement();
+			    	if(
+			    			active &&
+			    			"Data".equals(end.getName().getLocalPart())
+			    			) {
+			    		System.out.println("Finished Reading");
+			    		active = false;
+			    	}
+			    	break;
+			    }
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	public void createFromXML(EntityDeclaration e) {
+		System.out.println("Found Declaration");
+		elements.add(new TypeEntry(
+				"",
+				e.getReplacementText(),
+				e.getName()
+				));
+	}
 	public void createFromXML(StartElement event) {
+		System.out.println("Found Entry");
 		switch(event.getName().getLocalPart()) {
 		case "TypeEntry":
 			elements.add(new TypeEntry(
@@ -71,7 +158,7 @@ public class UNIDManager {
 					event.getAttributeByName(new QName("comment")).getValue(),
 					event.getAttributeByName(new QName("unid_min")).getValue(),
 					event.getAttributeByName(new QName("unid_max")).getValue(),
-					event.getAttributeByName(new QName("types")).getValue().split("; ")
+					event.getAttributeByName(new QName("types")).getValue().split(" ")
 					));
 			break;
 		}
@@ -229,7 +316,7 @@ public class UNIDManager {
 			doc.appendChild(metadata);
 			metadata.appendChild(data);
 			for(TypeElement e : elements) {
-				metadata.appendChild(e.getXMLOutput(doc));
+				data.appendChild(e.getXMLOutput(doc));
 			}
 			return DesignElementOld.docToString(doc);
 		} catch (ParserConfigurationException e) {
@@ -251,6 +338,16 @@ interface TypeElement {
 	public static String UNID_DEFAULT = "[UNID]";
 	public static String ENTITY_DEFAULT = "[Entity]";
 	public static void store(BidiMap<String, String> entryMap, String unid, String entry) {
+		//Attempt to make the unid into a hex string, if it is not already one.
+		try {
+			unid = Integer.toHexString(Integer.parseInt(unid));
+		} catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Invalid UNID: " + unid);
+			return;
+		}
+		if(!StringUtils.isAlphanumeric(entry)) {
+			JOptionPane.showMessageDialog(null, "Invalid Type: " + entry);
+		}
 		if(entryMap.containsKey(unid)) {
 			JOptionPane.showMessageDialog(null, "UNID Conflict: " + unid);
 		} else if(entryMap.containsValue(entry)) {
@@ -264,6 +361,25 @@ interface TypeElement {
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		return container;
+	}
+	public static JTextField createUNIDField(String unid, boolean editable) {
+		JTextField result = createTextField(/*(unid.startsWith("0x") ? "" : "0x") + */ unid, editable);
+		
+		/*result.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent arg0) {
+				if(result.getCaretPosition() < 3 && arg0.getKeyCode() != arg0.VK_RIGHT) {
+					arg0.consume();
+				}
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyTyped(KeyEvent e) {
+				if(result.getCaretPosition() < 2) {
+					e.consume();
+				}
+			}
+		});
+		*/
+		return result;
 	}
 	public static JTextField createEntityField(String type, boolean editable) {
 		JTextField result = createTextField(type, editable);
@@ -333,19 +449,19 @@ class TypeEntry extends Type {
 	public TypeEntry(String unid) {
 		super();
 		this.unid = unid;
-		field_unid = createTextField(unid, true);
+		field_unid = TypeElement.createUNIDField(unid, true);
 	}
 	public TypeEntry(String comment, String unid, String type) {
 		super(comment, type);
 		this.unid = unid;
-		field_unid = createTextField(unid, true);
+		field_unid = TypeElement.createUNIDField(unid, true);
 	}
 	public JPanel initializePanel() {
 		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
-		subrow.add(field_unid = createTextField(unid, true));
+		subrow.add(field_unid = TypeElement.createUNIDField(unid, true));
 		subrow.add(field_type = TypeElement.createEntityField(type, true));
 		container.add(subrow);
 		return container;
@@ -384,6 +500,9 @@ class TypeGroup implements TypeElement {
 		
 		field_comment = new JTextArea(comment);
 		field_types = new LinkedList<JTextField>();
+		for(String s : types) {
+			field_types.add(createEntityField(null, s, true));
+		}
 	}
 	/*
 	public void createAddEntityButton(JPanel container) {
@@ -405,7 +524,7 @@ class TypeGroup implements TypeElement {
 	public JPanel initializePanel() {
 		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
-		field_types.clear();;
+		field_types.clear();
 		for(String type : types) {
 			JTextField field_type = createEntityField(container, type, true);
 			field_types.add(field_type);
@@ -484,7 +603,7 @@ class TypeGroup implements TypeElement {
 	@Override
 	public void saveData() {
 		comment = field_comment.getText();
-		for(int i = 0; i < field_types.size(); i++) {
+		for(int i = 0; i < Math.min(types.size(), field_types.size()); i++) {
 			types.set(i, field_types.get(i).getText());
 		}
 	}
@@ -499,11 +618,11 @@ class TypeGroup implements TypeElement {
 	}
 	public String listToString(List<String> list) {
 		String result = "";
-		String last = list.remove(list.size()-1);
-		for(String s : list) {
+		int last = list.size() - 1;
+		for(String s : list.subList(0, last)) {
 			result += s + " ";
 		}
-		result += last;
+		result += list.get(last);
 		return result;
 	}
 }
@@ -518,23 +637,23 @@ class TypeRange extends TypeGroup {
 		super();
 		this.unid_min = unid_min;
 		this.unid_max = unid_max;
-		field_unid_min = createTextField(UNID_DEFAULT, true);
-		field_unid_max = createTextField(UNID_DEFAULT, true);
+		field_unid_min = TypeElement.createUNIDField(unid_min, true);
+		field_unid_max = TypeElement.createUNIDField(unid_max, true);
 	}
 	public TypeRange(String comment, String unid_min, String unid_max, String... types) {
 		super(comment, types);
 		this.unid_min = unid_min;
 		this.unid_max = unid_max;
-		field_unid_min = createTextField(UNID_DEFAULT, true);
-		field_unid_max = createTextField(UNID_DEFAULT, true);
+		field_unid_min = TypeElement.createUNIDField(unid_min, true);
+		field_unid_max = TypeElement.createUNIDField(unid_max, true);
 	}
 	public JPanel initializePanel() {
 		JPanel container = TypeElement.createContainerPanel();
 		container.add((field_comment = createTextArea(comment, true)));
 		JPanel subrow = new JPanel();
 		subrow.setLayout(new GridLayout(0, 2));
-		subrow.add(field_unid_min = createTextField(unid_min, true));
-		subrow.add(field_unid_max = createTextField(unid_max, true));
+		subrow.add(field_unid_min = TypeElement.createUNIDField(unid_min, true));
+		subrow.add(field_unid_max = TypeElement.createUNIDField(unid_max, true));
 		container.add(subrow);
 		System.out.println("Entity Count: " + types.size());
 		field_types.clear();
@@ -560,7 +679,7 @@ class TypeRange extends TypeGroup {
 		return result;
 	}
 	public void output(BidiMap<String, String> entryMap) {
-		int min = -1, max = -1;
+		Integer min = null, max = null;
 		try {
 			min = Integer.parseInt(unid_min);
 		}catch(Exception e) {
@@ -571,8 +690,14 @@ class TypeRange extends TypeGroup {
 		} catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Invalid Maximum UNID: " + unid_max);
 		}
-		for(int i = 0; i < types.size() && i < (max - min) + 1; i++) {
-			TypeElement.store(entryMap, "" + (min + i), types.get(i));
+		if(min != null || max != null) {
+			int maxCount = (max - min) + 1;
+			if(types.size() > maxCount) {
+				JOptionPane.showMessageDialog(null, "Not enough UNIDs within range");
+			}
+			for(int i = 0; i < types.size() && i < maxCount; i++) {
+				TypeElement.store(entryMap, "" + (min + i), types.get(i));
+			}
 		}
 	}
 }

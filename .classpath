@@ -33,5 +33,10 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/TransGenesis/commons-collections4-4.1/commons-collections4-4.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="commons-lang3-3.6/commons-lang3-3.6.jar" sourcepath="commons-lang3-3.6/commons-lang3-3.6-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TransGenesis/commons-lang3-3.6/commons-lang3-3.6-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

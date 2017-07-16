@@ -17,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -74,9 +75,18 @@ public class XMLPanel extends JPanel {
 		this.frame = frame;
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
-		String dir = JOptionPane.showInputDialog("Specify mod directory");
-		mods = Loader.loadAllMods(new File(dir));
-		origin = new DefaultMutableTreeNode(new DesignElementOld(dir));
+		JFileChooser j = new JFileChooser();
+		j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		j.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		File f = null;
+		if(j.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			//String dir = JOptionPane.showInputDialog("Specify mod directory");
+			f = j.getSelectedFile();
+		} else {
+			f = new File("");
+		}
+		mods = Loader.loadAllMods(f);
+		origin = new DefaultMutableTreeNode(new DesignElementOld(f.getAbsolutePath()));
 		for(TranscendenceMod tm : mods) {
 			if(tm == null) {
 				System.out.println("Null extension found");
@@ -84,7 +94,6 @@ public class XMLPanel extends JPanel {
 				origin.add(tm.toTreeNode());
 			}
 		}
-		
 		DefaultTreeCellRenderer elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
 			public Component getTreeCellRendererComponent(

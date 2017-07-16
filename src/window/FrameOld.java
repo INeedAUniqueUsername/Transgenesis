@@ -60,10 +60,8 @@ public class FrameOld extends JFrame {
 	
 	
 	public FrameOld() {
+		/*
 		try {
-			if(true) {
-				throw new Exception();
-			}
 			FileWriter fw = new FileWriter("XML Definitions.txt");
 			BufferedWriter bw = new BufferedWriter(fw);
 			DesignElementOld hierarchy = new DesignElementOld("Hierarchy");
@@ -83,10 +81,8 @@ public class FrameOld extends JFrame {
 			
 		}
 		
+		/*
 		try {
-			if(true) {
-				throw new Exception();
-			}
 			//https://stackoverflow.com/questions/5640334/how-do-i-preserve-line-breaks-when-using-jsoup-to-convert-html-to-plain-text
 			//https://stackoverflow.com/questions/11154145/jsoup-how-to-extract-this-text
 			Document d = Jsoup.connect("http://wiki.kronosaur.com/modding/xml/effecttype").get();
@@ -105,9 +101,6 @@ public class FrameOld extends JFrame {
 		}
 		
 		try {
-			if(true) {
-				throw new Exception();
-			}
 			FileWriter fw = new FileWriter("XML Hierarchy.txt");
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(ExtensionFactory.Extensions.TranscendenceAdventure.get().toMinistryMarkdown());
@@ -118,7 +111,7 @@ public class FrameOld extends JFrame {
 		} finally {
 			
 		}
-		
+		*/
 		setTitle("TransGenesis");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

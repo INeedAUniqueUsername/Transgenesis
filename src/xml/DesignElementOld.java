@@ -232,7 +232,7 @@ public class DesignElementOld {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			doc.appendChild(getOutput(doc));
-			return docToString(doc).replaceAll("&amp;amp;", "&");
+			return docToString(doc).replaceAll("\\&amp;", "&");
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -353,13 +353,14 @@ public class DesignElementOld {
 	}
 	public Element getOutput(Document doc) {
 		Element child = doc.createElement(getName());
+		child.setTextContent(text);
 		for(DesignAttribute a : getAttributes()) {
 			if(a.getValue().isEmpty()) {
 				continue;
 			}
 			System.out.println("Attribute");
 			System.out.println(a.getValue());
-			child.setAttribute(a.getName(), a.getValue().replaceAll("\\&", "&amp;"));
+			child.setAttribute(a.getName(), a.getValue());//.replaceAll("\\&", "&amp;")
 		}
 		for(DesignElementOld e : getSubElements()) {
 			System.out.println("Child");
@@ -546,5 +547,19 @@ public class DesignElementOld {
 				optionalSingleSubElements,
 				optionalMultipleSubElements
 				);
+	}
+	public void finalizeLoad() {
+		//Remove all empty lines
+		String text_new = "";
+		String[] lines = text.split("\n");
+		for(int i = 0; i < lines.length - 1; i++) {
+			String line = lines[i];
+			if(!(line.matches("(\\s)+") || line.isEmpty())) {
+				text_new += line + "\n";
+			}
+		}
+		text_new += lines[lines.length-1];
+		text = text_new.replace("(\\s)+$", "");;
+		//text = text.replaceFirst("(\\s|\\n)+", "").replace("(\\s|\\n)+$", "");
 	}
 }
