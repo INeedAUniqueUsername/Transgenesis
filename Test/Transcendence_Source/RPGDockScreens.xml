@@ -1,0 +1,1967 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TranscendenceModule>
+	
+	<Type unid="&dsDockScreenBase;">
+		<Language>
+			<Text id="actionCancel">"[C]ancel"</Text>
+			<Text id="actionCommoditiesExchange">"[C]ommodities Exchange"</Text>
+			<Text id="actionContinue">"[C]ontinue"</Text>
+			<Text id="actionDockServices">"[D]ock Services"</Text>
+			<Text id="actionDone">"[D]one"</Text>
+			<Text id="actionRefuel">"[R]efuel"</Text>
+			<Text id="actionRepairArmor">"Repair [A]rmor"</Text>
+			<Text id="actionRepairReplaceArmor">"Repair or Replace [A]rmor"</Text>
+			<Text id="actionUndock">"[U]ndock"</Text>
+		</Language>
+	</Type>
+	
+<!-- ABANDONED STATION =========================================================
+
+	Language IDs:
+	
+	descAbandonedStation: If the station has the given language ID, then we use
+			that as the description. Otherwise we come up with a default.
+	
+	
+-->
+
+	<DockScreen unid="&dsRPGAbandonedStation;"
+			inherit=			"&dsDockScreenBase;"
+			>
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(block (desc)
+						(switch
+							;	If we have a description in the object, then use that.
+						
+							(setq desc (objTranslate gSource 'descAbandonedStation))
+								(scrSetDesc gScreen desc)
+								
+							;	If populated, then use a default.
+							
+							(objHasAttribute gSource 'populated)
+								(scrSetDescTranslate gScreen 'descAbandonedStationPopulated)
+								
+							;	If a ship, use ship description.
+							
+							(= (objGetProperty gSource 'scale) 'ship)
+								(scrSetDescTranslate gScreen 'descAbandonedShipDefault { name:(objGetName gSource 0x04) })
+								
+							;	Otherwise, generic default
+							
+							(scrSetDescTranslate gScreen 'descAbandonedStationDefault)
+							)
+						)
+				</OnPaneInit>
+				
+				<Actions>
+					<Action id="actionLoot" default="1" >
+						(scrShowScreen gScreen &dsRPGLoot;)
+					</Action>
+
+					<Action id="actionJettison">
+						(scrShowScreen gScreen &dsRPGJettison;)
+					</Action>
+
+					<Action id="actionUndock" cancel="1">
+						<Exit/>
+					</Action>
+				</Actions>
+			</Default>
+		</Panes>
+		
+		<Language>
+			<Text id="actionJettison">"[J]ettison"</Text>
+			<Text id="actionLoot">"[L]oot"</Text>
+			
+			<Text id="descAbandonedStationDefault">
+				(cat
+					"You are docked at a destroyed structure. "
+					"Leaking fluids and venting gases obscure the ruined machinery inside."
+					)
+			</Text>
+			<Text id="descAbandonedStationPopulated">
+				(cat 
+					"You are docked at the lifeless ruins of a destroyed station. "
+					"Wrecked machinery and smoldering bodies litter the silent, cavernous bay."
+					)
+			</Text>
+			<Text id="descAbandonedShipDefault">
+				(cat
+					"You are docked with " (@ gData 'name) "."
+					)
+			</Text>
+		</Language>
+	</DockScreen>
+
+<!-- COMMODITIES EXCHANGE ======================================================
+
+	This screen allows the player to buy and sell items according to the 
+	<Trade> settings.
+	
+	gData uses the following fields:
+	
+		checkMilitaryID: If True, we check military ID before installing an 
+				item.
+				
+		showInstallables: If True, we always show all devices, etc.
+		
+		sourceObj: If not Nil, use this as the object for inventory purposes.
+	
+-->
+	
+	<DockScreen unid="&dsRPGCommoditiesExchange;"
+			inherit=			"&dsDockScreenBase;"
+			nestedScreen=		"true"
+			>
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(scrSetDescTranslate gScreen 'commoditiesExchangeScreenDesc)
+				</OnPaneInit>
+				
+				<Actions>
+					<Action id="actionBuyItems" default="1">
+						(scrShowScreen gScreen &dsRPGCommoditiesExchangeBuy; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							showInstallables: (@ gData 'showInstallables)
+							sourceObj: (@ gData 'sourceObj)
+							})
+					</Action>
+
+					<Action id="actionSellItems">
+						(scrShowScreen gScreen &dsRPGCommoditiesExchangeSell; {
+							sourceObj: (@ gData 'sourceObj)
+							})
+					</Action>
+
+					<Action id="actionDone" cancel="1">
+						(scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Default>
+		</Panes>
+		
+		<Language>
+			<Text id="actionBuyItems">"[B]uy Items"</Text>
+			<Text id="actionSellItems">"[S]ell Items"</Text>
+			
+			<Text id="commoditiesExchangeScreenDesc">
+				(cat 
+					"Welcome to the " (objGetName gSource) " Commodities Exchange Market."
+					)
+			</Text>
+		</Language>
+	</DockScreen>
+
+<!-- COMMODITIES EXCHANGE BUY ==================================================
+
+	This screen allows the player to buy items from a station. We use the 
+	<Trade> directives on the station to determine inventory and price.
+	
+	gData uses the following fields:
+	
+		checkMilitaryID: If True, we check military ID before installing an 
+				item.
+				
+		criteria: If non-nil, we restrict sales to items matching this 
+				criteria.
+
+		listFilter: If non-nil, this is a function to use as a filter of items
+				for the player to buy.
+				
+		showInstallables: If non-nil, then we show weapons, armor, etc. in the
+				screen.
+				
+		sourceObj: If non-nil, get items from this object. NOTE: This is just
+				for the list of items; the <Trade> descriptors (and other stuff
+				still come from gSource).
+		
+-->
+	
+	<DockScreen unid="&dsRPGCommoditiesExchangeBuy;"
+			inherit=			"&dsDockScreenBase;"
+			nestedScreen=		"true"
+			>
+		
+		<Display type="itemPicker"
+				dataFrom=	"=(if (@ gData 'sourceObj) (@ gData 'sourceObj) 'station)"
+				list=		"*"
+				>
+			<OnDisplayInit>
+				(block (
+					(itemCriteria (@ gData 'criteria))
+					(sourceObj (if (@ gData 'sourceObj) (@ gData 'sourceObj) gSource))
+					)
+				
+					(switch
+						;	If we specify an item criteria, then create a function
+						;	that will filter.
+					
+						(and itemCriteria
+								(not (eq itemCriteria "*"))
+								)
+							(scrSetListFilter gScreen (lambda (theItem)
+								(switch
+									(not (itmMatches theItem itemCriteria))
+										Nil
+								
+									(rpgCalcSellPrice theItem)
+									)
+								))
+							
+						;	If we specify a function, use that
+					
+						(@ gData 'listFilter)
+							(scrSetListFilter gScreen (@ gData 'listFilter))
+						
+						;	If we want to hide installables, then we need to add some
+						;	user-selectable filters.
+					
+						(and (not (@ gData 'showInstallables))
+								(objGetItems sourceObj "Uadm")
+								)
+							(block Nil
+							
+								(scrAddListFilter gScreen 'filterGeneral "General" (lambda (theItem)
+									(switch
+										(itmMatches theItem "adm")
+											Nil
+											
+										(rpgCalcSellPrice theItem)
+										)
+									))
+									
+								(scrAddListFilter gScreen 'filterInstallable "Devices &amp; Armor" (lambda (theItem)
+									(switch
+										(itmMatches theItem "ad")
+											(rpgCalcSellPrice theItem)
+										)
+									))
+							
+								(scrAddListFilter gScreen 'filterAmmo "Ammo" (lambda (theItem)
+									(switch
+										(itmMatches theItem "m")
+											(rpgCalcSellPrice theItem)
+										)
+									))
+							
+								(scrAddListFilter gScreen 'filterAll "All" rpgCalcSellPrice)
+								)
+					
+						;	Otherwise, we sell everything listed in our Trade
+						;	directives.
+					
+						(scrSetListFilter gScreen rpgCalcSellPrice)
+						)
+					)
+			</OnDisplayInit>
+		</Display>
+		
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(block (
+						(thisItem (scrGetItem gScreen))
+						
+						;	Compute the cost of this item.
+						
+						(currencyUsed (objGetDefaultCurrency gSource))
+						(rawCost (objGetSellPrice gSource thisItem))
+						(itemCost (if rawCost rawCost 0))
+						
+						;	Items available
+						
+						(availCount (itmGetCount thisItem))
+						
+						;	How many items can we afford?
+						;	NOTE: If price is 0 it means not for sale.
+						
+						(affordCount (if (gr itemCost 0)
+							(divide (objGetBalance gPlayerShip currencyUsed) itemCost)
+							0
+							))
+							
+						;	Mark up
+						
+						(baseCost (itmGetPrice thisItem currencyUsed))
+						(itemMarkup (if (gr itemCost 0) (- itemCost baseCost) 0))
+						(itemMarkupPercent (if (gr baseCost 0) (int (round (* (/ itemMarkup baseCost) 100)))))
+							
+						;	How many items can we fit?
+						
+						(fitCount (objGetFitCount gPlayerShip thisItem))
+						
+						;	Max items we can buy
+						
+						(maxCount (min availCount affordCount fitCount))
+						
+						;	Can this item be installed?
+						
+						(installResult (rpgInstallDevicePrep {
+							item: thisItem
+
+							buyAndInstall: True
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							checkTotalPower: True
+							currencyUsed: currencyUsed
+							installerObj: gSource
+							itemInCargo: True
+							}))
+						)
+						
+						;	Set the description
+						
+						(switch
+							(not thisItem)
+								(scrSetDescTranslate gScreen 'errorNoItemsToBuy)
+								
+							(scrSetDesc gScreen
+								(scrTranslate gScreen 'descItemStats {
+									value: (if (gr itemCost 0) (fmtCurrency currencyUsed itemCost))
+									markup: (if (geq itemMarkup 0) (fmtCurrency currencyUsed itemMarkup))
+									discount: (if (ls itemMarkup 0) (fmtCurrency currencyUsed (abs itemMarkup)))
+									markupPercent: (abs itemMarkupPercent)
+									max: (if (gr maxCount 1) maxCount)
+									maxValue: (fmtCurrency currencyUsed (multiply itemCost maxCount))
+									mass: (strMassString (itmGetMass thisItem))
+									maxMass: (strMassString (multiply (itmGetMass thisItem) maxCount))
+									})
+									
+								(switch
+									(eq itemCost 0)
+										(scrTranslate gScreen 'descNotForSale)
+										
+									(eq affordCount 0)
+										(scrTranslate gScreen 'descNotEnoughMoney { currency: (fmtCurrency currencyUsed True) })
+										
+									(eq fitCount 0)
+										(scrTranslate gScreen 'descNotEnoughRoom)
+										
+									(and (gr availCount affordCount) (gr fitCount affordCount))
+										(scrTranslate gScreen 'descNotEnoughMoneyForAll { currency: (fmtCurrency currencyUsed True) value: affordCount })
+										
+									(and (gr availCount fitCount))
+										(scrTranslate gScreen 'descNotEnoughRoomForAll { value: fitCount })
+									)
+								)
+							)
+							
+						;	Remember some computed values
+						
+						(scrSetData gScreen 'maxCount maxCount)
+						(scrSetData gScreen 'itemCost itemCost)
+						
+						;	Remember installation result
+						
+						(if (@ installResult 'canInstall)
+							(scrSetData gScreen 'installResult installResult)
+							(scrSetData gScreen 'installResult Nil)
+							)
+							
+						;	Enable/disable actions
+						
+						(scrEnableAction gScreen 'actionBuy (gr maxCount 0))
+						)
+				</OnPaneInit>
+				
+				<Actions>
+					<Action id="actionBuy" default="1">
+						(block (
+							(thisItem (scrGetItem gScreen))
+							(maxCount (scrGetData gScreen 'maxCount))
+							(itemCost (scrGetData gScreen 'itemCost))
+							(installResult (scrGetData gScreen 'installResult))
+							)
+							
+							(switch
+								;	Ask for a quantity, if necessary
+								
+								(gr maxCount 1)
+									(scrShowPane gScreen "BuyQuantity")
+									
+								;	Can we install this item?
+								
+								installResult
+									(scrShowPane gScreen "InstallItem")
+									
+								;	Otherwise, complete transaction
+									
+								(block Nil
+									(rpgBuyItems 1 itemCost)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+					
+					<Action id="actionDone" cancel="1">
+						(scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Default>
+			
+			<BuyQuantity
+					showCounter=	"true">
+
+				<OnPaneInit>
+					(block (
+						(maxCount (scrGetData gScreen 'maxCount))
+						(itemCost (scrGetData gScreen 'itemCost))
+						)
+						
+						(scrSetDescTranslate gScreen 'descBuyQuantity { value: (fmtCurrency (objGetDefaultCurrency gSource) itemCost) })
+						(scrSetCounter gScreen maxCount)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action id="actionBuy" default="1">
+						(block (
+							(thisItem (scrGetItem gScreen))
+							(countToBuy (scrGetCounter gScreen))
+							(maxCount (scrGetData gScreen 'maxCount))
+							(itemCost (scrGetData gScreen 'itemCost))
+							(installResult (scrGetData gScreen 'installResult))
+							)
+							
+							(switch
+								(gr countToBuy maxCount)
+									(scrSetCounter gScreen maxCount)
+									
+								(and (eq countToBuy 1) installResult)
+									(scrShowPane gScreen "InstallItem")
+									
+								(block Nil
+									(rpgBuyItems countToBuy itemCost)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+
+					<Action id="actionCancel" cancel="1">
+						<ShowPane pane="Default"/>
+					</Action>
+				</Actions>
+			</BuyQuantity>
+			
+			<InstallItem
+					noListNavigation="true"
+					>
+				<OnPaneInit>
+					(block (
+						(thisItem (scrGetItem gScreen))
+						(itemCost (scrGetData gScreen 'itemCost))
+						(currencyUsed (objGetDefaultCurrency gSource))
+						(installResult (scrGetData gScreen 'installResult))
+						(installCost (@ installResult 'price))
+						(installDesc (@ installResult 'desc))
+						(canInstall Nil)
+						)
+						
+						(switch
+							(gr installCost (objGetBalance gPlayerShip currencyUsed))
+								(scrSetDescTranslate gScreen 'descNotEnoughMoneyToInstall { installDesc: installDesc value: (fmtCurrency currencyUsed itemCost) })
+								
+							(block Nil
+								(scrSetDescTranslate gScreen 'descBuyOrInstall { 
+									installDesc: installDesc
+									buyValue: (fmtCurrency currencyUsed itemCost) 
+									installValue: (fmtCurrency currencyUsed installCost) 
+									})
+								(setq canInstall True)
+								)
+							)
+							
+						(scrEnableAction gScreen 'actionBuyAndInstall canInstall)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action id="actionBuyAndInstall" default="1">
+						(block (
+							(itemInstalled (scrGetItem gScreen))
+							(itemCost (scrGetData gScreen 'itemCost))
+							(installResult (scrGetData gScreen 'installResult))
+							(installCost (@ installResult 'price))
+							)
+								
+							(scrSetData gScreen 'itemInstalled itemInstalled)
+								
+							(rpgBuyItems 1 installCost)
+								
+							(shpInstallDevice gPlayerShip itemInstalled)
+							(typSetData &svPlayer; 'tutorialInstalled True)
+							(scrShowPane gScreen "InstallSuccess")
+							)
+					</Action>
+
+					<Action id="actionBuyOnly">
+						(block (
+							(itemCost (scrGetData gScreen 'itemCost))
+							)
+							
+							(rpgBuyItems 1 itemCost)
+							(scrShowPane gScreen "Default")
+							)
+					</Action>
+
+					<Action id="actionCancel" cancel="1">
+						(scrShowPane gScreen "Default")
+					</Action>
+				</Actions>
+			</InstallItem>
+			
+			<InstallSuccess
+					noListNavigation="true"
+					>
+				<OnPaneInit>
+					(scrSetDescTranslate gScreen 'descInstallationSuccessful { 
+						item: (scrGetData gScreen 'itemInstalled)
+						})
+				</OnPaneInit>
+
+				<Actions>
+					<Action id="actionContinue" default="1" cancel="1">
+						(scrShowPane gScreen "Default")
+					</Action>
+				</Actions>
+			</InstallSuccess>
+		</Panes>
+		
+		<Language>
+			<Text id="actionBuy">"[B]uy"</Text>
+			<Text id="actionBuyAndInstall">"Buy &amp; [I]nstall"</Text>
+			<Text id="actionBuyOnly">"[B]uy Only"</Text>
+			<Text id="actionShowInstallables">"[S]how Dock Service Items"</Text>
+			<Text id="actionHideInstallables">"[H]ide Dock Service Items"</Text>
+			
+			<Text id="descItemStats">
+				(if (@ gData 'max)
+					(cat
+						"Unit price: " (@ gData 'value) " (" (@ gData 'max) " for " (@ gData 'maxValue) ")\n"
+						"Unit mass: " (@ gData 'mass) " (" (@ gData 'max) " for " (@ gData 'maxMass) ")\n"
+						(if (@ gData 'markup) 
+							(cat "Unit markup: " (@ gData 'markup) " (" (@ gData 'markupPercent) "%)\n")
+							(cat "Unit discount: " (@ gData 'discount) " (" (@ gData 'markupPercent) "%)\n")
+							)
+						"\n"
+						)
+					(cat
+						"Unit price: " (@ gData 'value) "\n"
+						"Unit mass: " (@ gData 'mass) "\n"
+						(if (@ gData 'markup) 
+							(cat "Unit markup: " (@ gData 'markup) " (" (@ gData 'markupPercent) "%)\n")
+							(cat "Unit discount: " (@ gData 'discount) " (" (@ gData 'markupPercent) "%)\n")
+							)
+						"\n"
+						)
+					)
+			</Text>
+			<Text id="descBuyOrInstall">
+				(cat
+					(@ gData 'installDesc) "\n\n"
+					
+					"Do you wish to buy and install it for " (@ gData 'installValue) ", "
+					"or do you wish to only buy it for " (@ gData 'buyValue) "?"
+					)
+			</Text>
+			<Text id="descNotForSale">
+				"This item is not for sale."
+			</Text>
+			<Text id="descNotEnoughMoney">
+				(cat
+					"You do not have enough " (@ gData 'currency) " to purchase any."
+					)
+			</Text>
+			<Text id="descNotEnoughMoneyToInstall">
+				(cat
+					(@ gData 'installDesc) "\n\n"
+					
+					"Unfortunately, you cannot afford the installation cost. "
+					"Do you wish to buy it without installation for " (@ gData 'value) "?"
+					)
+			</Text>
+			<Text id="descNotEnoughRoom">
+				"Unfortunately, you cannot fit any in your cargo hold."
+			</Text>
+			<Text id="descNotEnoughMoneyForAll">
+				(cat
+					"You have enough " (@ gData 'currency) " to buy " (@ gData 'value) "."
+					)
+			</Text>
+			<Text id="descNotEnoughRoomForAll">
+				(cat
+					"You have enough room in your cargo hold to carry " (@ gData 'value) "."
+					)
+			</Text>
+			<Text id="descBuyQuantity">
+				(cat
+					"How many items do you wish to purchase at " (@ gData 'value) " each?"
+					)
+			</Text>
+			<Text id="descInstallationSuccessful">
+				(cat 
+					(itmGetName (@ gData 'item) 0x01) " installed successfully."
+					)
+			</Text>
+			
+			<Text id="errorNoItemsToBuy">"There are no items available for sale."</Text>
+		</Language>
+	</DockScreen>
+	
+<!-- COMMODITIES EXCHANGE SELL =================================================
+
+	This screen allows the player to sell items to a station. We use the 
+	<Trade> directives on the station to determine inventory and price.
+	
+	gData uses the following fields:
+	
+		criteria: If non-nil, we restrict sales to items matching this 
+				criteria.
+
+		listFilter: If non-nil, this is a function to use as a filter of items
+				for the player to sell.
+				
+		sourceObj: If non-nil, get items from this object. NOTE: This is just
+				for the list of items; the <Trade> descriptors (and other stuff
+				still come from gSource).
+				
+		title: Title for screen (or Nil for station name)
+-->
+	
+	<DockScreen UNID="&dsRPGCommoditiesExchangeSell;"
+			name=				"=(if (@ gData 'title) (@ gData 'title) (objGetName gSource 0x400))"
+			type=				"itemPicker"
+			inherit=			"&dsDockScreenBase;"
+			nestedScreen=		"true"
+			>
+
+		<ListOptions
+				dataFrom=	"player"
+				list=		"*"
+				>
+			(block (
+				(itemCriteria (@ gData 'criteria))
+				)
+				
+				(switch
+					;	If we specify an item criteria, then create a function
+					;	that will filter.
+					
+					(and itemCriteria
+							(not (eq itemCriteria "*"))
+							)
+						(scrSetListFilter gScreen (lambda (theItem)
+							(switch
+								(not (itmMatches theItem itemCriteria))
+									Nil
+								
+								(rpgCalcBuyPrice theItem)
+								)
+							))
+							
+					;	If we specify a function, use that
+					
+					(@ gData 'listFilter)
+						(scrSetListFilter gScreen (@ gData 'listFilter))
+						
+					;	Otherwise, we sell everything listed in our Trade
+					;	directives.
+					
+					(scrSetListFilter gScreen rpgCalcBuyPrice)
+					)
+				)
+		</ListOptions>
+
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(block (
+						(title (if (@ gData 'title) (@ gData 'title) (objGetName gSource 0x400)))
+						(thisItem (scrGetItem gScreen))
+						
+						;	Compute the cost of this item
+						
+						(currencyUsed (objGetDefaultCurrency gSource))
+						(itemCost (objGetBuyPrice gSource thisItem))
+						
+						;	Get some counts
+						
+						(existingCount (objHasItem gSource thisItem))
+						(averageCount (itmGetAverageAppearing thisItem))
+						(availCount (itmGetCount thisItem))
+						
+						;	Calc the price offered by the station
+						
+						(offerPrice
+							(switch
+								(not itemCost)
+									0
+									
+								(not (itmIsKnown thisItem))
+									(divide itemCost 10)
+									
+								(not existingCount)
+									itemCost
+									
+								(geq existingCount (multiply averageCount 5))
+									0
+
+								(geq existingCount (multiply averageCount 4))
+									(divide (multiply itemCost 25) 100)
+
+								(geq existingCount (multiply averageCount 3))
+									(divide (multiply itemCost 50) 100)
+
+								(geq existingCount (multiply averageCount 2))
+									(divide (multiply itemCost 75) 100)
+									
+								itemCost
+								)
+							)
+							
+						;	Mark up
+						
+						(baseCost (itmGetPrice thisItem currencyUsed))
+						(itemMarkup (if (gr offerPrice 0) (- offerPrice baseCost) 0))
+						(itemMarkupPercent (if (gr baseCost 0) (int (round (* (/ itemMarkup baseCost) 100)))))
+						
+						;	Compute the number of items the station is willing
+						;	to buy.
+						
+						(offerCount
+							(switch
+								(= offerPrice 0)
+									0
+									
+								(min availCount 
+									(divide (objGetBalance gSource) offerPrice)
+									)
+								)
+							)
+						)
+						
+						;	Set the description
+						
+						(switch
+							(not thisItem)
+								(scrSetDescTranslate gScreen 'errorNoItemsToSell)
+								
+							(scrSetDesc gScreen
+								;	The first part describes the item
+								
+								(if (gr offerCount 0)
+									(scrTranslate gScreen 'descItemStats {
+										value: (if (gr offerPrice 0) (fmtCurrency currencyUsed offerPrice))
+										markup: (if (geq itemMarkup 0) (fmtCurrency currencyUsed itemMarkup))
+										discount: (if (ls itemMarkup 0) (fmtCurrency currencyUsed (abs itemMarkup)))
+										markupPercent: (abs itemMarkupPercent)
+										max: (if (gr offerCount 1) offerCount)
+										maxValue: (fmtCurrency currencyUsed (multiply offerPrice offerCount))
+										mass: (strMassString (itmGetMass thisItem))
+										maxMass: (strMassString (multiply (itmGetMass thisItem) offerCount))
+										})
+									)
+									
+								(switch
+									(= offerPrice 0)
+										(scrTranslate gScreen 'descNotForSale { title:title item:thisItem })
+										
+									(= offerCount 0)
+										(scrTranslate gScreen 'descNotEnoughMoney { title:title item:thisItem currency:(fmtCurrency currencyUsed True) })
+										
+									(= availCount 1)
+										(scrTranslate gScreen 'descBuyOnlyItem { title:title item:thisItem currency:(fmtCurrency currencyUsed offerPrice) })
+										
+									(= offerCount 1)
+										(scrTranslate gScreen 'descBuySingleItem { title:title item:thisItem currency:(fmtCurrency currencyUsed offerPrice) })
+										
+									(ls offerCount availCount)
+										(scrTranslate gScreen 'descBuySomeItems { title:title item:thisItem currency:(fmtCurrency currencyUsed offerPrice) offerCount:offerCount availCount:availCount })
+										
+									(scrTranslate gScreen 'descBuyAllItems { title:title item:thisItem currency:(fmtCurrency currencyUsed offerPrice) })
+									)
+								)
+							)
+							
+						;	Remember some computed values
+						
+						(scrSetData gScreen 'itemCost offerPrice)
+						(scrSetData gScreen 'maxCount offerCount)
+						
+						;	Enable/disable actions
+						
+						(scrEnableAction gScreen 'actionSell (gr offerCount 0))
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action id="actionSell" default="1">
+						(block (
+							(thisItem (scrGetItem gScreen))
+							(maxCount (scrGetData gScreen 'maxCount))
+							(itemCost (scrGetData gScreen 'itemCost))
+							(sourceObj (if (@ gData 'sourceObj) (@ gData 'sourceObj) gSource))
+							)
+							
+							(switch
+								;	Ask for quantity, if necessary
+								
+								(gr maxCount 1)
+									(scrShowPane gScreen "SellQuantity")
+									
+								;	Done
+								
+								(block Nil
+									(rpgSellItems 1 itemCost sourceObj)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+
+					<Action id="actionDone" cancel="1">
+						(scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Default>
+
+			<SellQuantity
+					showCounter=	"true">
+
+				<OnPaneInit>
+					(block (
+						(maxCount (scrGetData gScreen 'maxCount))
+						(itemCost (scrGetData gScreen 'itemCost))
+						)
+						
+						(scrSetDescTranslate gScreen 'descSellQuantity { value: (fmtCurrency (objGetDefaultCurrency gSource) itemCost) })
+						(scrSetCounter gScreen maxCount)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action id="actionSell" default="1">
+						(block (
+							(thisItem (scrGetItem gScreen))
+							(countToSell (scrGetCounter gScreen))
+							(maxCount (scrGetData gScreen 'maxCount))
+							(itemCost (scrGetData gScreen 'itemCost))
+							(sourceObj (if (@ gData 'sourceObj) (@ gData 'sourceObj) gSource))
+							)
+							
+							(switch
+								(gr countToSell maxCount)
+									(scrSetCounter gScreen maxCount)
+									
+								(block Nil
+									(rpgSellItems countToSell itemCost sourceObj)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+
+					<Action id="actionCancel" cancel="1">
+						<ShowPane pane="Default"/>
+					</Action>
+				</Actions>
+			</SellQuantity>
+		</Panes>
+
+		<Language>
+			<Text id="actionSell">"[S]ell"</Text>
+			
+			<Text id="descItemStats">
+				(if (@ gData 'max)
+					(cat
+						"Unit price: " (@ gData 'value) " (" (@ gData 'max) " for " (@ gData 'maxValue) ")\n"
+						"Unit mass: " (@ gData 'mass) " (" (@ gData 'max) " for " (@ gData 'maxMass) ")\n"
+						(if (@ gData 'markup) 
+							(cat "Unit markup: " (@ gData 'markup) " (" (@ gData 'markupPercent) "%)\n")
+							(cat "Unit discount: " (@ gData 'discount) " (" (@ gData 'markupPercent) "%)\n")
+							)
+						"\n"
+						)
+					(cat
+						"Unit price: " (@ gData 'value) "\n"
+						"Unit mass: " (@ gData 'mass) "\n"
+						(if (@ gData 'markup) 
+							(cat "Unit markup: " (@ gData 'markup) " (" (@ gData 'markupPercent) "%)\n")
+							(cat "Unit discount: " (@ gData 'discount) " (" (@ gData 'markupPercent) "%)\n")
+							)
+						"\n"
+						)
+					)
+			</Text>
+			<Text id="errorNoItemsToSell">
+				"You have no items to sell to the station."
+			</Text>
+			<Text id="descNotForSale">
+				(cat
+					(@ gData 'title) " is not interested in buying " (itmGetName (@ gData 'item) 0x02) "."
+					)
+			</Text>
+			<Text id="descNotEnoughMoney">
+				(cat
+					(@ gData 'title) " cannot afford to buy " (itmGetName (@ gData 'item) 0x04) "."
+					)
+			</Text>
+			<Text id="descBuyOnlyItem">
+				(cat
+					(@ gData 'title) " offers " (@ gData 'currency) " for your " (itmGetName (@ gData 'item) 0x00) "."
+					)
+			</Text>
+			<Text id="descBuySingleItem">
+				(cat
+					(@ gData 'title) " offers " (@ gData 'currency) " for a single " (itmGetName (@ gData 'item) 0x00) "."
+					)
+			</Text>
+			<Text id="descBuySomeItems">
+				(cat
+					(@ gData 'title) " offers " (@ gData 'currency) " for each " (itmGetName (@ gData 'item) 0x00) " (up to a maximum of " (@ gData 'offerCount) ")."
+					)
+			</Text>
+			<Text id="descBuyAllItems">
+				(cat
+					(@ gData 'title) " offers " (@ gData 'currency) " for each " (itmGetName (@ gData 'item) 0x00) "."
+					)
+			</Text>
+			<Text id="descSellQuantity">
+				(cat
+					"How many items do you wish to sell at " (@ gData 'value) " each?"
+					)
+			</Text>
+		</Language>
+	</DockScreen>
+
+<!-- DECONTAMINATION ===========================================================
+
+	This screen allows a station to decontaminate the player's ship.
+	
+	gData uses the following fields:
+	
+		currency: The currency used (if Nil, we default to credits)
+		cost: The cost to decontaminate (defaults to 250)
+		descDeconID: ID of language for decon (default to descDecon).
+		descDeconCantAffordID: ID of language for "can't afford" message (defaults to descDeconCantAfford).
+		
+-->
+	
+	<DockScreen UNID="&dsRPGDecontamination;"
+			inherit=			"&dsDockScreenBase;"
+			nestedScreen=		"true"
+			>
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(block (
+						(currency (if (@ gData 'currency) (@ gData 'currency) 'credit))
+						(cost (if (@ gData 'cost) (@ gData 'cost) 250))
+						(deconID (if (@ gData 'descDeconID) (@ gData 'descDeconID) 'descDecon))
+						(deconCantAffordID (if (@ gData 'descDeconCantAffordID) (@ gData 'descDeconCantAffordID) 'descDeconCantAfford))
+						)
+						
+						(if (geq (plyGetCredits gPlayer currency) cost)
+							(scrSetDescTranslate gScreen deconID { currency:currency cost:cost })
+							(scrSetDescTranslate gScreen deconCantAffordID { currency:currency cost:cost })
+							)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action id="actionContinue" default="1" cancel="1">
+						(block (
+							(currency (if (@ gData 'currency) (@ gData 'currency) 'credit))
+							(cost (if (@ gData 'cost) (@ gData 'cost) 250))
+							)
+							
+							(if (geq (plyGetCredits gPlayer currency) cost)
+								(block Nil
+									(plyCharge gPlayer currency cost)
+									(shpDecontaminate gPlayerShip)
+									)
+								)
+								
+							;	If the ship is still radioactive, force undock.
+							;	Otherwise, we just exit the screen and go back to the default screen
+						
+							(scrExitScreen gScreen (shpIsRadioactive gPlayerShip))
+							)
+					</Action>
+				</Actions>
+			</Default>
+		</Panes>
+	</DockScreen>
+
+<!-- DOCK SERVICES =============================================================
+
+	This screen allows the player to repair and upgrade their ship at a station.
+	We rely on the <Trade> entries to determine the services that the station 
+	will offer.
+	
+	gData uses the following fields:
+	
+		checkMilitaryID: If True, we check for military ID before installing
+				any military items. We also refuse to install Illegal items.
+		
+		reactorUpgrade: If non-Nil, this must be a list generate with
+				rpgGetReactorUpgradeList. Otherwise, we do not offer a reactor
+				upgrade at this station.
+				
+		'sourceObj: If not Nil, use this as the object for inventory purposes.
+	
+		'upgradeInstallOnly: If True, we only offer device installation services if
+				the player buys an upgrade.
+	
+-->
+	
+	<DockScreen unid="&dsRPGDockServices;"
+			inherit=			"&dsRPGDockServicesBase;"
+			backgroundID=		"none"
+			nestedScreen=		"true"
+			>
+		<InitialPane>
+			(block (
+				(removableOverlays Nil)
+				)
+				
+				(switch
+					;	If we've got crap attached to the hull, then we might have
+					;	the option of fixing it.
+					;
+					;	We look for any overlay type with the "OnRemoveAtDockServices"
+					;	event.
+				
+					(and (objGetProperty gSource 'repairArmorMaxLevel)
+							(setq removableOverlays
+								(filter (objGetOverlays gPlayerShip) theID
+									(typHasEvent (objGetOverlayType gPlayerShip theID) 'OnRemoveAtDockServices)
+									)
+								)
+							)
+						(block Nil
+							(scrSetData gScreen 'removableOverlays removableOverlays)
+							"RemoveOverlays"
+							)
+				
+					"Default"
+					)
+				)
+		</InitialPane>
+		
+		<OnScreenInit>
+			(block ()
+				;	Background
+						
+				(rpgSetShipStatsDisplay gPlayerShip { })
+				)
+		</OnScreenInit>
+		
+		<Display>
+			<Text id="leftCol"	left="0" right="0" top="280" bottom="0" align="left" font="Medium" color="#daebff"/>
+			<Text id="rightCol"	left="0" right="0" top="280" bottom="0" align="right" font="Medium" color="#daebff"/>
+		</Display>
+		
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(block (
+						(isShipConfig (= gSource gPlayerShip))
+						(canInstallMiscDevices 
+							(or isShipConfig
+								(and
+									(objGetProperty gSource 'installDeviceMaxLevel)
+									(or
+										(filter (objGetItems gPlayerShip "d~ws") theItem (objGetItemProperty gSource theItem 'installDevicePrice))
+										(filter (objGetItems gSource "d~ws") theItem (objGetItemProperty gSource theItem 'installDevicePrice))
+										)
+									)
+								)
+							)
+						
+						(actionStatus Nil)
+						)
+						
+						;	Refuel services
+						
+						(setq actionStatus (rpgCalcDockServiceRefuelAction gSource gPlayerShip { }))
+						(scrShowAction gScreen 'actionRefuel (@ actionStatus 'visible))
+						(scrEnableAction gScreen 'actionRefuel (@ actionStatus 'enabled))
+						(scrSetActionDesc gScreen 'actionRefuel (@ actionStatus 'desc))
+						(scrSetData gScreen 'fuelCost (@ actionStatus 'cost))
+						(scrSetData gScreen 'fuelItem (@ actionStatus 'fuelItem))
+						(scrSetData gScreen 'fuelMax (@ actionStatus 'maxCount))
+						(scrSetData gScreen 'fuelNeeded (@ actionStatus 'maxNeeded))
+						(scrSetData gScreen 'fuelAfford (@ actionStatus 'maxAfford))
+						
+						;	Armor services
+						
+						(setq actionStatus (rpgCalcDockServiceArmorAction gSource gPlayerShip { }))
+						(scrShowAction gScreen 'actionRepairArmor (@ actionStatus 'visible))
+						(scrEnableAction gScreen 'actionRepairArmor (@ actionStatus 'enabled))
+						(scrSetActionDesc gScreen 'actionRepairArmor (@ actionStatus 'desc))
+						
+						;	Weapon services
+						
+						(setq actionStatus (rpgCalcDockServiceWeaponsAction gSource gPlayerShip { }))
+						(scrShowAction gScreen 'actionWeapons (@ actionStatus 'visible))
+						(scrEnableAction gScreen 'actionWeapons (@ actionStatus 'enabled))
+						(scrSetActionDesc gScreen 'actionWeapons (@ actionStatus 'desc))
+
+						;	Misc devices
+						
+						(setq actionStatus (rpgCalcDockServiceMiscDevicesAction gSource gPlayerShip { }))
+						(scrShowAction gScreen 'actionMiscDevices (@ actionStatus 'visible))
+						(scrEnableAction gScreen 'actionMiscDevices (@ actionStatus 'enabled))
+						(scrSetActionDesc gScreen 'actionMiscDevices (@ actionStatus 'desc))
+						
+						;	Page Down
+						
+						(scrShowAction gScreen 'actionRepairArmorPgDn
+							(scrIsActionEnabled gScreen 'actionRepairArmor)
+							)
+						(scrShowAction gScreen 'actionWeaponsPgDn 
+							(and 
+								(scrIsActionEnabled gScreen 'actionWeapons)
+								(not (scrIsActionEnabled gScreen 'actionRepairArmor))
+								)
+							)
+						(scrShowAction gScreen 'actionMiscDevicesPgDn 
+							(and 
+								(scrIsActionEnabled gScreen 'actionMiscDevices)
+								(not (scrIsActionEnabled gScreen 'actionWeapons))
+								(not (scrIsActionEnabled gScreen 'actionRepairArmor))
+								)
+							)
+						
+						;	Description
+						
+						(scrSetDesc gScreen
+							(or (objTranslate gPlayerShip "dockServices:shipDesc")
+									(objGetProperty gPlayerShip 'playerDesc)
+									(scrTranslate gScreen 'shipConfigScreenDesc)
+									)
+							)
+						)
+				</OnPaneInit>
+				
+				<Actions>
+					<Action id="actionRefuel">
+						(if (= (scrGetData gScreen 'fuelCost) 0)
+							(block Nil
+								(setq itemsToUse (itmCreate (itmGetType (scrGetData gScreen 'fuelItem)) (scrGetData gScreen 'fuelNeeded)))
+								(shpRefuelFromItem gPlayerShip itemsToUse)
+								(scrRefreshScreen gScreen)
+								)
+								
+							(scrShowPane gScreen "RefuelShip")
+							)
+					</Action>
+
+					<Action id="actionRepairArmor">
+						(scrShowScreen gScreen &dsRPGManageArmor; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							noUpgrade: (@ gData 'noUpgrade)
+							sourceObj: (@ gData 'sourceObj)
+							upgradeInstallOnly: (@ gData 'upgradeInstallOnly)
+							
+							manageMiscDevices: (scrIsActionEnabled gScreen 'actionMiscDevices)
+							manageWeapons: (scrIsActionEnabled gScreen 'actionWeapons)
+							doubleExit: True
+							})
+					</Action>
+					
+					<Action id="actionWeapons">
+						(scrShowScreen gScreen &dsRPGManageWeapons; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							noUpgrade: (@ gData 'noUpgrade)
+							sourceObj: (@ gData 'sourceObj)
+							upgradeInstallOnly: (@ gData 'upgradeInstallOnly)
+							
+							manageArmor: (scrIsActionEnabled gScreen 'actionRepairArmor)
+							manageMiscDevices: (scrIsActionEnabled gScreen 'actionMiscDevices)
+							doubleExit: True
+							})
+					</Action>
+
+					<Action id="actionMiscDevices">
+						(scrShowScreen gScreen &dsRPGManageMiscDevices; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							noUpgrade: (@ gData 'noUpgrade)
+							sourceObj: (@ gData 'sourceObj)
+							upgradeInstallOnly: (@ gData 'upgradeInstallOnly)
+							
+							manageArmor: (scrIsActionEnabled gScreen 'actionRepairArmor)
+							manageWeapons: (scrIsActionEnabled gScreen 'actionWeapons)
+							doubleExit: True
+							})
+					</Action>
+
+					<Action id="actionRepairArmorPgDn" minor="true">
+						(scrShowScreen gScreen &dsRPGManageArmor; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							noUpgrade: (@ gData 'noUpgrade)
+							sourceObj: (@ gData 'sourceObj)
+							upgradeInstallOnly: (@ gData 'upgradeInstallOnly)
+							
+							manageMiscDevices: (scrIsActionEnabled gScreen 'actionMiscDevices)
+							manageWeapons: (scrIsActionEnabled gScreen 'actionWeapons)
+							doubleExit: True
+							})
+					</Action>
+					<Action id="actionWeaponsPgDn" minor="true">
+						(scrShowScreen gScreen &dsRPGManageWeapons; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							noUpgrade: (@ gData 'noUpgrade)
+							sourceObj: (@ gData 'sourceObj)
+							upgradeInstallOnly: (@ gData 'upgradeInstallOnly)
+							
+							manageArmor: (scrIsActionEnabled gScreen 'actionRepairArmor)
+							manageMiscDevices: (scrIsActionEnabled gScreen 'actionMiscDevices)
+							doubleExit: True
+							})
+					</Action>
+					<Action id="actionMiscDevicesPgDn" minor="true">
+						(scrShowScreen gScreen &dsRPGManageMiscDevices; {
+							checkMilitaryID: (@ gData 'checkMilitaryID)
+							noUpgrade: (@ gData 'noUpgrade)
+							sourceObj: (@ gData 'sourceObj)
+							upgradeInstallOnly: (@ gData 'upgradeInstallOnly)
+							
+							manageArmor: (scrIsActionEnabled gScreen 'actionRepairArmor)
+							manageWeapons: (scrIsActionEnabled gScreen 'actionWeapons)
+							doubleExit: True
+							})
+					</Action>
+					<Action id="actionDone" minor="true">
+						(scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Default>
+		
+			<RemoveOverlays>
+				<OnPaneInit>
+					(block (
+						(removableOverlays (scrGetData gScreen 'removableOverlays))
+						(currencyUsed (objGetDefaultCurrency gSource))
+						
+						;	The price of removing each overlay is equal to 25 credits
+						;	per armor level.
+						
+						(costPerOverlay 
+							(ecoExchange
+								(map (objGetItems gPlayerShip "aI") 'reduceSum theArmor
+									(multiply 25 (itmGetLevel theArmor))
+									)
+								'credit
+								currencyUsed
+								)
+							)
+
+						(totalCost (multiply (count removableOverlays) costPerOverlay))
+						(canRemove Nil)
+						)
+						
+						(switch
+							(ls (objGetBalance gPlayerShip currencyUsed) totalCost)
+								(scrSetDescTranslate gScreen 'descCannotAffordOverlayRemove { removableOverlays:removableOverlays cost:(fmtCurrency currencyUsed totalCost) })
+							
+							(block Nil
+								(scrSetDescTranslate gScreen 'descOverlayRemove { removableOverlays:removableOverlays cost:(fmtCurrency currencyUsed totalCost) })
+								(setq canRemove True)
+								)
+							)
+	
+						(scrSetData gScreen 'totalCost totalCost)
+						(scrEnableAction gScreen 'actionRemoveOverlays canRemove)
+						)
+				</OnPaneInit>
+				
+				<Actions>
+					<Action id="actionRemoveOverlays" default="1">
+						(block (
+							(removableOverlays (scrGetData gScreen 'removableOverlays))
+							(totalCost (scrGetData gScreen 'totalCost))
+							(currencyUsed (objGetDefaultCurrency gSource))
+							)
+							
+							(enum removableOverlays theID
+								(objFireOverlayEvent gPlayerShip theID 'OnRemoveAtDockServices)
+								)
+								
+							(objCharge gPlayerShip currencyUsed totalCost)
+							(scrShowPane gScreen "OverlaysRemoved")
+							)
+					</Action>
+					
+					<Action id="actionCancel" cancel="1">
+						(scrShowPane gScreen "Default")
+					</Action>
+				</Actions>
+			</RemoveOverlays>
+			
+			<OverlaysRemoved>
+				<OnPaneInit>
+					(scrSetDescTranslate gScreen 'descOverlaysRemoved { removableOverlays:(scrGetData gScreen 'removableOverlays) })
+				</OnPaneInit>
+			
+				<Actions>
+					<Action id="actionContinue" default="1" cancel="1">
+						(scrShowPane gScreen "Default")
+					</Action>
+				</Actions>
+			</OverlaysRemoved>
+		</Panes>
+		
+		<Language>
+			<Text id="actionDone">"[Escape] Done"</Text>
+			
+			<Text id="actionMiscDevices">"[M]iscellaneous Devices"</Text>
+			<Text id="actionMiscDevices:nothing">"We don't upgrade or install miscellaneous devices."</Text>
+			<Text id="actionMiscDevices:shipConfig">"View and manage your reactor, drive upgrade, cargo expansion, and other devices."</Text>
+			<Text id="actionMiscDevices:defaultInstall">
+				(cat
+					"We install miscellaneous devices up to level " (@ gData 'maxLevel) "."
+					)
+			</Text>
+			<Text id="actionMiscDevices:defaultRemove">
+				(cat
+					"We install miscellaneous devices up to level " (@ gData 'maxLevel) "."
+					)
+			</Text>
+			<Text id="actionMiscDevices:defaultUpgrade">
+				(switch
+					;	If we only sell one item, say so
+					
+					(= (count (@ gData 'items)) 1)
+						(cat "We sell and install " (itmGetName (@ (@ gData 'items) 0) 0x02) ".")
+
+					;	Otherwise, describe the upgrade based on a category
+					
+					(scrTranslate gScreen "actionUpgrade:defaultAbility" {
+						maxLevel: (@ gData 'maxLevel)
+						category:
+							(switch
+								(= (count (@ gData 'items))
+										(count (filter (@ gData 'items) theItem (itmMatches theItem "r")))
+										)
+									'reactor
+									
+								(= (count (@ gData 'items))
+										(count (filter (@ gData 'items) theItem (itmMatches theItem "v")))
+										)
+									'drive
+									
+								(= (count (@ gData 'items))
+										(count (filter (@ gData 'items) theItem (itmMatches theItem "c")))
+										)
+									'cargoHold
+									
+								Nil
+								)
+						})
+					)
+			</Text>
+			
+			<Text id="actionMiscDevicesPgDn">"[PageDown] Miscellaneous Devices"</Text>
+			
+			<Text id="actionRefuel">"[R]efuel"</Text>
+			<Text id="actionRemoveDevice">"Remo[v]e Device"</Text>
+			<Text id="actionRemoveOverlays">"[R]emove All"</Text>
+			
+			<Text id="actionRepairArmor">"[A]rmor and Shields"</Text>
+			<Text id="actionRepairArmorPgDn">"[PageDown] Armor and Shields"</Text>
+			<Text id="actionUpgradeReactor">"U[p]grade Reactor"</Text>
+			
+			<Text id="actionWeapons">"[W]eapons"</Text>
+			<Text id="actionWeapons:defaultAmmo">
+				(cat
+					"We sell ammo up to level " (@ gData 'maxLevel) "."
+					)
+			</Text>
+			<Text id="actionWeapons:defaultInstall">
+				(cat
+					"We install weapons up to level " (@ gData 'maxLevel) "."
+					)
+			</Text>
+			<Text id="actionWeapons:defaultRemove">
+				(cat
+					"We install weapons up to level " (@ gData 'maxLevel) "."
+					)
+			</Text>
+			<Text id="actionWeapons:defaultUpgrade">
+				(cat
+					"We sell weapon upgrades up to level " (@ gData 'maxLevel) "."
+					)
+			</Text>
+			<Text id="actionWeapons:noBetterUpgrades">
+				(cat
+					"We sell weapons up to level " (@ gData 'maxLevel) ", but none are as good as what your ship has."
+					)
+			</Text>
+			<Text id="actionWeapons:nothing">"We don't upgrade or install weapons."</Text>
+			<Text id="actionWeapons:shipConfig">"View and manage your weapons."</Text>
+			
+			<Text id="actionWeaponsPgDn">"[PageDown] Weapons"</Text>
+			
+			<Text id="shipConfigScreenDesc">(cat "You're on board " (objGetName gPlayerShip 0x04) ".")</Text>
+			<Text id="dockServicesScreenDesc">"You are at a dock services terminal."</Text>
+			
+			<Text id="errorNoReactorTech">"The technology required to upgrade your reactor is not available at this station."</Text>
+			
+			<Text id="descOverlayRemove">
+				(if (eq (count (@ gData 'removableOverlays)) 1)
+					(cat
+						"You have a foreign object attached to your armor. "
+						"We can remove it completely for " (@ gData 'cost) "."
+						)
+					(cat
+						"You have some foreign objects attached to your armor. "
+						"We can remove them completely for " (@ gData 'cost) "."
+						)
+					)
+			</Text>
+			<Text id="descCannotAffordOverlayRemove">
+				(if (eq (count (@ gData 'removableOverlays)) 1)
+					(cat
+						"You have a foreign object attached to your armor. "
+						"We could remove it completely for " (@ gData 'cost) ", "
+						"but unfortunately you cannot afford the cost."
+						)
+					(cat
+						"You have some foreign objects attached to your armor. "
+						"We could remove them completely for " (@ gData 'cost) ", "
+						"but unfortunately you cannot afford the cost."
+						)
+					)
+			</Text>
+			<Text id="descOverlaysRemoved">
+				(if (eq (count (@ gData 'removableOverlays)) 1)
+					"We've removed the object and discarded it safely. Your hull is clean."
+					"We've removed the objects and discarded them safely. Your hull is clean."
+					)
+			</Text>
+		</Language>
+	</DockScreen>
+
+<!-- JETTISON SCREEN ===========================================================
+
+	This screen allows the player to jettison items either to the docked object
+	or to a crate in space.
+
+	gData uses the following fields:
+	
+	sourceObj: Object to jettison to.
+-->
+
+	<DockScreen UNID="&dsRPGJettison;"
+			name=				"Ship's Cargo Hold"
+			type=				"itemPicker"
+			nestedScreen=		"true"
+			>
+
+		<ListOptions
+			dataFrom=	"player"
+			list=		"*U"
+			/>
+
+		<Panes>
+			<Default
+					desc=	"There are no items in your cargo hold that can be jettisoned.">
+
+				<OnPaneInit>
+					(block (
+						(thisItem (scrGetItem gScreen))
+						(sourceObj (if (@ gData 'sourceObj) (@ gData 'sourceObj) gSource))
+						)
+
+						(if thisItem
+							(block (availCount fitCount)
+								(setq availCount (itmGetCount thisItem))
+								(setq fitCount (objGetFitCount sourceObj thisItem))
+								(setq gMaxCount (min availCount fitCount))
+
+								(setq desc (cat "Unit mass: " (strMassString (itmGetMass thisItem))))
+								(if (gr gMaxCount 1)
+									(setq desc (cat desc " (" gMaxCount " at " (strMassString (multiply (itmGetMass thisItem) gMaxCount)) ")"))
+									)
+
+								(if (ls (objGetCargoSpaceLeft sourceObj) 200000)
+									(setq desc (cat desc "\nCapacity: " (strMassString (objGetCargoSpaceLeft sourceObj))))
+									)
+
+								(switch
+									(eq gMaxCount 0)
+										(setq desc (cat desc "\n\nThere is not enough space here to jettison " (itmGetName thisItem 4) "."))
+									(eq gMaxCount 1)
+										(setq desc (cat desc "\n\nThere is enough space to jettison one " (itmGetName thisItem 0) "."))
+									(gr availCount fitCount)
+										(setq desc (cat desc "\n\nThere is enough space to jettison only " fitCount " " (itmGetName thisItem 2) "."))
+									(setq desc (cat desc "\n\nThere is enough space to jettison all " (itmGetName thisItem 8) "."))
+									)
+
+								(scrSetDesc gScreen desc)
+								)
+							(setq gMaxCount 0)
+							)
+
+						; Enable/disable actions
+						(scrEnableAction gScreen 0 (gr gMaxCount 0))
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Jettison this Item" default="1" key="J" >
+						(block (
+							(sourceObj (if (@ gData 'sourceObj) (@ gData 'sourceObj) gSource))
+							)
+							(switch
+								(gr gMaxCount 1)
+									(scrShowPane gScreen "JettisonQuantity")
+
+								(eq gMaxCount 1)
+									(block (itemsToJettison)
+										; Dump items
+										(setq itemsToJettison (scrRemoveItem gScreen 1))
+										(rpgJettisonItem sourceObj itemsToJettison)
+										(scrShowPane gScreen "Default")
+										)
+								)
+							)
+					</Action>
+
+					<Action name="Done" cancel="1" key="D">
+                        (scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Default>
+
+			<JettisonQuantity
+					showCounter=	"true">
+
+				<OnPaneInit>
+					(block Nil
+						(scrSetDesc gScreen (cat "How many items do you wish to jettison?"))
+						(scrSetCounter gScreen gMaxCount)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Jettison" default="1" key="J">
+						(block (
+							(sourceObj (if (@ gData 'sourceObj) (@ gData 'sourceObj) gSource))
+							(count (scrGetCounter gScreen))
+							)
+							(if (gr count gMaxCount)
+								(scrSetCounter gScreen gMaxCount)
+								(block (itemsToJettison)
+									; Dump items
+									(setq itemsToJettison (scrRemoveItem gScreen count))
+									(rpgJettisonItem sourceObj itemsToJettison)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+
+					<Action name="Cancel" cancel="1" key="C">
+						<ShowPane pane="Default"/>
+					</Action>
+				</Actions>
+			</JettisonQuantity>
+		</Panes>
+	</DockScreen>
+
+<!-- LOOT SCREEN ===============================================================
+
+	This screen allows the player to loot items from the object that we're 
+	docked with.
+
+	gData uses the following fields:
+
+	nextScreen:	If specified, we navigate to the given screen when we're done.
+		This may also be a list consisting of a screen and a pane.
+						
+	sourceObj: Object to loot from (if Nil, we look from the station we're 
+		docked with.
+-->
+
+	<DockScreen UNID="&dsRPGLoot;"
+			type=				"itemPicker"
+			nestedScreen=		"true"
+			>
+
+		<ListOptions
+			dataFrom=	"=(if (@ gData 'sourceObj) (@ gData 'sourceObj) 'station)"
+			list=		"*U"
+			/>
+
+		<Panes>
+			<Default
+					desc=		"There are no items here.">
+
+				<OnPaneInit>
+					(block (thisItem)
+						(setq thisItem (scrGetItem gScreen))
+						(if thisItem
+							(block (fitCount availCount desc)
+								(setq availCount (itmGetCount thisItem))
+								(setq fitCount (objGetFitCount gPlayerShip thisItem))
+								
+								(setq gMaxCount (min availCount fitCount))
+
+								(setq desc (cat "Unit mass: " (strMassString (itmGetMass thisItem))))
+								(if (gr gMaxCount 1)
+									(setq desc (cat desc " (" gMaxCount " at " (strMassString (multiply (itmGetMass thisItem) gMaxCount)) ")"))
+									)
+
+								(setq desc (cat desc "\n\n"))
+
+								(switch
+									(eq gMaxCount 0)
+										(setq desc (cat desc "You do not have enough space to carry " (itmGetName thisItem 4) "."))
+									(eq gMaxCount 1)
+										(setq desc (cat desc "You have enough room to carry one " (itmGetName thisItem 0) "."))
+									(gr availCount fitCount)
+										(setq desc (cat desc "You have enough room to carry only " fitCount " " (itmGetName thisItem 2) "."))
+									(setq desc (cat desc "You have enough room to carry all " (itmGetName thisItem 8) "."))
+									)
+
+								(scrSetDesc gScreen desc)
+								)
+							(setq gMaxCount 0)
+							)
+
+						; Enable/disable actions
+						(scrEnableAction gScreen 0 (gr gMaxCount 0))
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Loot this Item" key="L" default="1" >
+						(if (gr gMaxCount 1)
+							(scrShowPane gScreen "LootQuantity")
+							(if (eq gMaxCount 1)
+								(block (itemsToLoot)
+									(setq itemsToLoot (scrRemoveItem gScreen 1))
+									(objAddItem gPlayerShip itemsToLoot)
+									(typSetData &svPlayer; 'tutorialLooted True)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+
+					<Action name="Done" cancel="1" default="1" key="D">
+						(block Nil
+							(scrExitScreen gScreen (@ gData 'forceUndock))
+
+							(if (@ gData 'nextScreen)
+								(scrShowScreen gScreen (@ gData 'nextScreen))
+								)
+							)
+					</Action>
+
+				</Actions>
+			</Default>
+
+			<LootQuantity
+					showCounter=	"true">
+
+				<OnPaneInit>
+					(block Nil
+						(scrSetDesc gScreen (cat "How many items do you wish to loot?"))
+						(scrSetCounter gScreen gMaxCount)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Loot" default="1" key="L">
+						(block (count)
+							(setq count (scrGetCounter gScreen))
+							(if (gr count gMaxCount)
+								(scrSetCounter gScreen gMaxCount)
+								(block (itemsToLoot)
+									(setq itemsToLoot (scrRemoveItem gScreen count))
+									(objAddItem gPlayerShip itemsToLoot)
+									(typSetData &svPlayer; 'tutorialLooted True)
+									(scrShowPane gScreen "Default")
+									)
+								)
+							)
+					</Action>
+
+					<Action name="Cancel" cancel="1" key="C">
+						<ShowPane pane="Default"/>
+					</Action>
+
+				</Actions>
+
+			</LootQuantity>
+		</Panes>
+
+	</DockScreen>
+
+<!-- MESSAGE SCREEN ============================================================
+
+	This screen is used to show a simple message.
+
+	gData uses the following fields:
+
+	desc: The text to display.
+
+	nextScreen:	If specified, we navigate to the given screen when we're done
+			This may also be a list consisting of a screen and a pane.
+
+			If nextScreen is equal to 'forceUndock, then we force undock when we
+			exit.
+
+	textID: If specified, we obtain the text to display by asking gSource to
+			translate the ID. (desc is ignored.)
+
+-->
+
+	<DockScreen UNID="&dsRPGMessage;"
+			nestedScreen=		"true"
+			>
+		<Panes>
+			<Default>
+				<OnPaneInit>
+					(switch
+						(@ gData 'textID)
+							(scrSetDesc gScreen (objTranslate gSource (@ gData 'textID)))
+
+						(scrSetDesc gScreen (@ gData 'desc))
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Continue" key="C" default="1" cancel="1">
+						(switch
+							(not (@ gData 'nextScreen))
+								(scrExitScreen gScreen)
+
+							(eq (@ gData 'nextScreen) 'forceUndock)
+								(scrExitScreen gScreen 'forceUndock)
+
+							(block Nil
+								(scrExitScreen gScreen)
+								(scrShowScreen gScreen (@ gData 'nextScreen))
+								)
+							)
+					</Action>
+				</Actions>
+			</Default>
+		</Panes>
+	</DockScreen>
+
+<!-- REFUEL SCREEN =============================================================
+
+	This screen allows the player to refuel from a station. It requires the
+	station to use the <Refuel> directive in its <Trade> section.
+
+-->
+
+	<DockScreen UNID="&dsRPGRefuel;"
+			nestedScreen="true"
+			>
+
+		<Panes>
+			<Default
+					showCounter=	"true">
+
+				<OnPaneInit>
+					(block (maxAfford currencyUsed fuelToUse)
+						(setq currencyUsed (objGetDefaultCurrency gSource))
+
+						(setq fuelToUse (objGetRefuelItemAndPrice gSource gPlayerShip))
+						(setq gItem (@ fuelToUse 0))
+						(setq gCost (@ fuelToUse 1))
+						
+						(if fuelToUse
+							(setq gMaxCount (shpGetFuelNeeded gPlayerShip gItem))
+							(setq gMaxCount 0)
+							)
+
+						(if (gr gCost 0)
+							(setq maxAfford (divide (objGetBalance gPlayerShip currencyUsed) gCost))
+							)
+
+						(switch
+							(not fuelToUse)
+								(block Nil
+									(setq gMaxCount 0)
+									(scrSetDesc gScreen (cat "This refueling facility does not have fuel compatible with your ship's reactor."))
+									)
+
+							(eq gCost 0)
+								(switch
+									(eq gMaxCount 0)
+										(scrSetDesc gScreen "Your ship is does not need any fuel.")
+									(eq gMaxCount 1)
+										(scrSetDesc gScreen (cat "Your ship needs one " (itmGetName gItem 0) " to refuel. We can refuel you free of charge."))
+									(scrSetDesc gScreen (cat "Your ship needs " gMaxCount " " (itmGetName gItem 2) " to refuel. We can refuel you free of charge. How many do you wish to use?"))
+									)
+
+							(geq maxAfford gMaxCount)
+								(switch
+									(eq gMaxCount 0)
+										(scrSetDesc gScreen "Your ship is does not need any fuel.")
+									(eq gMaxCount 1)
+										(scrSetDesc gScreen (cat "Your ship needs one " (itmGetName gItem 0) " to refuel for a total cost of " (fmtCurrency currencyUsed gCost) "."))
+									(scrSetDesc gScreen (cat "Your ship needs " gMaxCount " " (itmGetName gItem 2) " to refuel. Each " (itmGetName gItem 0) " costs " (fmtCurrency currencyUsed gCost) " (" (fmtCurrency currencyUsed (multiply gCost gMaxCount)) " total). How many do you wish to buy?"))
+									)
+
+							(block Nil
+								(setq gMaxCount maxAfford)
+								(switch
+									(eq gMaxCount 0)
+										(scrSetDesc gScreen "You cannot afford to refuel your ship.")
+									(eq gMaxCount 1)
+										(scrSetDesc gScreen (cat "Each " (itmGetName gItem 0) " costs " (fmtCurrency currencyUsed gCost) ". You can only afford a single one."))
+									(scrSetDesc gScreen (cat "Each " (itmGetName gItem 0) " costs " (fmtCurrency currencyUsed gCost) ". You can only afford " gMaxCount " " (itmGetName gItem 2) ". How many do you wish to buy?"))
+									)
+								)
+							)
+
+						(scrSetCounter gScreen gMaxCount)
+
+						; Enable/disable actions
+						(scrEnableAction gScreen 0 (gr gMaxCount 0))
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Refuel" default="1" key="R">
+						(block (count)
+							(setq count (scrGetCounter gScreen))
+							(if (gr count gMaxCount)
+								(scrSetCounter gScreen gMaxCount)
+								
+								(block (itemsToUse currencyUsed)
+									(setq itemsToUse (itmCreate (itmGetType gItem) count))
+									(setq currencyUsed (objGetDefaultCurrency gSource))
+									
+									(shpRefuelFromItem gPlayerShip itemsToUse)
+									
+									(objCharge gPlayerShip currencyUsed (multiply count gCost))
+									(plyRecordBuyItem gPlayer itemsToUse currencyUsed (multiply count gCost))
+									
+									(scrExitScreen gScreen)
+									)
+								)
+							)
+					</Action>
+
+					<Action name="Cancel" cancel="1" key="C">
+						(scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Default>
+		</Panes>
+	</DockScreen>
+
+<!-- REPAIR ITEM SCREEN ========================================================
+
+	This screen allows the player to repair an item.
+
+	gData uses the following fields:
+
+	criteria:			This is the criteria for items that we can repair.
+
+	priceAdj:			Cost to repair the item as a percent of the standard
+						repair price. The standard repair price is equal to the
+						difference between the full price and the price of a
+						damaged item.
+
+-->
+	<DockScreen UNID="&dsRPGRepairItem;"
+			type=				"itemPicker"
+			nestedScreen=		"true"
+			>
+
+		<ListOptions
+			dataFrom=	"player"
+			list=		"*"
+			>
+			(scrSetListFilter gScreen (@ gData 'criteria))
+		</ListOptions>
+
+		<Panes>
+			<Default
+					desc=	"You do not have any items that we can repair.">
+
+				<OnPaneInit>
+					(block (thisItem currencyUsed)
+						(setq thisItem (scrGetItem gScreen))
+						(setq currencyUsed (objGetDefaultCurrency gSource))
+						(setq gResult Nil)
+
+						(if thisItem
+							(block (desc stdRepairCost)
+								; Compute the standard repair cost
+								(setq stdRepairCost (subtract (itmGetPrice (itmSetProperty thisItem 'damaged Nil) currencyUsed) (itmGetPrice thisItem currencyUsed)))
+
+								; Compute the cost to repair the item
+								(setq gCost (divide (multiply stdRepairCost (@ gData 'priceAdj)) 100))
+
+								(switch
+									(gr gCost (objGetBalance gPlayerShip currencyUsed))
+										(setq desc (cat "It will cost " (fmtCurrency currencyUsed gCost) " to repair " (itmGetName thisItem 0x04) ". Unfortunately, you cannot afford the cost."))
+
+									(block Nil
+										(setq desc (cat "We can repair " (itmGetName thisItem 0x04) " for " (fmtCurrency currencyUsed gCost) "."))
+										(setq gResult True)
+										)
+									)
+
+								(scrSetDesc gScreen desc)
+								)
+							)
+
+						(scrEnableAction gScreen 0 gResult)
+						)
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Repair Item" default="1" key="R">
+						(block Nil
+							(setq gItem (scrGetItem gScreen))
+							
+							(shpEnhanceItem gPlayerShip gItem)
+							(objCharge gPlayerShip (objGetDefaultCurrency gSource) gCost)
+							
+							(scrShowPane gScreen "Success")
+							)
+					</Action>
+
+					<Action name="Cancel" cancel="1" key="C">
+                        (scrExitScreen gScreen)
+					</Action>
+				</Actions>
+
+			</Default>
+
+			<Success
+					noListNavigation="true"
+					>
+				<OnPaneInit>
+					(scrSetDesc gScreen (cat "Your " (itmGetName gItem 0) " has been repaired successfully."))
+				</OnPaneInit>
+
+				<Actions>
+					<Action name="Continue" default="1" cancel="1" key="C">
+                        (scrExitScreen gScreen)
+					</Action>
+				</Actions>
+			</Success>
+		</Panes>
+
+	</DockScreen>
+
+</TranscendenceModule>

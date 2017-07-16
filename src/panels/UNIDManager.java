@@ -412,7 +412,7 @@ class Type implements TypeElement {
 	public Type() {
 		this(ENTITY_DEFAULT, COMMENT_DEFAULT);
 	}
-	public Type(String type, String comment) {
+	public Type(String comment, String type) {
 		this.comment = comment;
 		this.type = type;
 		field_comment = createTextArea(comment, true);
