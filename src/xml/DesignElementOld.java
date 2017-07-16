@@ -558,7 +558,9 @@ public class DesignElementOld {
 				text_new += line + "\n";
 			}
 		}
-		text_new += lines[lines.length-1];
+		if(lines.length > 0) {
+			text_new += lines[lines.length-1];
+		}
 		text = text_new.replace("(\\s)+$", "");;
 		//text = text.replaceFirst("(\\s|\\n)+", "").replace("(\\s|\\n)+$", "");
 	}

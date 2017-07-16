@@ -44,9 +44,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLResolver;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.Comment;
+import javax.xml.stream.events.DTD;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.StartElement;
@@ -80,12 +84,10 @@ public class UNIDManager {
 		try {
 			File read = new File(modFile.getAbsolutePath() + ".dat");
 			if(!read.exists()) {
-				System.out.println("Metadata not found");
+				System.out.println("Generating metadata using extension");
 				read = modFile;
-				return;
 			}
-			System.out.println(read.getAbsolutePath());
-			System.out.println("Found metadata");
+			System.out.println("Metadata file: " + read.getAbsolutePath());
 			byte[] bytes = Files.readAllBytes(read.toPath());
 			String lines = new String(bytes);
 			lines = lines.replace("&", "&amp;");
@@ -100,15 +102,17 @@ public class UNIDManager {
 			    XMLEvent event = reader.nextEvent();
 			    
 			    EventType: switch(event.getEventType()) {
-			    case XMLEvent.ENTITY_DECLARATION:
-			    	createFromXML((EntityDeclaration) event);
-			    	break;
-			    case XMLEvent.START_ELEMENT:
+			    case XMLStreamConstants.DTD:
+			    	System.out.println("DTD");
+			    	for(Object o : ((DTD) event).getEntities()) {
+			    		createFromXML((EntityDeclaration) o);
+			    	}
+			    	break EventType;
+			    case XMLStreamConstants.START_ELEMENT:
 			    	System.out.println("StartElement");
 			    	StartElement start = event.asStartElement();
 			    	if(
-			    			"Data".equals(start.getName().getLocalPart()) &&
-			    			"TransGenesis".equals(start.getAttributeByName(new QName("id")).getValue())
+			    			"TransGenesis".equals(start.getName().getLocalPart())
 			    			) {
 			    		System.out.println("Found Data");
 			    		active = true;
@@ -118,7 +122,7 @@ public class UNIDManager {
 			    		createFromXML(start);
 			    	}
 			    	break EventType;
-			    case XMLEvent.END_ELEMENT:
+			    case XMLStreamConstants.END_ELEMENT:
 			    	EndElement end = event.asEndElement();
 			    	if(
 			    			active &&
@@ -127,7 +131,7 @@ public class UNIDManager {
 			    		System.out.println("Finished Reading");
 			    		active = false;
 			    	}
-			    	break;
+			    	break EventType;
 			    }
 			}
 		} catch(Exception e) {
@@ -311,8 +315,7 @@ public class UNIDManager {
 		try {
 			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			Element metadata = doc.createElement("MetaData");
-			Element data = doc.createElement("Data");
-			data.setAttribute("id", "TransGenesis");
+			Element data = doc.createElement("TransGenesis");
 			doc.appendChild(metadata);
 			metadata.appendChild(data);
 			for(TypeElement e : elements) {
@@ -340,15 +343,14 @@ interface TypeElement {
 	public static void store(BidiMap<String, String> entryMap, String unid, String entry) {
 		//Attempt to make the unid into a hex string, if it is not already one.
 		try {
-			unid = Integer.toHexString(Integer.parseInt(unid));
+			//8-digit hex is too cool for Integer
+			unid = Long.toHexString(Long.decode(unid.toLowerCase()));
 		} catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Invalid UNID: " + unid);
-			return;
 		}
 		if(!StringUtils.isAlphanumeric(entry)) {
 			JOptionPane.showMessageDialog(null, "Invalid Type: " + entry);
-		}
-		if(entryMap.containsKey(unid)) {
+		} else if(entryMap.containsKey(unid)) {
 			JOptionPane.showMessageDialog(null, "UNID Conflict: " + unid);
 		} else if(entryMap.containsValue(entry)) {
 			JOptionPane.showMessageDialog(null, "Type Conflict: " + entry);
