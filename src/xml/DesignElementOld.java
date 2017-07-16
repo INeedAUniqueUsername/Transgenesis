@@ -429,7 +429,7 @@ public class DesignElementOld {
 				fieldPanel.add(inputField);
 			}
 		}
-		DesignElementOld me = this;
+		/*
 		ArrayList<DesignElementOld> addableSubElements = getAddableElements();
 		
 		if(addableSubElements.size() == 0) {
@@ -454,6 +454,35 @@ public class DesignElementOld {
 				subElementPanel.add(button);
 			}
 		}
+		*/
+		ArrayList<DesignElementOld> singleSubElements = new ArrayList<>(requiredSingleSubElements.size() + optionalSingleSubElements.size());
+		singleSubElements.addAll(requiredSingleSubElements);
+		singleSubElements.addAll(optionalSingleSubElements);
+		for(DesignElementOld element : singleSubElements) {
+			JButton button = new JButton(element.getDisplayName());
+			button.setFont(Medium.f);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					subElements.add(element);
+					panel.addElement(element);
+				}
+			});
+			button.setEnabled(!subElements.contains(element));
+			subElementPanel.add(button);
+		}
+		for(SubElementType elementType : optionalMultipleSubElements) {
+			DesignElementOld element = elementType.get();
+			JButton button = new JButton(element.getDisplayName());
+			button.setFont(Medium.f);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					subElements.add(element);
+					panel.addElement(element);
+				}
+			});
+			subElementPanel.add(button);
+		}
+		
 		
 		textArea.setText(getText());
 	}

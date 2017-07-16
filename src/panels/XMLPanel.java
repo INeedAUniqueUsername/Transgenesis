@@ -344,7 +344,7 @@ public class XMLPanel extends JPanel {
 				.x("25%")
 				.y("70%")
 				.minWidth("75%").maxWidth("75%")
-				.minHeight("30%").maxHeight("80%")
+				.minHeight("30%").maxHeight("30%")
 				);
 	}
 	public DesignElementOld getSelected() {

@@ -54,7 +54,6 @@ import mod.ExtensionFactory;
 import mod.TranscendenceMod;
 import mod.ExtensionFactory.Extensions;
 import xml.DesignAttribute;
-import xml.DesignElement;
 import xml.DesignElementOld;
 
 public class FrameOld extends JFrame {
