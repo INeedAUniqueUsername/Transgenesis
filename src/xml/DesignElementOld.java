@@ -232,7 +232,13 @@ public class DesignElementOld {
 		try {
 			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 			doc.appendChild(getOutput(doc));
-			return docToString(doc).replaceAll("\\&amp;", "&");
+			return
+					docToString(doc)
+					.replaceAll("\\&amp;", "&")
+					//Don't break comment starts/ends
+					.replaceAll("&lt;!--", "<!--")
+					.replaceAll("--&gt;", "-->")
+					;
 		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -353,7 +359,12 @@ public class DesignElementOld {
 	}
 	public Element getOutput(Document doc) {
 		Element child = doc.createElement(getName());
-		child.setTextContent(text);
+		//If text contains multiple lines, give it starting/trailing lines so that it appears under the element
+		if(text.contains("\n")) {
+			child.setTextContent("\n" + text + "\n");
+		} else {
+			child.setTextContent(text);
+		}
 		for(DesignAttribute a : getAttributes()) {
 			if(a.getValue().isEmpty()) {
 				continue;
@@ -408,9 +419,6 @@ public class DesignElementOld {
 		JPanel fieldPanel = panel.fieldPanel;
 		JPanel subElementPanel = panel.subElementPanel;
 		JTextArea textArea = panel.textArea;
-		labelPanel.removeAll();
-		fieldPanel.removeAll();
-		subElementPanel.removeAll();
 		
 		nameField.setText(name);
 		nameField.setEditable(false);

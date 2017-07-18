@@ -77,6 +77,9 @@ public class TranscendenceMod extends DesignElementOld {
 		// TODO Auto-generated method stub
 		path = absolutePath;
 	}
+	public File getPath() {
+		return path;
+	}
 	public void save() {
 		System.out.println("File saved!");
 		File path_metadata = new File(path.getAbsolutePath() + ".dat");
