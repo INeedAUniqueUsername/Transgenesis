@@ -103,13 +103,13 @@ public class UNIDManager {
 			    
 			    EventType: switch(event.getEventType()) {
 			    case XMLStreamConstants.DTD:
-			    	System.out.println("DTD");
+			    	//System.out.println("DTD");
 			    	for(Object o : ((DTD) event).getEntities()) {
 			    		createFromXML((EntityDeclaration) o);
 			    	}
 			    	break EventType;
 			    case XMLStreamConstants.START_ELEMENT:
-			    	System.out.println("StartElement");
+			    	//System.out.println("StartElement");
 			    	StartElement start = event.asStartElement();
 			    	if(
 			    			"TransGenesis".equals(start.getName().getLocalPart())
@@ -286,8 +286,7 @@ public class UNIDManager {
 			e.saveData();
 		}
 	}
-	public String getXMLOutput() {
-		//UNID, Entity
+	public BidiMap<String, String> bindAll() {
 		BidiMap<String, String> map = new TreeBidiMap<>();
 		LinkedList<TypeElement> definedUNIDs = new LinkedList<>();
 		LinkedList<TypeElement> generatedUNIDs = new LinkedList<>();
@@ -299,11 +298,16 @@ public class UNIDManager {
 			}
 		}
 		definedUNIDs.forEach((TypeElement e) -> {
-			e.output(map);
+			e.bindAll(map);
 		});
 		generatedUNIDs.forEach((TypeElement e) -> {
-			e.output(map);
+			e.bindAll(map);
 		});
+		return map;
+	}
+	public String getXMLOutput() {
+		//UNID, Entity
+		BidiMap<String, String> map = bindAll();
 		String result = "";
 		for(Entry<String, String> e : map.entrySet()) {
 			result += String.format("\t<!ENTITY %-32s \"%s\">", e.getValue(), e.getKey()) + "\n";
@@ -336,11 +340,11 @@ interface TypeElement {
 	public JPanel initializePanel();
 	public Element getXMLOutput(Document doc);
 	public void saveData();
-	public void output(BidiMap<String, String> entryMap);
+	public void bindAll(BidiMap<String, String> entryMap);
 	public static String COMMENT_DEFAULT = "[Comment]";
 	public static String UNID_DEFAULT = "[UNID]";
 	public static String ENTITY_DEFAULT = "[Entity]";
-	public static void store(BidiMap<String, String> entryMap, String unid, String entry) {
+	public static void bindEntry(BidiMap<String, String> entryMap, String unid, String entry) {
 		//Attempt to make the unid into a hex string, if it is not already one.
 		try {
 			//8-digit hex is too cool for Integer
@@ -431,7 +435,7 @@ class Type implements TypeElement {
 		type = field_type.getText();
 	}
 	@Override
-	public void output(BidiMap<String, String> entryMap) {
+	public void bindAll(BidiMap<String, String> entryMap) {
 	}
 	@Override
 	public Element getXMLOutput(Document doc) {
@@ -473,8 +477,8 @@ class TypeEntry extends Type {
 		super.saveData();
 		unid = field_unid.getText();
 	}
-	public void output(BidiMap<String, String> entryMap) {
-		TypeElement.store(entryMap, unid, type);
+	public void bindAll(BidiMap<String, String> entryMap) {
+		TypeElement.bindEntry(entryMap, unid, type);
 	}
 	public Element getXMLOutput(Document doc) {
 		Element result = doc.createElement("TypeEntry");
@@ -610,7 +614,7 @@ class TypeGroup implements TypeElement {
 		}
 	}
 	@Override
-	public void output(BidiMap<String, String> entryMap) {}
+	public void bindAll(BidiMap<String, String> entryMap) {}
 	@Override
 	public Element getXMLOutput(Document doc) {
 		Element result = doc.createElement("TypeGroup");
@@ -680,7 +684,7 @@ class TypeRange extends TypeGroup {
 		result.setAttribute("types", listToString(types));
 		return result;
 	}
-	public void output(BidiMap<String, String> entryMap) {
+	public void bindAll(BidiMap<String, String> entryMap) {
 		Integer min = null, max = null;
 		try {
 			min = Integer.parseInt(unid_min);
@@ -698,8 +702,35 @@ class TypeRange extends TypeGroup {
 				JOptionPane.showMessageDialog(null, "Not enough UNIDs within range");
 			}
 			for(int i = 0; i < types.size() && i < maxCount; i++) {
-				TypeElement.store(entryMap, "" + (min + i), types.get(i));
+				TypeElement.bindEntry(entryMap, "" + (min + i), types.get(i));
 			}
 		}
 	}
 }
+/*
+class Hex implements Comparable {
+	private String value;
+	public Hex(String value) {
+		this.value = value;
+	}
+	public int compareTo(Object o) {
+		if(o instanceof Hex) {
+			String value_o = ((Hex) o).value;
+			try {
+				Long number = Long.decode(value);
+				Long number_o = Long.decode(value_o);
+				if(number < number_o) {
+					return -1;
+				} else if(number.equals(number_o)) {
+					return 0;
+				} else if(number > number_o) {
+					return 1;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+}
+*/

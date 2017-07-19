@@ -162,7 +162,9 @@ public class DesignElementOld {
 	public String getText() {
 		return text;
 	}
-	
+	public boolean hasAttribute(String name) {
+		return attributes.containsKey(name);
+	}
 	public DesignAttribute getAttributeByName(String name) {
 		return attributes.get(name);
 	}
@@ -600,5 +602,14 @@ public class DesignElementOld {
 		}
 		text = text_new.replace("(\\s)+$", "");;
 		//text = text.replaceFirst("(\\s|\\n)+", "").replace("(\\s|\\n)+$", "");
+	}
+
+	public boolean hasSubElement(String name) {
+		for(DesignElementOld e : subElements) {
+			if(e.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

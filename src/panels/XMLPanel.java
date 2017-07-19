@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -64,6 +66,7 @@ public class XMLPanel extends JPanel {
 	
 	private final List<TranscendenceMod> mods;
 	private DesignElementOld selected;
+	private static TranscendenceMod selectedExtension;
 	
 	public final JTextField nameField;
 	public final JLabel documentation;
@@ -71,7 +74,8 @@ public class XMLPanel extends JPanel {
 	public final JPanel fieldPanel;
 	public final JPanel subElementPanel;
 	public final JTextArea textArea;
-	public final DefaultMutableTreeNode origin;
+	private static DefaultMutableTreeNode origin;
+	private boolean saved;
 	//JPanel subelementPanel;
 	public XMLPanel(FrameOld frame) {
 		this.frame = frame;
@@ -139,13 +143,7 @@ public class XMLPanel extends JPanel {
 	    		}
 	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	    				elementTree.getLastSelectedPathComponent();
-	    		if(node != origin) {
-	    			DesignElementOld element = (DesignElementOld) node.getUserObject();
-		    		selectElement(element);
-	    		} else {
-	    			selectElement(null);
-	    		}
-	    		
+	    		selectNode(node);
 	    	}
 	    });
 	    elementTreePane = createScrollPane(elementTree);
@@ -186,16 +184,63 @@ public class XMLPanel extends JPanel {
 		
 		resetLayout();
 	}
+	public static List<TranscendenceMod> getExtensions() {
+		List<TranscendenceMod> result = new LinkedList<>();
+		for(int i = 0; i < origin.getChildCount(); i++) {
+			result.add((TranscendenceMod) ((DefaultMutableTreeNode) origin.getChildAt(i)).getUserObject()); 
+		}
+		return result;
+	}
+	public TranscendenceMod getExtension(DefaultMutableTreeNode node) {
+		//It's possible that the selected extension is in the node itself
+		DefaultMutableTreeNode parent = node;
+		while(parent != null) {
+			System.out.println("Looking for parent Extension");
+			Object parentObj = parent.getUserObject();
+			if(parentObj instanceof TranscendenceMod) {
+				System.out.println("Found parent Extension");
+				return (TranscendenceMod) parentObj;
+			} else {
+				parent = (DefaultMutableTreeNode) parent.getParent();
+			}
+		}
+		System.out.println();
+		return null;
+	}
+	//Get all the Types defined by the selected extension
+	public static Map<String, DesignElementOld> getExtensionTypeMap() {
+		if(selectedExtension != null) {
+			selectedExtension.updateTypeBindings();
+			return selectedExtension.getTypeMap();
+		}
+		return new TreeMap<String, DesignElementOld>();
+	}
+	/*
+	public static Map<String, DesignElementOld> getExtensionExternalTypes() {
+		
+	}
+	*/
+	//Get all Types that the extension can access, including from libraries
+	public static Map<String, DesignElementOld> getExtensionAvailableTypes() {
+		Map<String, DesignElementOld> result = new TreeMap<String, DesignElementOld>();
+		result.putAll(getExtensionTypeMap());
+		//Add external Types from libraries
+		
+		return result;
+	}
 	public void resetLayout() {
 		removeAll();
 		setLayout(new MigLayout());
 		
-		nameField.setText("");
+		//nameField.setText("Element name");
 		nameField.setEditable(false);
 		labelPanel.removeAll();
+		//labelPanel.add(createLabel("Attribute name"));
 		fieldPanel.removeAll();
+		//fieldPanel.add(createLabel("Attribute value"));
 		subElementPanel.removeAll();
-		textArea.setText("");
+		//subElementPanel.add(createLabel("Subelements"));
+		//textArea.setText("Element text");
 		textArea.setEditable(false);
 		
 		
@@ -212,22 +257,7 @@ public class XMLPanel extends JPanel {
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(selected != null) {
-					setData(selected);
-					DefaultMutableTreeNode node = getNode(selected);
-					DefaultMutableTreeNode parent = node;
-					TranscendenceMod mod = null;
-					while(parent != null && mod == null) {
-						DesignElementOld parentElement = (DesignElementOld) parent.getUserObject();
-						if(parentElement instanceof TranscendenceMod) {
-							mod = (TranscendenceMod) parentElement;
-							mod.save();
-							break;
-						} else {
-							parent = (DefaultMutableTreeNode) node.getParent();
-						}
-					}
-				}
+				save();
 			}
 		});
 		
@@ -236,7 +266,7 @@ public class XMLPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(selected != null) {
-					setData(selected);
+					save();
 					JTextArea ta = new JTextArea(selected.getXMLOutput());
 					ta.setFont(Medium.f);
 					ta.setTabSize(4);
@@ -308,13 +338,14 @@ public class XMLPanel extends JPanel {
 							parent = (DefaultMutableTreeNode) node.getParent();
 					if(parent == null) {
 						selected = null;
+						selectedExtension = null;
 					} else {
 						DesignElementOld parentElement = (DesignElementOld) parent.getUserObject();
 						parentElement.getSubElements().remove(selected);
 						if(parent.getChildCount() > 1) {
-							selectElement((DesignElementOld) ((DefaultMutableTreeNode) parent.getChildAt(1)).getUserObject());
+							selectNode(((DefaultMutableTreeNode) parent.getChildAt(1)));
 						} else if(parent.getUserObject() instanceof DesignElementOld) {
-							selectElement((DesignElementOld) parent.getUserObject());
+							selectNode(parent);
 						}
 					}
 					elementTreeModel.removeNodeFromParent(node);
@@ -395,6 +426,15 @@ public class XMLPanel extends JPanel {
 				.minHeight("30%").maxHeight("30%")
 				);
 	}
+	private void save() {
+		if(selected != null) {
+			setData(selected);
+		}
+		if(selectedExtension != null) {
+			selectedExtension.save();
+		}
+		saved = true;
+	}
 	public List<TranscendenceMod> getMods() {
 		List<TranscendenceMod> result = new LinkedList<>();
 		for(int i = 0; i < origin.getChildCount(); i++) {
@@ -404,6 +444,17 @@ public class XMLPanel extends JPanel {
 	}
 	public DesignElementOld getSelected() {
 		return selected;
+	}
+	public void selectNode(DefaultMutableTreeNode node) {
+		Object obj = node.getUserObject();
+		if(obj instanceof DesignElementOld) {
+			selectElement((DesignElementOld) obj);
+			selectedExtension = getExtension(node);
+		}
+		else {
+			selectElement(null);
+			selectedExtension = null;
+		}
 	}
 	public void selectElement(DesignElementOld e) {
 		Dimension size = getSize();
@@ -422,7 +473,7 @@ public class XMLPanel extends JPanel {
 		frame.remove(this);
 	}
 	public void setData(DesignElementOld e) {
-		
+		saved = false;
 		e.setName(nameField.getText());
 		List<DesignAttribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();

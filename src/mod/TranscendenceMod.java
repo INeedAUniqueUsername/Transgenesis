@@ -7,12 +7,16 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -34,11 +38,79 @@ import xml.DesignAttribute;
 import xml.DesignElementOld;
 public class TranscendenceMod extends DesignElementOld {
 	public UNIDManager unids;
+	Map<String, DesignElementOld> typeMap;
 	private File path;
+	List<DesignElementOld> dependencies; //If we are a module, this includes our parent extension
 	public TranscendenceMod(String name) {
 		super(name);
 		unids = new UNIDManager();
+		typeMap = new TreeMap<String, DesignElementOld>();
 		path = null;
+	}
+	public void updateTypeBindings() {
+		System.out.println("Rebinding Types");
+		typeMap = new TreeMap<>();
+		bindTypes(typeMap);
+	}
+	
+	//Allow modules to take external entities
+	
+	//Bindings between Types and Designs are stored in the map
+	public void bindTypes(Map<String, DesignElementOld> typeMap) {
+		
+		//If we have a UNID of our own, bind it
+		if(hasAttribute("unid")) {
+			typeMap.put(getAttributeByName("unid").getValue(), this);
+		}
+		
+		for(String s : unids.bindAll().values()) {
+			typeMap.put(s, null);
+		}
+		String warnings = "Warnings\n";
+		for(DesignElementOld sub : getSubElements()) {
+			if(sub.hasAttribute("unid")) {
+				String sub_type = sub.getAttributeByName("unid").getValue();
+				//Check if the element has been assigned a UNID
+				if(!(sub_type == null || sub_type.isEmpty())) {
+					//Check if the UNID has been defined by the extension
+					if(typeMap.containsKey(sub_type)) {
+						//Check if the UNID has not already been bound to an element
+						if(typeMap.get(sub_type) == null) {
+							typeMap.put(sub_type, sub);
+						} else {
+							warnings += sub.getName() + ": " + "Duplicate Type: " + sub_type + "\n";
+						}
+					} else {
+						warnings += sub.getName() + ": " + "Unknown UNID: " + sub_type + "\n";
+					}
+				} else {
+					warnings += sub.getName() + ": " + "Missing unid= attribute" + "\n";
+				}
+			} else if(sub.getName().equals("Module")) {
+				//We may be looking at a module. Use it to bind types.
+				String moduleFileName = sub.getAttributeByName("filename").getValue();
+				String folder = path.getAbsolutePath().substring(0, path.getAbsolutePath().lastIndexOf(File.separator));
+				String modulePath = folder + File.separator + moduleFileName;
+				System.out.println("Looking for Module at " + moduleFileName);
+				//Look for our module in the Extensions list
+				boolean found = false;
+				FindModule:
+				for(TranscendenceMod m : XMLPanel.getExtensions()) {
+					if(m.path.getAbsolutePath().equals(modulePath)) {
+						System.out.println("Binding Types from Module at " + modulePath);
+						m.bindTypes(typeMap);
+						found = true;
+						break FindModule;
+					}
+				}
+				warnings += getName() + ": " + "Load module at " + modulePath + "\n";
+				//Maybe we should automatically load the module if it is not loaded already
+			}
+		}
+		JOptionPane.showMessageDialog(null, warnings);
+	}
+	public Map<String, DesignElementOld> getTypeMap() {
+		return typeMap;
 	}
 	public String getXMLOutput() {
 		return

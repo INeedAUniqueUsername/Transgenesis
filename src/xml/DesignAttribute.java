@@ -3,6 +3,10 @@ package xml;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.JComboBox;
@@ -12,6 +16,7 @@ import javax.swing.JTextField;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import panels.XMLPanel;
 import window.Window;
 import static window.Window.Fonts.*;
 public class DesignAttribute {
@@ -20,60 +25,88 @@ public class DesignAttribute {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design == null;
 			}
 		},
 		TYPE_ANY {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return true;
 			}
 		},
 		TYPE_IMAGE {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
 			}
-			
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("Image");
+			}
 		},
 		TYPE_MOD {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
 			}
-			
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("TranscendenceLibrary");
+			}
 		},
 		TYPE_SOVEREIGN {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("Sovereign");
 			}
 		},
 		TYPE_SPACE_ENVIRONMENT {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
 			}
-			
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("SpaceEnvironment");
+			}
 		},
 		TYPE_SYSTEM_MAP {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
 			}
-			
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("SystemMap");
+			}
 		},
 		TYPE_INHERITED {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && (design.getName().equals("Type") || (design.hasAttribute("virtual") && design.getAttributeByName("virtual").getValue().equals("true")));
 			}
 		},
 		BOOLEAN {
@@ -377,15 +410,33 @@ public class DesignAttribute {
 			
 		}, TYPE_WEAPON {
 			public JComponent getInputField(String value) {
-				return createComboBox(true, value);
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("ItemType") && design.hasSubElement("Weapon");
 			}
 		}, TYPE_EFFECT {
 			public JComponent getInputField(String value) {
-				return createComboBox(true, value);
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("EffectType");
 			}
 		}, TYPE_STATION {
 			public JComponent getInputField(String value) {
-				return createComboBox(true, value);
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("StationType");
 			}
 		}, DOCKSCREEN_TYPE {
 			public JComponent getInputField(String value) {
@@ -464,7 +515,11 @@ public class DesignAttribute {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("ItemType");
 			}
 		}, LEVEL_VALUE {
 			public JComponent getInputField(String value) {
@@ -483,13 +538,21 @@ public class DesignAttribute {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("ItemTable");
 			}
 		}, TYPE_DOCKSCREEN {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("DockScreen");
 			}
 		}, OVERLAY_COUNTER_STTYLE {
 			public JComponent getInputField(String value) {
@@ -543,7 +606,11 @@ public class DesignAttribute {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("OverlayType");
 			}
 		}, SATELLITE_OVERLAP_CHECK {
 			public JComponent getInputField(String value) {
@@ -555,7 +622,11 @@ public class DesignAttribute {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(false, value, "");
+				addValidTypes(field);
 				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("ShipClass");
 			}
 		}
 		
@@ -593,6 +664,27 @@ public class DesignAttribute {
 			field.setFont(Medium.f);
 			field.setSelectedItem(value);
 			return field;
+		}
+		/*
+		public List<String> getValidTypes() {
+			List<String> result = new LinkedList<>();
+			XMLPanel.getExtensionAvailableTypes().forEach((String type, DesignElementOld design) -> {
+				if(typeIsValid(design)) {
+					result.add(type);
+				}
+			});
+			return result;
+		}
+		*/
+		public void addValidTypes(JComboBox<String> box) {
+			XMLPanel.getExtensionAvailableTypes().forEach((String type, DesignElementOld design) -> {
+				if(typeIsValid(design)) {
+					box.addItem(type);
+				}
+			});
+		}
+		public boolean typeIsValid(DesignElementOld design) {
+			return true;
 		}
 	}
 	private String name;

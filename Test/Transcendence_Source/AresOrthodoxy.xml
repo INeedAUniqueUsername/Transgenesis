@@ -1,1510 +1,424 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TranscendenceModule
+[
 
+]>
 <TranscendenceModule>
-
-	<Sovereign UNID="&svAres;"
-			name="Ares Orthodoxy"
-			alignment="destructive order"
-			/>
-
 	<!-- Segment of light Tharsis plate -->
-
-	<ItemType UNID="&itLightTharsisPlate;"
-			name=				"[segment(s) of ]light Tharsis plate"
-			level=				"6"
-			value=				"750"
-			mass=				"1500"
-			attributes=			"Ares; MinorItem; NotForSale;"
-			frequency=			"uncommon"
-			numberAppearing=	"1d4"
-
-			description=		"The standard armor used by Ares gunships is light, yet resistant to particle beam damage; it is, however, vulnerable to blast damage."
-
-			sortName=			"Tharsis plate, light, segment of"
-			>
-
-		<Image imageID="&rsItems6;" imageX="96" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Armor
-				hitPoints=	"60"
-				hpBonus=	"particle:+50; blast:-25"
-				/>
-	</ItemType>
-
 	<!-- Cydonian shields -->
-
-	<ItemType UNID="&itCydonianShields;"
-			name=				"Cydonian shield generator"
-			level=				"6"
-			value=				"20000"
-			mass=				"3000"
-			frequency=			"rare"
-			attributes=			"Ares; MajorItem; Military; NotForSale;"
-
-			description=		"Ares engineers cloned the Yoroi S500 and added ion resistance."
-			>
-
-		<Image imageID="&rsItems1;" imageX="192" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Shields
-				hitPoints=		"130"
-				hpBonus=		"  +0,  +0,  +0,  +0,+100,  +0"
-				regen=			"40"
-				depletionDelay=	"360"
-				powerUse=		"300"
-				/>
-
-		</ItemType>
-
 	<!-- Cydonian heavy shields -->
-
-	<ItemType UNID="&itCydonianHeavyShields;"
-			name=				"Cydonian heavy shield generator"
-			level=				"7"
-			value=				"40000"
-			mass=				"6000"
-			frequency=			"veryrare"
-			attributes=			"Ares; MajorItem; Military; NotForSale;"
-
-			description=		"This is a more powerful version of the Cydonian shield generator."
-			>
-
-		<Image imageID="&rsItems1;" imageX="192" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Shields
-				hitPoints=		"270"
-				hpBonus=		"  +0,  +0,  +0,  +0,+100,  +0"
-				regen=			"30"
-				depletionDelay=	"540"
-				powerUse=		"500"
-				/>
-
-		</ItemType>
-
 	<!-- Kaidun shields -->
-
-	<ItemType UNID="&itKaidunShields;"
-			name=				"Kaidun shield generator"
-			level=				"9"
-			value=				"150000"
-			mass=				"12000"
-			frequency=			"veryrare"
-			attributes=			"Ares; MajorItem; Military; NotForSale;"
-
-			description=		"The most advanced shield generator in the Ares Orthodoxy, the Kaidun generator is used by the Ares dreadnought."
-			>
-
-		<Image imageID="&rsItems1;" imageX="192" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Shields
-				hitPoints=		"800"
-				hpBonus=		"  +0,  +0,  +0,  +0, +50, +50"
-				regen=			"30"
-				depletionDelay=	"540"
-				powerUse=		"2000"
-				/>
-
-		</ItemType>
-
 	<!-- Segment of Tharsis plate -->
-
-	<ItemType UNID="&itTharsisPlate;"
-			name=				"[segment(s) of ]Tharsis plate"
-			level=				"8"
-			value=				"6000"
-			mass=				"4000"
-			attributes=			"Ares; Military; MinorItem; NotForSale;"
-			frequency=			"uncommon"
-			numberAppearing=	"1d4"
-
-			description=		"Tharsis plate is used by the Tundra heavy gunship; it is resistant to thermonuclear damage."
-
-			sortName=			"Tharsis plate, segment of"
-			>
-
-		<Image imageID="&rsItems6;" imageX="96" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Armor
-				hitPoints=	"200"
-				hpBonus=	"  +0,  +0, +50, +25, -25, +25"
-				/>
-
-	</ItemType>
-
 	<!-- Segment of heavy Tharsis plate -->
-
-	<ItemType UNID="&itHeavyTharsisPlate;"
-			name=				"[segment(s) of ]heavy Tharsis plate"
-			level=				"9"
-			value=				"18000"
-			mass=				"10000"
-			attributes=			"Ares; Military; MinorItem; NotForSale;"
-			frequency=			"rare"
-			numberAppearing=	"1d4"
-
-			description=		"This is a double layer of Tharsis plate."
-
-			sortName=			"Tharsis plate, heavy, segment of"
-			>
-
-		<Image imageID="&rsItems6;" imageX="96" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Armor
-				hitPoints=	"400"
-				hpBonus=	"  +0,  +0, +50, +25, -25, +25"
-				repairTech=	"8"
-				/>
-
-	</ItemType>
-
 	<!-- Segment of massive Tharsis plate -->
-
-	<ItemType UNID="&itMassiveTharsisPlate;"
-			name=				"[segment(s) of ]massive Tharsis plate"
-			level=				"10"
-			value=				"50000"
-			mass=				"25000"
-			attributes=			"Ares; Military; MinorItem; NotForSale;"
-			frequency=			"veryrare"
-			numberAppearing=	"1d4"
-
-			description=		"The capital ships of the Ares Orthodoxy use this massive armor."
-
-			sortName=			"Tharsis plate, massive, segment of"
-			>
-
-		<Image imageID="&rsItems6;" imageX="96" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Armor
-				hitPoints=	"600"
-				hpBonus=	"  +0,  +0, +50, +25, -25, +25"
-				repairTech=	"8"
-				/>
-
-	</ItemType>
-
 	<!-- Ares Lightning Cannon -->
-
-	<ItemType UNID="&itLightningCannon;"
-			name=				"Ares lightning cannon"
-			level=				"7"
-			value=				"24000"
-			mass=				"3000"
-			frequency=			"uncommon"
-			attributes=			"Ares; EnergyWeapon; Military; MajorItem; NotForSale;"
-
-			description=		"During the Syrtis War the lightning cannons of the Orthodoxy were devastating to the Earth Fleet."
-			>
-
-		<Image imageID="&rsItems7;" imageX="192" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				type=				"beam"
-
-				damage=				"ion:4d6+2"
-				fireRate=			"15"
-				lifetime=			"30"
-				powerUse=			"350"
-
-				effect=				"&efIonBeamDefault;"
-				sound=				"&snLaserCannon;"
-				>
-		</Weapon>
-	</ItemType>
-
 	<!-- Micronuke -->
-
-	<ItemType UNID="&itMicronuke;"
-			name=				"Ares micronuke"
-			level=				"7"
-			value=				"60"
-			mass=				"10"
-			attributes=			"Ares; Consumable; Military; Missile; NotForSale;"
-			frequency=			"common"
-			numberAppearing=	"12d20"
-
-			description=		"The compact warheads detonate into an expanding shockwave of thermonuclear damage. They require a launcher."
-
-			sortName=			"Ares.30"
-			>
-
-		<Image imageID="&rsItems1;" imageX="288" imageY="192" imageWidth="96" imageHeight="96"/>
-
-		<Missile
-				type=			"missile"
-				lifetime=		"180"
-				missileSpeed=	"60"
-				hitPoints=		"20"
-
-				fragmentCount=	"1"
-				failsafe=		"6"
-
-				hitEffect=		"&efThermoShockwaveExplosion;"
-				sound=			"&snMissileLauncher;"
-				>
-
-			<Effect>
-				<ParticleJet
-						fixedPos=			"true"
-						emitRate=			"40"
-						tangentSpeed=		"3d2-3"
-						particleLifetime=	"10-30"
-						XformTime=			"20"
-								>
-					<ParticleEffect>
-						<Particle
-								style=			"plain"
-								minWidth=		"1"
-								maxWidth=		"4"
-								primaryColor=	"#f7ffc6"
-								secondaryColor=	"#b63718"
-										/>
-					</ParticleEffect>
-				</ParticleJet>
-
-				<Image imageID="&rsMissiles;" imageX="0" imageY="32" imageWidth="16" imageHeight="16" imageFrameCount="12" imageTicksPerFrame="3"/>
-			</Effect>
-
-			<Fragment
-					type=			"area"
-
-					damage=			"thermo:1d10; WMD3"
-					expansionSpeed=	"35"
-					missileSpeed=	"0"
-					lifetime=		"24"
-					>
-
-				<Effect>
-					<Shockwave
-							fadeStart=	"70"
-									>
-						<Image imageID=				"&rsShockwave2;"
-								imageX=				"0"
-								imageY=				"0"
-								imageWidth=			"512"
-								imageHeight=		"128"/>
-					</Shockwave>
-				</Effect>
-			</Fragment>
-		</Missile>
-	</ItemType>
-
 	<!-- Ares Launcher -->
-
-	<ItemType UNID="&itAresLauncher;"
-			name=				"Ares launcher"
-			level=				"8"
-			value=				"75000"
-			mass=				"4000"
-			frequency=			"rare"
-			attributes=			"Ares; MajorItem; Military; NotForSale;"
-
-			description=		"These launchers can fire both a standard micronuke or the heavier and deadlier Warhammer nuke."
-			>
-
-		<Image imageID="&rsItems1;" imageX="0" imageY="480" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				fireRate=			"40"
-				powerUse=			"200"
-				launcher=			"true"
-				>
-
-			<Missiles>
-				<Missile ammoID="&itWarhammerNuke;"/>
-				<Missile ammoID="&itMicronuke;"/>
-			</Missiles>
-		</Weapon>
-	</ItemType>
-
 	<!-- Ares Lightning Turret -->
-
-	<ItemType UNID="&itLightningTurret;"
-			name=				"Ares lightning turret"
-			level=				"8"
-			value=				"75000"
-			mass=				"6000"
-			frequency=			"veryrare"
-			attributes=			"Ares; EnergyWeapon; Military; MajorItem; NotForSale;"
-
-			description=		"This omnidirectional turret fires rapid bursts of ion energy, but requires periods of rest."
-			>
-
-		<Image imageID="&rsItems8;" imageX="0" imageY="96" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				type=				"beam"
-
-				omnidirectional=	"true"
-				damage=				"ion:4d6+2"
-				fireRate=			"4"
-				lifetime=			"40"
-				powerUse=			"1000"
-
-				counter=			"capacitor"
-				counterActivate=	"-5"
-				counterUpdate=		"2"
-				counterUpdateRate=	"6"
-
-				effect=				"&efIonBeamDefault;"
-				sound=				"&snLaserCannon;"
-				>
-		</Weapon>
-	</ItemType>
-
 	<!-- Ares Micronuke Cannon -->
-
-	<ItemType UNID="&itMicronukeCannon;"
-			name=				"Ares micronuke cannon"
-			level=				"8"
-			value=				"66000"
-			mass=				"4000"
-			frequency=			"uncommon"
-			attributes=			"Ares; MajorItem; Military; NotForSale;"
-
-			description=		"These cannons can launch a micronuke warhead at 60% of lightspeed."
-			>
-
-		<Image imageID="&rsItems8;" imageX="96" imageY="96" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				fireRate=			"40"
-				powerUse=			"100"
-				reportAmmo=			"true"
-				>
-
-			<Missiles>
-				<Missile ammoID="&itMicronuke;"/>
-			</Missiles>
-		</Weapon>
-	</ItemType>
-
 	<!-- Hecates Cannon -->
-
-	<ItemType UNID="&itHecatesCannon;"
-			name=				"Hecates cannon"
-			level=				"8"
-			value=				"94000"
-			mass=				"6000"
-			frequency=			"veryrare"
-			numberAppearing=	"1"
-			attributes=			"Ares; Howitzer; MajorItem; Military; NotForSale;"
-
-			description=		"The Hecates cannon is a fusion howitzer used by Ares destroyers."
-			>
-
-		<Image imageID="&rsItems8;" imageX="288" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				type=				"missile"
-
-				damage=				"thermo:11d12; momentum:3; WMD:7"
-				fireRate=			"50"
-				missileSpeed=		"50"
-				lifetime=			"120"
-				hitPoints=			"10"
-				powerUse=			"1200"
-				recoil=				"2"
-
-				effect=				"&efThermoShellDefault;"
-				sound=				"&snRecoillessCannon;"
-				>
-		</Weapon>
-	</ItemType>
-
 	<!-- Ares Warhammer nuke -->
-
-	<ItemType UNID="&itWarhammerNuke;"
-			name=				"Ares Warhammer nuke"
-			level=				"9"
-			value=				"150"
-			mass=				"20"
-			attributes=			"Ares; Consumable; Military; Missile; NotForSale;"
-			frequency=			"rare"
-			numberAppearing=	"1d6"
-
-			description=		"These long-range thermonuclear missiles are fired by Ares launchers."
-
-			sortName=			"Ares.10"
-			>
-
-		<Image imageID="&rsItems1;" imageX="0" imageY="96" imageWidth="96" imageHeight="96"/>
-
-		<Missile
-				type=			"missile"
-				lifetime=		"480"
-				missileSpeed=	"30"
-				hitPoints=		"30"
-
-				fragmentCount=	"1"
-				failsafe=		"15"
-
-				hitEffect=		"&efThermoShockwaveExplosion;"
-				sound=			"&snMissileLauncher;"
-				>
-
-			<Effect>
-				<ParticleJet
-						fixedPos=			"true"
-						emitRate=			"60"
-						tangentSpeed=		"3d2-3"
-						particleLifetime=	"10-30"
-						XformTime=			"30"
-								>
-					<ParticleEffect>
-						<Particle
-								style=			"plain"
-								minWidth=		"1"
-								maxWidth=		"5"
-								primaryColor=	"#f7ffc6"
-								secondaryColor=	"#b63718"
-										/>
-					</ParticleEffect>
-				</ParticleJet>
-
-				<Image imageID="&rsMissiles;" imageX="0" imageY="32" imageWidth="16" imageHeight="16" imageFrameCount="12" imageTicksPerFrame="3"/>
-			</Effect>
-
-			<Fragment
-					type=			"area"
-
-					damage=			"thermo:2d10; WMD7"
-					expansionSpeed=	"25"
-					missileSpeed=	"0"
-					lifetime=		"24"
-					>
-
-				<Effect>
-					<Shockwave
-							fadeStart=	"70"
-									>
-						<Image imageID=				"&rsShockwave2;"
-								imageX=				"0"
-								imageY=				"0"
-								imageWidth=			"512"
-								imageHeight=		"128"/>
-					</Shockwave>
-				</Effect>
-			</Fragment>
-		</Missile>
-	</ItemType>
-
 	<!-- Ares positron cannon -->
-
-	<ItemType UNID="&itAresArchcannon;"
-			name=				"Ares positron cannon"
-			level=				"9"
-			value=				"150000"
-			mass=				"1500"
-			frequency=			"uncommon"
-			attributes=			"Ares; EnergyWeapon; Military; MajorItem; NotForSale;"
-
-			description=		"Ares engineers created this weapon after the Commonwealth developed defenses against their lightning cannon."
-			>
-
-		<Image imageID="&rsItems9;" imageX="192" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				type=				"missile"
-
-				damage=				"positron:6d8; shield:8"
-				fireRate=			"15"
-				missileSpeed=		"80"
-				interaction=		"0"
-				lifetime=			"60"
-				powerUse=			"2000"
-
-				effect=				"&efPositronBeamDefault;"
-				sound=				"&snLaserCannon;"
-				>
-		</Weapon>
-	</ItemType>
-
 	<!-- Ares plasma cannon -->
-
-	<ItemType UNID="&itAresPlasmaCannon;"
-			name=				"Ares plasma archcannon"
-			level=				"10"
-			value=				"500000"
-			mass=				"10000"
-			frequency=			"veryrare"
-			attributes=			"Ares; Howitzer; MajorItem; Military; NotForSale"
-
-			description=		"The most powerful weapon in the Ares fleet. The plasma archcannon can destroy anything that's not protected by massive shields and armor."
-			>
-
-		<Image imageID="&rsItems10;" imageX="288" imageY="0" imageWidth="96" imageHeight="96"/>
-
-		<Weapon
-				type=				"particles"
-				damage=				"plasma:300; WMD:7"
-				
-				fireRate=			"80"
-				hitPoints=			"30"
-
-				deviceSlots=		"2"
-				powerUse=			"3000"
-				sound=				"&snRecoillessCannon;"
-				>
-			
-			<ParticleSystem
-					style=				"comet"
-					emitLifetime=		"1"
-					emitRate=			"150"
-					emitSpeed=			"50-70"
-					emitWidth=			"50"
-					
-					particleLifetime=	"120"
-					particleEffect=		"&efPlasmaParticleDefault;"
-					>
-			</ParticleSystem>
-			
-			<Effect>
-				<ParticleSystem
-						style=				"jet"
-						fixedPos=			"true"
-						emitRate=			"2-4"
-						tangentSpeed=		"-8-8"
-						particleLifetime=	"10"
-						XformTime=			"30"
-						>
-					<ParticleEffect>
-						<Orb
-								instance=			"owner"
-						
-								style=				"smooth"
-								animate=			"fade"
-								radius=				"20"
-								lifetime=			"10"
-								intensity=			"20"
-						
-								blendMode=			"screen"
-								primaryColor=		"#feff00"
-								secondaryColor=		"#ff7f00"
-								/>
-					</ParticleEffect>
-				</ParticleSystem>
-			</Effect>
-		</Weapon>
-	</ItemType>
-
 	<!-- Ares Cannon -->
-
-	<ShipClass UNID="&scAresCannon;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Ares sentry"
-			type=				""
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares, genericClass"
-			   
-			mass=				"400"
-			thrustRatio=		"0"
-			maxSpeed=			"0"
-			cargoSpace=			"0"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itTharsisPlate;"
-			count=				"2"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itAresArchcannon;" minFireArc="350" maxFireArc="10" />
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"18.0"
-			rotationAccel=		"3.0"
-			/>
-
-		<!-- Image and Effects -->
-
-		<Image imageID="&rsMediumShips1;" imageX="576" imageY="0" imageWidth="48" imageHeight="48" rotationOffset="-15"/>
-
-		<!-- AI and Behavior -->
-
-		<AISettings
-			fireRateAdj=		"40"
-			fireAccuracy=		"90"
-			perception=			"4"
-
-			noFriendlyFire=		"true"
-			/>
-
-	</ShipClass>
-
 	<!-- Chasm Heavy Gunship -->
-
-	<ShipClass UNID="&scChasm;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Chasm"
-			type=				"heavy gunship"
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares,genericClass"
-			   
-			mass=				"210"
-			thrustRatio=		"5"
-			maxSpeed=			"20"
-			cargoSpace=			"50"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itTharsisPlate;"
-			count=				"4"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itAresArchcannon;"/>
-			<Device deviceID="&itCydonianShields;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"18.0"
-			rotationAccel=		"2.0"
-			/>
-
-		<Items>
-			<Item count="1d6" item="&itPteracniumFuelRod;"/>
-		</Items>
-		
-		<!-- Image and Effects -->
-
-		<Image imageID="&rsMediumShips2;" imageX="1024" imageY="0" imageWidth="64" imageHeight="64" rotationOffset="-8"/>
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="160"	posRadius="16"	posZ="0"	rotation="180"/>
-			<Effect type="thrustMain"		posAngle="180"	posRadius="14"	posZ="0"	rotation="180"/>
-			<Effect type="thrustMain"		posAngle="-160"	posRadius="16"	posZ="0"	rotation="180"/>
-		</Effects>
-
-		<!-- AI and Behavior -->
-
-		<AISettings
-			fireRateAdj=		"15"
-			fireAccuracy=		"95"
-			perception=			"6"
-			
-			combatStyle=		"advanced"
-			/>
-
-	</ShipClass>
-
 	<!-- Cometfall missileship -->
-
-	<ShipClass UNID="&scCometfall;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Cometfall"
-			type=				"missileship"
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares, capitalShip, genericClass"
-			   
-			size=				"110"
-			mass=				"6000"
-			thrustRatio=		"2"
-			maxSpeed=			"10"
-			cargoSpace=			"1000"
-
-			explosionType=		"&vtThermoExplosion2;"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itTharsisPlate;"
-			count=				"8"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itAresLauncher;"/>
-			<Device deviceID="&itLightningCannon;" secondaryWeapon="true" omnidirectional="true" posAngle="0" posRadius="12" posZ="20" />
-			<Device deviceID="&itCydonianShields;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"5.0"
-			rotationAccel=		"0.5"
-			/>
-
-		<Interior>
-			<Compartment name="interior"
-					hitPoints=	"200"
-					/>
-			
-			<Compartment name="main drive"
-					type=		"mainDrive"
-					hitPoints=	"100"
-
-					posX=		"-6"
-					posY=		"0"
-					sizeX=		"36"
-					sizeY=		"52"
-					/>
-		</Interior>
-
-		<Items>
-			<Item count="3d20" item="&itWarhammerNuke;"/>
-			<Item count="12d20" item="&itMicronuke;"/>
-			<Item count="1d12" item="&itPteracniumFuelRod;"/>
-		</Items>
-
-		<!-- Image and Effects -->
-		
-		<Image imageID="&rsCometfall;" imageWidth="130" imageHeight="130"/>
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="156"	posRadius="48"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-156"	posRadius="48"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			
-			<Effect type="thrustMain"		posAngle="123"	posRadius="31"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"	bringToFront="*"/>
-			<Effect type="thrustMain"		posAngle="-123"	posRadius="31"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"	bringToFront="*"/>
-		</Effects>
-		 
-		<!-- AI and Behavior -->
-		
-		<AISettings
-			combatStyle=		"standOff"
-			fireRateAdj=		"25"
-			fireAccuracy=		"90"
-			perception=			"4"
-			
-			ignoreShieldsDown=	"true"
-			/>
-
-	</ShipClass>
-
 	<!-- Deimos Destroyer -->
-
-	<ShipClass UNID="&scDeimos;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Deimos"
-			type=				"destroyer"
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares, capitalShip, genericClass"
-			   
-			size=				"140"
-			mass=				"12000"
-			thrustRatio=		"2"
-			maxSpeed=			"16"
-			cargoSpace=			"1000"
-
-			explosionType=		"&vtThermoExplosion2;"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itHeavyTharsisPlate;"
-			count=				"12"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itHecatesCannon;" posAngle="0" posRadius="48" posZ="0" minFireArc="345" maxFireArc="15" />
-			<Device deviceID="&itLightningTurret;" secondaryWeapon="true"/>
-			<Device deviceID="&itCydonianHeavyShields;"/>
-			<Device deviceID="&it250MWReactor;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"6"
-			rotationAccel=		"1"
-			/>
-
-		<Interior>
-			<Compartment name="interior"
-					hitPoints=	"300"
-					/>
-			
-			<Compartment name="main drive"
-					type=		"mainDrive"
-					hitPoints=	"150"
-
-					posX=		"-9"
-					posY=		"0"
-					sizeX=		"48"
-					sizeY=		"46"
-					/>
-		</Interior>
-
-		<Items>
-			<Item count="2d12"	item="&itPteracniumFuelRod;"/>
-		</Items>
-
-		<!-- Image and Effects -->
-		
-		<Image imageID="&rsDeimos;" imageWidth="170" imageHeight="170" rotationOffset="-30"/>
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="95"	posRadius="36"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-95"	posRadius="36"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-		</Effects>
-		
-		<!-- AI and Behavior -->
-
-		<AISettings
-			fireRateAdj=		"10"
-			fireAccuracy=		"90"
-			ignoreShieldsDown=	"true"
-			
-			perception=			"6"
-			/>
-
-	</ShipClass>
-
 	<!-- Polar-class Freighter -->
-
-	<ShipClass UNID="&scPolar;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Polar"
-			type=				"freighter"
-			defaultSovereign=	"&svAres;"
-
-			size=				"180"
-			mass=				"15000"
-			cargoSpace=			"10000"
-			thrustRatio=		"0.3"
-			maxSpeed=			"8"
-
-			explosionType=		"&vtBlastExplosion4;"
-
-			attributes=			"ares, freighter, genericClass"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itLightTharsisPlate;"
-			count=				"20"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itLightningCannon;" omnidirectional="true"	posAngle="0" posRadius="0" posZ="10"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"2"
-			rotationAccel=		"0.2"
-			/>
-
-		<Interior>
-			<Compartment name="interior"
-					hitPoints=	"60"
-					/>
-			
-			<Compartment name="main drive"
-					type=		"mainDrive"
-					hitPoints=	"60"
-
-					posX=		"-66"
-					posY=		"0"
-					sizeX=		"36"
-					sizeY=		"46"
-					/>
-			
-			<Compartment name="cargo containers"
-					type=		"cargo"
-					hitPoints=	"180"
-
-					posX=		"0"
-					posY=		"0"
-					sizeX=		"110"
-					sizeY=		"60"
-					/>
-		</Interior>
-
-		<Image imageID="&rsPolarFreighter;" imageWidth="192" imageHeight="192" />
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="170"	posRadius="82"	posZ="-15"	rotation="180"	effect="&efMainThrusterLarge;"	sendToBack="*"/>
-			<Effect type="thrustMain"		posAngle="-170"	posRadius="82"	posZ="-15"	rotation="180"	effect="&efMainThrusterLarge;"	sendToBack="*"/>
-			
-			<Effect type="thrustMain"		posAngle="165"	posRadius="86"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-165"	posRadius="86"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			
-			<Effect type="thrustMain"		posAngle="170"	posRadius="82"	posZ="15"	rotation="180"	effect="&efMainThrusterLarge;"	bringToFront="*"/>
-			<Effect type="thrustMain"		posAngle="-170"	posRadius="82"	posZ="15"	rotation="180"	effect="&efMainThrusterLarge;"	bringToFront="*"/>
-		</Effects>
-		
-		<AISettings
-			fireRateAdj=		"30"
-			fireAccuracy=		"95"
-			perception=			"4"
-			
-			combatStyle=		"standOff"
-			/>
-
-	</ShipClass>
-
 	<!-- Polar II-class Freighter -->
-
-	<ShipClass UNID="&scPolar2;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Polar II"
-			type=				"freighter"
-
-			size=				"180"
-			mass=				"15000"
-			cargoSpace=			"10000"
-			thrustRatio=		"0.3"
-			maxSpeed=			"8"
-
-			explosionType=		"&vtBlastExplosion4;"
-
-			attributes=			"ares, freighter"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itLightTharsisPlate;"
-			count=				"20"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itAresArchcannon;" omnidirectional="true"	posAngle="0" posRadius="0" posZ="10"/>
-			<Device deviceID="&itCydonianShields;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"2"
-			rotationAccel=		"0.2"
-			/>
-
-		<Interior>
-			<Compartment name="interior"
-					hitPoints=	"60"
-					/>
-			
-			<Compartment name="main drive"
-					type=		"mainDrive"
-					hitPoints=	"60"
-
-					posX=		"-66"
-					posY=		"0"
-					sizeX=		"36"
-					sizeY=		"46"
-					/>
-			
-			<Compartment name="cargo containers"
-					type=		"cargo"
-					hitPoints=	"180"
-
-					posX=		"0"
-					posY=		"0"
-					sizeX=		"110"
-					sizeY=		"60"
-					/>
-		</Interior>
-
-		<Image imageID="&rsPolarFreighter;" imageWidth="192" imageHeight="192" />
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="170"	posRadius="82"	posZ="-15"	rotation="180"	effect="&efMainThrusterLarge;"	sendToBack="*"/>
-			<Effect type="thrustMain"		posAngle="-170"	posRadius="82"	posZ="-15"	rotation="180"	effect="&efMainThrusterLarge;"	sendToBack="*"/>
-			
-			<Effect type="thrustMain"		posAngle="165"	posRadius="86"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-165"	posRadius="86"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			
-			<Effect type="thrustMain"		posAngle="170"	posRadius="82"	posZ="15"	rotation="180"	effect="&efMainThrusterLarge;"	bringToFront="*"/>
-			<Effect type="thrustMain"		posAngle="-170"	posRadius="82"	posZ="15"	rotation="180"	effect="&efMainThrusterLarge;"	bringToFront="*"/>
-		</Effects>
-		
-		<AISettings
-			fireRateAdj=		"30"
-			fireAccuracy=		"95"
-			perception=			"4"
-			
-			combatStyle=		"standOff"
-			/>
-
-	</ShipClass>
-
 	<!-- Sandstorm Gunship -->
-
-	<ShipClass UNID="&scSandstorm;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Sandstorm"
-			type=				"gunship"
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares,genericClass"
-			   
-			mass=				"60"
-			thrustRatio=		"8"
-			maxSpeed=			"20"
-			cargoSpace=			"25"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itLightTharsisPlate;"
-			count=				"4"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itLightningCannon;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"18.0"
-			rotationAccel=		"4.0"
-			/>
-
-		<Items>
-		</Items>
-
-		<!-- Image and Effects -->
-
-		<Image imageID="&rsMediumShips1;" imageX="144" imageY="0" imageWidth="48" imageHeight="48"/>
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="150"	posRadius="8"	posZ="0"	rotation="180"/>
-			<Effect type="thrustMain"		posAngle="180"	posRadius="8"	posZ="0"	rotation="180"/>
-			<Effect type="thrustMain"		posAngle="-150"	posRadius="8"	posZ="0"	rotation="180"/>
-			<Effect type="rotateRight"		posAngle="115"	posRadius="19"	posZ="-3"	rotation="0"		sendToBack="*"/>
-			<Effect type="rotateRight"		posAngle="-140"	posRadius="24"	posZ="-3"	rotation="180"		sendToBack="*"/>
-			<Effect type="rotateLeft"		posAngle="-115"	posRadius="19"	posZ="-3"	rotation="0"		sendToBack="*"/>
-			<Effect type="rotateLeft"		posAngle="140"	posRadius="24"	posZ="-3"	rotation="180"		sendToBack="*"/>
-		</Effects>
-
-		<!-- AI and Behavior -->
-
-		<AISettings
-			fireRateAdj=		"30"
-			fireAccuracy=		"85"
-			perception=			"4"
-			
-			combatStyle=		"advanced"
-			/>
-
-	</ShipClass>
-
 	<!-- Tundra Gunship -->
-
-	<ShipClass UNID="&scTundra;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Tundra"
-			type=				"heavy gunship"
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares,genericClass"
-			   
-			mass=				"80"
-			thrustRatio=		"6"
-			maxSpeed=			"20"
-			cargoSpace=			"50"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itTharsisPlate;"
-			count=				"4"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itLightningCannon;"/>
-			<Device deviceID="&itMicronukeCannon;"/>
-			<Device deviceID="&itCydonianShields;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"18.0"
-			rotationAccel=		"2.0"
-			/>
-
-		<Items>
-			<Item count="3d20" item="&itMicronuke;"/>
-		</Items>
-
-		<!-- Image and Effects -->
-		
-		<Image imageID="&rsMediumShips2;" imageX="576" imageY="0" imageWidth="64" imageHeight="64"/>
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="40"	posRadius="8"	posZ="0"	rotation="180"/>
-			<Effect type="thrustMain"		posAngle="0"	posRadius="6"	posZ="0"	rotation="180"/>
-			<Effect type="thrustMain"		posAngle="-40"	posRadius="8"	posZ="0"	rotation="180"/>
-		</Effects>
-
-		<!-- AI and Behavior -->
-
-		<AISettings
-			fireRateAdj=		"20"
-			fireAccuracy=		"90"
-			perception=			"4"
-			
-			combatStyle=		"advanced"
-			ignoreShieldsDown=	"true"
-			/>
-
-	</ShipClass>
-
 	<!-- Phobos-class Dreadnought -->
-
-	<ShipClass UNID="&scPhobos;"
-			manufacturer=		"Ares Orthodoxy"
-			class=				"Phobos"
-			type=				"dreadnought"
-			defaultSovereign=	"&svAres;"
-
-			attributes=			"ares, capitalShip, genericClass, majorShip"
-
-			size=				"290"
-			mass=				"61000"
-			thrustRatio=		"1"
-			maxSpeed=			"16"
-			cargoSpace=			"5000"
-
-			cyberDefenseLevel=	"8"
-			   
-			explosionType=		"&vtPlasmaExplosion2;"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itMassiveTharsisPlate;"
-			count=				"16"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itAresPlasmaCannon;" posAngle="0" posRadius="80" posZ="0"/>
-			<Device deviceID="&itLightningTurret;" secondaryWeapon="true" posAngle="30"  posRadius="50" posZ="0"/>
-			<Device deviceID="&itLightningTurret;" secondaryWeapon="true" posAngle="330" posRadius="50" posZ="0"/>
-			<Device deviceID="&itKaidunShields;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"3.6"
-			rotationAccel=		"0.6"
-			/>
-
-		<Interior>
-			<Compartment name="interior"
-					hitPoints=	"600"
-					/>
-			
-			<Compartment name="main drive"
-					type=		"mainDrive"
-					hitPoints=	"200"
-
-					posX=		"-88"
-					posY=		"0"
-					sizeX=		"80"
-					sizeY=		"62"
-					/>
-		</Interior>
-
-		<Items>
-			<Item				count="6d12"	item="&itPteracniumFuelRod;"/>
-		</Items>
-
-		<!-- Image and Effects -->
-		
-		<Image imageID="&rsLargeShips2;" imageX="256" imageY="0" imageWidth="256" imageHeight="256"/>
-		
-		<Effects>
-			<Effect type="thrustMain"		posAngle="180"	posRadius="118"	posZ="-30"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="170"	posRadius="118"	posZ="-15"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-170"	posRadius="118"	posZ="-15"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="170"	posRadius="118"	posZ="15"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-170"	posRadius="118"	posZ="15"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="180"	posRadius="118"	posZ="30"	rotation="180"	effect="&efMainThrusterLarge;"/>
-		</Effects>
-
-		<!-- AI and Behavior -->
-
-		<AISettings
-			fireRateAdj=		"10"
-			fireAccuracy=		"95"
-			perception=			"6"
-			
-			ignoreShieldsDown=	"true"
-			/>
-
-	</ShipClass>
-
 	<!-- Ares Outpost -->
-
-	<StationType UNID="&stAresOutpost;"
-			name=				"Ares outpost"
-			sovereign=			"&svAres;"
-			abandonedScreen=	"&dsAbandonedStation;"
-			dockingPorts=		"8"
-			canAttack=			"true"
-
-			multiHull=			"true"
-			armorID=			"&itLightTharsisPlate;"
-			hitPoints=			"370"
-            regen=              "1.1"
-			fireRateAdj=		"40"
-			explosionType=		"&vtThermoExplosion1;"
-			ejectaType=			"&vtWreckEjecta;"
-			randomEncounters=	"common"
-
-			attributes=			"ares, enemy, envAir, envEarth, envFire, envWater, generic, neoHuman, populated"
-			levelFrequency=		"----- rcur- ----- ----- -----"
-			locationCriteria=	"-asteroids"
-			>
-
-		<Image			imageID="&rsStations7;" imageX="0" imageY="640" imageWidth="128" imageHeight="128"/>
-
-		<Devices>
-			<Device deviceID="&itLightningCannon;" omnidirectional="true"/>
-		</Devices>
-
-		<Ships>
-			<Ship		count="1d6"		class="&scSandstorm;" orders="guard"/>
-		</Ships>
-
-		<Reinforcements minShips="5">
-			<Ship		count="1d4"		class="&scSandstorm;" orders="guard"/>
-		</Reinforcements>
-
-		<Items>
-			<Table>
-				<Lookup chance="25" count="1d3" table="&trConsumables7;"/>
-				<Lookup chance="25" count="1"	table="&trConsumables8;"/>
-				<Lookup chance="25" count="1"	table="&trMinorItem7;"/>
-				<Lookup chance="15" count="1"	table="&trMinorItem8;"/>
-				<Lookup chance="10" count="1"	table="&trMajorItem7;"/>
-			</Table>
-		</Items>
-		
-		<Encounters frequency="common">
-			<Lookup table="&tbAresEncounters;"/>
-		</Encounters>
-
-	</StationType>
-
 	<!-- Ares Commune -->
-
-	<StationType UNID="&stAresCommune;"
-			name=				"Ares commune"
-			sovereign=			"&svAres;"
-			abandonedScreen=	"&dsAbandonedStation;"
-			dockingPorts=		"8"
-			canAttack=			"true"
-
-			multiHull=			"true"
-			armorID=			"&itTharsisPlate;"
-			hitPoints=			"2400"
-            regen=              "20"
-			explosionType=		"&vtThermoExplosion4;"
-			ejectaType=			"&vtWreckEjecta;"
-
-			attributes=			"ares, aresMajor, enemy, envAir, envEarth, envFire, envWater, generic, majorStation, neoHuman, populated"
-			levelFrequency=		"----- -vuur ----- ----- -----"
-			locationCriteria=	"-asteroids"
-			enemyExclusionRadius="60"
-			>
-
-		<Image			imageID="&rsStations7;" imageX="0" imageY="0" imageWidth="256" imageHeight="256"/>
-
-		<Ships>
-			<Ship		count="1d2"		class="&scTundra;" orders="guard"/>
-			<Ship		count="1d6"		class="&scSandstorm;" orders="patrol" patrolDist="5"/>
-		</Ships>
-
-		<Reinforcements minShips="6">
-			<Table>
-				<Ship chance="75"	count="1d4" class="&scSandstorm;" orders="patrol" patrolDist="5"/>
-				<Ship chance="25"	count="1" class="&scTundra;" orders="guard" />
-			</Table>
-		</Reinforcements>
-
-		<Items>
-			<Table count="1d6">
-				<Lookup chance="25" count="1d3" table="&trConsumables8;"/>
-				<Lookup chance="25" count="1"	table="&trConsumables9;"/>
-				<Lookup chance="25" count="1"	table="&trMinorItem8;"/>
-				<Lookup chance="15" count="1"	table="&trMinorItem9;"/>
-				<Lookup chance="10" count="1"	table="&trMajorItem8;"/>
-			</Table>
-		</Items>
-
-		<Satellites overlapCheck="asteroids">
-			<Orbitals count="2d4" distance="12" angle="equidistant">
-				<Ship class="&scAresCannon;" count="1" sovereign="&svAres;" orders="sentry"/>
-			</Orbitals>
-		</Satellites>
-
-		<Encounters frequency="common">
-			<Lookup table="&tbAresEncounters;"/>
-		</Encounters>
-
-	</StationType>
-
 	<!-- Ares Shipyard -->
-
-	<StationType UNID="&stAresShipyard;"
-			name=				"Ares shipyard"
-			sovereign=			"&svAres;"
-			abandonedScreen=	"&dsAbandonedStation;"
-			dockingPorts=		"8"
-			canAttack=			"true"
-
-			multiHull=			"true"
-			armorID=			"&itMassiveTharsisPlate;"
-			hitPoints=			"3600"
-            regen=              "22"
-			explosionType=		"&vtPlasmaExplosion3;"
-			ejectaType=			"&vtWreckEjecta;"
-
-			attributes=			"ares, aresMajor, enemy, envAir, envEarth, envFire, envWater, generic, majorStation, neoHuman, populated"
-			levelFrequency=		"----- --vuu ----- ----- -----"
-			locationCriteria=	"-asteroids"
-			enemyExclusionRadius="100"
-			>
-
-		<Image			imageID="&rsStations9;" imageX="0" imageY="256" imageWidth="256" imageHeight="256"/>
-
-		<Ships>
-			<Ship		count="1d2"		class="&scTundra;" orders="guard"/>
-			<Ship		count="1d6"		class="&scSandstorm;" orders="patrol" patrolDist="5"/>
-			<Table>
-				<Ship	chance="40"	count="1d4+2"	class="&scChasm;" orders="patrol" patrolDist="5"/>
-				<Ship	chance="40" count="1d2" class="&scDeimos;" orders="patrol" patrolDist="8"/>
-				<Ship	chance="10" count="4d6"	class="&scSandstorm;" orders="patrol" patrolDist="8"/>
-				<Ship	chance="10" count="1"	class="&scPhobos;"	orders="guard"/>
-			</Table>
-		</Ships>
-
-		<Construction constructionRate="500" maxConstruction="10">
-			<Table>
-				<Ship chance="40"	count="1"	class="&scSandstorm;"	 orders="patrol" patrolDist="5"/>
-				<Ship chance="20"	count="1"	class="&scChasm;"		 orders="patrol" patrolDist="5"/>
-				<Ship chance="20"	count="1"	class="&scTundra;"		 orders="patrol" patrolDist="8"/>
-				<Ship chance="10"	count="1"	class="&scDeimos;"		 orders="patrol" patrolDist="8"/>
-				<Ship chance="5"	count="1"	class="&scDeimos;"		 orders="wander"/>
-				<Ship chance="5"	count="1"	class="&scPhobos;"		 orders="patrol" patrolDist="150"/>
-			</Table>
-		</Construction>
-
-		<Items>
-			<Table count="3d4">
-				<Lookup chance="25" count="1d3" table="&trConsumables9;"/>
-				<Lookup chance="25" count="1"	table="&trConsumables10;"/>
-				<Lookup chance="25" count="1"	table="&trMinorItem9;"/>
-				<Lookup chance="15" count="1"	table="&trMinorItem10;"/>
-				<Lookup chance="10" count="1"	table="&trMajorItem9;"/>
-			</Table>
-		</Items>
-
-		<Satellites overlapCheck="asteroids">
-			<Orbitals id="test" count="2d6" distance="12" angle="equidistant">
-				<Ship class="&scAresCannon;" count="1" sovereign="&svAres;" orders="sentry"/>
-			</Orbitals>
-		</Satellites>
-
-		<Encounters frequency="common">
-			<Lookup table="&tbAresEncounters;"/>
-		</Encounters>
-
-	</StationType>
-	
 <!-- MISCELLANEOUS -->
-
 	<!-- Encounters -->
-
-	<ShipTable UNID="&etAresAmbush1;">
-		<Ship count="1d2+2"	class="&scSandstorm;"	orders="attack"	sovereign="&svAres;"/>
-	</ShipTable>
-
-	<ShipTable UNID="&etAresAmbush2;">
-		<Ship count="1d3+3"	class="&scSandstorm;"	orders="attack"	sovereign="&svAres;"/>
-	</ShipTable>
-
-	<ShipTable UNID="&etAresAmbush3;">
-		<Ship count="1"		class="&scChasm;"		orders="attack" sovereign="&svAres;">
-			<Escorts>
-				<Ship count="1d2+4" class="&scSandstorm;"	orders="escort"/>
-			</Escorts>
-		</Ship>
-	</ShipTable>
-
-	<ShipTable UNID="&etAresAmbush4;">
-		<Ship count="1"		class="&scTundra;"		orders="attack" sovereign="&svAres;">
-			<Escorts>
-				<Ship count="1d2+4" class="&scSandstorm;"	orders="escort"/>
-			</Escorts>
-		</Ship>
-	</ShipTable>
-	
 	<!-- Ares Encounter Table -->
-	
-	<ShipTable unid="&tbAresEncounters;">
-		<LevelTable>
-			<Ship levelFrequency="----- ucur-" count="1"	 class="&scSandstorm;" eventHandler="&evStdPatrolEncounterBehavior;">
-				<Escorts>
-					<Ship					   count="1d3-1" class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-
-			<Ship levelFrequency="----- -vuur" count="1"	 class="&scSandstorm;" eventHandler="&evStdPatrolEncounterBehavior;">
-				<Escorts>
-					<Ship					   count="1d4-1" class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-
-			<Ship levelFrequency="----- --rrv" count="1"	 class="&scTundra;" eventHandler="&evStdPatrolEncounterBehavior;">
-				<Escorts>
-					<Ship					   count="1d3"	 class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-
-			<Ship levelFrequency="----- --vuu" count="1"	 class="&scSandstorm;" eventHandler="&evStdPatrolEncounterBehavior;">
-				<Escorts>
-					<Ship					   count="1d6-1" class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-
-			<Ship levelFrequency="----- ---rr" count="1"	 class="&scTundra;" eventHandler="&evStdPatrolEncounterBehavior;">
-				<Escorts>
-					<Ship					   count="1d6" class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-
-			<Ship levelFrequency="----- ---rr" count="1"	 class="&scChasm;" eventHandler="&evStdPatrolEncounterBehavior;">
-				<Escorts>
-					<Ship					   count="1d6" class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-
-			<Ship levelFrequency="----- ruucu" count="1"	 class="&scPolar;" eventHandler="&evStdConvoyEncounterBehavior;">
-				<Items>
-					<Table>
-						<RandomItem chance="40" count="1d2" levelFrequency="----- ccurv" criteria="* +Ares;" />
-						<Item		chance="10" count="1d12" item="&itTetramiteOre;"/>
-						<Item		chance="10" count="3d12" item="&itXenotiteOre;"/>
-						<Item		chance="10" count="2d12" item="&itPteracniumOre;"/>
-						<Item		chance="10" count="3d12" item="&itPteracniumFuelRod;"/>
-						<Lookup chance="10" count="1d4" table="&trConsumables8;"/>
-						<Lookup chance="5" count="1" table="&trMinorItem8;"/>
-						<Lookup chance="5" count="1" table="&trMajorItem8;"/>
-					</Table>
-				</Items>
-
-				<Escorts>
-					<Ship					   count="2d4"	 class="&scSandstorm;" orders="escort"/>
-				</Escorts>
-			</Ship>
-		</LevelTable>
-	</ShipTable>
-	
 <!-- RESOURCES -->
-	
-	<Image UNID="&rsCometfall;" bitmap="Resources\Cometfall.jpg" bitmask="Resources\CometfallMask.bmp" loadOnUse="true" />
-	<Image UNID="&rsDeimos;" bitmap="Resources\Deimos.jpg" bitmask="Resources\DeimosMask.bmp" loadOnUse="true" />
-	<Image UNID="&rsPolarFreighter;" bitmap="Resources\PolarFreighter.jpg" bitmask="Resources\PolarFreighterMask.bmp" loadOnUse="true" />
-	
+    
+<Sovereign UNID="&svAres;" alignment="destructive order" name="Ares Orthodoxy"/>
+    <ItemType UNID="&itLightTharsisPlate;" attributes="Ares; MinorItem; NotForSale;" description="The standard armor used by Ares gunships is light, yet resistant to particle beam damage; it is, however, vulnerable to blast damage." frequency="uncommon" level="6" mass="1500" name="[segment(s) of ]light Tharsis plate" numberAppearing="1d4" sortName="Tharsis plate, light, segment of" value="750">    <Image imageHeight="96" imageID="&rsItems6;" imageWidth="96" imageX="96" imageY="0"/>
+        <Armor hitPoints="60" hpBonus="particle:+50; blast:-25"/>
+    </ItemType>
+    <ItemType UNID="&itCydonianShields;" attributes="Ares; MajorItem; Military; NotForSale;" description="Ares engineers cloned the Yoroi S500 and added ion resistance." frequency="rare" level="6" mass="3000" name="Cydonian shield generator" value="20000">    <Image imageHeight="96" imageID="&rsItems1;" imageWidth="96" imageX="192" imageY="0"/>
+        <Shields depletionDelay="360" hitPoints="130" hpBonus="  +0,  +0,  +0,  +0,+100,  +0" powerUse="300" regen="40"/>
+    </ItemType>
+    <ItemType UNID="&itCydonianHeavyShields;" attributes="Ares; MajorItem; Military; NotForSale;" description="This is a more powerful version of the Cydonian shield generator." frequency="veryrare" level="7" mass="6000" name="Cydonian heavy shield generator" value="40000">    <Image imageHeight="96" imageID="&rsItems1;" imageWidth="96" imageX="192" imageY="0"/>
+        <Shields depletionDelay="540" hitPoints="270" hpBonus="  +0,  +0,  +0,  +0,+100,  +0" powerUse="500" regen="30"/>
+    </ItemType>
+    <ItemType UNID="&itKaidunShields;" attributes="Ares; MajorItem; Military; NotForSale;" description="The most advanced shield generator in the Ares Orthodoxy, the Kaidun generator is used by the Ares dreadnought." frequency="veryrare" level="9" mass="12000" name="Kaidun shield generator" value="150000">    <Image imageHeight="96" imageID="&rsItems1;" imageWidth="96" imageX="192" imageY="0"/>
+        <Shields depletionDelay="540" hitPoints="800" hpBonus="  +0,  +0,  +0,  +0, +50, +50" powerUse="2000" regen="30"/>
+    </ItemType>
+    <ItemType UNID="&itTharsisPlate;" attributes="Ares; Military; MinorItem; NotForSale;" description="Tharsis plate is used by the Tundra heavy gunship; it is resistant to thermonuclear damage." frequency="uncommon" level="8" mass="4000" name="[segment(s) of ]Tharsis plate" numberAppearing="1d4" sortName="Tharsis plate, segment of" value="6000">    <Image imageHeight="96" imageID="&rsItems6;" imageWidth="96" imageX="96" imageY="0"/>
+        <Armor hitPoints="200" hpBonus="  +0,  +0, +50, +25, -25, +25"/>
+    </ItemType>
+    <ItemType UNID="&itHeavyTharsisPlate;" attributes="Ares; Military; MinorItem; NotForSale;" description="This is a double layer of Tharsis plate." frequency="rare" level="9" mass="10000" name="[segment(s) of ]heavy Tharsis plate" numberAppearing="1d4" sortName="Tharsis plate, heavy, segment of" value="18000">    <Image imageHeight="96" imageID="&rsItems6;" imageWidth="96" imageX="96" imageY="0"/>
+        <Armor hitPoints="400" hpBonus="  +0,  +0, +50, +25, -25, +25" repairTech="8"/>
+    </ItemType>
+    <ItemType UNID="&itMassiveTharsisPlate;" attributes="Ares; Military; MinorItem; NotForSale;" description="The capital ships of the Ares Orthodoxy use this massive armor." frequency="veryrare" level="10" mass="25000" name="[segment(s) of ]massive Tharsis plate" numberAppearing="1d4" sortName="Tharsis plate, massive, segment of" value="50000">    <Image imageHeight="96" imageID="&rsItems6;" imageWidth="96" imageX="96" imageY="0"/>
+        <Armor hitPoints="600" hpBonus="  +0,  +0, +50, +25, -25, +25" repairTech="8"/>
+    </ItemType>
+    <ItemType UNID="&itLightningCannon;" attributes="Ares; EnergyWeapon; Military; MajorItem; NotForSale;" description="During the Syrtis War the lightning cannons of the Orthodoxy were devastating to the Earth Fleet." frequency="uncommon" level="7" mass="3000" name="Ares lightning cannon" value="24000">    <Image imageHeight="96" imageID="&rsItems7;" imageWidth="96" imageX="192" imageY="0"/>
+        <Weapon damage="ion:4d6+2" effect="&efIonBeamDefault;" fireRate="15" lifetime="30" powerUse="350" sound="&snLaserCannon;" type="beam">		</Weapon>
+    </ItemType>
+    <ItemType UNID="&itMicronuke;" attributes="Ares; Consumable; Military; Missile; NotForSale;" description="The compact warheads detonate into an expanding shockwave of thermonuclear damage. They require a launcher." frequency="common" level="7" mass="10" name="Ares micronuke" numberAppearing="12d20" sortName="Ares.30" value="60">    <Image imageHeight="96" imageID="&rsItems1;" imageWidth="96" imageX="288" imageY="192"/>
+        <Missile failsafe="6" fragmentCount="1" hitEffect="&efThermoShockwaveExplosion;" hitPoints="20" lifetime="180" missileSpeed="60" sound="&snMissileLauncher;" type="missile">        <Effect>            <ParticleJet XformTime="20" emitRate="40" fixedPos="true" particleLifetime="10-30" tangentSpeed="3d2-3">                <ParticleEffect>                    <Particle maxWidth="4" minWidth="1" primaryColor="#f7ffc6" secondaryColor="#b63718" style="plain"/>
+                    </ParticleEffect>
+                </ParticleJet>
+                <Image imageFrameCount="12" imageHeight="16" imageID="&rsMissiles;" imageTicksPerFrame="3" imageWidth="16" imageX="0" imageY="32"/>
+            </Effect>
+            <Fragment damage="thermo:1d10; WMD3" expansionSpeed="35" lifetime="24" missileSpeed="0" type="area">            <Effect>                <Shockwave fadeStart="70">                    <Image imageHeight="128" imageID="&rsShockwave2;" imageWidth="512" imageX="0" imageY="0"/>
+                    </Shockwave>
+                </Effect>
+            </Fragment>
+        </Missile>
+    </ItemType>
+    <ItemType UNID="&itAresLauncher;" attributes="Ares; MajorItem; Military; NotForSale;" description="These launchers can fire both a standard micronuke or the heavier and deadlier Warhammer nuke." frequency="rare" level="8" mass="4000" name="Ares launcher" value="75000">    <Image imageHeight="96" imageID="&rsItems1;" imageWidth="96" imageX="0" imageY="480"/>
+        <Weapon fireRate="40" launcher="true" powerUse="200">        <Missiles>            <Missile ammoID="&itWarhammerNuke;"/>
+                <Missile ammoID="&itMicronuke;"/>
+            </Missiles>
+        </Weapon>
+    </ItemType>
+    <ItemType UNID="&itLightningTurret;" attributes="Ares; EnergyWeapon; Military; MajorItem; NotForSale;" description="This omnidirectional turret fires rapid bursts of ion energy, but requires periods of rest." frequency="veryrare" level="8" mass="6000" name="Ares lightning turret" value="75000">    <Image imageHeight="96" imageID="&rsItems8;" imageWidth="96" imageX="0" imageY="96"/>
+        <Weapon counter="capacitor" counterActivate="-5" counterUpdate="2" counterUpdateRate="6" damage="ion:4d6+2" effect="&efIonBeamDefault;" fireRate="4" lifetime="40" omnidirectional="true" powerUse="1000" sound="&snLaserCannon;" type="beam">		</Weapon>
+    </ItemType>
+    <ItemType UNID="&itMicronukeCannon;" attributes="Ares; MajorItem; Military; NotForSale;" description="These cannons can launch a micronuke warhead at 60% of lightspeed." frequency="uncommon" level="8" mass="4000" name="Ares micronuke cannon" value="66000">    <Image imageHeight="96" imageID="&rsItems8;" imageWidth="96" imageX="96" imageY="96"/>
+        <Weapon fireRate="40" powerUse="100" reportAmmo="true">        <Missiles>            <Missile ammoID="&itMicronuke;"/>
+            </Missiles>
+        </Weapon>
+    </ItemType>
+    <ItemType UNID="&itHecatesCannon;" attributes="Ares; Howitzer; MajorItem; Military; NotForSale;" description="The Hecates cannon is a fusion howitzer used by Ares destroyers." frequency="veryrare" level="8" mass="6000" name="Hecates cannon" numberAppearing="1" value="94000">    <Image imageHeight="96" imageID="&rsItems8;" imageWidth="96" imageX="288" imageY="0"/>
+        <Weapon damage="thermo:11d12; momentum:3; WMD:7" effect="&efThermoShellDefault;" fireRate="50" hitPoints="10" lifetime="120" missileSpeed="50" powerUse="1200" recoil="2" sound="&snRecoillessCannon;" type="missile">		</Weapon>
+    </ItemType>
+    <ItemType UNID="&itWarhammerNuke;" attributes="Ares; Consumable; Military; Missile; NotForSale;" description="These long-range thermonuclear missiles are fired by Ares launchers." frequency="rare" level="9" mass="20" name="Ares Warhammer nuke" numberAppearing="1d6" sortName="Ares.10" value="150">    <Image imageHeight="96" imageID="&rsItems1;" imageWidth="96" imageX="0" imageY="96"/>
+        <Missile failsafe="15" fragmentCount="1" hitEffect="&efThermoShockwaveExplosion;" hitPoints="30" lifetime="480" missileSpeed="30" sound="&snMissileLauncher;" type="missile">        <Effect>            <ParticleJet XformTime="30" emitRate="60" fixedPos="true" particleLifetime="10-30" tangentSpeed="3d2-3">                <ParticleEffect>                    <Particle maxWidth="5" minWidth="1" primaryColor="#f7ffc6" secondaryColor="#b63718" style="plain"/>
+                    </ParticleEffect>
+                </ParticleJet>
+                <Image imageFrameCount="12" imageHeight="16" imageID="&rsMissiles;" imageTicksPerFrame="3" imageWidth="16" imageX="0" imageY="32"/>
+            </Effect>
+            <Fragment damage="thermo:2d10; WMD7" expansionSpeed="25" lifetime="24" missileSpeed="0" type="area">            <Effect>                <Shockwave fadeStart="70">                    <Image imageHeight="128" imageID="&rsShockwave2;" imageWidth="512" imageX="0" imageY="0"/>
+                    </Shockwave>
+                </Effect>
+            </Fragment>
+        </Missile>
+    </ItemType>
+    <ItemType UNID="&itAresArchcannon;" attributes="Ares; EnergyWeapon; Military; MajorItem; NotForSale;" description="Ares engineers created this weapon after the Commonwealth developed defenses against their lightning cannon." frequency="uncommon" level="9" mass="1500" name="Ares positron cannon" value="150000">    <Image imageHeight="96" imageID="&rsItems9;" imageWidth="96" imageX="192" imageY="0"/>
+        <Weapon damage="positron:6d8; shield:8" effect="&efPositronBeamDefault;" fireRate="15" interaction="0" lifetime="60" missileSpeed="80" powerUse="2000" sound="&snLaserCannon;" type="missile">		</Weapon>
+    </ItemType>
+    <ItemType UNID="&itAresPlasmaCannon;" attributes="Ares; Howitzer; MajorItem; Military; NotForSale" description="The most powerful weapon in the Ares fleet. The plasma archcannon can destroy anything that's not protected by massive shields and armor." frequency="veryrare" level="10" mass="10000" name="Ares plasma archcannon" value="500000">    <Image imageHeight="96" imageID="&rsItems10;" imageWidth="96" imageX="288" imageY="0"/>
+        <Weapon damage="plasma:300; WMD:7" deviceSlots="2" fireRate="80" hitPoints="30" powerUse="3000" sound="&snRecoillessCannon;" type="particles">        <ParticleSystem emitLifetime="1" emitRate="150" emitSpeed="50-70" emitWidth="50" particleEffect="&efPlasmaParticleDefault;" particleLifetime="120" style="comet">			</ParticleSystem>
+            <Effect>            <ParticleSystem XformTime="30" emitRate="2-4" fixedPos="true" particleLifetime="10" style="jet" tangentSpeed="-8-8">                <ParticleEffect>                    <Orb animate="fade" blendMode="screen" instance="owner" intensity="20" lifetime="10" primaryColor="#feff00" radius="20" secondaryColor="#ff7f00" style="smooth"/>
+                    </ParticleEffect>
+                </ParticleSystem>
+            </Effect>
+        </Weapon>
+    </ItemType>
+    <ShipClass UNID="&scAresCannon;" attributes="ares, genericClass" cargoSpace="0" class="Ares sentry" defaultSovereign="&svAres;" manufacturer="Ares Orthodoxy" mass="400" maxSpeed="0" thrustRatio="0">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itTharsisPlate;" count="2"/>
+        <Devices>        <Device deviceID="&itAresArchcannon;" maxFireArc="10" minFireArc="350"/>
+        </Devices>
+        <Maneuver maxRotationRate="18.0" rotationAccel="3.0"/>
+        <Image imageHeight="48" imageID="&rsMediumShips1;" imageWidth="48" imageX="576" imageY="0" rotationOffset="-15"/>
+        <AISettings fireAccuracy="90" fireRateAdj="40" noFriendlyFire="true" perception="4"/>
+    </ShipClass>
+    <ShipClass UNID="&scChasm;" attributes="ares,genericClass" cargoSpace="50" class="Chasm" defaultSovereign="&svAres;" manufacturer="Ares Orthodoxy" mass="210" maxSpeed="20" thrustRatio="5" type="heavy gunship">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itTharsisPlate;" count="4"/>
+        <Devices>        <Device deviceID="&itAresArchcannon;"/>
+            <Device deviceID="&itCydonianShields;"/>
+        </Devices>
+        <Maneuver maxRotationRate="18.0" rotationAccel="2.0"/>
+        <Items>        <Item count="1d6" item="&itPteracniumFuelRod;"/>
+        </Items>
+        <Image imageHeight="64" imageID="&rsMediumShips2;" imageWidth="64" imageX="1024" imageY="0" rotationOffset="-8"/>
+        <Effects>        <Effect posAngle="160" posRadius="16" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="180" posRadius="14" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="-160" posRadius="16" posZ="0" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings combatStyle="advanced" fireAccuracy="95" fireRateAdj="15" perception="6"/>
+    </ShipClass>
+    <ShipClass UNID="&scCometfall;" attributes="ares, capitalShip, genericClass" cargoSpace="1000" class="Cometfall" defaultSovereign="&svAres;" explosionType="&vtThermoExplosion2;" manufacturer="Ares Orthodoxy" mass="6000" maxSpeed="10" size="110" thrustRatio="2" type="missileship">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itTharsisPlate;" count="8"/>
+        <Devices>        <Device deviceID="&itAresLauncher;"/>
+            <Device deviceID="&itLightningCannon;" omnidirectional="true" posAngle="0" posRadius="12" posZ="20" secondaryWeapon="true"/>
+            <Device deviceID="&itCydonianShields;"/>
+        </Devices>
+        <Maneuver maxRotationRate="5.0" rotationAccel="0.5"/>
+        <Interior>        <Compartment hitPoints="200" name="interior"/>
+            <Compartment hitPoints="100" name="main drive" posX="-6" posY="0" sizeX="36" sizeY="52" type="mainDrive"/>
+        </Interior>
+        <Items>        <Item count="3d20" item="&itWarhammerNuke;"/>
+            <Item count="12d20" item="&itMicronuke;"/>
+            <Item count="1d12" item="&itPteracniumFuelRod;"/>
+        </Items>
+        <Image imageHeight="130" imageID="&rsCometfall;" imageWidth="130"/>
+        <Effects>        <Effect effect="&efMainThrusterLarge;" posAngle="156" posRadius="48" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-156" posRadius="48" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect bringToFront="*" effect="&efMainThrusterLarge;" posAngle="123" posRadius="31" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect bringToFront="*" effect="&efMainThrusterLarge;" posAngle="-123" posRadius="31" posZ="0" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings combatStyle="standOff" fireAccuracy="90" fireRateAdj="25" ignoreShieldsDown="true" perception="4"/>
+    </ShipClass>
+    <ShipClass UNID="&scDeimos;" attributes="ares, capitalShip, genericClass" cargoSpace="1000" class="Deimos" defaultSovereign="&svAres;" explosionType="&vtThermoExplosion2;" manufacturer="Ares Orthodoxy" mass="12000" maxSpeed="16" size="140" thrustRatio="2" type="destroyer">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itHeavyTharsisPlate;" count="12"/>
+        <Devices>        <Device deviceID="&itHecatesCannon;" maxFireArc="15" minFireArc="345" posAngle="0" posRadius="48" posZ="0"/>
+            <Device deviceID="&itLightningTurret;" secondaryWeapon="true"/>
+            <Device deviceID="&itCydonianHeavyShields;"/>
+            <Device deviceID="&it250MWReactor;"/>
+        </Devices>
+        <Maneuver maxRotationRate="6" rotationAccel="1"/>
+        <Interior>        <Compartment hitPoints="300" name="interior"/>
+            <Compartment hitPoints="150" name="main drive" posX="-9" posY="0" sizeX="48" sizeY="46" type="mainDrive"/>
+        </Interior>
+        <Items>        <Item count="2d12" item="&itPteracniumFuelRod;"/>
+        </Items>
+        <Image imageHeight="170" imageID="&rsDeimos;" imageWidth="170" rotationOffset="-30"/>
+        <Effects>        <Effect effect="&efMainThrusterLarge;" posAngle="95" posRadius="36" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-95" posRadius="36" posZ="0" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings fireAccuracy="90" fireRateAdj="10" ignoreShieldsDown="true" perception="6"/>
+    </ShipClass>
+    <ShipClass UNID="&scPolar;" attributes="ares, freighter, genericClass" cargoSpace="10000" class="Polar" defaultSovereign="&svAres;" explosionType="&vtBlastExplosion4;" manufacturer="Ares Orthodoxy" mass="15000" maxSpeed="8" size="180" thrustRatio="0.3" type="freighter">
+		<!-- Configuration -->
+    
+<Armor armorID="&itLightTharsisPlate;" count="20"/>
+        <Devices>        <Device deviceID="&itLightningCannon;" omnidirectional="true" posAngle="0" posRadius="0" posZ="10"/>
+        </Devices>
+        <Maneuver maxRotationRate="2" rotationAccel="0.2"/>
+        <Interior>        <Compartment hitPoints="60" name="interior"/>
+            <Compartment hitPoints="60" name="main drive" posX="-66" posY="0" sizeX="36" sizeY="46" type="mainDrive"/>
+            <Compartment hitPoints="180" name="cargo containers" posX="0" posY="0" sizeX="110" sizeY="60" type="cargo"/>
+        </Interior>
+        <Image imageHeight="192" imageID="&rsPolarFreighter;" imageWidth="192"/>
+        <Effects>        <Effect effect="&efMainThrusterLarge;" posAngle="170" posRadius="82" posZ="-15" rotation="180" sendToBack="*" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-170" posRadius="82" posZ="-15" rotation="180" sendToBack="*" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="165" posRadius="86" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-165" posRadius="86" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect bringToFront="*" effect="&efMainThrusterLarge;" posAngle="170" posRadius="82" posZ="15" rotation="180" type="thrustMain"/>
+            <Effect bringToFront="*" effect="&efMainThrusterLarge;" posAngle="-170" posRadius="82" posZ="15" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings combatStyle="standOff" fireAccuracy="95" fireRateAdj="30" perception="4"/>
+    </ShipClass>
+    <ShipClass UNID="&scPolar2;" attributes="ares, freighter" cargoSpace="10000" class="Polar II" explosionType="&vtBlastExplosion4;" manufacturer="Ares Orthodoxy" mass="15000" maxSpeed="8" size="180" thrustRatio="0.3" type="freighter">
+		<!-- Configuration -->
+    
+<Armor armorID="&itLightTharsisPlate;" count="20"/>
+        <Devices>        <Device deviceID="&itAresArchcannon;" omnidirectional="true" posAngle="0" posRadius="0" posZ="10"/>
+            <Device deviceID="&itCydonianShields;"/>
+        </Devices>
+        <Maneuver maxRotationRate="2" rotationAccel="0.2"/>
+        <Interior>        <Compartment hitPoints="60" name="interior"/>
+            <Compartment hitPoints="60" name="main drive" posX="-66" posY="0" sizeX="36" sizeY="46" type="mainDrive"/>
+            <Compartment hitPoints="180" name="cargo containers" posX="0" posY="0" sizeX="110" sizeY="60" type="cargo"/>
+        </Interior>
+        <Image imageHeight="192" imageID="&rsPolarFreighter;" imageWidth="192"/>
+        <Effects>        <Effect effect="&efMainThrusterLarge;" posAngle="170" posRadius="82" posZ="-15" rotation="180" sendToBack="*" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-170" posRadius="82" posZ="-15" rotation="180" sendToBack="*" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="165" posRadius="86" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-165" posRadius="86" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect bringToFront="*" effect="&efMainThrusterLarge;" posAngle="170" posRadius="82" posZ="15" rotation="180" type="thrustMain"/>
+            <Effect bringToFront="*" effect="&efMainThrusterLarge;" posAngle="-170" posRadius="82" posZ="15" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings combatStyle="standOff" fireAccuracy="95" fireRateAdj="30" perception="4"/>
+    </ShipClass>
+    <ShipClass UNID="&scSandstorm;" attributes="ares,genericClass" cargoSpace="25" class="Sandstorm" defaultSovereign="&svAres;" manufacturer="Ares Orthodoxy" mass="60" maxSpeed="20" thrustRatio="8" type="gunship">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itLightTharsisPlate;" count="4"/>
+        <Devices>        <Device deviceID="&itLightningCannon;"/>
+        </Devices>
+        <Maneuver maxRotationRate="18.0" rotationAccel="4.0"/>
+        <Items>		</Items>
+        <Image imageHeight="48" imageID="&rsMediumShips1;" imageWidth="48" imageX="144" imageY="0"/>
+        <Effects>        <Effect posAngle="150" posRadius="8" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="180" posRadius="8" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="-150" posRadius="8" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="115" posRadius="19" posZ="-3" rotation="0" sendToBack="*" type="rotateRight"/>
+            <Effect posAngle="-140" posRadius="24" posZ="-3" rotation="180" sendToBack="*" type="rotateRight"/>
+            <Effect posAngle="-115" posRadius="19" posZ="-3" rotation="0" sendToBack="*" type="rotateLeft"/>
+            <Effect posAngle="140" posRadius="24" posZ="-3" rotation="180" sendToBack="*" type="rotateLeft"/>
+        </Effects>
+        <AISettings combatStyle="advanced" fireAccuracy="85" fireRateAdj="30" perception="4"/>
+    </ShipClass>
+    <ShipClass UNID="&scTundra;" attributes="ares,genericClass" cargoSpace="50" class="Tundra" defaultSovereign="&svAres;" manufacturer="Ares Orthodoxy" mass="80" maxSpeed="20" thrustRatio="6" type="heavy gunship">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itTharsisPlate;" count="4"/>
+        <Devices>        <Device deviceID="&itLightningCannon;"/>
+            <Device deviceID="&itMicronukeCannon;"/>
+            <Device deviceID="&itCydonianShields;"/>
+        </Devices>
+        <Maneuver maxRotationRate="18.0" rotationAccel="2.0"/>
+        <Items>        <Item count="3d20" item="&itMicronuke;"/>
+        </Items>
+        <Image imageHeight="64" imageID="&rsMediumShips2;" imageWidth="64" imageX="576" imageY="0"/>
+        <Effects>        <Effect posAngle="40" posRadius="8" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="0" posRadius="6" posZ="0" rotation="180" type="thrustMain"/>
+            <Effect posAngle="-40" posRadius="8" posZ="0" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings combatStyle="advanced" fireAccuracy="90" fireRateAdj="20" ignoreShieldsDown="true" perception="4"/>
+    </ShipClass>
+    <ShipClass UNID="&scPhobos;" attributes="ares, capitalShip, genericClass, majorShip" cargoSpace="5000" class="Phobos" cyberDefenseLevel="8" defaultSovereign="&svAres;" explosionType="&vtPlasmaExplosion2;" manufacturer="Ares Orthodoxy" mass="61000" maxSpeed="16" size="290" thrustRatio="1" type="dreadnought">
+		<!-- Configuration -->
+		<!-- Image and Effects -->
+		<!-- AI and Behavior -->
+    
+<Armor armorID="&itMassiveTharsisPlate;" count="16"/>
+        <Devices>        <Device deviceID="&itAresPlasmaCannon;" posAngle="0" posRadius="80" posZ="0"/>
+            <Device deviceID="&itLightningTurret;" posAngle="30" posRadius="50" posZ="0" secondaryWeapon="true"/>
+            <Device deviceID="&itLightningTurret;" posAngle="330" posRadius="50" posZ="0" secondaryWeapon="true"/>
+            <Device deviceID="&itKaidunShields;"/>
+        </Devices>
+        <Maneuver maxRotationRate="3.6" rotationAccel="0.6"/>
+        <Interior>        <Compartment hitPoints="600" name="interior"/>
+            <Compartment hitPoints="200" name="main drive" posX="-88" posY="0" sizeX="80" sizeY="62" type="mainDrive"/>
+        </Interior>
+        <Items>        <Item count="6d12" item="&itPteracniumFuelRod;"/>
+        </Items>
+        <Image imageHeight="256" imageID="&rsLargeShips2;" imageWidth="256" imageX="256" imageY="0"/>
+        <Effects>        <Effect effect="&efMainThrusterLarge;" posAngle="180" posRadius="118" posZ="-30" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="170" posRadius="118" posZ="-15" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-170" posRadius="118" posZ="-15" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="170" posRadius="118" posZ="15" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="-170" posRadius="118" posZ="15" rotation="180" type="thrustMain"/>
+            <Effect effect="&efMainThrusterLarge;" posAngle="180" posRadius="118" posZ="30" rotation="180" type="thrustMain"/>
+        </Effects>
+        <AISettings fireAccuracy="95" fireRateAdj="10" ignoreShieldsDown="true" perception="6"/>
+    </ShipClass>
+    <StationType UNID="&stAresOutpost;" abandonedScreen="&dsAbandonedStation;" armorID="&itLightTharsisPlate;" attributes="ares, enemy, envAir, envEarth, envFire, envWater, generic, neoHuman, populated" canAttack="true" dockingPorts="8" ejectaType="&vtWreckEjecta;" explosionType="&vtThermoExplosion1;" fireRateAdj="40" hitPoints="370" levelFrequency="----- rcur- ----- ----- -----" locationCriteria="-asteroids" multiHull="true" name="Ares outpost" randomEncounters="common" regen="1.1" sovereign="&svAres;">    <Image imageHeight="128" imageID="&rsStations7;" imageWidth="128" imageX="0" imageY="640"/>
+        <Devices>        <Device deviceID="&itLightningCannon;" omnidirectional="true"/>
+        </Devices>
+        <Ships>        <Ship class="&scSandstorm;" count="1d6" orders="guard"/>
+        </Ships>
+        <Reinforcements minShips="5">        <Ship class="&scSandstorm;" count="1d4" orders="guard"/>
+        </Reinforcements>
+        <Items>        <Table>            <Lookup chance="25" count="1d3" table="&trConsumables7;"/>
+                <Lookup chance="25" count="1" table="&trConsumables8;"/>
+                <Lookup chance="25" count="1" table="&trMinorItem7;"/>
+                <Lookup chance="15" count="1" table="&trMinorItem8;"/>
+                <Lookup chance="10" count="1" table="&trMajorItem7;"/>
+            </Table>
+        </Items>
+        <Encounters frequency="common">        <Lookup table="&tbAresEncounters;"/>
+        </Encounters>
+    </StationType>
+    <StationType UNID="&stAresCommune;" abandonedScreen="&dsAbandonedStation;" armorID="&itTharsisPlate;" attributes="ares, aresMajor, enemy, envAir, envEarth, envFire, envWater, generic, majorStation, neoHuman, populated" canAttack="true" dockingPorts="8" ejectaType="&vtWreckEjecta;" enemyExclusionRadius="60" explosionType="&vtThermoExplosion4;" hitPoints="2400" levelFrequency="----- -vuur ----- ----- -----" locationCriteria="-asteroids" multiHull="true" name="Ares commune" regen="20" sovereign="&svAres;">    <Image imageHeight="256" imageID="&rsStations7;" imageWidth="256" imageX="0" imageY="0"/>
+        <Ships>        <Ship class="&scTundra;" count="1d2" orders="guard"/>
+            <Ship class="&scSandstorm;" count="1d6" orders="patrol" patrolDist="5"/>
+        </Ships>
+        <Reinforcements minShips="6">        <Table>            <Ship chance="75" class="&scSandstorm;" count="1d4" orders="patrol" patrolDist="5"/>
+                <Ship chance="25" class="&scTundra;" count="1" orders="guard"/>
+            </Table>
+        </Reinforcements>
+        <Items>        <Table count="1d6">            <Lookup chance="25" count="1d3" table="&trConsumables8;"/>
+                <Lookup chance="25" count="1" table="&trConsumables9;"/>
+                <Lookup chance="25" count="1" table="&trMinorItem8;"/>
+                <Lookup chance="15" count="1" table="&trMinorItem9;"/>
+                <Lookup chance="10" count="1" table="&trMajorItem8;"/>
+            </Table>
+        </Items>
+        <Satellites overlapCheck="asteroids">        <Orbitals angle="equidistant" count="2d4" distance="12">            <Ship class="&scAresCannon;" count="1" orders="sentry" sovereign="&svAres;"/>
+            </Orbitals>
+        </Satellites>
+        <Encounters frequency="common">        <Lookup table="&tbAresEncounters;"/>
+        </Encounters>
+    </StationType>
+    <StationType UNID="&stAresShipyard;" abandonedScreen="&dsAbandonedStation;" armorID="&itMassiveTharsisPlate;" attributes="ares, aresMajor, enemy, envAir, envEarth, envFire, envWater, generic, majorStation, neoHuman, populated" canAttack="true" dockingPorts="8" ejectaType="&vtWreckEjecta;" enemyExclusionRadius="100" explosionType="&vtPlasmaExplosion3;" hitPoints="3600" levelFrequency="----- --vuu ----- ----- -----" locationCriteria="-asteroids" multiHull="true" name="Ares shipyard" regen="22" sovereign="&svAres;">    <Image imageHeight="256" imageID="&rsStations9;" imageWidth="256" imageX="0" imageY="256"/>
+        <Ships>        <Ship class="&scTundra;" count="1d2" orders="guard"/>
+            <Ship class="&scSandstorm;" count="1d6" orders="patrol" patrolDist="5"/>
+            <Table>            <Ship chance="40" class="&scChasm;" count="1d4+2" orders="patrol" patrolDist="5"/>
+                <Ship chance="40" class="&scDeimos;" count="1d2" orders="patrol" patrolDist="8"/>
+                <Ship chance="10" class="&scSandstorm;" count="4d6" orders="patrol" patrolDist="8"/>
+                <Ship chance="10" class="&scPhobos;" count="1" orders="guard"/>
+            </Table>
+        </Ships>
+        <Construction constructionRate="500" maxConstruction="10">        <Table>            <Ship chance="40" class="&scSandstorm;" count="1" orders="patrol" patrolDist="5"/>
+                <Ship chance="20" class="&scChasm;" count="1" orders="patrol" patrolDist="5"/>
+                <Ship chance="20" class="&scTundra;" count="1" orders="patrol" patrolDist="8"/>
+                <Ship chance="10" class="&scDeimos;" count="1" orders="patrol" patrolDist="8"/>
+                <Ship chance="5" class="&scDeimos;" count="1" orders="wander"/>
+                <Ship chance="5" class="&scPhobos;" count="1" orders="patrol" patrolDist="150"/>
+            </Table>
+        </Construction>
+        <Items>        <Table count="3d4">            <Lookup chance="25" count="1d3" table="&trConsumables9;"/>
+                <Lookup chance="25" count="1" table="&trConsumables10;"/>
+                <Lookup chance="25" count="1" table="&trMinorItem9;"/>
+                <Lookup chance="15" count="1" table="&trMinorItem10;"/>
+                <Lookup chance="10" count="1" table="&trMajorItem9;"/>
+            </Table>
+        </Items>
+        <Satellites overlapCheck="asteroids">        <Orbitals angle="equidistant" count="2d6" distance="12" id="test">            <Ship class="&scAresCannon;" count="1" orders="sentry" sovereign="&svAres;"/>
+            </Orbitals>
+        </Satellites>
+        <Encounters frequency="common">        <Lookup table="&tbAresEncounters;"/>
+        </Encounters>
+    </StationType>
+    <ShipTable UNID="&etAresAmbush1;">    <Ship class="&scSandstorm;" count="1d2+2" orders="attack" sovereign="&svAres;"/>
+    </ShipTable>
+    <ShipTable UNID="&etAresAmbush2;">    <Ship class="&scSandstorm;" count="1d3+3" orders="attack" sovereign="&svAres;"/>
+    </ShipTable>
+    <ShipTable UNID="&etAresAmbush3;">    <Ship class="&scChasm;" count="1" orders="attack" sovereign="&svAres;">        <Escorts>            <Ship class="&scSandstorm;" count="1d2+4" orders="escort"/>
+            </Escorts>
+        </Ship>
+    </ShipTable>
+    <ShipTable UNID="&etAresAmbush4;">    <Ship class="&scTundra;" count="1" orders="attack" sovereign="&svAres;">        <Escorts>            <Ship class="&scSandstorm;" count="1d2+4" orders="escort"/>
+            </Escorts>
+        </Ship>
+    </ShipTable>
+    <ShipTable UNID="&tbAresEncounters;">    <LevelTable>        <Ship class="&scSandstorm;" count="1" eventHandler="&evStdPatrolEncounterBehavior;" levelFrequency="----- ucur-">            <Escorts>                <Ship class="&scSandstorm;" count="1d3-1" orders="escort"/>
+                </Escorts>
+            </Ship>
+            <Ship class="&scSandstorm;" count="1" eventHandler="&evStdPatrolEncounterBehavior;" levelFrequency="----- -vuur">            <Escorts>                <Ship class="&scSandstorm;" count="1d4-1" orders="escort"/>
+                </Escorts>
+            </Ship>
+            <Ship class="&scTundra;" count="1" eventHandler="&evStdPatrolEncounterBehavior;" levelFrequency="----- --rrv">            <Escorts>                <Ship class="&scSandstorm;" count="1d3" orders="escort"/>
+                </Escorts>
+            </Ship>
+            <Ship class="&scSandstorm;" count="1" eventHandler="&evStdPatrolEncounterBehavior;" levelFrequency="----- --vuu">            <Escorts>                <Ship class="&scSandstorm;" count="1d6-1" orders="escort"/>
+                </Escorts>
+            </Ship>
+            <Ship class="&scTundra;" count="1" eventHandler="&evStdPatrolEncounterBehavior;" levelFrequency="----- ---rr">            <Escorts>                <Ship class="&scSandstorm;" count="1d6" orders="escort"/>
+                </Escorts>
+            </Ship>
+            <Ship class="&scChasm;" count="1" eventHandler="&evStdPatrolEncounterBehavior;" levelFrequency="----- ---rr">            <Escorts>                <Ship class="&scSandstorm;" count="1d6" orders="escort"/>
+                </Escorts>
+            </Ship>
+            <Ship class="&scPolar;" count="1" eventHandler="&evStdConvoyEncounterBehavior;" levelFrequency="----- ruucu">            <Items>                <Table>                    <RandomItem chance="40" count="1d2" criteria="* +Ares;" levelFrequency="----- ccurv"/>
+                        <Item chance="10" count="1d12" item="&itTetramiteOre;"/>
+                        <Item chance="10" count="3d12" item="&itXenotiteOre;"/>
+                        <Item chance="10" count="2d12" item="&itPteracniumOre;"/>
+                        <Item chance="10" count="3d12" item="&itPteracniumFuelRod;"/>
+                        <Lookup chance="10" count="1d4" table="&trConsumables8;"/>
+                        <Lookup chance="5" count="1" table="&trMinorItem8;"/>
+                        <Lookup chance="5" count="1" table="&trMajorItem8;"/>
+                    </Table>
+                </Items>
+                <Escorts>                <Ship class="&scSandstorm;" count="2d4" orders="escort"/>
+                </Escorts>
+            </Ship>
+        </LevelTable>
+    </ShipTable>
+    <Image UNID="&rsCometfall;" bitmap="Resources\Cometfall.jpg" bitmask="Resources\CometfallMask.bmp" loadOnUse="true"/>
+    <Image UNID="&rsDeimos;" bitmap="Resources\Deimos.jpg" bitmask="Resources\DeimosMask.bmp" loadOnUse="true"/>
+    <Image UNID="&rsPolarFreighter;" bitmap="Resources\PolarFreighter.jpg" bitmask="Resources\PolarFreighterMask.bmp" loadOnUse="true"/>
 </TranscendenceModule>
