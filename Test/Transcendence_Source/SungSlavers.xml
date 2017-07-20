@@ -3,12 +3,19 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svSung;"
-			name="Sung Slavers"
+			name=":the Sung civilization"
+			shortName=":the Sung"
+			adjective="Sung"
+			demonym=":a Sung Slaver(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
 	<Sovereign UNID="&svSungSlaves;"
-			name="Slaves of Sung"
+			name="slaves of Sung"
+			demonym=":a slave(s) of Sung"
+
 			alignment="neutral"
 			/>
 
@@ -1053,7 +1060,8 @@
 
 			multiHull=			"true"
 			armorID=			"&itSungArmor;"
-			hitPoints=			"125"
+			hitPoints=			"150"
+			regen=				"4"
 			fireRateAdj=		"80"
 			ejectaType=			"&vtWreckEjecta;"
 
@@ -1135,7 +1143,7 @@
 			multiHull=			"true"
 			armorID=			"&itSungArmor;"
 			hitPoints=			"400"
-            regen=              "4.0"
+            regen=              "11"
 			explosionType=		"&vtBlastExplosion4;"
 			ejectaType=			"&vtWreckEjecta;"
 
@@ -1201,7 +1209,7 @@
 			multiHull=			"true"
 			armorID=			"&itSungArmor;"
 			hitPoints=			"1500"
-            regen=              "9.0"
+            regen=              "11"
 			fireRateAdj=		"20"
 			explosionType=		"&vtThermoExplosion3;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -1314,11 +1322,11 @@
 	<StationType UNID="&stSungSlaveQuarters1;"
 			name=				"Sung slave quarters|Sung slave quarters"
 			sovereign=			"&svSungSlaves;"
-			abandonedScreen=	"&dsAbandonedStation;"
+			abandonedScreen=	"&dsRPGAbandonedStation;"
 			dockScreen=			"&dsSungSlaveQuarters;"
 			noMapLabel=			"true"
 
-			armorID=			"&itLightTitaniumPlate;"
+			armorID=			"&itUltraLightTitaniumArmor;"
 			hitPoints=			"35"
 			structuralHitPoints="10"
 			ejectaType=			"&vtWreckEjecta;"
@@ -1333,10 +1341,9 @@
 		</ImageVariants>
 
 		<Language>
-			<Text id="AbandonedScreenDesc">
-				(cat "You are docked at a ruined structure once housing slaves. "
-					"Lifeless forms float around in zero-G amid the scraps and mementos they once owned."
-					)
+			<Text id="descAbandonedStation">
+				You are docked at a ruined structure once housing slaves.
+				Lifeless forms float around in zero-G amid the scraps and mementos they once owned.
 			</Text>
 		</Language>
 
@@ -1357,11 +1364,11 @@
 	<StationType UNID="&stSungSlaveQuarters2;"
 			name=				"Sung slave quarters|Sung slave quarters"
 			sovereign=			"&svSungSlaves;"
-			abandonedScreen=	"&dsAbandonedStation;"
+			abandonedScreen=	"&dsRPGAbandonedStation;"
 			dockScreen=			"&dsSungSlaveQuarters;"
 			noMapLabel=			"true"
 
-			armorID=			"&itLightTitaniumPlate;"
+			armorID=			"&itUltraLightTitaniumArmor;"
 			hitPoints=			"20"
 			structuralHitPoints="10"
 			ejectaType=			"&vtWreckEjecta;"
@@ -1377,10 +1384,9 @@
 		</ImageVariants>
 
 		<Language>
-			<Text id="AbandonedScreenDesc">
-				(cat "You are docked at a ruined structure once housing slaves. "
-					"Lifeless forms float around in zero-G amid the scraps and mementos they once owned."
-					)
+			<Text id="descAbandonedStation">
+				You are docked at a ruined structure once housing slaves.
+				Lifeless forms float around in zero-G amid the scraps and mementos they once owned.
 			</Text>
 		</Language>
 
@@ -1589,7 +1595,7 @@
 			</Done>
 
 			<Empty
-					desc="You are docked at a station once used to house slaves of the Sung Empire. Now abandoned, these living quarters appear no worse than sub-standard Corporate quarters. But a closer look reveals surveillance sensors and discarded docility collars.">
+					desc="You are docked at a station once used to house slaves of the Sung Empire. Now abandoned, these living quarters appear no worse than sub-standard corporate quarters. But a closer look reveals surveillance sensors and discarded docility collars.">
 
 				<Actions>
 					<Action name="Undock" cancel="1" key="U">

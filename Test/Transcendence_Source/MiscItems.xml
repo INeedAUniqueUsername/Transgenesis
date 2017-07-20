@@ -545,10 +545,10 @@
 		<Image imageID="&rsItems1;" imageX="288" imageY="0" imageWidth="96" imageHeight="96"/>
 
 		<StaticData>
-			<00182001_Donation>
+			<Donation_00182001>
 				;			attd	rel		text
 				'(Nil		-1		135		"This empty vessel may nevertheless possess a connection to the soul it once housed. Domina will use it to gather her flock.")
-			</00182001_Donation>
+			</Donation_00182001>
 		</StaticData>
 	</ItemType>
 
@@ -622,7 +622,7 @@
 			numberAppearing=	"2d4"
 			attributes=			"Consumable; consumerGood, Food; Lux"
 
-			description=		"This precious delicacy is imported from Earth and served only at special Corporate functions."
+			description=		"This precious delicacy is imported from Earth and served only at special corporate functions."
 
 			sortName=			"Imperial caviar, tin of"
 			>
@@ -641,7 +641,7 @@
 			numberAppearing=	"1"
 			attributes=			"Consumable; consumerGood, Lux"
 
-			description=		"These beautifully handmade, mechanical wristwatches are often worn by high-level Corporate officers."
+			description=		"These beautifully handmade, mechanical wristwatches are often worn by high-level corporate officers."
 			>
 
 		<Image imageID="&rsItems1;" imageX="288" imageY="0" imageWidth="96" imageHeight="96"/>
@@ -700,7 +700,7 @@
 			numberAppearing=	"1d8"
 			attributes=			"Consumable; consumerGood, Food"
 
-			description=		"Famous for its refreshing effects and calming advertisements, Kobe spring water is the drink of choice for Corporate executives."
+			description=		"Famous for its refreshing effects and calming advertisements, Kobe spring water is the drink of choice for corporate executives."
 
 			>
 
@@ -935,7 +935,7 @@
 			numberAppearing=	"1d20"
 			attributes=			"Consumable; consumerGood, Food; Lux"
 
-			description=		"This vintage beverage is extremely popular with high-level Corporate and Military leaders."
+			description=		"This vintage beverage is extremely popular with high-level corporate and military leaders."
 
 			sortName=			"New Coke, case of"
 			>
@@ -1169,7 +1169,7 @@
 			numberAppearing=	"1d2"
 			attributes=			"Consumable; consumerGood, Lux"
 
-			description=		"This designer woman's suit is popular with Corporate executives and Commonwealth officials."
+			description=		"This designer woman's suit is popular with corporate executives and Commonwealth officials."
 			>
 
 		<Image imageID="&rsItems1;" imageX="288" imageY="0" imageWidth="96" imageHeight="96"/>
@@ -1193,7 +1193,7 @@
 		<Image imageID="&rsItems1;" imageX="192" imageY="96" imageWidth="96" imageHeight="96"/>
 
 		<StaticData>
-			<00182001_Donation>
+			<Donation_00182001>
 				;				attd	rel
 				(list	Nil		0		0
 
@@ -1206,7 +1206,7 @@
 						"We thank you for your good intentions; may Domina be with you. Always."
 						))
 					)
-			</00182001_Donation>
+			</Donation_00182001>
 		</StaticData>
 	</ItemType>
 
@@ -1253,7 +1253,7 @@
 	<!-- itUraniumRods -->
 
 	<ItemType UNID="&itUraniumRods;"
-			name=				"uranium fuel rod"
+			name=				":a uranium fuel rod"
 			level=				"3"
 			value=				"150"
 			mass=				"500"
@@ -1264,8 +1264,6 @@
 			data=				"5000"
 
 			description=		"Refined uranium fuel rods are used in old industrial reactors, but they can be adapted to starship use."
-
-			reverseArticle=		"true"
 			>
 
 		<Image imageID="&rsItems1;" imageX="0" imageY="672" imageWidth="96" imageHeight="96"/>
@@ -1661,7 +1659,7 @@
 			numberAppearing=	"1d8"
 			attributes=			"Consumable; consumerGood, Food; Lux"
 
-			description=		"A product of Starton Eridani, this mineral water is trendy among the Corporate crowd."
+			description=		"A product of Starton Eridani, this mineral water is trendy among the corporate crowd."
 
 			sortName=			"Eridani mineral water, barrel of"
 			>

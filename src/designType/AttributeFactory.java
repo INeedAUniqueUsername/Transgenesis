@@ -152,11 +152,11 @@ public class AttributeFactory {
 			};
 		case StationType:
 			return new DesignAttribute[] {
-					att("abandonedScreen", STRING),
+					att("abandonedScreen", DOCKSCREEN_LOCAL_OR_TYPE),
 					att("alertWhenAttacked", STRING),
 					att("alertWhenDestroyed", STRING),
 					att("allowEnemyDocking", STRING),
-					att("armorID", STRING),
+					att("armorID", TYPE_ARMOR),
 					att("backgroundPlane", STRING),
 					att("barrierEffect", STRING),
 					att("beacon", STRING),
@@ -174,11 +174,11 @@ public class AttributeFactory {
 					att("dockingPorts", INTEGER),
 					att("enemyExclusionRadius", INTEGER),
 					att("ejectaAdj", INTEGER),
-					att("ejectaType", TYPE_ANY),
-					att("explosionType", TYPE_ANY),
+					att("ejectaType", TYPE_WEAPON),
+					att("explosionType", TYPE_WEAPON),
 					att("fireRateAdj", INTEGER),
 					att("frequency", FREQUENCY),
-					att("gateEffect", TYPE_ANY),
+					att("gateEffect", TYPE_EFFECT),
 					att("gravityRadius", INTEGER),
 					att("hitPoints", INTEGER),
 					att("immutable", BOOLEAN),

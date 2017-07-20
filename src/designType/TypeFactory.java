@@ -382,6 +382,7 @@ public final class TypeFactory {
 			
 			List<DesignElementOld> result = new ArrayList<>(Arrays.asList());
 			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
+			//WIP
 			return result.toArray(new DesignElementOld[0]);
 		case ShipTable:				break;
 		case Sound:					break;

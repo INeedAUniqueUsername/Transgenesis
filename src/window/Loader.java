@@ -32,7 +32,7 @@ import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
-import panels.UNIDManager;
+import panels.TypeManager;
 import xml.DesignElementOld;
 
 public class Loader {
@@ -98,7 +98,6 @@ public class Loader {
 			    	//unids.createFromXML(b);
 			    	//unid_map.put(b.getName(), b.getReplacementText());
 			    	System.out.println("Entity: " + b.getName() + "=" + b.getReplacementText());
-			    	System.exit(0);
 			    	break;
 			    case XMLEvent.START_ELEMENT:
 			    	String name = event.asStartElement().getName().getLocalPart();
@@ -113,16 +112,18 @@ public class Loader {
 				    		element.setAttribute(a.getName().getLocalPart(), a.getValue());
 				    	}
 			    	});
-			    	//Check if we have an extension
-			    	try {
-			    		Extensions result = Extensions.valueOf(name);
-			    		mod = result.get();
-			    		mod.setPath(path);
-			    		elementStack.addLast(mod);
-			    		addAttributes.accept(mod);
-			    		System.out.println("Extension Found");
-			    		continue Read;
-			    	} catch(Exception e) { System.out.println("Not an extension"); }
+			    	//Check if we have an extension (if we do not already have one, then it's just an element)
+			    	if(mod == null) {
+			    		try {
+				    		Extensions result = Extensions.valueOf(name);
+				    		mod = result.get();
+				    		mod.setPath(path);
+				    		elementStack.addLast(mod);
+				    		addAttributes.accept(mod);
+				    		System.out.println("Extension Found");
+				    		continue Read;
+				    	} catch(Exception e) { System.out.println("Not an extension"); }
+			    	}
 			    	try {
 			    		//Check if we have a DesignType
 				    	Types result = Types.valueOf(name);
@@ -183,11 +184,12 @@ public class Loader {
 			    
 			}
 			if(mod != null) {
-				mod.setUNIDs(new UNIDManager(path));
+				mod.setUNIDs(new TypeManager(path));
 			}
 		} catch (IOException | XMLStreamException e) {
-			System.out.println("Encountered error; mod loading cancelled");
-			mod = null;
+			System.out.println("Encountered error; could not load " + mod.getPath());
+			mod = new TranscendenceMod("TranscendenceError");
+			mod.setPath(path);
 			e.printStackTrace();
 		}
 		return mod;

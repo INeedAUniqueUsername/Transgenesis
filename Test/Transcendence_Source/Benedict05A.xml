@@ -22,7 +22,6 @@
 			maxAppearing=		"1"
 			priority=			"100"
 
-			expireTime=			"5400"
 			failureAfterOutOfSystem="5400"
 			noDebrief=			"true"
 			>
@@ -327,6 +326,25 @@
 							"all ships away from me until I'm done scanning.\""
 							)
 						label: "\"[I]'ll do what I can.\""
+						}
+					)
+			</Text>
+			<Text id="Intro">
+				(list
+					{
+						desc: (cat
+							"\"You ready now? Armor all clean? Weapons loaded? Do you need a hug before we go?\""
+							)
+						label: "\"[G]o to hell.\""
+						}
+					{
+						desc: (cat
+							"\"You're not as fun as I expected.\n\n"
+							
+							"\"Remember, keep all ships away from me until I'm done scanning. It's "
+							"our best chance to find the Hand of Solace.\""
+							)
+						label: "\"[G]ot it.\""
 						}
 					)
 			</Text>

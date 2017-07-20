@@ -3,15 +3,19 @@ package mod;
 import java.awt.event.ActionEvent;
 import static window.Window.Fonts.*;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,85 +35,198 @@ import org.apache.commons.collections4.bidimap.TreeBidiMap;
 import org.w3c.dom.Document;
 
 import net.miginfocom.layout.CC;
-import panels.UNIDManager;
+import panels.TypeManager;
 import panels.XMLPanel;
 import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElementOld;
 public class TranscendenceMod extends DesignElementOld {
-	public UNIDManager unids;
+	//This is a placeholder in the typeMap to make sure that an unbound Type exists in it, because containsKey returns false with an actual null value
+	/*
+	DesignElementOld DESIGN_NULL = new DesignElementOld() {
+		public boolean equals(Object o) {
+			return this == o;
+		}
+	};
+	*/
+	private TypeManager types;
 	Map<String, DesignElementOld> typeMap;
 	private File path;
-	List<DesignElementOld> dependencies; //If we are a module, this includes our parent extension
+	//Do not acquire additional dependencies from our dependencies
+	//Does not include Modules
+	private List<TranscendenceMod> dependencies;
+	private List<TranscendenceMod> modules;
 	public TranscendenceMod(String name) {
 		super(name);
-		unids = new UNIDManager();
+		types = new TypeManager();
 		typeMap = new TreeMap<String, DesignElementOld>();
 		path = null;
+		dependencies = new LinkedList<>();
+		modules = new LinkedList<>();
 	}
+	//To allow overwriting dependency types without recursively binding all the extensions, we should take a list of Types from dependencies
+	//If we're a TranscendenceModule, then have our parent extension bind types for us
 	public void updateTypeBindings() {
-		System.out.println("Rebinding Types");
+		if(getName().equals("TranscendenceModule")) {
+			System.out.println("Warning: Not binding Types for TranscendenceModule");
+			//We should have our parent extension handle this
+			if(dependencies.size() < 1) {
+				System.out.println("Parent Extension unknown");
+				return;
+			}
+			TranscendenceMod parent = dependencies.get(0);
+			parent.updateTypeBindings();
+			//Inherit typeMap from parent
+			typeMap = parent.typeMap;
+			return;
+		}
+		System.out.println("Type Binding requested");
 		typeMap = new TreeMap<>();
-		bindTypes(typeMap);
-	}
-	
-	//Allow modules to take external entities
-	
-	//Bindings between Types and Designs are stored in the map
-	public void bindTypes(Map<String, DesignElementOld> typeMap) {
-		
+		//First, insert all of our own Types. This will allow dependencies to override them
+		for(String s : types.bindAll().values()) {
+			typeMap.put(s, null);
+		}
 		//If we have a UNID of our own, bind it
 		if(hasAttribute("unid")) {
 			typeMap.put(getAttributeByName("unid").getValue(), this);
 		}
-		
-		for(String s : unids.bindAll().values()) {
-			typeMap.put(s, null);
+		updateDependencies();
+		bindDependencyDesigns(typeMap);
+		updateModules();
+		bindInternalDesigns(typeMap);
+	}
+	//Allow modules to take external entities
+		public void updateDependencies() {
+			String warnings = getName() + ": Updating Dependencies";
+			dependencies = new LinkedList<TranscendenceMod>();
+			for(DesignElementOld sub : getSubElements()) {
+				switch(sub.getName()) {
+				case "Library":
+					String library_unid = sub.getAttributeByName("unid").getValue();
+					//Make sure that Library Types are defined in our TypeManager so that they always work in-game
+					boolean found = false;
+					FindLibrary:
+					for(TranscendenceMod m : XMLPanel.getExtensions()) {
+						if(
+								m.getName().equals("TranscendenceLibrary") ||
+								m.getName().equals("CoreLibrary") &&
+								m.getAttributeByName("unid").getValue().equals(library_unid)) {
+							dependencies.add(m);
+							found = true;
+							break FindLibrary;
+						}
+					}
+					if(!found) {
+						warnings += "\n" + getName() + ": " + "Could not find Library " + library_unid + ". It may be unloaded.";
+					}
+					break;
+				case "TranscendenceAdventure":
+				case "CoreLibrary":
+					String libraryPath = getModulePath(sub.getAttributeByName("filename").getValue());
+					//Make sure that Library Types are defined in our TypeManager so that they always work in-game
+					found = false;
+					FindLibrary:
+					for(TranscendenceMod m : XMLPanel.getExtensions()) {
+						if(
+								m.getName().equals(sub.getName()) &&
+								m.getPath().getAbsolutePath().equals(libraryPath)) {
+							dependencies.add(m);
+							found = true;
+							break FindLibrary;
+						}
+					}
+					if(!found) {
+						warnings += "\n" + getName() + ": " + "Could not find Library " + libraryPath + ". It may be unloaded.";
+					}
+					break;
+				}
+			}
+			XMLPanel.showWarningPane(warnings);
 		}
-		String warnings = "Warnings\n";
+	public void bindDependencyDesigns(Map<String, DesignElementOld> typeMap) {
+		//Avoid going into a circular dependency binding loop by binding only the internal types from each dependency
+		//Note: Circular dependencies are not supported
+		for(TranscendenceMod dependency : dependencies) {
+			for(String s : dependency.types.bindAll().values()) {
+				typeMap.put(s, null);
+			}
+			dependency.bindInternalDesigns(typeMap);
+		}
+	}
+	public void updateModules() {
+		modules = new LinkedList<TranscendenceMod>();
+		String warnings = getName() + ": " + "Updating Modules";
+		for(DesignElementOld e : getSubElements()) {
+			if(!e.getName().equals("Module")) {
+				continue;
+			}
+			String moduleFilename = e.getAttributeByName("filename").getValue();
+			String modulePath = getModulePath(moduleFilename);
+			//Look for our module in the Extensions list
+			boolean found = false;
+			FindModule:
+			for(TranscendenceMod m : XMLPanel.getExtensions()) {
+				if(m.path.getAbsolutePath().equals(modulePath)) {
+					modules.add(m);
+					//We are the parent extension and we are the module's only dependency
+					m.dependencies.clear();
+					m.dependencies.add(this);
+					found = true;
+					break FindModule;
+				}
+			}
+			if(!found) {
+				warnings += "\n" + getName() + ": " + "Could not find Module " + modulePath + ". It may be unloaded.\n";
+			}
+			//Maybe we should automatically load the module if it is not loaded already
+		}
+		XMLPanel.showWarningPane(warnings);
+	}
+	//Bindings between Types and Designs are stored in the map
+	//This only affects Designs that are defined WITHIN the file and Modules
+	public void bindInternalDesigns(Map<String, DesignElementOld> typeMap) {
+		String warnings = getName() + ": Binding Internal Designs";
+		//warnings += typeMap.keySet().toString() + "\n";
 		for(DesignElementOld sub : getSubElements()) {
-			if(sub.hasAttribute("unid")) {
+			//We already handled Library types as dependencies
+			if(!sub.getName().equals("Library") && sub.hasAttribute("unid")) {
 				String sub_type = sub.getAttributeByName("unid").getValue();
 				//Check if the element has been assigned a UNID
 				if(!(sub_type == null || sub_type.isEmpty())) {
 					//Check if the UNID has been defined by the extension
+					//WARNING: THE TYPE SPECIFIED IN THE ATTRIBUTE WILL NOT MATCH BECAUSE IT IS AN XML ENTITY. REMOVE THE AMPERSAND AND SEMICOLON.
+					sub_type = sub_type.replaceFirst("&", "").replaceFirst(";", "");
 					if(typeMap.containsKey(sub_type)) {
-						//Check if the UNID has not already been bound to an element
+						//Check if the UNID has not already been bound to a Design
 						if(typeMap.get(sub_type) == null) {
 							typeMap.put(sub_type, sub);
+						} else if(typeMap.get(sub_type).getName().equals(sub.getName())) {
+							//If the UNID is bound to a Design with the same tag, then it's probably an override
+							warnings += "\n" + sub.getName() + ": " + "Override Type: " + sub_type;
 						} else {
-							warnings += sub.getName() + ": " + "Duplicate Type: " + sub_type + "\n";
+							warnings += "\n" + sub.getName() + ": " + "Duplicate Type: " + sub_type;
 						}
 					} else {
-						warnings += sub.getName() + ": " + "Unknown UNID: " + sub_type + "\n";
+						//Depending on the context, we will not be able to identify whether this is defining a completely nonexistent Type or overriding an external type
+						warnings += "\n" + sub.getName() + ": " + "Unknown UNID: " + sub_type + ". It may be an override for an unloaded dependency or it may be nonexistent\n";
 					}
 				} else {
-					warnings += sub.getName() + ": " + "Missing unid= attribute" + "\n";
+					warnings += "\n" + sub.getName() + ": " + "Missing unid= attribute";
 				}
-			} else if(sub.getName().equals("Module")) {
-				//We may be looking at a module. Use it to bind types.
-				String moduleFileName = sub.getAttributeByName("filename").getValue();
-				String folder = path.getAbsolutePath().substring(0, path.getAbsolutePath().lastIndexOf(File.separator));
-				String modulePath = folder + File.separator + moduleFileName;
-				System.out.println("Looking for Module at " + moduleFileName);
-				//Look for our module in the Extensions list
-				boolean found = false;
-				FindModule:
-				for(TranscendenceMod m : XMLPanel.getExtensions()) {
-					if(m.path.getAbsolutePath().equals(modulePath)) {
-						System.out.println("Binding Types from Module at " + modulePath);
-						m.bindTypes(typeMap);
-						found = true;
-						break FindModule;
-					}
-				}
-				warnings += getName() + ": " + "Load module at " + modulePath + "\n";
-				//Maybe we should automatically load the module if it is not loaded already
+			}
+			for(TranscendenceMod module : modules) {
+				module.bindInternalDesigns(typeMap);
 			}
 		}
-		JOptionPane.showMessageDialog(null, warnings);
+		XMLPanel.showWarningPane(warnings);
+	}
+	public String getModulePath(String moduleFilename) {
+		String folder = path.getAbsolutePath().substring(0, path.getAbsolutePath().lastIndexOf(File.separator));
+		String modulePath = folder + File.separator + moduleFilename;
+		return modulePath;
 	}
 	public Map<String, DesignElementOld> getTypeMap() {
+		System.out.println("Type Map requested");
 		return typeMap;
 	}
 	public String getXMLOutput() {
@@ -117,7 +234,7 @@ public class TranscendenceMod extends DesignElementOld {
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
 				"<!DOCTYPE" + " " + getName() + "\n" +
 				"[" + "\n" +
-				unids.getXMLOutput() + "\n" +
+				types.getXMLOutput() + "\n" +
 				"]>" + "\n" +
 				super.getXMLOutput()
 				;
@@ -125,25 +242,29 @@ public class TranscendenceMod extends DesignElementOld {
 	public String getXMLMetaData() {
 		return
 				"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n" +
-				unids.getXMLMetaData();
+				types.getXMLMetaData();
 	}
 	public String getDisplayName() {
+		String name = getName().replaceFirst("Transcendence", "");
 		for(DesignAttribute a : new DesignAttribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
 			if(a == null) {
 				continue;
 			}
-			String name = a.getValue();
-			if(name != null && !name.equals("")) {
-				return name;
+			String displayName = a.getValue();
+			if(displayName != null && !displayName.equals("")) {
+				return String.format("%-16s%s", name, displayName);
 			}
 		}
 		if(path != null) {
-			return path.getName();
+			return String.format("%-16s%s", name, path.getName());
 		}
 		return super.getDisplayName();
 	}
-	public void setUNIDs(UNIDManager unids) {
-		this.unids = unids;
+	public void setUNIDs(TypeManager unids) {
+		this.types = unids;
+	}
+	public TypeManager getTypeManager() {
+		return types;
 	}
 	public void setPath(File absolutePath) {
 		// TODO Auto-generated method stub
@@ -176,6 +297,10 @@ public class TranscendenceMod extends DesignElementOld {
 		} finally {
 			
 		}
+		//Save all Modules
+		for(TranscendenceMod m : modules) {
+			m.save();
+		}
 	}
 	
 	public void initializeFrame(XMLPanel panel) {
@@ -185,8 +310,8 @@ public class TranscendenceMod extends DesignElementOld {
 			public void actionPerformed(ActionEvent arg0) {
 				if(arg0.getSource() == manageUNIDs) {
 					panel.frame.remove(panel);
-					unids.setEditor(panel);
-					unids.refreshFrame();
+					types.setEditor(panel);
+					types.refreshFrame();
 					panel.frame.pack();
 				}
 			}});

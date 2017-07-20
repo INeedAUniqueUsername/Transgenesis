@@ -3,7 +3,12 @@
 <TranscendenceModule>
 	
 	<Sovereign UNID="&svFerianMiners;"
-			name="Ferian miners"
+			name=":the Ferian swarm"
+			shortName=":the Ferians"
+			adjective="Ferian"
+			demonym=":a Ferian(s)"
+			plural="true"
+
 			alignment="neutral"
 			>
 		<Relationships>
@@ -17,7 +22,12 @@
 	</Sovereign>
 
 	<Sovereign UNID="&svFerianMinersAngry;"
-			name="Ferian miners"
+			name=":the Ferian swarm"
+			shortName=":the Ferians"
+			adjective="Ferian"
+			demonym=":a Ferian(s)"
+			plural="true"
+
 			alignment="destructive order"
 			>
 		<Relationships>
@@ -55,8 +65,8 @@
 			abandonedScreen=	"&dsAbandonedStation;"
 				 
 			armorID=			"&itAdvancedPlasteelPlate;"
-			hitPoints=			"280"
-            regen=              "0.8"
+			hitPoints=			"500"
+            regen=              "10"
 			multiHull=			"true"
 				 
 			canAttack=			"true"

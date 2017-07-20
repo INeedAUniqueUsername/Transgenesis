@@ -11,7 +11,6 @@
 	Gaian Terraformers
 	Heliotropes
 	Himal Separatists
-	Huari Empire
 	Kobol Syndicate
 	Marauders
 	Outlaws
@@ -28,7 +27,12 @@
 <!-- Abbasid Survivalists ================================================= -->
 
 	<Sovereign UNID="&svAbbasid;"
-			name="Abbasid Survivalists"
+			name=":the Abbasid Caliphate"
+			shortName=":the Abbasid"
+			adjective="Abbasid"
+			demonym=":an Abbasid survivalist(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -59,8 +63,9 @@
 			canAttack=			"true"
 
 			multiHull=			"true"
-			armorID=			"&itTitaniumPlate;"
+			armorID=			"&itLightTitaniumArmor;"
 			hitPoints=			"90"
+			regen=				"1"
 			fireRateAdj=		"40"
 			explosionType=		"&vtBlastExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -101,7 +106,12 @@
 <!-- Bennin Xenophobes ==================================================== -->
 
 	<Sovereign UNID="&svXenophobes;"
-			name="Bennin Xenophobes"
+			name=":the Bennin Conclave"
+			shortName=": Xenophobes"
+			adjective="Xenophobe"
+			demonym=":a Xenophobe disciple(s)"
+			plural="true"
+
 			alignment="destructive chaos"
 			/>
 	
@@ -672,7 +682,7 @@
 			name=				"(Xenophobe worldship)"
 			sovereign=			"&svCommonwealth;"
 			controllingSovereign="&svXenophobes;"
-			abandonedScreen=	"Main"
+			abandonedScreen=	"&dsRPGAbandonedStation;"
 
 			multiHull=			"true"
 			armorID=			"&itPlasteelPlate;"
@@ -717,31 +727,11 @@
 			</Ship>
 		</Ships>
 
-		<DockScreens>
-			<Main>
-				<Panes>
-					<Default
-							desc=		"You are docked at the lifeless ruins of a destroyed station. A group of refugees, huddling in the cavernous bay, tell you that the station was destroyed by Xenophobes.">
-
-						<Actions>
-							<Action name="Loot" key="L" default="1" >
-								(scrShowScreen gScreen &dsRPGLoot;)
-							</Action>
-
-							<Action name="Jettison" key="J">
-								(scrShowScreen gScreen &dsRPGJettison;)
-							</Action>
-
-							<Action name="Undock" cancel="1" key="U">
-								<Exit/>
-							</Action>
-
-						</Actions>
-
-					</Default>
-				</Panes>
-			</Main>
-		</DockScreens>
+		<Language>
+			<Text id="descAbandonedStation">
+				"You are docked at the lifeless ruins of a destroyed station. A group of refugees, huddling in the cavernous bay, tell you that the station was destroyed by Xenophobes."
+			</Text>
+		</Language>
 	</StationType>
 
 	<!-- LEVEL VII ITEMS -->
@@ -796,9 +786,11 @@
 					</Events>
 				</Ray>
 			
-				<ParticleComet
+				<ParticlePattern
+						style=			"comet"
 						particleCount=	"200"
 						primaryColor=	"#00d5ff"
+						jitterLength=	"80-150"
 						>
 					<Events>
 						<GetParameters>
@@ -814,7 +806,7 @@
 								)
 						</GetParameters>
 					</Events>
-				</ParticleComet>
+				</ParticlePattern>
 			</Effect>
 		</Weapon>
 
@@ -829,7 +821,10 @@
 <!-- Death Drugs Cartel =================================================== -->
 
 	<Sovereign UNID="&svDeathDrugsCartel;"
-			name="Death Drugs Cartel"
+			name=":the Death Drugs Cartel"
+			adjective="Death Drugs Cartel"
+			demonym=":a Death Drugs Cartel member(s)"
+
 			alignment="destructive order"
 			/>
 
@@ -896,7 +891,7 @@
 
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"160"
-            regen=              "0.5"
+            regen=              "2"
 			fireRateAdj=		"20"
 			explosionType=		"&vtBlastExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -983,7 +978,7 @@
 		<!-- Configuration -->
 
 		<Armor
-			armorID=			"&itTitaniumPlate;"
+			armorID=			"&itLightTitaniumArmor;"
 			count=				"4"
 			/>
 
@@ -1040,7 +1035,7 @@
 			>
 
 		<Armor>
-			<ArmorSection start="0" span="360" armorID="&itUltraLightTitaniumPlate;"/>
+			<ArmorSection start="0" span="360" armorID="&itUltraLightTitaniumCasing;"/>
 		</Armor>
 
 		<Devices>
@@ -1075,7 +1070,7 @@
 			dockingPorts=		"4"
 			canAttack=			"true"
 
-			armorID=			"&itLightTitaniumPlate;"
+			armorID=			"&itUltraLightTitaniumArmor;"
 			hitPoints=			"50"
 			fireRateAdj=		"40"
 			explosionType=		"&vtKineticExplosion1;"
@@ -1137,7 +1132,7 @@
 			dockingPorts=		"4"
 			canAttack=			"true"
 
-			armorID=			"&itHeavyTitaniumPlate;"
+			armorID=			"&itTitaniumArmor;"
 			hitPoints=			"50"
 			fireRateAdj=		"40"
 			explosionType=		"&vtKineticExplosion1;"
@@ -1208,7 +1203,7 @@
 			noMapLabel=			"true"
 			canAttack=			"true"
 
-			armorID=			"&itHeavyTitaniumPlate;"
+			armorID=			"&itTitaniumArmor;"
 			hitPoints=			"50"
 			fireRateAdj=		"40"
 			explosionType=		"&vtKineticExplosion1;"
@@ -1273,7 +1268,7 @@
 			multiHull=			"true"
 			armorID=			"&itLightPlasteelPlate;"
 			hitPoints=			"250"
-            regen=              "1.3"
+            regen=              "5"
 			fireRateAdj=		"80"
 			explosionType=		"&vtKineticExplosion3;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -1281,6 +1276,7 @@
 			attributes=			"anarchists, enemy, envEarth, envAvoidsAir, freeworldAnarchists, generic, human, populated"
 			levelFrequency=		"-rcuv ----- ----- ----- -----"
 			locationCriteria=	"+asteroids"
+			enemyExclusionRadius="75"
 			>
 
 		<Image		imageID="&rsAnarchistStations;" imageX="0"   imageY="244" imageWidth="260" imageHeight="260"/>
@@ -1378,7 +1374,12 @@
 <!-- Gaian Terraformers =================================================== -->
 
 	<Sovereign UNID="&svGaianTerraformers;"
-			name="Gaian Terraformers"
+			name=":the Gaian League"
+			shortName=": Gaians"
+			adjective="Gaian"
+			demonym=":a Gaian(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -1554,7 +1555,12 @@
 <!-- Heliotropes ========================================================== -->
 
 	<Sovereign UNID="&svHeliotropes;"
-			name="Heliotropes"
+			name=":the Heliotrope kingdom"
+			shortName=": Heliotropes"
+			adjective="Heliotrope"
+			demonym=":a Heliotropian(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -1832,7 +1838,7 @@
 			armorID=			"&itSolarArmor;"
 			hitPoints=			"420"
 			multiHull=			"true"
-            regen=              "2.1"
+            regen=              "8"
 				 
 			canAttack=			"true"
 			fireRateAdj=		"20"
@@ -1908,7 +1914,7 @@
 				 
 			armorID=			"&itHeavyCeramicPlate;"
 			hitPoints=			"120"
-            regen=              "0.4"
+            regen=              "1"
 				 
 			canAttack=			"true"
 			fireRateAdj=		"40"
@@ -2003,7 +2009,12 @@
 <!-- Himal Separatists ==================================================== -->
 
 	<Sovereign UNID="&svHimalSeparatists;"
-			name="Himal Separatists"
+			name=":the Himal coalition"
+			shortName=":the Himal"
+			adjective="Himal"
+			demonym=":a Himalian(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -2024,8 +2035,8 @@
 			>
 
 		<Armor>
-			<ArmorSection start="270" span="180" armorID="&itUltraLightTitaniumPlate;"/>
-			<ArmorSection start="90"  span="180" armorID="&itUltraLightTitaniumPlate;"/>
+			<ArmorSection start="270" span="180" armorID="&itUltraLightTitaniumCasing;"/>
+			<ArmorSection start="90"  span="180" armorID="&itUltraLightTitaniumCasing;"/>
 		</Armor>
 
 		<Devices>
@@ -2109,175 +2120,15 @@
 
 	</StationType>
 
-<!-- Huari Empire ========================================================= -->
-
-	<Sovereign UNID="&svHuariEmpire;"
-			name="Huari Empire"
-			alignment="destructive order"
-			>
-		<Relationships>
-			<Relationship sovereign="&svSung;" disposition="enemy" mutual="true"/>
-		</Relationships>
-	</Sovereign>
-
-	<!-- Hurin Destroyer -->
-
-	<ShipClass UNID="&scHurinDestroyer;"
-			manufacturer=		"Huari"
-			class=				"Hurin"
-			type=				"destroyer"
-			defaultSovereign=	"&svHuariEmpire;"
-
-			attributes=			"capitalShip, genericClass, huari"
-			   
-			size=				"150"
-			mass=				"15000"
-			thrustRatio=		"1.5"
-			maxSpeed=			"8"
-			cargoSpace=			"1000"
-
-			explosionType=		"&vtBlastExplosion4;"
-			>
-
-		<!-- Configuration -->
-		
-		<Armor
-			armorID=			"&itDuralloyArmor;"
-			count=				"12"
-			/>
-		
-		<Devices>
-			<Device deviceID="&itSlamCannon;" secondaryWeapon="true" minFireArc="0" maxFireArc="200"   posAngle="67"  posRadius="53" posZ="0"/>
-			<Device deviceID="&itSlamCannon;" secondaryWeapon="true" minFireArc="0" maxFireArc="170"   posAngle="35"  posRadius="71" posZ="0"/>
-			<Device deviceID="&itSlamCannon;" secondaryWeapon="true" minFireArc="300" maxFireArc="170" posAngle="25"  posRadius="80" posZ="0"/>
-
-			<Device deviceID="&itSlamCannon;" secondaryWeapon="true" minFireArc="160" maxFireArc="0"   posAngle="293" posRadius="53" posZ="0"/>
-			<Device deviceID="&itSlamCannon;" secondaryWeapon="true" minFireArc="190" maxFireArc="0"   posAngle="325" posRadius="71" posZ="0"/>
-			<Device deviceID="&itSlamCannon;" secondaryWeapon="true" minFireArc="190" maxFireArc="60"  posAngle="335" posRadius="80" posZ="0"/>
-
-			<Device deviceID="&itSuperconductingShields;"/>
-			<Device deviceID="&it250MWReactor;"/>
-		</Devices>
-
-		<Maneuver
-			maxRotationRate=	"3"
-			rotationAccel=		"0.3"
-			/>
-
-		<Interior>
-			<Compartment name="interior"
-					hitPoints=	"250"
-					/>
-			
-			<Compartment name="main drive"
-					type=		"mainDrive"
-					hitPoints=	"100"
-
-					posX=		"-35"
-					posY=		"0"
-					sizeX=		"46"
-					sizeY=		"42"
-					/>
-		</Interior>
-
-		<Items>
-			<Item count="2d12"	item="&itPteracniumFuelRod;"/>
-			<Item count="5d10" item="&itSuperconductingCoil;"/>
-		</Items>
-
-		<!-- Image and Effects -->
-
-		<Image imageID="&rsHurin;" imageWidth="164" imageHeight="164"/>
-
-		<Effects>
-			<Effect type="thrustMain"		posAngle="165"	posRadius="76"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="180"	posRadius="74"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-165"	posRadius="76"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-		</Effects>
-
-		<!-- AI and Behavior -->
-
-		<AISettings
-			combatStyle=		"standOff"
-			fireRateAdj=		"20"
-			fireAccuracy=		"90"
-			perception=			"5"
-			/>
-	</ShipClass>
-
-	<StationType UNID="&stHuariFortress;"
-			name=				"Huari fortress(es)"
-			sovereign=			"&svHuariEmpire;"
-			abandonedScreen=	"&dsAbandonedStation;"
-			dockingPorts=		"8"
-			canAttack=			"true"
-
-			multiHull=			"true"
-			armorID=			"&itAdvancedPlasteelPlate;"
-			hitPoints=			"900"
-            regen=              "9.0"
-			fireRateAdj=		"20"
-			explosionType=		"&vtBlastExplosion4;"
-			ejectaType=			"&vtWreckEjecta;"
-
-			attributes=			"enemy, envWater, envAvoidsEarth, generic, huari, human, majorStation, populated"
-			levelFrequency=		"---vu ur--- ----- ----- -----"
-			locationCriteria=	"-lifeZone, +planetary"
-			enemyExclusionRadius="100"
-			>
-
-		<Image			imageID="&rsStations6;" imageX="0" imageY="448" imageWidth="192" imageHeight="192"/>
-
-		<Devices>
-			<Device deviceID="&itMarkIIIHowitzer;"	omnidirectional="true" posAngle="60"  posRadius="85"/>
-			<Device deviceID="&itMarkIIIHowitzer;"	omnidirectional="true" posAngle="155" posRadius="90"/>
-			<Device deviceID="&itMarkIIIHowitzer;"	omnidirectional="true" posAngle="240" posRadius="100"/>
-			<Device deviceID="&itMarkIIIHowitzer;"	omnidirectional="true" posAngle="330" posRadius="110"/>
-		</Devices>
-
-		<Items>
-			<Item count="20d20" item="&itSuperconductingCoil;"/>
-			<Table count="1-3">
-				<Lookup chance="40" count="1" table="&trConsumables7;"/>
-				<Lookup chance="40" count="1" table="&trMinorItem7;"/>
-				<Lookup chance="20" count="1" table="&trMajorItem7;"/>
-			</Table>
-		</Items>
-
-		<Ships>
-			<Ship					count="1d2"	class="&scHurinDestroyer;"	orders="patrol" patrolDist="40"/>
-		</Ships>
-
-		<Reinforcements minShips="1">
-			<Ship					count="1d2"	class="&scHurinDestroyer;"	orders="patrol" patrolDist="40"/>
-		</Reinforcements>
-
-		<Encounters frequency="uncommon">
-			<Ship count="1"	class="&scHurinDestroyer;" orders="wander"	maxShips="4"/>
-		</Encounters>
-
-		<DockingPorts>
-			<Port x="-49"	y="91" />
-			<Port x="85"	y="63" />
-			<Port x="67"	y="-49" />
-			<Port x="43"	y="-72" />
-			<Port x="4"		y="-84" />
-
-			<Port x="-58"	y="-64" />
-			<Port x="-86"	y="-33" />
-			<Port x="-94"	y="3" />
-		</DockingPorts>
-
-	</StationType>
-
-	<!-- Resources -->
-
-	<Image UNID="&rsHurin;"			bitmap="Resources\Hurin.jpg"		bitmask="Resources\HurinMask.bmp"  loadOnUse="true"/>
-	
 <!-- Kobol Syndicate ======================================================= -->
 
 	<Sovereign UNID="&svKobolWarlords;"
-			name="Kobol Syndicate"
+			name=":the Kobol Syndicate"
+			shortName=":the Kobol"
+			adjective="Kobol"
+			demonym=":a Kobol warlord(s)"
+			plural="true"
+
 			alignment="destructive chaos"
 			/>
 
@@ -2448,8 +2299,8 @@
 
 			multiHull=			"true"
 			armorID=			"&itAdvancedCeralloyArmor;"
-			hitPoints=			"240"
-            regen=              "0.7"
+			hitPoints=			"450"
+            regen=              "4"
 			fireRateAdj=		"20"
 			explosionType=		"&vtThermoExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -2497,7 +2348,12 @@
 <!-- Marauders ============================================================ -->
 
 	<Sovereign UNID="&svMarauders;"
-			name="Lombard Marauders"
+			name=":the Marauder confederacy"
+			shortName=": Marauders"
+			adjective="Marauder"
+			demonym=":a Marauder(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -2758,7 +2614,7 @@
 			multiHull=			"true"
 			armorID=			"&itLightPlasteelPlate;"
 			hitPoints=			"160"
-            regen=              "0.5"
+            regen=              "2"
 			fireRateAdj=		"30"
 			explosionType=		"&vtBlastExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -2805,7 +2661,7 @@
 			multiHull=			"true"
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"320"
-            regen=              "1.6"
+            regen=              "6"
 			fireRateAdj=		"20"
 			explosionType=		"&vtBlastExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -2873,7 +2729,7 @@
 			multiHull=			"true"
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"400"
-            regen=              "4"
+            regen=              "6"
 			fireRateAdj=		"20"
 			explosionType=		"&vtBlastExplosion3;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -3057,7 +2913,7 @@
 			/>
 		
 		<Devices>
-			<Device deviceID="&itArbalestCannon;" omnidirectional="true"	posAngle="180" posRadius="5" posZ="20"/>
+			<Device deviceID="&itArbalestCannon;" omnidirectional="true"	posAngle="180" posRadius="7" posZ="20"/>
 			<Device deviceID="&itClass1Deflector;"/>
 		</Devices>
 
@@ -3072,11 +2928,12 @@
 
 		<!-- Image and Effects -->
 		
-		<Image imageID="&rsSotho;" imageX="0" imageY="0" imageWidth="72" imageHeight="72"/>
+		<Image imageID="&rsSotho120;" imageWidth="72" imageHeight="72" rotationCount="120" rotationColumns="12" viewportRatio="0.00625"/>
+		<HeroImage imageID="&rsSothoHero;" imageWidth="320" imageHeight="320"/>
 
 		<Effects>
-			<Effect type="thrustMain"		posAngle="164"	posRadius="29"	posZ="0"	rotation="180"	sendToBack="3,4,16,17"/>
-			<Effect type="thrustMain"		posAngle="-164"	posRadius="29"	posZ="0"	rotation="180"	sendToBack="3,4,16,17"/>
+			<Effect type="thrustMain"		posAngle="164"	posRadius="30"	posZ="0"	rotation="180"/>
+			<Effect type="thrustMain"		posAngle="-164"	posRadius="30"	posZ="0"	rotation="180"/>
 		</Effects>
 		
 		<!-- AI and Behavior -->
@@ -3101,10 +2958,10 @@
 			attributes=			"freighter, genericClass, outlaws"
 			   
 			size=				"60"
-			mass=				"1000"
+			mass=				"600"
 			thrustRatio=		"1.5"
 			maxSpeed=			"16"
-			cargoSpace=			"2000"
+			cargoSpace=			"1000"
 			>
 
 		<!-- Configuration -->
@@ -3163,10 +3020,10 @@
 			attributes=			"freighter, genericClass, outlaws"
 			   
 			size=				"95"
-			mass=				"1500"
+			mass=				"900"
 			thrustRatio=		"1.1"
 			maxSpeed=			"16"
-			cargoSpace=			"5000"
+			cargoSpace=			"1500"
 			>
 
 		<Armor>
@@ -3342,7 +3199,16 @@
 
 		<Names>abandoned cargo container</Names>
 
-		<Image			imageID="&rsStations1;" imageX="480" imageY="0" imageWidth="32" imageHeight="32" />
+		<ImageVariants>
+			<Image			imageID="&rsStations1;" imageX="480" imageY="0" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="32" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="64" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="96" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="128" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="160" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="192" imageWidth="32" imageHeight="32" />
+			<Image			imageID="&rsStations1;" imageX="480" imageY="224" imageWidth="32" imageHeight="32" />
+		</ImageVariants>
 
 		<Ships>
 			<Ship	count="1"	class="&scT31ArmedTransport;" orders="trade route">
@@ -3399,7 +3265,7 @@
 			canAttack=			"true"
 
 			multiHull=			"true"
-			armorID=			"&itLightTitaniumPlate;"
+			armorID=			"&itUltraLightTitaniumArmor;"
 			hitPoints=			"50"
 			explosionType=		"&vtKineticExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -3453,7 +3319,7 @@
 			multiHull=			"true"
 			armorID=			"&itCeramicPlate;"
 			hitPoints=			"90"
-            regen=              "0.3"
+            regen=              "1"
 			fireRateAdj=		"40"
 			explosionType=		"&vtKineticExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -3515,7 +3381,7 @@
 			multiHull=			"true"
 			armorID=			"&itHeavyCeramicPlate;"
 			hitPoints=			"250"
-            regen=              "1.3"
+            regen=              "5"
 			fireRateAdj=		"30"
 			explosionType=		"&vtKineticExplosion3;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -3681,6 +3547,8 @@
 	
 	<Image UNID="&rsOromo;"				bitmap="Resources\Oromo.jpg"		bitmask="Resources\OromoMask.bmp"  loadOnUse="true"/>
 	<Image UNID="&rsSotho;"				bitmap="Resources\Sotho.jpg"		bitmask="Resources\SothoMask.bmp"  loadOnUse="true"/>
+	<Image UNID="&rsSotho120;"			bitmap="Resources\Sotho120.jpg"		bitmask="Resources\Sotho120Mask.bmp"  loadOnUse="true"/>
+	<Image UNID="&rsSothoHero;"			bitmap="Resources\SothoLarge.jpg"		bitmask="Resources\SothoLargeMask.bmp"  loadOnUse="true"/>
 	<Image UNID="&rsT31ArmedTransport;"	bitmap="Resources\T31Transport.jpg"		bitmask="Resources\T31TransportMask.bmp"  loadOnUse="true"/>
 	<Image UNID="&rsT55ArmedTransport;"	bitmap="Resources\T55Transport.jpg"		bitmask="Resources\T55TransportMask.bmp"  loadOnUse="true"/>
 	<Image UNID="&rsZulu;"				bitmap="Resources\Zulu.jpg"		bitmask="Resources\ZuluMask.bmp"  loadOnUse="true"/>
@@ -3689,6 +3557,10 @@
 
 	<Sovereign UNID="&svPteravores;"
 			name="pteravores"
+			adjective="pteravore"
+			demonym=":a pteravore(s)"
+			plural="true"
+
 			alignment="destructive chaos"
 			/>
 
@@ -3697,7 +3569,7 @@
 	<StationType UNID="&stPteravoreLair;"
 			name=				"pteravore lair"
 			sovereign=			"&svPteravores;"
-			abandonedScreen=	"&dsAbandonedStation;"
+			abandonedScreen=	"&dsRPGAbandonedStation;"
 			canAttack=			"true"
 
 			multiHull=			"true"
@@ -3729,10 +3601,9 @@
 		</Items>
 
 		<Language>
-			<Text id="AbandonedScreenDesc">
-				(cat "You are docked at the remains of a pteravore lair. "
-					"These fearsome silicon-based lifeforms live on refined pteracnium, extracted from unsuspecting vessels."
-					)
+			<Text id="descAbandonedStation">
+				You are docked at the remains of a pteravore lair. These fearsome silicon-based
+				lifeforms live on refined pteracnium, extracted from unsuspecting vessels.
 			</Text>
 		</Language>
 
@@ -4081,7 +3952,12 @@
 <!-- Ranx Empire =========================================================== -->
 
 	<Sovereign UNID="&svRanxEmpire;"
-			name="Ranx Empire"
+			name=":the Ranx Empire"
+			shortName=":the Ranx"
+			adjective="Ranx"
+			demonym=":a Ranx citizen(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -4090,7 +3966,7 @@
 	<ItemType UNID="&itDepletedUraniumArmor;"
 			name=				"[segment(s) of ]depleted uranium armor"
 			level=				"4"
-			value=				"600"
+			value=				"500"
 			frequency=			"rare"
 			numberAppearing=	"1d4"
 			mass=				"5000"
@@ -4102,7 +3978,7 @@
 		<Image imageID="&rsItems4;" imageX="96" imageY="0" imageWidth="96" imageHeight="96"/>
 
 		<Armor
-				hitPoints=	"75"
+				hitPoints=	"100"
 				hpBonus=	"  +0,  +0, +25, +25, +25, +25"
 
 				repairTech=	"6"
@@ -4188,7 +4064,7 @@
 
 	<ItemType UNID="&itKilotonCannonShell;"
 			name=				"kiloton cannon shell"
-			attributes=			"consumable, missile, ranx"
+			attributes=			"consumable, military, missile, ranx, specialty"
 			  
 			level=				"6"
 			frequency=			"common"
@@ -4220,13 +4096,11 @@
 			attributes=			"genericClass,ranx"
 			>
 
-		<Armor>
-			<ArmorSection start="315" span="90" armorID="&itDepletedUraniumArmor;"/>
-			<ArmorSection start="225" span="90" armorID="&itDepletedUraniumArmor;"/>
-			<ArmorSection start="135" span="90" armorID="&itDepletedUraniumArmor;"/>
-			<ArmorSection start="45"  span="90" armorID="&itDepletedUraniumArmor;"/>
-		</Armor>
-
+		<Armor
+			armorID=			"&itDepletedUraniumArmor;"
+			count=				"2"
+			/>
+		
 		<Devices>
 			<Device deviceID="&itAkan30Cannon;"/>
 			<Device deviceID="&itMonopoleDeflector;"/>
@@ -4335,12 +4209,12 @@
 
 		<!-- Image and Effects -->
 
-		<Image imageID="&rsRanxDreadnought;" imageX="0" imageY="0" imageWidth="280" imageHeight="280"/>
+		<Image imageID="&rsRanxDreadnought;" imageX="0" imageY="0" imageWidth="280" imageHeight="280" viewportRatio="0.0475"/>
 
 		<Effects>
-			<Effect type="thrustMain"		posAngle="175"	posRadius="136"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="180"	posRadius="136"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
-			<Effect type="thrustMain"		posAngle="-175"	posRadius="136"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
+			<Effect type="thrustMain"		posAngle="175"	posRadius="134"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
+			<Effect type="thrustMain"		posAngle="180"	posRadius="134"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
+			<Effect type="thrustMain"		posAngle="-175"	posRadius="134"	posZ="0"	rotation="180"	effect="&efMainThrusterLarge;"/>
 		</Effects>
 		
 		<!-- AI and Behavior -->
@@ -4368,7 +4242,7 @@
 			multiHull=			"true"
 			armorID=			"&itLightOrthoSteel;"
 			hitPoints=			"370"
-            regen=              "1.1"
+            regen=              "4"
 			explosionType=		"&vtThermoExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
 
@@ -4418,8 +4292,8 @@
 
 			multiHull=			"true"
 			armorID=			"&itOrthoSteel;"
-			hitPoints=			"1800"
-            regen=              "18"
+			hitPoints=			"2400"
+            regen=              "19"
 			explosionType=		"&vtThermoExplosion4;"
 			ejectaType=			"&vtWreckEjecta;"
 
@@ -4659,7 +4533,12 @@
 <!-- Sapiens ============================================================== -->
 
 	<Sovereign UNID="&svSapiens;"
-			name="Sapiens Preservation Society"
+			name=":the Sapiens Preservation Society"
+			shortName=": Sapiens"
+			adjective="Sapient"
+			demonym=":a Sapient(s)"
+			plural="true"
+
 			alignment="destructive chaos"
 			/>
 
@@ -4853,7 +4732,7 @@
 
 			armorID=			"&itHardenedReactiveArmor;"
 			hitPoints=			"120"
-            regen=              "0.4"
+            regen=              "1"
 			fireRateAdj=		"30"
 			explosionType=		"&vtRadioactiveExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -4910,7 +4789,7 @@
 			multiHull=			"true"
 			armorID=			"&itHardenedReactiveArmor;"
 			hitPoints=			"320"
-            regen=              "1.6"
+            regen=              "6"
 			fireRateAdj=		"20"
 			explosionType=		"&vtRadioactiveExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -5018,6 +4897,8 @@
 	<StationType UNID="&stSealedCargoContainer;"
 			name=				"abandoned cargo container"
 			sovereign=			"&svNeutral;"
+			inherit=			"&dsDockScreenBase;"
+		
 			abandonedScreen=	"Main"
 			dockScreen=			"Main"
 
@@ -5071,10 +4952,10 @@
 
 				<Panes>
 					<Default
-							desc=	"You are docked at an abandoned cargo container. The hatch to the container is sealed. Do you wish to open it?">
+							desc=	"=(scrTranslate gScreen 'descDefault)">
 
 						<Actions>
-							<Action name="Open Seal" default="1" key="O">
+							<Action id="actionOpenSeal" default="1">
 								(block (contents roll)
 									(objSetData gSource "Opened" True)
 
@@ -5103,7 +4984,7 @@
 									)
 							</Action>
 
-							<Action name="Undock" cancel="1" key="U">
+							<Action id="actionUndock" cancel="1">
 								<Exit/>
 							</Action>
 
@@ -5112,31 +4993,43 @@
 
 					<Opened>
 						<OnPaneInit>
-							(switch
-								(eq (objGetData gSource "Contents") 4)
-									(scrSetDesc gScreen "You are docked at an abandoned cargo container. There is a family of refugees living here.")
-								(block (allItems itemCount)
-									(setq allItems (objGetItems gSource "*"))
-									(setq itemCount (count allItems))
+							(block nil
+								(scrSetDesc gScreen (cat
+									(scrTranslate gScreen 'descOpenedStart)
 									(switch
-										(eq itemCount 0)
-											(scrSetDesc gScreen "You are docked at an abandoned cargo container. There are no items here.")
-										(eq itemCount 1)
-											(scrSetDesc gScreen (cat "You are docked at an abandoned cargo container. You see " (itmGetName (item allItems 0) 8) " here."))
-										(scrSetDesc gScreen (cat "You are docked at an abandoned cargo container. You see several items here."))
+										(eq (objGetData gSource "Contents") 4)
+											(scrTranslate gScreen 'descOpenedRefugees)
+										(block (allItems itemCount)
+											(setq allItems (objGetItems gSource "*"))
+											(setq itemCount (count allItems))
+											(scrSetData gScreen 'itemName (itmGetName (@ allItems 0) 8))
+											(switch
+												(eq itemCount 0)
+													(scrTranslate gScreen 'descNoItemsHere)
+												(eq itemCount 1)
+													(scrTranslate gScreen 'descOpenedOneItem)
+												(scrTranslate gScreen 'descOpenedSeveralItems)
+												)
+											)
+										)
+									))
+								(if (not (objGetItems gSource '*U))
+									(block nil
+										(scrEnableAction gScreen 'actionLoot nil)
+										(scrSetActionDesc gScreen 'actionLoot (scrTranslate gScreen 'descNoItemsHere))
 										)
 									)
 								)
 						</OnPaneInit>
 
 						<Actions>
-							<Action name="Loot" default="1" key="L">
+							<Action id="actionLoot" default="1">
 								(scrShowScreen gScreen &dsRPGLoot; {
 									nextScreen: "Main"
 									})
 							</Action>
 
-							<Action name="Undock" cancel="1" key="U">
+							<Action id="actionUndock" cancel="1" default="1">
 								<Exit/>
 							</Action>
 
@@ -5146,10 +5039,10 @@
 					; Cargo container is empty
 
 					<Contents1
-							desc=	"The cargo container is empty.">
+							desc=	"=(scrTranslate gScreen 'descContentsEmpty)">
 
 						<Actions>
-							<Action name="Undock" default="1" cancel="1" key="U">
+							<Action id="actionUndock" default="1" cancel="1">
 								<Exit/>
 							</Action>
 						</Actions>
@@ -5162,24 +5055,31 @@
 							(block (allItems itemCount)
 								(setq allItems (objGetItems gSource "*"))
 								(setq itemCount (count allItems))
+								(scrSetData gScreen 'itemName (itmGetName (@ allItems 0) 8))
 								(switch
 									(eq itemCount 0)
-										(scrSetDesc gScreen "The cargo container is empty.")
+										(scrSetDescTranslate gScreen 'descContentsEmpty)
 									(eq itemCount 1)
-										(scrSetDesc gScreen (cat "The cargo container has " (itmGetName (item allItems 0) 8) "."))
-									(scrSetDesc gScreen (cat "The cargo container is filled with various items."))
+										(scrSetDescTranslate gScreen 'descContents2OneItem)
+									(scrSetDescTranslate gScreen 'descContents2VariousItems)
+									)
+								(if (not (objGetItems gSource '*U))
+									(block nil
+										(scrEnableAction gScreen 'actionLoot nil)
+										(scrSetActionDesc gScreen 'actionLoot (scrTranslate gScreen 'descNoItemsHere))
+										)
 									)
 								)
 						</OnPaneInit>
 
 						<Actions>
-							<Action name="Loot" default="1" key="L">
+							<Action id="actionLoot" default="1">
 								(scrShowScreen gScreen &dsRPGLoot; {
 									nextScreen: "Main"
 									})
 							</Action>
 
-							<Action name="Undock" cancel="1" key="U">
+							<Action id="actionUndock" cancel="1" default="1">
 								<Exit/>
 							</Action>
 						</Actions>
@@ -5190,17 +5090,18 @@
 					<Contents3>
 						<OnPaneInit>
 							(block (allItems desc)
-								(setq desc "The cargo container was filled with a powerful industrial solvent which has flooded your ship's cargo hold.")
+								(setq desc (scrTranslate gScreen 'descContents3Start))
 
 								; pick a random item in the ship's cargo hold to damage
-								(setq allItems (objGetItems gPlayerShip "*U -ID;"))
+								(setq allItems (objGetItems gPlayerShip "*U -ID; -questItem;"))
 
 								; Destroy an item
 								(if (eq (count allItems) 0)
-									(setq desc (cat desc " Fortunately, your cargo hold is empty and nothing was damaged."))
+									(setq desc (cat desc (scrTranslate gScreen 'descContents3NothingDamaged)))
 									(block (itemDamaged)
 										(setq itemDamaged (random allItems))
-										(setq desc (cat desc " The solvent has destroyed " (itmGetName itemDamaged 8) "."))
+										(scrSetData gScreen 'itemName (itmGetName itemDamaged 8))
+										(setq desc (cat desc (scrTranslate gScreen 'descContents3ItemDestroyed)))
 										(objRemoveItem gPlayerShip itemDamaged)
 										)
 									)
@@ -5211,7 +5112,7 @@
 						</OnPaneInit>
 
 						<Actions>
-							<Action name="Undock" default="1" cancel="1" key="U">
+							<Action id="actionUndock" default="1" cancel="1">
 								<Exit/>
 							</Action>
 						</Actions>
@@ -5220,10 +5121,10 @@
 					; Cargo container is occupied by some refugees
 
 					<Contents4
-							desc="You open the cargo doors and see that a family of refugees is living inside. They are somewhat annoyed at being disturbed.">
+							desc=	"=(scrTranslate gScreen 'descContents4)">
 
 						<Actions>
-							<Action name="Undock" default="1" cancel="1" key="U">
+							<Action id="actionUndock" default="1" cancel="1">
 								<Exit/>
 							</Action>
 						</Actions>
@@ -5232,10 +5133,10 @@
 					; Cargo container is a trap for some pirates
 
 					<Contents5
-							desc="This appears to be a makeshift base for a group of pirates. You see several enemy ships appear on your screen...">
+							desc=	"=(scrTranslate gScreen 'descContents5)">
 
 						<Actions>
-							<Action name="Continue" default="1" cancel="1" key="C">
+							<Action id="actionContinue" default="1" cancel="1">
 								(block Nil
 									(sysAddEncounterEventAtDist 0 gPlayerShip &etPirateAmbush1; 50)
 									(scrExitDock gScreen)
@@ -5254,13 +5155,35 @@
 				portRadius=		"24"
 				maxDist=		"3"
 				/>
-
+				
+		<Language>
+			<Text id="descDefault">"The hatch to the container is sealed. Do you wish to open it?"</Text>
+			<Text id="actionOpenSeal">"[O]pen Seal"</Text>
+			<Text id="descOpenedStart">"You are docked at an abandoned cargo container. "</Text>
+			<Text id="descOpenedRefugees">"There is a family of refugees living here."</Text>
+			<Text id="descOpenedOneItem">(cat "You see " (scrGetData gScreen 'itemName) " here.")</Text>
+			<Text id="descOpenedSeveralItems">"You see several items here."</Text>
+			<Text id="descContentsEmpty">"The cargo container is empty."</Text>
+			<Text id="descContents2OneItem">(cat "The cargo container has " (scrGetData gScreen 'itemName) ".")</Text>
+			<Text id="descContents2VariousItems">"The cargo container is filled with various items."</Text>
+			<Text id="descContents3Start">"The cargo container was filled with a powerful industrial solvent which has flooded your ship's cargo hold. "</Text>
+			<Text id="descContents3NothingDamaged">"Fortunately, nothing was damaged."</Text>
+			<Text id="descContents3ItemDestroyed">(cat "The solvent has destroyed " (scrGetData gScreen 'itemName) ".")</Text>
+			<Text id="descContents4">"You open the cargo doors and see that a family of refugees is living inside. They are somewhat annoyed at being disturbed."</Text>
+			<Text id="descContents5">"This appears to be a makeshift base for a group of pirates. You see several enemy ships appear on your screen..."</Text>
+			
+		</Language>
 	</StationType>
 
 <!-- Ventari Settlers ===================================================== -->
 
 	<Sovereign UNID="&svVentariSettlers;"
-			name="Ventari Settlers"
+			name=": Ventari coalition"
+			shortName=":the Ventari"
+			adjective="Ventari"
+			demonym=":a Ventarian(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -5359,7 +5282,7 @@
 			multiHull=			"true"
 			armorID=			"&itOrthoSteel;"
 			hitPoints=			"740"
-            regen=              "3.7"
+            regen=              "15"
 			fireRateAdj=		"40"
 			explosionType=		"&vtThermoExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"

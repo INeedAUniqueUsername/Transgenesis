@@ -3,7 +3,12 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svUrakWarlords;"
-			name="Urak Warlords"
+			name=":the Urak Empire"
+			shortName=":the Urak"
+			adjective="Urak"
+			demonym=":an Urak warlord(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -337,7 +342,8 @@
 
 			multiHull=			"true"
 			armorID=			"&itUrakArmorLight;"
-			hitPoints=			"40"
+			hitPoints=			"60"
+			regen=				"1"
 			fireRateAdj=		"60"
 			explosionType=		"&vtKineticExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -399,7 +405,7 @@
 			multiHull=			"true"
 			armorID=			"&itUrakArmorLight;"
 			hitPoints=			"120"
-            regen=              "0.4"
+            regen=              "1"
 			fireRateAdj=		"60"
 			explosionType=		"&vtKineticExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -463,8 +469,8 @@
 
 			multiHull=			"true"
 			armorID=			"&itUrakArmorHeavy;"
-			hitPoints=			"630"
-            regen=              "6.3"
+			hitPoints=			"790"
+            regen=              "6"
 			fireRateAdj=		"40"
 			explosionType=		"&vtBlastExplosion3;"
 			ejectaType=			"&vtWreckEjecta;"

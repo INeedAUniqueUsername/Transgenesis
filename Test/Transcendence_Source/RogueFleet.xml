@@ -3,7 +3,10 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svRogueFleet;"
-			name="rogue fleet"
+			name=":the Rogue Fleet"
+			adjective="Rogue Fleet"
+			demonym=":a Rogue Fleetmember(s)"
+
 			alignment="destructive chaos"
 			/>
 
@@ -132,7 +135,7 @@
 			multiHull=			"true"
 			armorID=			"&itP120HexphaseArmor;"
 			hitPoints=			"370"
-            regen=              "1.1"
+            regen=              "2"
 			fireRateAdj=		"20"
 			explosionType=		"&vtThermoExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -184,8 +187,8 @@
 			armorID=			"&itP120HexphaseArmor;"
 			hitPoints=			"950"
 			multiHull=			"true"
-			regen=              "4.8"
-			shipRepairRate=		"1"
+			regen=              "20"
+			shipRegen=			"4"
 				 
 			canAttack=			"true"
 			fireRateAdj=		"20"

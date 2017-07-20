@@ -34,29 +34,6 @@
 					)
 				))
 
-			(setq rpgBuyItem (lambda (theObj theItem thePrice theCurrency options)
-				(block Nil
-					; Add to player ship
-                    (if (not (@ options 'noAddItem))
-					    (objAddItem gPlayerShip theItem)
-                        )
-					
-					; Record the transaction
-					(objRecordBuyItem gPlayerShip theObj theItem theCurrency thePrice)
-					
-					; Remember that we've bought something, for tutorial 
-					; purposes.
-					(typSetData &svPlayer; 'tutorialBought True)
-					)
-				))
-				
-			(setq rpgBuyItems (lambda (itemCount itemCost)
-				(block (itemsToBuy)
-					(setq itemsToBuy (scrRemoveItem gScreen itemCount))
-					(rpgBuyItem gSource itemsToBuy (multiply itemCount itemCost) (objGetDefaultCurrency gSource))
-					)
-				))
-
 			(setq rpgDockServices (lambda (targetObj options)
 				(block Nil
 				
@@ -214,10 +191,6 @@
 					)
 				))
 			
-			(setq rpgCalcBuyPrice (lambda (thisItem)
-				(objGetBuyPrice gSource thisItem)
-				))
-
 			(setq rpgCalcDockServiceBuyAmmo (lambda (dockObj shipObj theItem options)
 				(switch
 					(= dockObj shipObj)
@@ -280,6 +253,15 @@
 								visible: Nil
 								}
 				
+						;	If the station only installs as part of upgrade, then say so.
+
+						(objGetProperty dockObj 'installDeviceUpgradeOnly)
+							{
+								visible: True
+								enabled: Nil
+								desc: (scrTranslate gScreen "actionInstall:upgradeInstallOnly" { category:(@ options 'category) })
+								}
+							
 						;	If no items to install, action is disabled
 					
 						(not (setq allItems (objGetItems shipObj (@ options 'criteria))))
@@ -303,19 +285,9 @@
 										(scrTranslate gScreen "actionInstall:noCompatibleItemInCargo" { category:(@ options 'category) })
 										)
 								}
-								
-						;	If none of the items in our cargo hold can be installed because
-						;	the station requires an upgrade (purchase) then we show an error.
-					
-						(not (filter allItems theItemToInstall
-								(not (@ (objGetItemProperty dockObj theItemToInstall 'installItemStatus) 'upgradeInstallOnly))
-								))
-							{
-								visible: True
-								enabled: Nil
-								desc: (scrTranslate gScreen "actionInstall:upgradeInstallOnly" { category:(@ options 'category) })
-								}
 							
+						;	We might be able to install something
+
 						{
 							visible: True
 							enabled: True
@@ -565,6 +537,13 @@
 										visible: True
 										enabled: Nil
 										desc: itemStatus
+										}
+										
+								(= itemStatus 1)
+									{
+										visible: True
+										enabled: Nil
+										desc: (scrTranslate gScreen "actionRemove.noRoomForCargoHold" { item:theItem })
 										}
 								
 								(not (eq itemStatus 0))
@@ -976,14 +955,21 @@
 				
 								(not (isint itemStatus))
 									{
-										visible: Nil	;	If we cannot be removed, then the Remove action will show the error
+										visible: (@ dockStatus 'upgradeInstallOnly)	;	If we cannot be removed, then the Remove action will show the error
 										enabled: Nil
 										desc: itemStatus
 										}
 								
+								(= itemStatus 1)
+									{
+										visible: (@ dockStatus 'upgradeInstallOnly)	;	If we cannot be removed, then the Remove action will show the error
+										enabled: Nil
+										desc: (scrTranslate gScreen "actionRemove.noRoomForCargoHold" { item:theItem })
+										}
+								
 								(not (eq itemStatus 0))
 									{
-										visible: Nil	;	If we cannot be removed, then the Remove action will show the error
+										visible: (@ dockStatus 'upgradeInstallOnly)	;	If we cannot be removed, then the Remove action will show the error
 										enabled: Nil
 										desc: (or (scrTranslate gScreen "actionReplace.cannotReplace" { item:theItem })
                                                 (scrTranslate gScreen "actionReplace:cannotReplace" { item:theItem })
@@ -1244,10 +1230,6 @@
 					)
 				))
 			
-			(setq rpgCalcSellPrice (lambda (thisItem)
-				(objGetSellPrice gSource thisItem)
-				))
-
 			;	rpgCalcToHit
 			;
 			;	This is a generic function useful for calculating probability of
@@ -1688,7 +1670,7 @@
 								;	Check military ID
 
 								(and (@ data 'checkMilitaryID)
-										(itmHasModifier thisItem "Military")
+										(itmHasAttribute thisItem "Military")
 										(not (objGetItems targetObj "*+MilitaryID"))
 										)
 									(setq desc (or
@@ -1698,7 +1680,7 @@
 										))
 
 								(and (@ data 'checkMilitaryID)
-										(itmHasModifier thisItem "Illegal")
+										(itmHasAttribute thisItem "Illegal")
 										)
 									(setq desc (or
 										(objTranslate installerObj 'rpg.cannotInstallDeviceBecauseIllegal { item:thisItem targetObj:targetObj })
@@ -1944,109 +1926,16 @@
 					)
 				))
 
-			(setq rpgMissionAssignment (lambda (options)
-			
-				;	Options may contain the following fields
-				;
-				;		maxPerStation: Maximum number of missions that we give out at
-				;				this station.
-				;
-				;		missionCriteria: Criteria used to create new missions. [Required]
-				;
-				;		noMissionTextID: Language ID to display if there is no mission
-				;				available at this station. [Required]
-				
-				(block (
-					(noMissionTextID (@ options 'noMissionTextID))
-					theMission newMissions
-					)
-
-					;	Show proper screen
-
-					(switch
-						;	If we have an active mission from this station then we show it.
-
-						(setq theMission (@ (msnFind gSource "aS") 0))
-							(scrShowScreen gScreen &dsRPGMission; {	missionObj: theMission })
-
-						;	If we have an open mission available then display it.
-
-						(setq theMission (@ (msnFind gSource "oS") 0))
-							(scrShowScreen gScreen &dsRPGMission; {	missionObj: theMission })
-
-						;	Don't give out more than X mission per station
-								
-						(and (@ options 'maxPerStation) 
-								(geq (count (msnFind gSource "*S")) (@ options 'maxPerStation))
-								)
-							(scrShowScreen gScreen &dsRPGMessage; { desc:(scrTranslate gScreen noMissionTextID) })
-
-						;	Make a list of available missions. We filter out any missions
-						;	that are outside our system level. If we can't find anything, then we've got nothing.
-
-						(not (setq newMissions (typFind (@ options 'missionCriteria))))
-							(scrShowScreen gScreen &dsRPGMessage; { desc:(scrTranslate gScreen noMissionTextID) })
-
-						;	Create a random mission from the list. If we succeed, then show the mission
-						;	screen.
-
-						(setq theMission (msnCreate newMissions gSource))
-							(scrShowScreen gScreen &dsRPGMission; { missionObj: theMission })
-
-						; Otherwise, nothing
-
-						(scrShowScreen gScreen &dsRPGMessage; { desc:(scrTranslate gScreen noMissionTextID) })
-						)
-					)
-				))
-
-			(setq rpgMissionAssignmentOnScreenInit (lambda (options)
-			
-				;	Options may contain the following fields
-				;
-				;		maxPerStation: Maximum number of missions that we give out at
-				;				this station.
-				;
-				;		missionCriteria: Criteria used to create new missions. [Required]
-				
-				(block (newMissions)
-					(switch
-						;	If we have an active/open mission from this station then nothing to
-						;	do. We go through the normal dock screen.
-
-						(@ (msnFind gSource "aoS") 0)
-							True
-
-						;	Don't give out more than X mission per station
-								
-						(and (@ options 'maxPerStation) 
-								(geq (count (msnFind gSource "*S")) (@ options 'maxPerStation))
-								)
-							True
-
-						;	See if there are any missions for the ship that we should show directly
-						;	when we dock (as opposed to when the player goes to the bridge).
-						;
-						;	If not, nothing to do.
-
-						(not (setq newMissions (typFind (cat (@ options 'missionCriteria) " +onDockMission;"))))
-							True
-
-						;	Create a random mission from the list. If we fail, then just continue
-						;	as normal.
-
-						(not (setq theMission (msnCreate newMissions gSource)))
-							True
-						
-						;	Otherwise, show the mission screen
-					
-						(scrShowScreen gScreen &dsRPGMission; { missionObj: theMission })
-						)
-					)
-				))
-
 			(setq rpgPageCount (lambda (textDesc)
-				(if (isatom textDesc) 1 (count textDesc))
+				(switch
+					(isatom textDesc) 
+						1
+
+					(= (typeOf textDesc) 'struct)
+						1
+						
+					(count textDesc)
+					)
 				))
 
 			(setq rpgPageDesc (lambda (textDesc pageNo)
@@ -2128,6 +2017,9 @@
 				;
 				;	We accept the following options:
 				;
+				;		actionDoneID: Action ID to use for the done button (defaults to
+				;				'actionDone).
+				;
 				;		missionObj: Required if 'onAcceptDecline is defined.
 				;
 				;		onAcceptDecline: (lambda (theScreen acceptDecline pageDesc options) ...)
@@ -2153,7 +2045,13 @@
 					
 					;	Show the appropriate page
 
-					(scrSetDesc theScreen (@ pageDesc 'desc))
+					(if (@ pageDesc 'textID)
+						(scrSetDesc theScreen (or
+							(msnTranslate (@ options 'missionObj) (@ pageDesc 'textID) (or (@ pageDesc 'data) gData))
+							(scrTranslate theScreen (@ pageDesc 'textID) (or (@ pageDesc 'data) gData))
+							))
+						(scrSetDesc theScreen (@ pageDesc 'desc))
+						)
 					
 					;	Make sure the actions list is properly initialized.
 					
@@ -2168,7 +2066,10 @@
 								)
 							(setq actions (list
 								{
-									label: (or (scrTranslate theScreen 'actionUndock) (typTranslate &dsDockScreenBase; 'actionUndock))
+									label: (or 
+										(scrTranslate theScreen 'actionUndock) 
+										(typTranslate &dsDockScreenBase; 'actionUndock)
+										)
 									code: (@ pageDesc 'acceptCode)
 									nextPage: 'missionAccept
 									}
@@ -2205,7 +2106,12 @@
 						
 						(!= (typeof actions) 'list)
 							(setq actions (list {
-								label: (or (@ pageDesc 'label) (@ pageDesc 'nextLabel))
+								label: (or 
+									(@ pageDesc 'label) 
+									(@ pageDesc 'nextLabel) 
+									(msnTranslate (@ options 'missionObj) (@ pageDesc 'labelID))
+									(scrTranslate theScreen (@ pageDesc 'labelID))
+									)
 								nextPage: (@ pageDesc 'nextPage)
 								code: (or (@ pageDesc 'code) (@ pageDesc 'nextCode))
 								}))
@@ -2218,6 +2124,7 @@
 							(nextPage (@ actionDesc 'nextPage))
 							
 							(actionID (cat "action" nextActionID))
+							(actionDoneID (or (@ options 'actionDoneID) 'actionDone))
 							
 							;	Figure out the label, if we don't have one.
 							
@@ -2225,6 +2132,11 @@
 								(switch
 									(@ actionDesc 'label)
 										(@ actionDesc 'label)
+
+									(@ actionDesc 'labelID)
+										(or (msnTranslate (@ options 'missionObj) (@ actionDesc 'labelID))
+												(scrTranslate theScreen (@ actionDesc 'labelID))
+												)
 										
 									;	If we're continuing, and at the last page, then we
 									;	use the [D]one label.
@@ -2232,13 +2144,13 @@
 									(and (or (not nextPage) (= nextPage 'nextPage))
 											atLastPage
 											)
-										(or (scrTranslate theScreen 'actionDone) (typTranslate &dsDockScreenBase; 'actionDone))
+										(or (scrTranslate theScreen actionDoneID) (typTranslate &dsDockScreenBase; actionDoneID))
 										
 									;	If we've got an explicit exit, then use the [D]one
 									;	label.
 									
 									(or (= nextPage 'exitPane) (= nextPage 'exitScreen))
-										(or (scrTranslate theScreen 'actionDone) (typTranslate &dsDockScreenBase; 'actionDone))
+										(or (scrTranslate theScreen actionDoneID) (typTranslate &dsDockScreenBase; actionDoneID))
 										
 									;	If we've got an explicit undock, then use the [U]ndock
 									;	label.
@@ -2265,7 +2177,7 @@
 									Nil
 									)
 								)
-								
+							(actionCode (@ actionDesc 'code))
 							(nextPageNo Nil)
 							)
 							
@@ -2301,9 +2213,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												(scrSetData theScreen 'curPage Nil)
 												(if (@ options 'onExitPane)
@@ -2320,9 +2230,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												(scrSetData theScreen 'curPage (+ pageNo 1))
 												(scrShowPane theScreen (@ (scrGetScreen theScreen) 'pane))
@@ -2334,9 +2242,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												(scrExitScreen theScreen)
 												)
@@ -2347,9 +2253,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												(scrExitScreen theScreen 'forceUndock)
 												)
@@ -2360,9 +2264,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												((@ options 'onAcceptDecline) theScreen 'accept pageDesc options)
 												)
@@ -2373,9 +2275,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												((@ options 'onAcceptDecline) theScreen 'decline pageDesc options)
 												)
@@ -2388,9 +2288,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												(scrSetData theScreen 'curPage nextPageNo)
 												(scrShowPane theScreen (@ (scrGetScreen theScreen) 'pane))
@@ -2404,9 +2302,7 @@
 									(scrAddAction theScreen actionID Nil actionLabel Nil actionAccel
 										(lambda ()
 											(block Nil
-												(if (@ actionDesc 'code)
-													((@ actionDesc 'code))
-													)
+												(if actionCode (actionCode))
 													
 												((@ options 'onNavigate) theScreen nextPage pageDesc options)
 												)
@@ -2517,22 +2413,6 @@
 					    )
 				    )            
                 ))
-                
-			(setq rpgSellItems (lambda (itemCount itemCost inventoryObj)
-				(block (itemsToSell)
-					(setq itemsToSell (scrRemoveItem gScreen itemCount))
-					
-					; Add to player ship
-					(objAddItem (or inventoryObj gSource) itemsToSell)
-					
-					; Record transaction
-					(objRecordBuyItem gSource gPlayerShip itemsToSell (objGetDefaultCurrency gSource) (* itemCount itemCost))
-					
-					; Remember that we've sold something, for tutorial 
-					; purposes.
-					(typSetData &svPlayer; 'tutorialSold True)
-					)
-				))
 			)
 	</Globals>
 

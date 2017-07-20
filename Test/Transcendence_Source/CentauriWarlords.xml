@@ -3,7 +3,12 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svCentauriWarlords;"
-			name="Centauri Clans"
+			name=":the Centauri coalition"
+			shortName=":the Centauri"
+			adjectice="Centauri"
+			demonym=":a Centauri warlord(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -577,8 +582,8 @@
 			>
 
 		<Armor>
-			<ArmorSection start="270" span="180" armorID="&itLightTitaniumPlate;" />
-			<ArmorSection start="90"  span="180" armorID="&itLightTitaniumPlate;" />
+			<ArmorSection start="270" span="180" armorID="&itUltraLightTitaniumArmor;" />
+			<ArmorSection start="90"  span="180" armorID="&itUltraLightTitaniumArmor;" />
 		</Armor>
 
 		<Devices>
@@ -610,7 +615,7 @@
 	<!-- Centauri Occupation -->
 
 	<StationType UNID="&stCentauriOccupation;"
-			name=				"occupied Commonwealth colony"
+			name=				"occupied Commonwealth habitat"
 			sovereign=			"&svCommonwealth;"
 			inherit=			"&baCommonwealthStation;"
 				 
@@ -621,10 +626,11 @@
 			canAttack=			"true"
 			noBlacklist=		"true"
 
+			level=				"4"
 			multiHull=			"true"
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"150"
-            regen=              "0.5"
+            regen=              "1"
 			explosionType=		"&vtBlastExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
 
@@ -633,15 +639,20 @@
 			locationCriteria=	"+planetary"
 			>
 
-		<Names noArticle="true">Arenius Colony; Baja Colony; Clearspace Station; Durin Colony;
-				Earthnight Colony; Fairmoon Settlement; Greenfield Colony;
-				Hector Colony; Ionfalls Colony; Jovian Clouds Settlement; Keller Station;
-				Lama Colony; Murchenson Settlement; Nightfall Colony; Oort Settlement;
-				Pallas Station; Queequeg Colony; Radiant Settlement; Star's End Station;
-				Terra Ex Colony; Uriel Station; Venuslight Colony; Weathermoon Colony
+		<Names noArticle="true">Arenius Habitat; Baja Habitat; Clearspace Station; Durin Habitat;
+				Earthnight Habitat; Fairmoon Settlement; Greenfield Habitat;
+				Hector Habitat; Ionfalls Habitat; Jovian Clouds Settlement; Keller Station;
+				Lama Habitat; Murchenson Settlement; Nightfall Habitat; Oort Settlement;
+				Pallas Station; Queequeg Habitat; Radiant Settlement; Star's End Station;
+				Terra Ex Habitat; Uriel Station; Venuslight Habitat; Weathermoon Habitat
 		</Names>
 
-		<Image			imageID="&rsStations1;" imageX="256" imageY="256" imageWidth="128" imageHeight="128"/>
+		<ImageVariants>
+			<Image	imageID="&rsCommonwealthSlumsImage;" imageX="0" imageY="0" imageWidth="64" imageHeight="128"/>
+			<Image	imageID="&rsCommonwealthSlumsImage;" imageX="64" imageY="0" imageWidth="64" imageHeight="128"/>
+			<Image	imageID="&rsCommonwealthSlumsImage;" imageX="128" imageY="0" imageWidth="64" imageHeight="128"/>
+			<Image	imageID="&rsCommonwealthSlumsImage;" imageX="192" imageY="0" imageWidth="64" imageHeight="128"/>
+		</ImageVariants>
 
 		<Ships>
 			<Ship count="1d4+1"	class="&scCentauriRaider;"	orders="guard"	sovereign="&svCentauriWarlords;"/>
@@ -696,7 +707,7 @@
 
 				<Panes>
 					<Default
-							desc=	"You are docked at a small Commonwealth settlement. The people here are friendly and grateful to you, but they mostly go on with their business.">
+							desc=	"You are docked at a small Commonwealth habitat. The people here are friendly and grateful to you, but they mostly go on with their business.">
 
 						<Actions>
 							<Action name="Undock" default="1" cancel="1" key="U">
@@ -720,7 +731,7 @@
 					</Hiding>
 
 					<LiberatedByOther
-							desc=	"You are docked at a small Commonwealth settlement. The people here are friendly, but they mostly go on with their business.">
+							desc=	"You are docked at a small Commonwealth habitat. The people here are friendly, but they mostly go on with their business.">
 
 						<Actions>
 							<Action name="Undock" default="1" cancel="1" key="U">
@@ -849,6 +860,7 @@
 
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"90"
+			regen=				"1"
 			fireRateAdj=		"40"
 			explosionType=		"&vtKineticExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -890,21 +902,20 @@
 	<!-- Arco Vaughn's Habitat -->
 
 	<StationType UNID="&stArcoVaughnHabitat;"
-			name=				"Arco Vaughn's container habitat"
+			name=				": Arco Vaughn's container habitat"
 			sovereign=			"&svCentauriWarlords;"
-			abandonedScreen=	"Main"
-			dockScreen=			"Main"
+			
+			abandonedScreen=	"&dsRPGAbandonedStation;"
 			canAttack=			"true"
 			noFriendlyTarget=	"true"
 
+			level=				"2"
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"35"
 			ejectaType=			"&vtWreckEjecta;"
 
 			attributes=			"arcoVaughn, centauriWarlords, enemy, human, populated, uncharted, warlords"
 			maxAppearing=		"1"
-
-			noArticle=			"true"
 			>
 
 		<ImageVariants>
@@ -986,34 +997,6 @@
 			</OnAttacked>
 		</Events>
 
-		<DockScreens>
-			<Main>
-
-				<Panes>
-					<Default
-							desc=	"You are docked at the lifeless ruins of a container habitat. This makeshift station has been recently occupied by a band of Centauri warlords.">
-
-						<Actions>
-							<Action name="Loot" key="L" default="1" >
-								(scrShowScreen gScreen &dsRPGLoot;)
-							</Action>
-
-							<Action name="Jettison" key="J">
-								(scrShowScreen gScreen &dsRPGJettison;)
-							</Action>
-
-							<Action name="Undock" cancel="1" key="U">
-								<Exit/>
-							</Action>
-
-						</Actions>
-
-					</Default>
-				</Panes>
-			</Main>
-
-		</DockScreens>
-
 		<DockingPorts>
 			<Port x="0"		y="70" />
 			<Port x="61"	y="35" />
@@ -1022,6 +1005,12 @@
 			<Port x="-61"	y="-35" />
 			<Port x="-61"	y="35" />
 		</DockingPorts>
+		
+		<Language>
+			<Text id="descAbandonedStation">
+				"You are docked at the lifeless ruins of a container habitat. This makeshift station has been recently occupied by a band of Centauri warlords."
+			</Text>
+		</Language>
 
 	</StationType>
 	

@@ -56,7 +56,7 @@
 	<!-- Sisters of Domina -->
 
 	<StationType UNID="&stSistersOfDomina;"
-			name=				"Sisters of Domina|Sisters of Domina"
+			name=				":the Sisters of Domina|Sisters of Domina"
 			sovereign=			"&svSistersOfDomina;"
 			dockScreen=			"Main"
 			abandonedScreen=	"&dsAbandonedStation;"
@@ -65,15 +65,13 @@
 			multiHull=			"true"
 			armorID=			"&itPlasteelPlate;"
 			hitPoints=			"160"
-			regen=              "0.5"
+			regen=              "2"
 			ejectaType=			"&vtWreckEjecta;"
 
 			attributes=			"envAir, envAvoidsFire, friendly, generic, human, majorStation, populated, religious, sistersOfDomina"
 			levelFrequency=		"ruccc ur--- ----- ----- -----"
 			unique=				"inSystem"
 			locationCriteria=	"-innerSystem, +planetary"
-
-			definiteArticle=	"true"
 			>
 
 		<Image			imageID="&rsStations1;" imageX="384" imageY="512" imageWidth="128" imageHeight="128"/>
@@ -1212,7 +1210,12 @@
 -->
 
 	<Sovereign UNID="&svSistersOfDomina;"
-			name="Sisters of Domina"
+			name=":the Sisters of Domina"
+			shortName=":the Sisters"
+			adjective="Sister"
+			demonym=":a Sister(s)"
+			plural="true"
+
 			alignment="constructive chaos"
 			>
 

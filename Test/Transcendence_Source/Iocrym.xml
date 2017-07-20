@@ -3,7 +3,11 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svIocrym;"
-			name="Iocrym"
+			name=":the Iocrym assembly"
+			adjective="Iocrym"
+			demonym=":an Iocrym(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
@@ -148,7 +152,7 @@
 			mass=				"100000"
 			frequency=			"rare"
 			unknownType=		"&itUnknownAlienDevice10;"
-			attributes=			"Alien; Iocrym; MajorItem"
+			attributes=			"alien, armorRepair, iocrym, majorItem"
 
 			description=		"This alien device heals Iocrym armor. It is possible that it is able to repair other kinds of armor as well."
 			>
@@ -213,7 +217,7 @@
 			name=				"[segment(s) of ]light Iocrym armor"
 			level=				"11"
 			value=				"50000"
-			mass=				"1700"
+			mass=				"2000"
 			attributes=			"Alien; Iocrym; MinorItem"
 			frequency=			"common"
 			numberAppearing=	"1d4"
@@ -457,7 +461,7 @@
 							; Deploy sentinels
 							(for i 1 theCount
 								(block (theSentinel)
-									(setq theSentinel (sysCreateShip &scIocrymSentinel; gSource &svIocrym;))
+									(setq theSentinel (sysCreateShip &scIocrymSentinel; gSource (objGetSovereign gSource)))
 									(shpOrder theSentinel 'attack theTarget)
 									(shpOrder theSentinel 'gate gSource)
 									
@@ -548,7 +552,7 @@
 	<StationType UNID="&stIocrymOutpost;"
 			name=				"Iocrym outpost"
 			sovereign=			"&svIocrym;"
-			abandonedScreen=	"&dsAbandonedStation;"
+			abandonedScreen=	"&dsRPGAbandonedStation;"
 			canAttack=			"true"
 
 			multiHull=			"true"
@@ -572,11 +576,10 @@
 		</Ships>
 		
 		<Language>
-			<Text id="AbandonedScreenDesc">
-				(cat "You are docked at the remains of an alien outpost. "
-					"The crystalline walls of this structure are cracked and pitted; "
-					"it appears that the outpost was fully automated as you see no signs of alien bodies."
-					)
+			<Text id="descAbandonedStation">
+				You are docked at the remains of an alien outpost.
+				The crystalline walls of this structure are cracked and pitted; 
+				it appears that the outpost was fully automated as you see no signs of alien bodies.
 			</Text>
 		</Language>
 

@@ -146,7 +146,7 @@
 	<!-- Miner's Cargo Hold -->
 
 	<ItemType UNID="&itMinersCargoHold;"
-			name=				"miners's cargo hold"
+			name=				"miner's cargo hold"
 			attributes=			"commonwealth, majorItem, minersHold, miningEquipment"
 			  
 			level=				"3"
@@ -204,13 +204,13 @@
 			value=				"650"
 			mass=				"1000"
 			  
-			description=		"A solar panel array converts sunlight into energy usable by a ship's reactor."
+			description=		"A solar panel array can power a ship's devices, saving on fuel consumption. This array can generate a maximum of 15 MWs of power."
 			>
 
 		<Image imageID="&rsItems1;" imageX="0" imageY="192" imageWidth="96" imageHeight="96"/>
 
 		<SolarDevice
-				refuel=			"60"
+				powerGen=	"150"
 				/>
 
 	</ItemType>
@@ -233,6 +233,7 @@
 		<Image imageID="&rsItems1;" imageX="96" imageY="384" imageWidth="96" imageHeight="96"/>
 
 		<DriveDevice
+				maxSpeedInc=	"2"
 				maxSpeed=		"20"
 				thrust=			"100"
 				powerUse=		"30"
@@ -606,6 +607,7 @@
 		<Image imageID="&rsItems1;" imageX="96" imageY="384" imageWidth="96" imageHeight="96"/>
 
 		<DriveDevice
+				maxSpeedInc=	"4"
 				maxSpeed=		"25"
 				thrust=			"300"
 				powerUse=		"280"
@@ -664,6 +666,7 @@
 		<Image imageID="&rsItems1;" imageX="96" imageY="384" imageWidth="96" imageHeight="96"/>
 
 		<DriveDevice
+				maxSpeedInc=	"4"
 				maxSpeed=		"25"
 				thrust=			"350"
 				powerUse=		"1000"
@@ -725,7 +728,7 @@
 	<!-- SN2500 reactor -->
 
 	<ItemType UNID="&it250MWReactor;"
-			name=				"SN2500 reactor"
+			name=				":an SN2500 reactor"
 			attributes=			"commonwealth, majorItem; military"
 			  
 			level=				"7"
@@ -735,7 +738,6 @@
 			mass=				"5000"
 
 			description=		"The SN2500 is a military reactor designed for the advanced Centurion/X heavy gunship."
-			reverseArticle=		"true"
 			>
 
 		<Image imageID="&rsItems1;" imageX="288" imageY="288" imageWidth="96" imageHeight="96"/>
@@ -920,6 +922,7 @@
 		<Image imageID="&rsItems1;" imageX="96" imageY="384" imageWidth="96" imageHeight="96"/>
 
 		<DriveDevice
+				maxSpeedInc=	"8"
 				maxSpeed=		"30"
 				thrust=			"750"
 				powerUse=		"2000"

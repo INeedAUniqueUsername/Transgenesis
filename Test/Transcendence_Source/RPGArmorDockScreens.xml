@@ -217,7 +217,8 @@
 							
 						;	Page Down goes to the next page (either weapons or misc devices)
 						
-						(scrShowAction gScreen 'actionDonePgUp (@ gData 'doubleExit))
+						(scrShowAction gScreen 'actionDonePgUp (and (@ gData 'doubleExit) (!= gSource gPlayerShip)))
+						(scrShowAction gScreen 'actionDonePgUpPlayer (and (@ gData 'doubleExit) (= gSource gPlayerShip)))
 						(scrShowAction gScreen 'actionManageWeapons (@ gData 'manageWeapons))
 						(scrShowAction gScreen 'actionManageMiscDevices (and (@ gData 'manageMiscDevices) (not (@ gData 'manageWeapons))))
 						)
@@ -308,6 +309,9 @@
 					<Action id="actionDonePgUp" minor="true">
 						(scrExitScreen gScreen)
 					</Action>
+					<Action id="actionDonePgUpPlayer" minor="true">
+						(scrExitScreen gScreen)
+					</Action>
 					<Action id="actionManageWeapons" minor="true">
 						(block Nil
 							(scrExitScreen gScreen)
@@ -354,6 +358,7 @@
 		<Language>
 			<Text id="actionDone">"[Escape] Done"</Text>
 			<Text id="actionDonePgUp">"[PageUp] Dock Services"</Text>
+			<Text id="actionDonePgUpPlayer">"[PageUp] Ship Configuration"</Text>
 			<Text id="actionDisable">"Disa[b]le"</Text>
 			<Text id="actionEnable">"Ena[b]le"</Text>
 			<Text id="actionInstall">"[I]nstall"</Text>
@@ -1220,7 +1225,7 @@
 											)
 											
 									(and (@ gData 'checkMilitaryID) 
-											(itmHasModifier thisItem "Military")
+											(itmHasAttribute thisItem "Military")
 											(not (objGetItems gPlayerShip "*+MilitaryID"))
 											)
 										(block Nil
@@ -1229,7 +1234,7 @@
 											)
 											
 									(and (@ gData 'checkMilitaryID) 
-											(itmHasModifier thisItem "Illegal")
+											(itmHasAttribute thisItem "Illegal")
 											)
 										(block Nil
 											(setq desc "We do not install illegal armor segments.")
@@ -1417,13 +1422,13 @@
 								(setq desc (@ result 2))
 								
 							(and (@ gData 'checkMilitaryID) 
-									(itmHasModifier thisItem "Military")
+									(itmHasAttribute thisItem "Military")
 									(not (objGetItems gPlayerShip "*+MilitaryID"))
 									)
 								(setq desc (typTranslate &dsRPGUpgradeArmor; 'descNeedMilitaryID { armor:thisItem }))
 								
 							(and (@ gData 'checkMilitaryID) 
-									(itmHasModifier thisItem "Illegal")
+									(itmHasAttribute thisItem "Illegal")
 									)
 								(setq desc (typTranslate &dsRPGUpgradeArmor; 'descArmorIllegal { armor:thisItem }))
 								
@@ -1773,6 +1778,11 @@
 			<Text id="actionRemove:cannotRemove">"The device cannot be removed."</Text>
 			<Text id="actionRemove:freeRemove">"The device can be removed free of charge."</Text>
 			<Text id="actionRemove:noRoomInCargo">"The device cannot be removed because there is no room in your cargo hold to store it."</Text>
+			<Text id="actionRemove.noRoomForCargoHold">
+				(cat
+					"Cannot remove cargo expansion because you have too much cargo."
+					)
+			</Text>
 			<Text id="actionRemove:remove">(cat "The device can be removed for " (@ gData 'cost) ".")</Text>
 			<Text id="actionRemove:upgradeInstallOnly">"Sorry, we only install or remove items as part of an upgrade purchase."</Text>
 			<Text id="actionRemove:noTech">(cat "We do not have the technology to remove a level " (itmGetLevel (@ gData 'item)) " device.")</Text>
@@ -1788,7 +1798,7 @@
 							
 					(@ gData 'maxLevel)
 						(cat 
-							"We install devices up to tech level " (objGetProperty (@ gData 'dockObj) 'installArmorMaxLevel)
+							"We install devices up to tech level " (objGetProperty (@ gData 'dockObj) 'installDeviceMaxLevel)
 							" (but you don't have anything better than level " (@ gData 'maxLevel) " in your cargo hold)."
 							)
 						

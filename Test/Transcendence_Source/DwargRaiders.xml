@@ -3,20 +3,41 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svDwargRaiders;"
-			name="Dwarg Raiders"
+			name=":the Dwarg civilization"
+			shortName=":the Dwarg"
+			adjective="Dwarg"
+			demonym=":a Dwarg master(s)"
+			plural="true"
+
 			alignment="destructive order"
 			/>
 
 	<Sovereign UNID="&svFriendlyZoanthrope;"
-			name="zoanthrope"
+			name="zoanthropes"
+			adjective="zoanthrope"
+			demonym=":a zoanthrope(s)"
 			alignment="constructive chaos"
-			>
+			/>
+
+	<!-- Zoanthrope base class -->
+	
+	<Type UNID="&baZoanthropeBase;">
+		<Events>
+			<OnObjDestroyed>
+				(intZoanthropeOnObjDestroyed)
+			</OnObjDestroyed>
+
+			<OnOrderChanged>
+				(intZoanthropeOnOrderChanged)
+			</OnOrderChanged>
+		</Events>
+		
 		<Language>
 			<Text id="WatchYourTargets">"\"Grrr!\""</Text>
 			<Text id="NiceShooting">""</Text>
 		</Language>
-	</Sovereign>
-
+	</Type>
+	
 	<!-- Dwarg Raider -->
 
 	<ShipClass UNID="&scDwargRaider;"
@@ -24,6 +45,7 @@
 			class=				"Zoanthrope raider"
 			type=				""
 			defaultSovereign=	"&svDwargRaiders;"
+			inherit=			"&baZoanthropeBase;"
 
 			mass=				"25"
 			cargoSpace=			"5"
@@ -52,16 +74,6 @@
 		<Effects>
 			<Effect type="thrustMain"		posAngle="180"	posRadius="4"	posZ="0"	rotation="180"/>
 		</Effects>
-		
-		<Events>
-			<OnObjDestroyed>
-				(intZoanthropeOnObjDestroyed)
-			</OnObjDestroyed>
-
-			<OnOrderChanged>
-				(intZoanthropeOnOrderChanged)
-			</OnOrderChanged>
-		</Events>
 
 		<AISettings
 			aggressor=			"true"
@@ -70,7 +82,7 @@
 			fireAccuracy=		"90"
 			perception=			"4"
 			/>
-
+			
 	</ShipClass>
 
 	<!-- Dwarg Master -->
@@ -135,6 +147,7 @@
 			class=				"Zoanthrope behemoth"
 			type=				""
 			defaultSovereign=	"&svDwargRaiders;"
+			inherit=			"&baZoanthropeBase;"
 
 			size=				"90"
 			mass=				"10000"
@@ -210,16 +223,6 @@
 			<Effect type="thrustMain"		posAngle="-176"	posRadius="57"	posZ="7"	rotation="180"	effect="&efMainThrusterLarge;"/>
 		</Effects>
 			
-		<Events>
-			<OnObjDestroyed>
-				(intZoanthropeOnObjDestroyed)
-			</OnObjDestroyed>
-
-			<OnOrderChanged>
-				(intZoanthropeOnOrderChanged)
-			</OnOrderChanged>
-		</Events>
-
 		<AISettings
 			aggressor=			"true"
 			fireRateAdj=		"20"
@@ -468,7 +471,7 @@
 			multiHull=			"true"
 			armorID=			"&itDwargChitonArmor;"
 			hitPoints=			"160"
-            regen=              "0.5"
+            regen=              "2"
 			fireRateAdj=		"50"
 			explosionType=		"&vtBlastExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -523,7 +526,7 @@
 			multiHull=			"true"
 			armorID=			"&itDwargCatoptricArmor;"
 			hitPoints=			"210"
-            regen=              "0.6"
+            regen=              "2"
 			fireRateAdj=		"50"
 			explosionType=		"&vtBlastExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -619,7 +622,7 @@
 			multiHull=			"true"
 			armorID=			"&itDwargCatoptricArmor;"
 			hitPoints=			"210"
-            regen=              "0.6"
+            regen=              "2"
 			fireRateAdj=		"50"
 			explosionType=		"&vtBlastExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -671,8 +674,8 @@
 
 			multiHull=			"true"
 			armorID=			"&itDwargHolochroalArmor;"
-			hitPoints=			"900"
-			regen=              "9"
+			hitPoints=			"1400"
+			regen=              "11"
 			fireRateAdj=		"20"
 			explosionType=		"&vtBlastExplosion4;"
 			ejectaType=			"&vtWreckEjecta;"

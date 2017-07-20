@@ -53,8 +53,11 @@
 						)
 						
 						;	Set the page text
-						
-						(scrSetDesc gScreen (@ pageDesc 'desc))
+
+						(if (@ pageDesc 'textID)
+							(scrSetDescTranslate gScreen (@ pageDesc 'textID) (or (@ pageDesc 'data) gData))
+							(scrSetDesc gScreen (@ pageDesc 'desc))
+							)
 						
 						;	Add all the appropriate actions
 						
@@ -69,7 +72,9 @@
 											gScreen 
 											(cat "action" nextActionID)
 											Nil
-											(@ actionDesc 'label)
+											(or (@ actionDesc 'label)
+												(scrTranslate gScreen (@ actionDesc 'labelID))
+												)
 											Nil
 											(switch
 												(eq (count (@ pageDesc 'actions)) 1)
@@ -115,7 +120,7 @@
 							
 							(block (
 								(nextPage (or (@ pageDesc 'nextPage) (@ pageDesc 'nextPane)))
-								(label (or (@ pageDesc 'label) (@ pageDesc 'nextLabel)))
+								(label (or (@ pageDesc 'label) (@ pageDesc 'nextLabel) (scrTranslate gScreen (@ pageDesc 'labelID))))
 								(code (or (@ pageDesc 'code) (@ pageDesc 'nextCode)))
 								)
 								(scrAddAction

@@ -51,7 +51,7 @@
 	<!-- Ammo Box, Cluser MAG -->
 
 	<ItemType UNID="&itAmmoBoxMAG;"
-			name=				"Cluster MAG ammunition box(es)"
+			name=				"ZG24 cluster MAG ammunition box(es)"
 			level=				"6"
 			value=				"1250"
 			mass=				"2500"
@@ -60,7 +60,7 @@
 			unknownType=		"&vtUnknownAmmoBox;"
 			attributes=			"ammoBox, consumable"
 
-			description=		"This box contains ZG24 Cluster MAGs."
+			description=		"This box contains ZG24 cluster MAGs."
 			>
 
 		<Image imageID="&rsItems1;" imageX="0" imageY="384" imageWidth="96" imageHeight="96"/>
@@ -119,7 +119,7 @@
 	<!-- Ammo Box, Contraband -->
 
 	<ItemType UNID="&itAmmoBoxContraband;"
-			name=				"Contraband ammunition box(es)"
+			name=				"contraband ammunition box(es)"
 			level=				"6"
 			value=				"3000"
 			mass=				"2500"
@@ -692,7 +692,7 @@
 			mass=				"1000"
 			frequency=			"uncommon"
 			numberAppearing=	"1d4"
-			attributes=			"armorDamage, minorItem, res"
+			attributes=			"armorDamage, minorItem"
 			unknownType=		"&itUnknownBarrel5;"
 
 			description=		"Meteorsteel interferes with most kinds of shield generators."
@@ -715,7 +715,7 @@
 			mass=				"1000"
 			frequency=			"rare"
 			numberAppearing=	"1d4"
-			attributes=			"ArmorEnhance; MinorItem; Res"
+			attributes=			"ArmorEnhance; MinorItem"
 			unknownType=		"&itUnknownBarrel5;"
 
 			description=		"Dust activated by dyons immunizes armor against ion effects that disable or damage a ship's systems."
@@ -1315,7 +1315,7 @@
 			mass=				"1"
 			frequency=			"notrandom"
 			unknownType=		"&itUnknownROM;"
-			attributes=			"Info; MinorItem; NeurohackROM; NotForSale"
+			attributes=			"info, minorItem, neurohackROM, notForSale, questItem"
 
 			description=		"This ROM enables you to connect to AIs and subdue them."
 			
@@ -1769,7 +1769,7 @@
 							(block Nil
 								(switch
 									; Alien items cannot be enhanced
-									(itmHasModifier shieldItem "Alien")
+									(itmHasAttribute shieldItem "Alien")
 										(objSendMessage gSource Nil "Shield generator is too alien for the ROM to enhance")
 
 									; If the shield generator is too advanced, then nothing happens

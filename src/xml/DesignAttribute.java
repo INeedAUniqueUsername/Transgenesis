@@ -43,6 +43,36 @@ public class DesignAttribute {
 				return true;
 			}
 		},
+		DOCKSCREEN_LOCAL_OR_TYPE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				
+				//Get the named local dockscreens from the selected element and add them to the box
+				DesignElementOld selected = XMLPanel.getSelected();
+				if(selected.hasSubElement("DockScreens")) {
+					for(DesignElementOld e : selected.getSubElementsByName("DockScreens").get(0).getSubElements()) {
+						field.addItem(e.getName());
+					}
+				}
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("DockScreen");
+			}
+		},
+		TYPE_ARMOR {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElementOld design) {
+				return design != null && design.getName().equals("ItemType") && design.hasSubElement("Armor");
+			}
+		},
 		TYPE_IMAGE {
 			public JComponent getInputField(String value) {
 				//WIP
@@ -677,9 +707,9 @@ public class DesignAttribute {
 		}
 		*/
 		public void addValidTypes(JComboBox<String> box) {
-			XMLPanel.getExtensionAvailableTypes().forEach((String type, DesignElementOld design) -> {
+			XMLPanel.getExtensionTypeMap().forEach((String type, DesignElementOld design) -> {
 				if(typeIsValid(design)) {
-					box.addItem(type);
+					box.addItem("&" + type + ";");
 				}
 			});
 		}

@@ -64,8 +64,10 @@ public class XMLPanel extends JPanel {
 	private final JTree elementTree;
 	private final JScrollPane elementTreePane;
 	
-	private final List<TranscendenceMod> mods;
-	private DesignElementOld selected;
+	public static boolean showErrors = false;
+	
+	//private final List<TranscendenceMod> mods;
+	private static DesignElementOld selected;
 	private static TranscendenceMod selectedExtension;
 	
 	public final JTextField nameField;
@@ -79,6 +81,7 @@ public class XMLPanel extends JPanel {
 	//JPanel subelementPanel;
 	public XMLPanel(FrameOld frame) {
 		this.frame = frame;
+		JOptionPane.showMessageDialog(this, createTextArea("TransGenesis: Transcendence XML Editor\nBy 0xABCDEF\n\nSelect a File or Folder to begin.", false));
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
 		JFileChooser j = new JFileChooser();
@@ -91,8 +94,10 @@ public class XMLPanel extends JPanel {
 		} else {
 			f = new File("");
 		}
+		//origin = new DefaultMutableTreeNode(f.getAbsolutePath());
+		origin = new DefaultMutableTreeNode("TransGenesis");
+		/*
 		mods = Loader.loadAllMods(f);
-		origin = new DefaultMutableTreeNode(f.getAbsolutePath());
 		for(TranscendenceMod tm : mods) {
 			if(tm == null) {
 				System.out.println("Null extension found");
@@ -100,6 +105,7 @@ public class XMLPanel extends JPanel {
 				origin.add(tm.toTreeNode());
 			}
 		}
+		*/
 		DefaultTreeCellRenderer elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
 			public Component getTreeCellRendererComponent(
@@ -181,7 +187,9 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {}
 			public void mouseReleased(MouseEvent e) {}
 		});
-		
+		loadExtensions(f, false);
+		elementTree.expandRow(0);
+		bindNonModuleExtensions(getExtensions());
 		resetLayout();
 	}
 	public static List<TranscendenceMod> getExtensions() {
@@ -210,7 +218,8 @@ public class XMLPanel extends JPanel {
 	//Get all the Types defined by the selected extension
 	public static Map<String, DesignElementOld> getExtensionTypeMap() {
 		if(selectedExtension != null) {
-			selectedExtension.updateTypeBindings();
+			//This only updates when save is pressed
+			//selectedExtension.updateTypeBindings();
 			return selectedExtension.getTypeMap();
 		}
 		return new TreeMap<String, DesignElementOld>();
@@ -220,14 +229,6 @@ public class XMLPanel extends JPanel {
 		
 	}
 	*/
-	//Get all Types that the extension can access, including from libraries
-	public static Map<String, DesignElementOld> getExtensionAvailableTypes() {
-		Map<String, DesignElementOld> result = new TreeMap<String, DesignElementOld>();
-		result.putAll(getExtensionTypeMap());
-		//Add external Types from libraries
-		
-		return result;
-	}
 	public void resetLayout() {
 		removeAll();
 		setLayout(new MigLayout());
@@ -291,16 +292,7 @@ public class XMLPanel extends JPanel {
 					j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 					j.setCurrentDirectory(new File(System.getProperty("user.dir")));
 					if(j.showOpenDialog(XMLPanel.this) == JFileChooser.APPROVE_OPTION) {
-						List<TranscendenceMod> loaded = getMods();
-						List<TranscendenceMod> mods = Loader.loadAllMods(j.getSelectedFile());
-						for(TranscendenceMod m : mods) {
-							if(loaded.contains(m)) {
-								JOptionPane.showMessageDialog(XMLPanel.this, "Failure: Extension " + m.getPath() + " already loaded");
-							} else {
-								JOptionPane.showMessageDialog(XMLPanel.this, "Success: Extension " + m.getPath() + " loaded");
-								elementTreeModel.insertNodeInto(m.toTreeNode(), origin, 0);
-							}
-						}
+						loadExtensions(j.getSelectedFile(), true);
 					}
 				}
 			}
@@ -308,7 +300,11 @@ public class XMLPanel extends JPanel {
 		add(loadExtension, new CC().x("0%").y("0%").width("25%").height("3%"));
 		
 		int yPercent = 3;
-		for(Extensions extension : Extensions.values()) {
+		for(Extensions extension : new Extensions[] {
+				Extensions.TranscendenceAdventure,
+				Extensions.TranscendenceExtension,
+				Extensions.TranscendenceLibrary,
+				Extensions.TranscendenceModule}) {
 			JButton b = createJButton("New " + extension.name());
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -426,23 +422,77 @@ public class XMLPanel extends JPanel {
 				.minHeight("30%").maxHeight("30%")
 				);
 	}
+	public static void showWarningPane(String warnings) {
+		if(!showErrors) {
+			return;
+		}
+		if(warnings.split("\n").length < 2) {
+			JOptionPane.showMessageDialog(null, XMLPanel.createTextArea(warnings + "\nNo Warnings", false));
+		} else {
+			JOptionPane.showMessageDialog(null, XMLPanel.createTextArea(warnings, false));
+		}
+	}
+	private void loadExtensions(File f, boolean bindTypesWhenDone) {
+		// TODO Auto-generated method stub
+		List<TranscendenceMod> loaded = getExtensions();
+		List<TranscendenceMod> mods = Loader.loadAllMods(f);
+		String message = "Loading Extensions from " + f.getAbsolutePath();
+		for(TranscendenceMod m : mods) {
+			if(loaded.contains(m)) {
+				message += ("\nNote: Extension " + m.getPath() + " already loaded");
+			} else if(m == null || m.getName().equals("TranscendenceError")) {
+				message += ("\nFailure: Extension " + m.getPath() + " could not be loaded");
+			} else {
+				message += ("\nSuccess: Extension " + m.getPath() + " loaded");
+				elementTreeModel.insertNodeInto(m.toTreeNode(), origin, 0);
+				/*
+				if(m.hasSubElement("Library") && JOptionPane.showConfirmDialog(null, "This Extension depends on other Libraries. Load them now?", "Load Dependencies", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				}
+				*/
+				//If the file is not the same as the Extension path, then we can assume that the file is the directory that contains the Extension. We can assume that an Extension and its modules have the same directory.
+				if(m.hasSubElement("Module") && f.equals(m.getPath()) && JOptionPane.showConfirmDialog(null, createLabel("Note: Extension " + m.getPath() + " has Modules. Load them now?"), "Load Modules", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					for(DesignElementOld e : m.getSubElementsByName("Module")) {
+						loadExtensions(new File(m.getModulePath(e.getAttributeByName("filename").getValue())), false);
+					}
+				}
+			}
+		}
+		if(bindTypesWhenDone) {
+			bindNonModuleExtensions(getExtensions());
+		}
+		
+		JOptionPane.showMessageDialog(this, createScrollPane(createTextArea(message, false)));
+	}
+	public void bindNonModuleExtensions(List<TranscendenceMod> mods) {
+		for(TranscendenceMod mod : mods) {
+			//Do not bind on TranscendenceModules because we will have their parents bind for them
+			if(!mod.getName().equals("TranscendenceModule")) {
+				mod.updateTypeBindings();
+			}
+		}
+	}
+	public boolean directoryContainsFile(File directory, File f) {
+		File parent = f;
+		while(parent != null) {
+			if(parent.equals(f)) {
+				return true;
+			}
+			parent = parent.getParentFile();
+		}
+		return false;
+	}
 	private void save() {
+		showErrors = true;
 		if(selected != null) {
 			setData(selected);
 		}
 		if(selectedExtension != null) {
 			selectedExtension.save();
 		}
+		showErrors = false;
 		saved = true;
 	}
-	public List<TranscendenceMod> getMods() {
-		List<TranscendenceMod> result = new LinkedList<>();
-		for(int i = 0; i < origin.getChildCount(); i++) {
-			result.add((TranscendenceMod) ((DefaultMutableTreeNode) origin.getChildAt(i)).getUserObject());
-		}
-		return result;
-	}
-	public DesignElementOld getSelected() {
+	public static DesignElementOld getSelected() {
 		return selected;
 	}
 	public void selectNode(DefaultMutableTreeNode node) {
@@ -463,7 +513,9 @@ public class XMLPanel extends JPanel {
 		resetLayout();
 		if(e != null) {
 			System.out.println("Initialize from element: " + e.getName());
+			showErrors = false;
 			e.initializeFrame(this);
+			showErrors = true;
 		}
 		
 		frame.pack();
@@ -527,6 +579,7 @@ public class XMLPanel extends JPanel {
 	}
 	public static JScrollPane createScrollPane(JComponent c) {
 		JScrollPane result = new JScrollPane(c, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		result.setMaximumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		result.getVerticalScrollBar().setUnitIncrement(16);
 		return result;
 	}

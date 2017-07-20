@@ -112,9 +112,9 @@
 							)
 							
 							;	No particle jet if there is no damage or if
-							;	we've hit a world/star. Also, we don't skip 
+							;	we've hit a world/star. Also, we skip 
 							;	abandoned stations, since they create their own
-							;	ejacta.
+							;	ejecta.
 							
 							(if (or (= damageHP 0)
 									(= scale 'star)
@@ -249,7 +249,7 @@
 							)
 							{
 								radius: (if (= damageHP 0) 10 (mathScale damageHP 5 64 20 50 50))
-								lifetime: (if (= damageHP 0) 4 (mathScale damageHP 5 64 6 24 50))
+								lifetime: (if (= damageHP 0) 4 (mathScale damageHP 5 64 12 48 50))
 								intensity: (seededRandom weaponUNID 50 100)
 								}
 							)
@@ -279,7 +279,7 @@
 			<Orb	style=			"fireblast"
 					animate=		"explode"
 					
-					blendMode=		"screen"
+					blendMode=		"normal"
 					primaryColor=	"#00ff2b"
 					secondaryColor=	"#008015"
 					>

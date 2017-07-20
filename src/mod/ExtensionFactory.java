@@ -13,9 +13,11 @@ public class ExtensionFactory {
 		TranscendenceAdventure,
 		TranscendenceExtension,
 		TranscendenceLibrary,
+		CoreLibrary,
+		TranscendenceUniverse,
 		TranscendenceModule,
 		;
-
+		
 		@Override
 		public TranscendenceMod get() {
 			TranscendenceMod e = new TranscendenceMod(name());
@@ -27,6 +29,8 @@ public class ExtensionFactory {
 						);
 			case TranscendenceExtension:
 			case TranscendenceLibrary:
+			case TranscendenceUniverse:
+			case CoreLibrary:
 				e.addAttributes(
 						att("apiVersion", ValueType.INTEGER, ""),
 						att("autoInclude", ValueType.BOOLEAN, ""),//"false"),

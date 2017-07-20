@@ -116,14 +116,12 @@ public final class Language {
 
 }
 class Text extends DesignElementOld {
-	String displayName;
 	public Text(String id) {
 		super();
-		displayName = id;
 		addAttributes(att("id", STRING, id));
 	}
 	public String getDisplayName() {
-		return displayName;
+		return String.format("%-16s%s", "Text", getAttributeByName("id").getValue());
 	}
 	//Make uneditable
 	public void initializeFrame(XMLPanel panel) {

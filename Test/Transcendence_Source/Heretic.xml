@@ -3,7 +3,11 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svAresHeretic;"
-			name="Ares Sect"
+			name=":the Ares Orthodoxy"
+			shortName=":the Ares"
+			adjective="Ares"
+			demonym="Arean(s)"
+
 			alignment="destructive order"
 			>
 		<Relationships>
@@ -92,7 +96,7 @@
 			frequency=			"notrandom"
 			numberAppearing=	"1"
 			unknownType=		"&itUnknownHyperglyph;"
-			attributes=			"Alien; HereticStargate; HyperglyphRod; MinorItem; NotForSale"
+			attributes=			"alien, hereticStargate, hyperglyphRod, minorItem, notForSale, questItem"
 
 			description=		"This hyperglyph rod is used to program stargates."
 			>
@@ -128,7 +132,7 @@
 			mass=				"10000"
 			frequency=			"notrandom"
 			numberAppearing=	"1"
-			attributes=			"Alien; IocrymCyberneticTower; NotForSale"
+			attributes=			"alien, iocrymCyberneticTower, notForSale, questItem"
 
 			description=		"This massive and beautiful crystalline tower is clearly part of a larger structure."
 			>
@@ -203,7 +207,7 @@
 			value=				"15000"
 			mass=				"2000"
 			frequency=			"notrandom"
-			attributes=			"MajorItem; MRADExperiment; NotForSale"
+			attributes=			"majorItem, MRADExperiment, notForSale, questItem"
 
 			charges=			"6"
 
@@ -597,7 +601,7 @@
 			value=				"0"
 			mass=				"1"
 			frequency=			"notrandom"
-			attributes=			"HereticROM; Info; MinorItem; NotForSale"
+			attributes=			"hereticROM, info, minorItem, notForSale, questItem"
 
 			description=		"This ROM contains research data about Iocrym technology."
 			>
@@ -612,7 +616,7 @@
 			value=				"0"
 			mass=				"1"
 			frequency=			"notrandom"
-			attributes=			"HereticROM; Info; MinorItem; NotForSale; LesserData"
+			attributes=			"hereticROM, info, lesserData, minorItem, notForSale, questItem"
 
 			description=		"This ROM contains research data about Iocrym technology."
 			>
@@ -793,7 +797,7 @@
 	-->
 
 	<ShipClass UNID="&scSvalbardExplorer;"
-			manufacturer=		"Corporate"
+			manufacturer=		"corporate"
 			class=				""
 			type=				"explorer"
 			defaultSovereign=	"&svCorporate;"
@@ -1386,7 +1390,7 @@
 	-->
 
 	<StationType UNID="&stHereticStation;"
-			name=				"Heretic Station"
+			name=				": Heretic Station"
 			sovereign=			"&svCommonwealth;"
 			inherit=			"&baCommonwealthStation;"
 				 
@@ -1399,21 +1403,19 @@
 			armorID=			"&itP120HexphaseArmor;"
 			hitPoints=			"740"
 			multiHull=			"true"
-			regen=              "3.7"
-			shipRepairRate=		"1"
+			regen=              "15"
+			shipRegen=			"6"
 				 
 			canAttack=			"true"
 			fireRateAdj=		"40"
 			explosionType=		"&vtThermoExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
-
-			noArticle=			"true"
 			>
 		
 		<!-- Trade and Items -->
 
 		<Trade currency="credit" max="50000" replenish="2500">
-			<Sell	criteria="m +commonwealth; -premiumAmmo; -illegal; -notForSale; -notStandard;" priceAdj="115" inventoryAdj="200" levelFrequency="systemLevel:ru|c|cur"/>
+			<Sell	criteria="m +commonwealth; -premiumAmmo; -illegal; -notForSale; -notStandard;" priceAdj="115" inventoryAdj="200" levelFrequency="systemLevel:ruc|c|cur"/>
 			<Sell	criteria="*NU -Illegal; -ID; -NotForSale;"	priceAdj="110"/>
 			<Buy	criteria="amswNU -Illegal; -NotForSale;"		priceAdj="50"/>
 			<Buy	criteria="*NU -Illegal; -ID; -NotForSale;"	priceAdj="90"/>
@@ -1664,11 +1666,9 @@
 
 	<!-- Svalbard Explorer Encounter -->
 
-	<StationType UNID="&stSvalbardEncounter;"
+	<EncounterType UNID="&stSvalbardEncounter;"
 			name=				"(Svalbard Explorer)"
 			sovereign=			"&svCorporate;"
-			shipEncounter=		"true"
-			scale=				"ship"
 
 			level=				"10"
 			attributes=			"friendly"
@@ -1678,7 +1678,7 @@
 		<Ships>
 			<Ship	count="1"	class="&scSvalbardExplorer;" orders="hold"/>
 		</Ships>
-	</StationType>
+	</EncounterType>
 
 	<!-- Commonwealth Research Station
 
@@ -1712,8 +1712,8 @@
 			armorID=			"&itP120HexphaseArmor;"
 			hitPoints=			"370"
 			multiHull=			"true"
-            regen=              "1.1"
-			shipRepairRate=		"1"
+            regen=              "4"
+			shipRegen=			"6"
 				 
 			canAttack=			"true"
 			explosionType=		"&vtThermoExplosion2;"
@@ -2153,7 +2153,7 @@
 			multiHull=			"true"
 			armorID=			"&itDiamondLatticeArmor;"
 			hitPoints=			"810"
-			regen=              "2.4"
+			regen=              "8"
 			fireRateAdj=		"15"
 			explosionType=		"&vtPlasmaExplosion1;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -2644,7 +2644,6 @@
 							<Action name="Buy Items" default="1" key="B">
 								(scrShowScreen gScreen &dsRPGCommoditiesExchangeBuy; {
 									checkMilitaryID: Nil
-									showInstallables: True
 									})
 							</Action>
 
@@ -2711,7 +2710,7 @@
 			multiHull=			"true"
 			armorID=			"&itLightIthaliumArmor;"
 			hitPoints=			"470"
-			regen=              "1.4"
+			regen=              "4"
 			ejectaType=			"&vtWreckEjecta;"
 
 			attributes=			"friendly, hereticStation, human, majorStation, populated, religious, sistersOfDomina"
@@ -3064,7 +3063,7 @@
 	-->
 
 	<StationType UNID="&stTVX1Outpost;"
-			name=				"Taikon research outpost TVX-1"
+			name=				": Taikon research outpost TVX-1"
 			sovereign=			"&svCorporate;"
 			dockScreen=			"Main"
 			abandonedScreen=	"&dsAbandonedStation;"
@@ -3075,14 +3074,12 @@
 			multiHull=			"true"
 			armorID=			"&itQuadroCarbideArmor;"
 			hitPoints=			"610"
-			regen=              "1.8"
+			regen=              "6"
 			fireRateAdj=		"20"
 			explosionType=		"&vtThermoExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
 
 			attributes=			"corporate, corporateCustoms, friendly, hereticStation, human, independent, populated"
-
-			noArticle=			"true"
 			>
 
 		<Image			imageID="&rsStations8;" imageX="0" imageY="448" imageWidth="128" imageHeight="192"/>
@@ -3503,7 +3500,7 @@
 			multiHull=			"true"
 			armorID=			"&itHeavyTharsisPlate;"
 			hitPoints=			"610"
-            regen=              "1.8"
+            regen=              "6"
 			fireRateAdj=		"20"
 			explosionType=		"&vtThermoExplosion2;"
 			ejectaType=			"&vtWreckEjecta;"
@@ -3805,7 +3802,7 @@
 							(scrSetDesc gScreen
 								"An Ares scientist comes forward:\n\n"
 								"\"Welcome, Human! We are studying the Iocrym just as you are now. Return "
-								"here when you task is complete and perhaps we can help each other.\""
+								"here when your task is complete and perhaps we can help each other.\""
 								)
 						</OnPaneInit>
 						

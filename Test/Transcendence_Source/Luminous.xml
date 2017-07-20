@@ -3,12 +3,17 @@
 <TranscendenceModule>
 
 	<Sovereign UNID="&svLuminous;"
-			name="Luminous"
+			name=": Luminous"
+			adjective="Luminous"
+			demonym=":a Luminous drone(s)"
+
 			alignment="destructive order"
 			/>
 
 	<Sovereign UNID="&svFriendlyLuminous;"
-			name="Luminous drone"
+			name="Luminous drones"
+			demonym=":a Luminous drone(s)"
+
 			alignment="constructive chaos"
 			>
 		<Language>
@@ -148,6 +153,7 @@
 						(block Nil
 							(objAddItem gSource choice)
 							(shpInstallDevice gSource choice)
+							(shpRechargeShield gSource (shpGetShieldDamage gSource))
 							)
 						)
 					)
@@ -473,10 +479,10 @@
 		</Encounters>
 
 		<Language>
-			<Text id="AbandonedScreenDesc">
-				(cat "You are docked at the remains of a Luminous assembler. "
-					"This automated factory churned out drones controlled by the mysterious sentient entity known as Luminous."
-					)
+			<Text id="descAbandonedStation">
+				You are docked at the remains of a Luminous assembler.
+				This automated factory churned out drones controlled by 
+				the mysterious sentient entity known as Luminous.
 			</Text>
 		</Language>
 	</StationType>

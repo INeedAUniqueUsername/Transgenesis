@@ -16,6 +16,14 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 public class Window implements Runnable {
+	/*
+	Terms used in this program
+		Name	Definition
+		UNID	Number in hexadecimal or decimal format
+		Type	XML entity bound to a UNID
+		Design	XML element bound to a Type
+	*/
+	
 	public static final boolean DEBUG = true;
 	public enum Fonts {
 		Title(new Font("Consolas", Font.BOLD, 32)),

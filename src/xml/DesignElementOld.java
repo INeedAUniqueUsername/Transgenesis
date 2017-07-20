@@ -432,7 +432,7 @@ public class DesignElementOld {
 			labelPanel.add(label);
 		} else {
 			for(DesignAttribute a : attributes) {
-				JLabel label = new JLabel(a.getName() + "=");
+				JLabel label = new JLabel(String.format("%-32s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase()));
 				label.setFont(Medium.f);
 				labelPanel.add(label);
 				JComponent inputField = a.getValueType().getInputField(a.getValue());

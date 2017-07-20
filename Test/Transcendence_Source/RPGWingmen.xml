@@ -59,15 +59,10 @@
 								
 	-->
 
-	<ShipClass UNID="&baStdWingmanBase;"
-			class=				"(wingman base class)"
-			virtual=			"true"
-			
-			attributes=			"baseClass"
-			>
+	<Type UNID="&baStdWingmanBase;">
 
 		<Communications>
-			<Message name="Attack target" key="A">
+			<Message id="msgAttackTarget" name="Attack target" key="A">
 				<OnShow>
 					(and (objGetTarget gSender)
 						(not (eq (objGetTarget gSender) (objGetTarget gSource)))
@@ -96,7 +91,7 @@
 				</Invoke>
 			</Message>
 			
-			<Message name="Break &amp; attack" key="B">
+			<Message id="msgBreakAndAttack" name="Break &amp; attack" key="B">
 				<OnShow>
 					(eq (objGetData gSource "behavior") 'escorting)
 				</OnShow>
@@ -121,7 +116,7 @@
 				</Invoke>
 			</Message>
 
-			<Message name="Form up" key="F">
+			<Message id="msgFormUp" name="Form up" key="F">
 				<OnShow>
 					(and 
 						(or (eq (objGetData gSource "behavior") 'waiting)
@@ -156,7 +151,7 @@
 				</Invoke>
 			</Message>
 			
-			<Message name="Status" key="S">
+			<Message id="msgStatus" name="Status" key="S">
 				<OnShow>
 					True
 				</OnShow>
@@ -196,7 +191,7 @@
 				</Invoke>
 			</Message>
 
-			<Message name="Wait" key="W">
+			<Message id="msgWait" name="Wait" key="W">
 				<OnShow>
 					(eq (objGetData gSource "behavior") 'escorting)
 				</OnShow>
@@ -256,7 +251,9 @@
 										)
 								
 								; If there is a station that can repair armor, dock with it
-								(setq theTarget (srvFindRepairArmor gSource 60 (itmGetLevel (shpGetArmor gSource 0))))
+								(and (setq theTarget (srvFindRepairArmor gSource 60 (itmGetLevel (shpGetArmor gSource 0))))
+									(gr (objGetOpenDockingPortCount theTarget) 1)
+									)
 									(block Nil
 										(shpCancelOrders gSource)
 										(shpOrder gSource 'dock theTarget)
@@ -278,6 +275,22 @@
 										)
 								)
 						)
+						
+						; If we're attempting to repair at a station that doesn't have enough free ports, go back to normal behavior.
+						(and (eq behavior 'repairingArmor)
+							(setq theTarget (shpGetOrderTarget gSource))
+							(ls (objGetOpenDockingPortCount theTarget) 2)
+							(not (find (staGetDockedShips theTarget) gSource)) ; Have to check this way because the station knows the ship is docking
+																			   ; once the port is reserved, but the ship doesn't know it's docked yet.
+
+							gPlayerShip
+							)
+							(block nil
+								(shpCancelOrders gSource)
+								(shpOrder gSource 'follow gPlayerShip)
+								(objSetData gSource 'behavior 'escorting)
+								)
+							
 					)
 			</OnBehavior>
 
@@ -425,6 +438,189 @@
 					)
 			</OrderLeavePlayer>
 		</Events>
-	</ShipClass>
+	</Type>
+
+<!-- Wingman encounter screen ==================================================
+	Screen for meeting wingmen. Just supports join/reject for now.
+
+	Code based on rpgPagePaneInit / dsRPGMission / dsRPGDialog.
+
+	Could add support for multiple encounters / leaving / rejoining etc.
+-->
+
+	<DockScreen UNID="&dsRPGWingmanEncounter;"
+		nestedScreen=	"true"
+		inherit=		"&dsDockScreenBase;"
+		>
+		<OnScreenInit>
+			(scrSetData gScreen 'wingman (@ gData 'wingman))
+		</OnScreenInit>
+
+		<InitialPane>
+			(switch
+				(not (typGetGlobalData (scrGetData gScreen 'wingman) 'status))
+					"Intro"
+
+				"AlreadyMeet"
+				)
+		</InitialPane>
+
+		<Panes>
+			<AlreadyMeet>
+				<OnPaneInit>
+					; Do nothing if already met
+					(scrExitScreen gScreen)
+				</OnPaneInit>
+			</AlreadyMeet>
+
+			<Intro>
+				<OnPaneInit>
+					(block (
+						(wingman (scrGetData gScreen 'wingman))
+						(textDesc (typTranslate wingman 'Intro))
+
+						(pageCount (rpgPageCount textDesc))
+						(pageNo (if (scrGetData gScreen 'curPage) (scrGetData gScreen 'curPage) 0))
+						(pageDesc (rpgPageDesc textDesc pageNo))
+
+						(actions (@ pageDesc 'actions))
+						(atLastPage (= pageNo (- pageCount 1)))
+
+						(nextActionID 0)
+						)
+
+						;	Set the page text
+						(scrSetDesc gScreen (@ pageDesc 'desc))
+
+						;	Add all the appropriate actions
+						(switch
+							;	If we're on the last page show the Accept/Decline actions.
+							atLastPage
+								(setq actions (list
+									{
+										label: (or (@ pageDesc 'acceptLabel)
+											(typTranslate wingman 'AcceptLabel)
+											(scrTranslate gScreen 'actionAccept)
+											)
+										code: (@ pageDesc 'acceptCode)
+										nextPage: 'wingmanAccept
+										}
+									{
+										label: (or (@ pageDesc 'declineLabel)
+											(typTranslate wingman 'DeclineLabel)
+											(scrTranslate gScreen 'actionDecline)
+											)
+										code: (@ pageDesc 'declineCode)
+										nextPage: 'wingmanDecline
+										}
+									))
+
+							;	If we don't have a list of actions, then we auto-generate
+							;	them based on variables on the page descriptor.
+							(!= (typeof actions) 'list)
+								(setq actions (list {
+									label: (or (@ pageDesc 'label) (@ pageDesc 'nextLabel) (scrTranslate gScreen 'actionContinue))
+									nextPage: (or (@ pageDesc 'nextPage) 'nextPage)
+									code: (or (@ pageDesc 'code) (@ pageDesc 'nextCode))
+									}))
+							)
+
+						(enum actions actionDesc
+							(block Nil
+								(scrAddAction
+									gScreen
+									(cat "action" nextActionID)
+									Nil
+									(@ actionDesc 'label)
+									Nil
+									(switch
+										(= (count (@ pageDesc 'actions)) 1)
+											(list "default" "cancel")
+										(= nextActionID 0)
+											"default"
+										(= nextActionID (- (count (@ pageDesc 'actions)) 1))
+											"cancel"
+										Nil
+										)
+									(lambda ()
+										(block (
+											(nextPage (or (@ actionDesc 'nextPage) (@ actionDesc 'nextPane)))
+											)
+											(if (@ actionDesc 'code)
+												((@ actionDesc 'code))
+												)
+
+											(switch
+												(not nextPage)
+													(scrExitScreen gScreen)
+
+												(= nextPage 'exitScreen)
+													(scrExitScreen gScreen)
+
+												(= nextPage 'forceUndock)
+													(scrExitScreen gScreen 'forceUndock)
+
+												(= nextPage 'wingmanAccept)
+													(scrShowPane gScreen "ReplyAccept")
+
+												(= nextPage 'wingmanDecline)
+													(scrShowPane gScreen "ReplyDecline")
+
+												(block Nil
+													(scrSetData gScreen 'curPage (if (= nextPage 'nextPage) (+ pageNo 1) (rpgFindIndexByID gData nextPage)))
+													(scrShowPane gScreen "Intro")
+													)
+												)
+											)
+										)
+									)
+								(setq nextActionID (add nextActionID 1))
+								)
+							)
+						)
+				</OnPaneInit>
+				<Actions>
+				</Actions>
+			</Intro>
+
+
+			<ReplyAccept>
+				<OnPaneInit>
+					(scrSetDesc gScreen (typTranslate (scrGetData gScreen 'wingman) 'AcceptReply))
+				</OnPaneInit>
+				<Actions>
+					<Action id="actionContinue" default="1" cancel="1">
+						(block (
+							(theClass (scrGetData gScreen 'wingman))
+							(theSov (typGetProperty theClass 'defaultSovereign))
+							)
+							(objFireEvent (sysCreateShip theClass gSource theSov) "OrderJoinPlayer")
+							(scrExitScreen gScreen)
+							)
+					</Action>
+				</Actions>
+			</ReplyAccept>
+
+			<ReplyDecline>
+				<OnPaneInit>
+					(scrSetDesc gScreen (typTranslate (scrGetData gScreen 'wingman) 'DeclineReply))
+				</OnPaneInit>
+				<Actions>
+					<Action id="actionContinue" default="1" cancel="1">
+						(block Nil
+							(typSetGlobalData (scrGetData gScreen 'wingman) "status" 'declined)
+							(scrExitScreen gScreen)
+							)
+					</Action>
+				</Actions>
+			</ReplyDecline>
+
+		</Panes>
+
+		<Language>
+			<Text id="actionAccept">"[A]ccept"</Text>
+			<Text id="actionDecline">"[D]ecline"</Text>
+		</Language>
+	</DockScreen>
 
 </TranscendenceModule>
