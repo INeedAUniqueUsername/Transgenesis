@@ -432,10 +432,13 @@ public class DesignElementOld {
 			labelPanel.add(label);
 		} else {
 			for(DesignAttribute a : attributes) {
-				JLabel label = new JLabel(String.format("%-32s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase()));
+				JLabel label = new JLabel(String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase()));
 				label.setFont(Medium.f);
+				//label.setPreferredSize(new Dimension((int) (fieldPanel.getWidth() / 2.5), label.getHeight()));
 				labelPanel.add(label);
 				JComponent inputField = a.getValueType().getInputField(a.getValue());
+				inputField.setPreferredSize(new Dimension((int) (fieldPanel.getWidth() / 2.5), inputField.getHeight()));
+				inputField.setMaximumSize(new Dimension((int) (fieldPanel.getWidth() / 2.5), inputField.getHeight()));
 				fieldPanel.add(inputField);
 			}
 		}

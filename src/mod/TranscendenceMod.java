@@ -154,7 +154,7 @@ public class TranscendenceMod extends DesignElementOld {
 		}
 	}
 	public void updateModules() {
-		modules = new LinkedList<TranscendenceMod>();
+		modules.clear();
 		String warnings = getName() + ": " + "Updating Modules";
 		for(DesignElementOld e : getSubElements()) {
 			if(!e.getName().equals("Module")) {

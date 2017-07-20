@@ -81,7 +81,18 @@ public class XMLPanel extends JPanel {
 	//JPanel subelementPanel;
 	public XMLPanel(FrameOld frame) {
 		this.frame = frame;
-		JOptionPane.showMessageDialog(this, createTextArea("TransGenesis: Transcendence XML Editor\nBy 0xABCDEF\n\nSelect a File or Folder to begin.", false));
+		JOptionPane.showMessageDialog(this, createTextArea(
+				"TransGenesis: Transcendence XML Editor\n" +
+				"By 0xABCDEF\n\n" +
+				"Notes\n" +
+				"-Please use an isolated copy of the source code in case of unknown bugs." +
+				"-Select a File or Folder to load extensions.\n" +
+				"-Loading may take a while depending on how many files you are loading.\n" +
+				"-In order to load successfully, files must contain well-formed XML code.\n" +
+				"-If an extension has unloaded dependencies or modules, then not all of its\n" +
+				" internal or external types will be recognized by TransGenesis. For optimal\n" +
+				" functionality, please have all dependencies and modules loaded.\n"
+				, false));
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
 		JFileChooser j = new JFileChooser();
@@ -433,7 +444,6 @@ public class XMLPanel extends JPanel {
 		}
 	}
 	private void loadExtensions(File f, boolean bindTypesWhenDone) {
-		// TODO Auto-generated method stub
 		List<TranscendenceMod> loaded = getExtensions();
 		List<TranscendenceMod> mods = Loader.loadAllMods(f);
 		String message = "Loading Extensions from " + f.getAbsolutePath();
@@ -451,16 +461,42 @@ public class XMLPanel extends JPanel {
 				*/
 				//If the file is not the same as the Extension path, then we can assume that the file is the directory that contains the Extension. We can assume that an Extension and its modules have the same directory.
 				if(m.hasSubElement("Module") && f.equals(m.getPath()) && JOptionPane.showConfirmDialog(null, createLabel("Note: Extension " + m.getPath() + " has Modules. Load them now?"), "Load Modules", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					List<File> paths = new LinkedList<>();
 					for(DesignElementOld e : m.getSubElementsByName("Module")) {
-						loadExtensions(new File(m.getModulePath(e.getAttributeByName("filename").getValue())), false);
+						paths.add(new File(m.getModulePath(e.getAttributeByName("filename").getValue())));
 					}
+					loadModules(paths);
 				}
 			}
 		}
 		if(bindTypesWhenDone) {
+			boolean showErrorsPrevious = showErrors;
+			showErrors = false;
 			bindNonModuleExtensions(getExtensions());
+			showErrors = showErrorsPrevious;
 		}
 		
+		JOptionPane.showMessageDialog(this, createScrollPane(createTextArea(message, false)));
+	}
+	private void loadModules(List<File> files) {
+		List<TranscendenceMod> loaded = getExtensions();
+		List<TranscendenceMod> mods = new LinkedList<>();
+		String message = "";
+		for(File f : files) {
+			mods.add(Loader.processMod(f));
+			message += "\nLoading Module from " + f.getAbsolutePath();
+		}
+		
+		for(TranscendenceMod m : mods) {
+			if(loaded.contains(m)) {
+				message += ("\nNote: Module " + m.getPath() + " already loaded");
+			} else if(m == null || m.getName().equals("TranscendenceError")) {
+				message += ("\nFailure: Module " + m.getPath() + " could not be loaded");
+			} else {
+				message += ("\nSuccess: Module " + m.getPath() + " loaded");
+				elementTreeModel.insertNodeInto(m.toTreeNode(), origin, 0);
+			}
+		}
 		JOptionPane.showMessageDialog(this, createScrollPane(createTextArea(message, false)));
 	}
 	public void bindNonModuleExtensions(List<TranscendenceMod> mods) {
@@ -482,14 +518,16 @@ public class XMLPanel extends JPanel {
 		return false;
 	}
 	private void save() {
-		showErrors = true;
+		boolean previous = showErrors;
+		showErrors = false;
 		if(selected != null) {
 			setData(selected);
 		}
 		if(selectedExtension != null) {
+			selectedExtension.updateTypeBindings();
 			selectedExtension.save();
 		}
-		showErrors = false;
+		showErrors = previous;
 		saved = true;
 	}
 	public static DesignElementOld getSelected() {
@@ -583,7 +621,20 @@ public class XMLPanel extends JPanel {
 		result.getVerticalScrollBar().setUnitIncrement(16);
 		return result;
 	}
-	
+	/*
+	public static JScrollPane createScrollPane(JComponent c, boolean vertical, boolean horizontal) {
+		JScrollPane result = new JScrollPane(c,
+				vertical ? JScrollPane.VERTICAL_SCROLLBAR_ALWAYS : JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				horizontal ? JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS : JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+				);
+		if(!horizontal) {
+			c.setMaximumSize(new Dimension(result.getMaximumSize().width, c.getMaximumSize().height));
+		}
+		result.setMaximumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+		result.getVerticalScrollBar().setUnitIncrement(16);
+		return result;
+	}
+	*/
 	public static JLabel createLabel(String text) {
 		JLabel result = new JLabel(text);
 		result.setFont(Medium.f);

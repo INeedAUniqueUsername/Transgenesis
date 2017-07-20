@@ -186,7 +186,7 @@ public class TypeManager {
 		//panel.setPreferredSize(frame.getSize());
 		container.setLayout(new MigLayout());
 		JPanel buttons = new JPanel();
-		buttons.setLayout(new GridLayout(2, 1));
+		buttons.setLayout(new GridLayout(3, 1));
 		JScrollPane result = createScrollPane(container);
 		JButton exitButton = createJButton("Exit");
 		exitButton.addActionListener(new ActionListener() {

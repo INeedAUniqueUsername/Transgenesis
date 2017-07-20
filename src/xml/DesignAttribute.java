@@ -707,11 +707,13 @@ public class DesignAttribute {
 		}
 		*/
 		public void addValidTypes(JComboBox<String> box) {
+			int count = box.getItemCount();
 			XMLPanel.getExtensionTypeMap().forEach((String type, DesignElementOld design) -> {
 				if(typeIsValid(design)) {
 					box.addItem("&" + type + ";");
 				}
 			});
+			System.out.println(box.getItemCount() - count + " valid Types found.");
 		}
 		public boolean typeIsValid(DesignElementOld design) {
 			return true;
