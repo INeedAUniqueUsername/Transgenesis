@@ -85,7 +85,7 @@ public class XMLPanel extends JPanel {
 				"TransGenesis: Transcendence XML Editor\n" +
 				"By 0xABCDEF\n\n" +
 				"Notes\n" +
-				"-Please use an isolated copy of the source code in case of unknown bugs." +
+				"-Please use an isolated copy of the source code in case of unknown bugs.\n" +
 				"-Select a File or Folder to load extensions.\n" +
 				"-Loading may take a while depending on how many files you are loading.\n" +
 				"-In order to load successfully, files must contain well-formed XML code.\n" +
