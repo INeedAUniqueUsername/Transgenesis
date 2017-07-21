@@ -54,12 +54,12 @@ import mod.ExtensionFactory;
 import mod.TranscendenceMod;
 import mod.ExtensionFactory.Extensions;
 import xml.DesignAttribute;
-import xml.DesignElementOld;
+import xml.DesignElement;
 
-public class FrameOld extends JFrame {
+public class Frame extends JFrame {
 	
 	
-	public FrameOld() {
+	public Frame() {
 		/*
 		try {
 			FileWriter fw = new FileWriter("XML Definitions.txt");

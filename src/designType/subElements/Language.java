@@ -9,29 +9,29 @@ import javax.swing.JTextArea;
 
 import designType.Types;
 import panels.XMLPanel;
-import window.FrameOld;
+import window.Frame;
 import window.Window;
 import xml.DesignAttribute;
-import xml.DesignElementOld;
+import xml.DesignElement;
 import static window.Window.Fonts.*;
 public final class Language {
 
 	//Done
-	public static DesignElementOld createLanguage(Types t) {
-		DesignElementOld e = new DesignElementOld("Language");
+	public static DesignElement createLanguage(Types t) {
+		DesignElement e = new DesignElement("Language");
 		e.addOptionalMultipleSubElements(
 				() -> {
-					DesignElementOld text = new DesignElementOld("Text");
+					DesignElement text = new DesignElement("Text");
 					text.addAttributes(att("id", STRING));
 					return text;
 				},
 				() -> {
-					DesignElementOld string = new DesignElementOld("String");
+					DesignElement string = new DesignElement("String");
 					string.addAttributes(att("id", STRING));
 					return string;
 				},
 				() -> {
-					DesignElementOld message = new DesignElementOld("Message");
+					DesignElement message = new DesignElement("Message");
 					message.addAttributes(
 							att("id", STRING),
 							att("text", STRING)
@@ -115,7 +115,7 @@ public final class Language {
 	}
 
 }
-class Text extends DesignElementOld {
+class Text extends DesignElement {
 	public Text(String id) {
 		super();
 		addAttributes(att("id", STRING, id));

@@ -4,7 +4,7 @@ import designType.Types;
 import designType.subElements.SubElementFactory.ExtensionElements;
 import designType.subElements.SubElementType;
 import xml.DesignAttribute;
-import xml.DesignElementOld;
+import xml.DesignElement;
 import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.*;
 public class ExtensionFactory {
@@ -64,7 +64,7 @@ public class ExtensionFactory {
 				}
 				break;
 			}
-			e.addOptionalSingleSubElements(new DesignElementOld("Globals"));
+			e.addOptionalSingleSubElements(new DesignElement("Globals"));
 			for(Types t : Types.values()) {
 				if(!t.equals(Types.AdventureDesc)) {
 					e.addOptionalMultipleSubElements(t);

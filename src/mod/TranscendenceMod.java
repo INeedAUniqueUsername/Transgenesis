@@ -39,8 +39,8 @@ import panels.TypeManager;
 import panels.XMLPanel;
 import window.Window;
 import xml.DesignAttribute;
-import xml.DesignElementOld;
-public class TranscendenceMod extends DesignElementOld {
+import xml.DesignElement;
+public class TranscendenceMod extends DesignElement {
 	//This is a placeholder in the typeMap to make sure that an unbound Type exists in it, because containsKey returns false with an actual null value
 	/*
 	DesignElementOld DESIGN_NULL = new DesignElementOld() {
@@ -50,7 +50,7 @@ public class TranscendenceMod extends DesignElementOld {
 	};
 	*/
 	private TypeManager types;
-	Map<String, DesignElementOld> typeMap;
+	Map<String, DesignElement> typeMap;
 	private File path;
 	//Do not acquire additional dependencies from our dependencies
 	//Does not include Modules
@@ -59,7 +59,7 @@ public class TranscendenceMod extends DesignElementOld {
 	public TranscendenceMod(String name) {
 		super(name);
 		types = new TypeManager();
-		typeMap = new TreeMap<String, DesignElementOld>();
+		typeMap = new TreeMap<String, DesignElement>();
 		path = null;
 		dependencies = new LinkedList<>();
 		modules = new LinkedList<>();
@@ -99,7 +99,7 @@ public class TranscendenceMod extends DesignElementOld {
 		public void updateDependencies() {
 			String warnings = getName() + ": Updating Dependencies";
 			dependencies = new LinkedList<TranscendenceMod>();
-			for(DesignElementOld sub : getSubElements()) {
+			for(DesignElement sub : getSubElements()) {
 				switch(sub.getName()) {
 				case "Library":
 					String library_unid = sub.getAttributeByName("unid").getValue();
@@ -143,7 +143,7 @@ public class TranscendenceMod extends DesignElementOld {
 			}
 			XMLPanel.showWarningPane(warnings);
 		}
-	public void bindDependencyDesigns(Map<String, DesignElementOld> typeMap) {
+	public void bindDependencyDesigns(Map<String, DesignElement> typeMap) {
 		//Avoid going into a circular dependency binding loop by binding only the internal types from each dependency
 		//Note: Circular dependencies are not supported
 		for(TranscendenceMod dependency : dependencies) {
@@ -156,7 +156,7 @@ public class TranscendenceMod extends DesignElementOld {
 	public void updateModules() {
 		modules.clear();
 		String warnings = getName() + ": " + "Updating Modules";
-		for(DesignElementOld e : getSubElements()) {
+		for(DesignElement e : getSubElements()) {
 			if(!e.getName().equals("Module")) {
 				continue;
 			}
@@ -184,10 +184,10 @@ public class TranscendenceMod extends DesignElementOld {
 	}
 	//Bindings between Types and Designs are stored in the map
 	//This only affects Designs that are defined WITHIN the file and Modules
-	public void bindInternalDesigns(Map<String, DesignElementOld> typeMap) {
+	public void bindInternalDesigns(Map<String, DesignElement> typeMap) {
 		String warnings = getName() + ": Binding Internal Designs";
 		//warnings += typeMap.keySet().toString() + "\n";
-		for(DesignElementOld sub : getSubElements()) {
+		for(DesignElement sub : getSubElements()) {
 			//We already handled Library types as dependencies
 			if(!sub.getName().equals("Library") && sub.hasAttribute("unid")) {
 				String sub_type = sub.getAttributeByName("unid").getValue();
@@ -225,7 +225,7 @@ public class TranscendenceMod extends DesignElementOld {
 		String modulePath = folder + File.separator + moduleFilename;
 		return modulePath;
 	}
-	public Map<String, DesignElementOld> getTypeMap() {
+	public Map<String, DesignElement> getTypeMap() {
 		System.out.println("Type Map requested");
 		return typeMap;
 	}

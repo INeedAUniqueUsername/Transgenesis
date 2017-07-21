@@ -44,48 +44,48 @@ import org.w3c.dom.Element;
 
 import designType.subElements.SubElementType;
 import panels.XMLPanel;
-import window.FrameOld;
+import window.Frame;
 import window.Window;
 import xml.DesignAttribute.ValueType;
 import static window.Window.Fonts.*;
-public class DesignElementOld {
+public class DesignElement {
 	private String name;
 	private final TreeMap<String, DesignAttribute> attributes;		
-	private final List<DesignElementOld> subElements;
+	private final List<DesignElement> subElements;
 	private String text;
 	
 	private final List<DesignAttribute> requiredAttributes;				//Must be defined
-	private final List<DesignElementOld> requiredSingleSubElements;			//Must have 1 of each
-	private final List<DesignElementOld> optionalSingleSubElements;			//Can have 0 or 1 of each
+	private final List<DesignElement> requiredSingleSubElements;			//Must have 1 of each
+	private final List<DesignElement> optionalSingleSubElements;			//Can have 0 or 1 of each
 	private final List<SubElementType> optionalMultipleSubElements;		//Can have 0, 1, or more of each
 	
-	public static DesignElementOld ele(String name) {
-		return new DesignElementOld(name);
+	public static DesignElement ele(String name) {
+		return new DesignElement(name);
 	}
 	
-	public DesignElementOld() {
+	public DesignElement() {
 		this.name = getClass().getSimpleName();
 		
 		attributes = new TreeMap<String, DesignAttribute>(String.CASE_INSENSITIVE_ORDER);
-		subElements = new ArrayList<DesignElementOld>();
+		subElements = new ArrayList<DesignElement>();
 		text = "";
 		requiredAttributes = new ArrayList<DesignAttribute>();
-		requiredSingleSubElements = new ArrayList<DesignElementOld>();
-		optionalSingleSubElements = new ArrayList<DesignElementOld>();
+		requiredSingleSubElements = new ArrayList<DesignElement>();
+		optionalSingleSubElements = new ArrayList<DesignElement>();
 		optionalMultipleSubElements = new ArrayList<SubElementType>();
 	}
-	public DesignElementOld(String name) {
+	public DesignElement(String name) {
 		this.name = name;
 		
 		attributes = new TreeMap<String, DesignAttribute>(String.CASE_INSENSITIVE_ORDER);
-		subElements = new ArrayList<DesignElementOld>();
+		subElements = new ArrayList<DesignElement>();
 		text = "";
 		requiredAttributes = new ArrayList<DesignAttribute>();
-		requiredSingleSubElements = new ArrayList<DesignElementOld>();
-		optionalSingleSubElements = new ArrayList<DesignElementOld>();
+		requiredSingleSubElements = new ArrayList<DesignElement>();
+		optionalSingleSubElements = new ArrayList<DesignElement>();
 		optionalMultipleSubElements = new ArrayList<SubElementType>();
 	}
-	public DesignElementOld(DesignElementOld source, String name) {
+	public DesignElement(DesignElement source, String name) {
 		this.name = name;
 		attributes = source.attributes;
 		subElements = source.subElements;
@@ -98,7 +98,7 @@ public class DesignElementOld {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void addOptionalSingleSubElements(DesignElementOld...subelements) {
+	public void addOptionalSingleSubElements(DesignElement...subelements) {
 		optionalSingleSubElements.addAll(Arrays.asList(subelements));
 	}
 	public void addOptionalMultipleSubElements(SubElementType...subelements) {
@@ -110,7 +110,7 @@ public class DesignElementOld {
 			this.attributes.put(a.getName(), a);
 		}
 	}
-	public void addSubElements(DesignElementOld...subelements) {
+	public void addSubElements(DesignElement...subelements) {
 		this.subElements.addAll(Arrays.asList(subelements));
 	}
 	public void setText(String text) {
@@ -136,7 +136,7 @@ public class DesignElementOld {
 				return false;
 			}
 		}
-		for(DesignElementOld e : requiredSingleSubElements) {
+		for(DesignElement e : requiredSingleSubElements) {
 			if(!e.validate()) {
 				return false;
 			}
@@ -156,7 +156,7 @@ public class DesignElementOld {
 	public TreeMap<String, DesignAttribute> getAttributesMap() {
 		return attributes;
 	}
-	public List<DesignElementOld> getSubElements() {
+	public List<DesignElement> getSubElements() {
 		return subElements;
 	}
 	public String getText() {
@@ -168,17 +168,17 @@ public class DesignElementOld {
 	public DesignAttribute getAttributeByName(String name) {
 		return attributes.get(name);
 	}
-	public List<DesignElementOld> getSubElementsByName(String name) {
-		List<DesignElementOld> result = new ArrayList<DesignElementOld>();
-		for(DesignElementOld e : subElements) {
+	public List<DesignElement> getSubElementsByName(String name) {
+		List<DesignElement> result = new ArrayList<DesignElement>();
+		for(DesignElement e : subElements) {
 			if(e.getName().equalsIgnoreCase(name)) {
 				result.add(e);
 			}
 		}
 		return result;
 	}
-	public DesignElementOld getOptionalSingleByName(String name) {
-		for(DesignElementOld e : optionalSingleSubElements) {
+	public DesignElement getOptionalSingleByName(String name) {
+		for(DesignElement e : optionalSingleSubElements) {
 			if(e.getName().equals(name)) {
 				return e;
 			}
@@ -279,12 +279,12 @@ public class DesignElementOld {
 		return result.getWriter().toString();
 	}
 	public Element getDefinition(Document doc) {
-		return getDefinition(doc, "", new HashMap<DesignElementOld, String>());
+		return getDefinition(doc, "", new HashMap<DesignElement, String>());
 	}
 	public boolean isCodeBlock() {
 		return attributes.isEmpty() && subElements.isEmpty() && optionalSingleSubElements.isEmpty() && optionalMultipleSubElements.isEmpty();
 	}
-	public boolean isSubSet(DesignElementOld e) {
+	public boolean isSubSet(DesignElement e) {
 		return
 				attributes.values().containsAll(e.getAttributes()) &&
 				subElements.containsAll(e.subElements) &&
@@ -292,7 +292,7 @@ public class DesignElementOld {
 				optionalMultipleSubElements.containsAll(e.optionalMultipleSubElements);
 	}
 	//Format of seen: element, id
-	public Element getDefinition(Document doc, String parentName, HashMap<DesignElementOld, String> seen) {
+	public Element getDefinition(Document doc, String parentName, HashMap<DesignElement, String> seen) {
 		String inherit = null;
 		//Prevent code blocks from inheriting from other code blocks
 		if(!isCodeBlock()) {
@@ -337,19 +337,19 @@ public class DesignElementOld {
 				child = a.getDefinition(doc);
 				result.appendChild(child);
 			}
-			for(DesignElementOld e : subElements) {
+			for(DesignElement e : subElements) {
 				child = e.getDefinition(doc, name, seen);
 				child.setAttribute("category", "1");
 				result.appendChild(child);
 			}
-			for(DesignElementOld e : optionalSingleSubElements) {
+			for(DesignElement e : optionalSingleSubElements) {
 				child = e.getDefinition(doc, name, seen);
 				child.setAttribute("category", "?");
 				result.appendChild(child);
 			}
 			//Recursion issue, probably due to the fact that attributes that are equal still have different hash codes
 			for(SubElementType s : optionalMultipleSubElements) {
-				DesignElementOld e = s.get();
+				DesignElement e = s.get();
 				child = e.getDefinition(doc, name, seen);
 				child.setAttribute("category", "*");
 				result.appendChild(child);
@@ -375,7 +375,7 @@ public class DesignElementOld {
 			System.out.println(a.getValue());
 			child.setAttribute(a.getName(), a.getValue());//.replaceAll("\\&", "&amp;")
 		}
-		for(DesignElementOld e : getSubElements()) {
+		for(DesignElement e : getSubElements()) {
 			System.out.println("Child");
 			child.appendChild(e.getOutput(doc));
 		}
@@ -383,15 +383,15 @@ public class DesignElementOld {
 	}
 	public DefaultMutableTreeNode toTreeNode() {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(this);
-		for (DesignElementOld e : getSubElements()) {
+		for (DesignElement e : getSubElements()) {
 			node.add(e.toTreeNode());
 		}
 		return node;
 	}
-	public ArrayList<DesignElementOld> getAddableElements() {
-		ArrayList<DesignElementOld> addableElements = new ArrayList<>();
+	public ArrayList<DesignElement> getAddableElements() {
+		ArrayList<DesignElement> addableElements = new ArrayList<>();
 		//Check if this element already has one instance of a single-only element
-		Consumer<DesignElementOld> singleCheck = (DesignElementOld e) -> {
+		Consumer<DesignElement> singleCheck = (DesignElement e) -> {
 			if(!subElements.contains(e)) {
 				addableElements.add(e);
 			}
@@ -401,14 +401,14 @@ public class DesignElementOld {
 		optionalMultipleSubElements.forEach((SubElementType e) -> addableElements.add(e.get()));
 		return addableElements;
 	}
-	public DesignElementOld getAddableElement(String name) {
-		ArrayList<DesignElementOld> addableElements = new ArrayList<>();
+	public DesignElement getAddableElement(String name) {
+		ArrayList<DesignElement> addableElements = new ArrayList<>();
 		addableElements.addAll(requiredSingleSubElements);
 		addableElements.addAll(optionalSingleSubElements);
 		optionalMultipleSubElements.forEach((SubElementType s) -> {
 			addableElements.add(s.get());
 		});
-		for(DesignElementOld e : addableElements) {
+		for(DesignElement e : addableElements) {
 			if(e.getName().equalsIgnoreCase(name)) {
 				return e;
 			}
@@ -468,10 +468,10 @@ public class DesignElementOld {
 			}
 		}
 		*/
-		ArrayList<DesignElementOld> singleSubElements = new ArrayList<>(requiredSingleSubElements.size() + optionalSingleSubElements.size());
+		ArrayList<DesignElement> singleSubElements = new ArrayList<>(requiredSingleSubElements.size() + optionalSingleSubElements.size());
 		singleSubElements.addAll(requiredSingleSubElements);
 		singleSubElements.addAll(optionalSingleSubElements);
-		for(DesignElementOld element : singleSubElements) {
+		for(DesignElement element : singleSubElements) {
 			JButton button = new JButton(element.getDisplayName());
 			button.setFont(Medium.f);
 			button.addActionListener(new ActionListener() {
@@ -484,7 +484,7 @@ public class DesignElementOld {
 			subElementPanel.add(button);
 		}
 		for(SubElementType elementType : optionalMultipleSubElements) {
-			DesignElementOld element = elementType.get();
+			DesignElement element = elementType.get();
 			JButton button = new JButton(element.getDisplayName());
 			button.setFont(Medium.f);
 			button.addActionListener(new ActionListener() {
@@ -499,12 +499,12 @@ public class DesignElementOld {
 		
 		textArea.setText(getText());
 	}
-	public DesignElementOld clone() {
-		DesignElementOld result = new DesignElementOld(name);
+	public DesignElement clone() {
+		DesignElement result = new DesignElement(name);
 		copyFields(result);
 		return result;
 	}
-	public void copyFields(DesignElementOld result) {
+	public void copyFields(DesignElement result) {
 		for(DesignAttribute a : attributes.values()) {
 			if(requiredAttributes.contains(a)) {
 				result.addAttributes(a.clone());
@@ -512,20 +512,20 @@ public class DesignElementOld {
 				result.addAttributes(a.clone());
 			}
 		}
-		for(DesignElementOld e : subElements) {
+		for(DesignElement e : subElements) {
 			result.addSubElements(e.clone());
 		}
-		for(DesignElementOld e : requiredSingleSubElements) {
+		for(DesignElement e : requiredSingleSubElements) {
 			result.addSubElements(e.clone());
 		}
-		for(DesignElementOld e : optionalSingleSubElements) {
+		for(DesignElement e : optionalSingleSubElements) {
 			result.addOptionalSingleSubElements(e.clone());
 		}
 		for(SubElementType e : optionalMultipleSubElements) {
 			result.addOptionalMultipleSubElements(e);
 		}
 	}
-	public static ArrayList<DesignElementOld> seen = new ArrayList<>();
+	public static ArrayList<DesignElement> seen = new ArrayList<>();
 	public String toMinistryMarkdown() {
 		return bulletWiki(1) + toMinistryMarkdown(1);
 	}
@@ -541,10 +541,10 @@ public class DesignElementOld {
 		for(DesignAttribute a : attributes.values()) {
 			result += line(bulletWiki(level+1) + a.toMinistryMarkdown());
 		}
-		for(DesignElementOld e : subElements) {
+		for(DesignElement e : subElements) {
 			result += line(bulletWiki(level+1) + "1" + " " + e.toMinistryMarkdown(level+1));
 		}
-		for(DesignElementOld e : optionalSingleSubElements) {
+		for(DesignElement e : optionalSingleSubElements) {
 			result += line(bulletWiki(level+1) + "0|1" + " " + e.toMinistryMarkdown(level+1));
 		}
 		for(SubElementType e : optionalMultipleSubElements) {
@@ -570,8 +570,8 @@ public class DesignElementOld {
 		return result + "* ";
 	}
 	public boolean equals(Object o) {
-		if(o instanceof DesignElementOld) {
-			DesignElementOld e = (DesignElementOld) o;
+		if(o instanceof DesignElement) {
+			DesignElement e = (DesignElement) o;
 			return
 					name.equals(e.name) &&
 					attributes.equals(e.attributes) &&
@@ -608,7 +608,7 @@ public class DesignElementOld {
 	}
 
 	public boolean hasSubElement(String name) {
-		for(DesignElementOld e : subElements) {
+		for(DesignElement e : subElements) {
 			if(e.getName().equals(name)) {
 				return true;
 			}

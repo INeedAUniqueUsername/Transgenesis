@@ -68,7 +68,7 @@ import mod.TranscendenceMod;
 import mod.ExtensionFactory.Extensions;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
-import xml.DesignElementOld;
+import xml.DesignElement;
 public class TypeManager {
 	XMLPanel editor;
 	JScrollPane pane = null;
@@ -331,7 +331,7 @@ public class TypeManager {
 			for(TypeElement e : elements) {
 				data.appendChild(e.getXMLOutput(doc));
 			}
-			return DesignElementOld.docToString(doc);
+			return DesignElement.docToString(doc);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (TransformerException e) {

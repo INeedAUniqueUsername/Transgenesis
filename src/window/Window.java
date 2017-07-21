@@ -38,7 +38,7 @@ public class Window implements Runnable {
 	File file;
 	Writer writer;
 	BufferedReader reader;
-	FrameOld frame;
+	Frame frame;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -85,7 +85,7 @@ public class Window implements Runnable {
 
 	@Override
 	public void run() {
-		frame = new FrameOld();
+		frame = new Frame();
 	}
 
 }

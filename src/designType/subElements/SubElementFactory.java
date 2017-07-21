@@ -10,10 +10,10 @@ import javax.swing.event.ListSelectionEvent;
 import designType.TypeFactory;
 import designType.Types;
 import designType.subElements.SubElementFactory.SystemGroupElements;
-import window.FrameOld;
+import window.Frame;
 import window.Window;
 import xml.DesignAttribute;
-import xml.DesignElementOld;
+import xml.DesignElement;
 import xml.RenameableElement;
 import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.ValueType.*;
@@ -23,7 +23,7 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public DesignElementOld get() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -33,8 +33,8 @@ public class SubElementFactory {
 		DockScreen_Named, Pane_Named, Action;
 		
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = null;
+		public DesignElement get() {
+			DesignElement e = null;
 			switch(this) {
 			case DockScreen_Named:
 				e = new RenameableElement("DockScreen");
@@ -49,26 +49,26 @@ public class SubElementFactory {
 						att("showCounter", BOOLEAN),
 						att("showTextInput", BOOLEAN)
 						);
-				DesignElementOld controls = new DesignElementOld("Controls");
+				DesignElement controls = new DesignElement("Controls");
 				for(String name : new String[] {"Counter", "ItemDisplay", "ItemListDisplay", "Text", "TextInput"}) {
-					DesignElementOld subelement = new DesignElementOld(name);
+					DesignElement subelement = new DesignElement(name);
 					subelement.addAttributes(
 							att("id", STRING),
 							att("style", STYLE_CONTROLS)
 							);
 					controls.addOptionalSingleSubElements(subelement);
 				}
-				DesignElementOld actions = new DesignElementOld("Actions");
+				DesignElement actions = new DesignElement("Actions");
 				actions.addOptionalMultipleSubElements(DockScreensElements.Action);
 				e.addOptionalSingleSubElements(
-						new DesignElementOld("OnPaneInit"),
-						new DesignElementOld("Initialize"),
+						new DesignElement("OnPaneInit"),
+						new DesignElement("Initialize"),
 						controls,
 						actions
 						);
 				break;
 			case Action:
-				e = new DesignElementOld("Action");
+				e = new DesignElement("Action");
 				e.addAttributes(
 						att("name", STRING),
 						att("id", STRING),
@@ -81,14 +81,14 @@ public class SubElementFactory {
 						att("minor", BOOLEAN)
 						
 						);
-				DesignElementOld navigate = new DesignElementOld("Navigate");
+				DesignElement navigate = new DesignElement("Navigate");
 				navigate.addAttributes(att("screen", STRING));
-				DesignElementOld showPane = new DesignElementOld("ShowPane");
+				DesignElement showPane = new DesignElement("ShowPane");
 				showPane.addAttributes(att("pane", STRING));
 				e.addOptionalSingleSubElements(
 						navigate,
 						showPane,
-						new DesignElementOld("Exit")
+						new DesignElement("Exit")
 						);
 				break;
 			}
@@ -99,8 +99,8 @@ public class SubElementFactory {
 		ItemAttribute;
 
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case ItemAttribute:
 				e.addAttributes(
@@ -122,8 +122,8 @@ public class SubElementFactory {
 		
 		;
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld result = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement result = new DesignElement(name());
 			switch(this) {
 			case EncounterOverrides:
 				result = Types.StationType.get().getOptionalSingleByName("Encounter");
@@ -148,8 +148,8 @@ public class SubElementFactory {
 		Text,
 		Image;
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Group:
 				e.addAttributes(
@@ -197,8 +197,8 @@ public class SubElementFactory {
 		Null;
 
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
 			if(!this.equals(Null)) {
 				e.addAttributes(
 						att("chance", WHOLE),						//Table
@@ -268,9 +268,9 @@ public class SubElementFactory {
 		Null;
 
 		@Override
-		public DesignElementOld get() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
-			DesignElementOld e = new DesignElementOld(name());
+			DesignElement e = new DesignElement(name());
 			if(!this.equals(Null)) {
 				e.addAttributes(
 						att("chance", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
@@ -338,7 +338,7 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public DesignElementOld get() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -361,8 +361,8 @@ public class SubElementFactory {
 		Custom,;
 
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
 			e.addAttributes(
 					att("actualPrice", BOOLEAN),
 					att("criteria", STRING),
@@ -384,9 +384,9 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public DesignElementOld get() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
-			DesignElementOld e = new DesignElementOld(name());
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Relationship:
 				e.addAttributes(
@@ -404,9 +404,9 @@ public class SubElementFactory {
 		;
 
 		@Override
-		public DesignElementOld get() {
+		public DesignElement get() {
 			// TODO Auto-generated method stub
-			return new DesignElementOld("W.I.P.");
+			return new DesignElement("W.I.P.");
 		}
 		
 	}
@@ -418,8 +418,8 @@ public class SubElementFactory {
 		StargateCount,;
 
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Attributes:
 				e.addAttributes(att("criteria", STRING));
@@ -457,8 +457,8 @@ public class SubElementFactory {
 		Module, Library;
 
 		@Override
-		public DesignElementOld get() {
-			DesignElementOld e = new DesignElementOld(name());
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
 			switch(this) {
 			case Library:
 				e.addAttributes(att("unid", TYPE_MOD));
@@ -535,7 +535,7 @@ public class SubElementFactory {
 	}
 	
 	//WIP
-	public static DesignElementOld createEffects() {
-		return new DesignElementOld("Effects");
+	public static DesignElement createEffects() {
+		return new DesignElement("Effects");
 	}
 }

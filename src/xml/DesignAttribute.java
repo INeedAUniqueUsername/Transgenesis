@@ -28,7 +28,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design == null;
 			}
 		},
@@ -39,7 +39,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return true;
 			}
 		},
@@ -49,16 +49,16 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(true, value);
 				
 				//Get the named local dockscreens from the selected element and add them to the box
-				DesignElementOld selected = XMLPanel.getSelected();
+				DesignElement selected = XMLPanel.getSelected();
 				if(selected.hasSubElement("DockScreens")) {
-					for(DesignElementOld e : selected.getSubElementsByName("DockScreens").get(0).getSubElements()) {
+					for(DesignElement e : selected.getSubElementsByName("DockScreens").get(0).getSubElements()) {
 						field.addItem(e.getName());
 					}
 				}
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("DockScreen");
 			}
 		},
@@ -69,7 +69,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ItemType") && design.hasSubElement("Armor");
 			}
 		},
@@ -80,7 +80,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("Image");
 			}
 		},
@@ -91,7 +91,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("TranscendenceLibrary");
 			}
 		},
@@ -102,7 +102,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("Sovereign");
 			}
 		},
@@ -113,7 +113,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("SpaceEnvironment");
 			}
 		},
@@ -124,7 +124,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("SystemMap");
 			}
 		},
@@ -135,7 +135,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && (design.getName().equals("Type") || (design.hasAttribute("virtual") && design.getAttributeByName("virtual").getValue().equals("true")));
 			}
 		},
@@ -445,7 +445,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ItemType") && design.hasSubElement("Weapon");
 			}
 		}, TYPE_EFFECT {
@@ -455,7 +455,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("EffectType");
 			}
 		}, TYPE_STATION {
@@ -465,7 +465,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("StationType");
 			}
 		}, DOCKSCREEN_TYPE {
@@ -548,7 +548,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ItemType");
 			}
 		}, LEVEL_VALUE {
@@ -571,7 +571,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ItemTable");
 			}
 		}, TYPE_DOCKSCREEN {
@@ -581,7 +581,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("DockScreen");
 			}
 		}, OVERLAY_COUNTER_STTYLE {
@@ -639,7 +639,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("OverlayType");
 			}
 		}, SATELLITE_OVERLAP_CHECK {
@@ -655,7 +655,7 @@ public class DesignAttribute {
 				addValidTypes(field);
 				return field;
 			}
-			public boolean typeIsValid(DesignElementOld design) {
+			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ShipClass");
 			}
 		}
@@ -708,14 +708,14 @@ public class DesignAttribute {
 		*/
 		public void addValidTypes(JComboBox<String> box) {
 			int count = box.getItemCount();
-			XMLPanel.getExtensionTypeMap().forEach((String type, DesignElementOld design) -> {
+			XMLPanel.getExtensionTypeMap().forEach((String type, DesignElement design) -> {
 				if(typeIsValid(design)) {
 					box.addItem("&" + type + ";");
 				}
 			});
 			System.out.println(box.getItemCount() - count + " valid Types found.");
 		}
-		public boolean typeIsValid(DesignElementOld design) {
+		public boolean typeIsValid(DesignElement design) {
 			return true;
 		}
 	}

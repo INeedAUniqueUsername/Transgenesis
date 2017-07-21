@@ -1,9 +1,9 @@
 package xml;
 
 import panels.XMLPanel;
-import window.FrameOld;
+import window.Frame;
 
-public class RenameableElement extends DesignElementOld {
+public class RenameableElement extends DesignElement {
 
 	public RenameableElement(String name) {
 		super(name);

@@ -1,7 +1,7 @@
 package designType;
 
 import designType.subElements.SubElementType;
-import xml.DesignElementOld;
+import xml.DesignElement;
 
 //@Override
 /*
@@ -46,7 +46,7 @@ public enum Types implements SubElementType {
 	;
 	
 	@Override
-	public DesignElementOld get() {
+	public DesignElement get() {
 		return TypeFactory.createDesignType(this);
 	}
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 import xml.DesignAttribute;
 import xml.DesignAttribute.ValueType;
-import xml.DesignElementOld;
+import xml.DesignElement;
 import static xml.DesignAttribute.ValueType.*;
 import static xml.DesignAttribute.*;
 
@@ -256,7 +256,7 @@ public class AttributeFactory {
 		}
 		return new DesignAttribute[] {};
 	}
-	public static void addDeviceContent(DesignElementOld e) {
+	public static void addDeviceContent(DesignElement e) {
 		e.addAttributes(
 				att("deviceSlots", WHOLE),
 				att("category", CATEGORY_DEVICE),
@@ -267,7 +267,7 @@ public class AttributeFactory {
 		);
 		e.addOptionalMultipleSubElements(
 				() -> {
-					DesignElementOld enhanceAbilities = new DesignElementOld("EnhanceAbilities");
+					DesignElement enhanceAbilities = new DesignElement("EnhanceAbilities");
 					enhanceAbilities.addAttributes(
 							att("criteria", STRING),
 							att("type", STRING),
