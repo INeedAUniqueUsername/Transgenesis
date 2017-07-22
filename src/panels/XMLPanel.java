@@ -93,7 +93,9 @@ public class XMLPanel extends JPanel {
 				"-In order to load successfully, files must contain well-formed XML code.\n" +
 				"-If an extension has unloaded dependencies or modules, then not all of its\n" +
 				" internal or external types will be recognized by TransGenesis. For optimal\n" +
-				" functionality, please have all dependencies and modules loaded.\n"
+				" functionality, please have all dependencies and modules loaded.\n" +
+				"-Design definitions are incomplete, so TransGenesis may not recognize all elements,\n" +
+				" subelements, or attributes."
 				, false));
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
