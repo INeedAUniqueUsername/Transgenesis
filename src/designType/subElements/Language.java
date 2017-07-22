@@ -3,9 +3,11 @@ package designType.subElements;
 import static xml.DesignAttribute.att;
 import static xml.DesignAttribute.ValueType.STRING;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import designType.Types;
 import panels.XMLPanel;
@@ -113,7 +115,10 @@ public final class Language {
 		}
 		return e;
 	}
-
+	public static Text createText(String id) {
+		Text result = new Text(id);
+		return result;
+	}
 }
 class Text extends DesignElement {
 	public Text(String id) {
@@ -121,7 +126,8 @@ class Text extends DesignElement {
 		addAttributes(att("id", STRING, id));
 	}
 	public String getDisplayName() {
-		return String.format("%-16s%s", "Text", getAttributeByName("id").getValue());
+		//return String.format("%-16s%s", "Text", getAttributeByName("id").getValue());
+		return getAttributeByName("id").getValue();
 	}
 	//Make uneditable
 	public void initializeFrame(XMLPanel panel) {
@@ -134,11 +140,10 @@ class Text extends DesignElement {
 		subElementPanel.removeAll();
 		
 		for(DesignAttribute a : getAttributes()) {
-			JLabel label = new JLabel(a.getName() + "=");
-			label.setFont(Medium.f);
+			JLabel label = XMLPanel.createLabel((String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase())));
+			JTextField value = XMLPanel.createTextField(a.getValue(), false);
+			value.setPreferredSize(label.getPreferredSize());
 			labelPanel.add(label);
-			JLabel value = new JLabel(a.getValue());
-			value.setFont(Medium.f);
 			fieldPanel.add(value);
 		}
 		

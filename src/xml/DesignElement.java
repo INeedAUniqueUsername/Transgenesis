@@ -415,6 +415,37 @@ public class DesignElement {
 		}
 		return null;
 	}
+	public DesignElement getAddableElement(String name, DesignAttribute...attributes) {
+		ArrayList<DesignElement> addableElements = new ArrayList<>();
+		addableElements.addAll(requiredSingleSubElements);
+		addableElements.addAll(optionalSingleSubElements);
+		optionalMultipleSubElements.forEach((SubElementType s) -> {
+			addableElements.add(s.get());
+		});
+		for(DesignElement e : addableElements) {
+			if(e.getName().equalsIgnoreCase(name)) {
+				boolean hasAllAttributes = true;
+				for(DesignAttribute a : attributes) {
+					if(!e.hasAttribute(a)) {
+						hasAllAttributes = false;
+					}
+				}
+				if(hasAllAttributes) {
+					return e;
+				}
+			}
+		}
+		return null;
+	}
+	private boolean hasAttribute(DesignAttribute a) {
+		for(DesignAttribute attribute : attributes.values()) {
+			if(attribute.equals(a)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void initializeFrame(XMLPanel panel) {
 		JTextField nameField = panel.nameField;
 		JPanel labelPanel = panel.labelPanel;
@@ -432,13 +463,12 @@ public class DesignElement {
 			labelPanel.add(label);
 		} else {
 			for(DesignAttribute a : attributes) {
-				JLabel label = new JLabel(String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase()));
-				label.setFont(Medium.f);
-				//label.setPreferredSize(new Dimension((int) (fieldPanel.getWidth() / 2.5), label.getHeight()));
+				JLabel label = XMLPanel.createLabel((String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase())));
 				labelPanel.add(label);
 				JComponent inputField = a.getValueType().getInputField(a.getValue());
-				inputField.setPreferredSize(new Dimension((int) (fieldPanel.getWidth() / 2.5), inputField.getHeight()));
-				inputField.setMaximumSize(new Dimension((int) (fieldPanel.getWidth() / 2.5), inputField.getHeight()));
+				//If the inputField is larger then the label, then the panel will expand so that both are the same width
+				//Restrict the size of the inputField
+				inputField.setPreferredSize(label.getPreferredSize());
 				fieldPanel.add(inputField);
 			}
 		}

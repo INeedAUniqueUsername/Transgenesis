@@ -574,6 +574,8 @@ public class XMLPanel extends JPanel {
 				value = ((JTextField) field).getText();
 			} else if(field instanceof JComboBox) {
 				value = (String) ((JComboBox) field).getSelectedItem();
+			} else if(field instanceof JLabel) {
+				value = (String) ((JLabel) field).getText();
 			}
 			attributes.get(i).setValue(value);
 		}

@@ -22,18 +22,22 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.Comment;
 import javax.xml.stream.events.EntityDeclaration;
+import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import org.xml.sax.InputSource;
 
 import designType.subElements.SubElementType;
 import designType.Types;
+import designType.subElements.Language;
 import designType.subElements.SubElementFactory;
 import mod.ExtensionFactory.Extensions;
 import mod.ExtensionFactory;
 import mod.TranscendenceMod;
 import panels.TypeManager;
 import xml.DesignElement;
+import xml.DesignAttribute;
+import xml.DesignAttribute.ValueType;
 
 public class Loader {
 	public static int successes = 0;
@@ -100,12 +104,13 @@ public class Loader {
 			    	System.out.println("Entity: " + b.getName() + "=" + b.getReplacementText());
 			    	break;
 			    case XMLEvent.START_ELEMENT:
-			    	String name = event.asStartElement().getName().getLocalPart();
+			    	StartElement start = event.asStartElement();
+			    	String name = start.getName().getLocalPart();
 			    	System.out.println("Element name: " + name);
 			    	Consumer<DesignElement> addAttributes =((DesignElement e) -> {
 			    		DesignElement element = elementStack.getLast();
 				    	//Now add all the attributes
-				    	Iterator<Attribute> attributes = event.asStartElement().getAttributes();
+				    	Iterator<Attribute> attributes = start.getAttributes();
 				    	while(attributes.hasNext()) {
 				    		Attribute a = attributes.next();
 				    		System.out.println("Attribute found: " + a.getName().getLocalPart() + "=" + a.getValue());
@@ -137,29 +142,45 @@ public class Loader {
 			    	} catch(Exception e) { System.out.println("Not a DesignType"); }
 			    	
 			    	//Otherwise, assume that we are making a DesignType and currently looking at a subelement
-			    	ElementName: switch(name) {
-			    	default:
-			    		if(elementStack.size() == 0) {
-			    			System.out.println("Skipping Start: First element is unrecognized");
-			    			break ElementName;
-			    		}
-			    		DesignElement element = elementStack.getLast();
-			    		if(element == null) {
-			    			System.out.println("Null Element Found");
-			    			break ElementName;
-			    		}
-			    		DesignElement add = element.getAddableElement(name);
-			    		if(add == null) {
-			    			System.out.println("Adding generic element: " + name);
-			    			add = new DesignElement(name);
-			    		} else {
-			    			System.out.println("Adding identified element: " + name);
-			    		}
-			    		element.addSubElements(add);
-			    		elementStack.addLast(add);
-			    		addAttributes.accept(add);
-			    		break ElementName;
-			    	}
+		    		if(elementStack.size() == 0) {
+		    			System.out.println("Skipping Start: First element is unrecognized");
+		    			break EventType;
+		    		}
+		    		DesignElement element = elementStack.getLast();
+		    		if(element == null) {
+		    			System.out.println("Null Element Found");
+		    			break EventType;
+		    		}
+		    		//If we have a Language subelement, then we need to identify it by the id= attribute
+		    		DesignElement add = null;
+		    		if(name.equals("Text")) {
+		    			String id = start.getAttributeByName(new QName("id")).getValue();
+		    			if(id != null) {
+		    				add = element.getAddableElement(
+			    					name,
+			    					new DesignAttribute(
+			    							"id",
+			    							ValueType.STRING,
+			    							id
+			    							)
+			    					);
+			    			if(add == null) {
+			    				add = Language.createText(id);
+			    			}
+		    			}
+		    		} else {
+		    			add = element.getAddableElement(name);
+		    		}
+		    		if(add == null) {
+		    			System.out.println("Adding generic element: " + name);
+		    			add = new DesignElement(name);
+		    		} else {
+		    			System.out.println("Adding identified element: " + name);
+		    		}
+		    		
+		    		element.addSubElements(add);
+		    		elementStack.addLast(add);
+		    		addAttributes.accept(add);
 			    	break EventType;
 			    case XMLEvent.END_ELEMENT:
 			    	//This means that the first element was not recognized
