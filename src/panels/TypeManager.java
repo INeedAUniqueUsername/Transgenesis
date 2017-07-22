@@ -72,7 +72,7 @@ import xml.DesignElement;
 public class TypeManager {
 	XMLPanel editor;
 	JScrollPane pane = null;
-	ArrayList<TypeElement> elements;
+	ArrayList<TypeElement> elements; //TO DO: Make sure that entries and ranges are correctly sorted at extension loading time if no working metadata file is available
 	public TypeManager() {
 		elements = new ArrayList<>();
 	}

@@ -95,7 +95,8 @@ public class XMLPanel extends JPanel {
 				" internal or external types will be recognized by TransGenesis. For optimal\n" +
 				" functionality, please have all dependencies and modules loaded.\n" +
 				"-Design definitions are incomplete, so TransGenesis may not recognize all elements,\n" +
-				" subelements, or attributes."
+				" subelements, or attributes.\n" +
+				"-Data about extension Type Entries/Ranges is stored as metadata in a .dat file."
 				, false));
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";

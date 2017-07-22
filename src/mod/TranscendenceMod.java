@@ -285,12 +285,14 @@ public class TranscendenceMod extends DesignElement {
 			bw.close();
 			fw.close();
 			
-			fw = new FileWriter(path_metadata);
-			bw = new BufferedWriter(fw);
-			bw.write(getXMLMetaData());
-			bw.close();
-			fw.close();
-			
+			//Do not write a metadata file for bindings if there are none
+			if(types.bindAll().size() > 0) {
+				fw = new FileWriter(path_metadata);
+				bw = new BufferedWriter(fw);
+				bw.write(getXMLMetaData());
+				bw.close();
+				fw.close();
+			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
