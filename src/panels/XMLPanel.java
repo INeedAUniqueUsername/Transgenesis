@@ -2,7 +2,9 @@ package panels;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -97,13 +99,15 @@ public class XMLPanel extends JPanel {
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
 		JFileChooser j = new JFileChooser();
 		j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		j.setMultiSelectionEnabled(true);
 		j.setCurrentDirectory(new File(System.getProperty("user.dir")));
-		File f = null;
+		setComponentsFont(j.getComponents(), Fonts.Medium.f);
+		File[] files = null;
 		if(j.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			//String dir = JOptionPane.showInputDialog("Specify mod directory");
-			f = j.getSelectedFile();
+			files = j.getSelectedFiles();
 		} else {
-			f = new File("");
+			files = null;
 		}
 		//origin = new DefaultMutableTreeNode(f.getAbsolutePath());
 		origin = new DefaultMutableTreeNode("TransGenesis");
@@ -166,11 +170,11 @@ public class XMLPanel extends JPanel {
 	    elementTreePane = createScrollPane(elementTree);
 	    //elementTreePane.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 		
-	    nameField = new JTextField("Element name here");
+	    nameField = new JTextField("TransGenesis");
 	    nameField.setFont(Title.f);
 	    nameField.setEditable(false);
 	    
-		documentation = new JLabel("Documentation Here");
+		documentation = new JLabel("Documentation.txt could not be found.");
 		documentation.setFont(Medium.f);
 		documentation.setVerticalTextPosition(SwingConstants.TOP);
 		
@@ -198,13 +202,30 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {}
 			public void mouseReleased(MouseEvent e) {}
 		});
-		loadExtensions(f, false);
+		if(files == null) {
+			JOptionPane.showMessageDialog(this, createTextArea("No files/folders were selected. TransGenesis will now exit.", false));
+			System.exit(0);
+		}
+		for(File f : files) {
+			loadExtensions(f, false);
+		}
 		elementTree.expandRow(0);
+		JOptionPane.showMessageDialog(this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
 		//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
 		bindNonModuleExtensions(getExtensions());
 		bindNonModuleExtensions(getExtensions());
 		resetLayout();
 	}
+	//https://coderanch.com/t/342116/java/set-font-JFileChooser
+	public void setComponentsFont(Component[] comp, Font font)
+	  {
+	    for(int x = 0; x < comp.length; x++)
+	    {
+	      if(comp[x] instanceof Container) setComponentsFont(((Container)comp[x]).getComponents(), font);
+	      try{comp[x].setFont(font);}
+	      catch(Exception e){}//do nothing
+	    }
+	  }
 	public static List<TranscendenceMod> getExtensions() {
 		List<TranscendenceMod> result = new LinkedList<>();
 		for(int i = 0; i < origin.getChildCount(); i++) {
@@ -455,21 +476,21 @@ public class XMLPanel extends JPanel {
 	private void loadExtensions(File f, boolean bindTypesWhenDone) {
 		List<TranscendenceMod> loaded = getExtensions();
 		List<TranscendenceMod> mods = Loader.loadAllMods(f);
-		String message = "Loading Extensions from " + f.getAbsolutePath();
+		String message = "Loading Extensions from " + f.getAbsolutePath() + ".";
 		for(TranscendenceMod m : mods) {
 			if(loaded.contains(m)) {
-				message += ("\nNote: Extension " + m.getPath() + " already loaded");
+				message += ("\nNote: Extension " + m.getPath() + " already loaded.");
 			} else if(m == null || m.getName().equals("TranscendenceError")) {
-				message += ("\nFailure: Extension " + m.getPath() + " could not be loaded");
+				message += ("\nFailure: Extension " + m.getPath() + " could not be loaded.");
 			} else {
-				message += ("\nSuccess: Extension " + m.getPath() + " loaded");
+				message += ("\nSuccess: Extension " + m.getPath() + " loaded.");
 				elementTreeModel.insertNodeInto(m.toTreeNode(), origin, 0);
 				/*
 				if(m.hasSubElement("Library") && JOptionPane.showConfirmDialog(null, "This Extension depends on other Libraries. Load them now?", "Load Dependencies", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				}
 				*/
 				//If the file is not the same as the Extension path, then we can assume that the file is the directory that contains the Extension. We can assume that an Extension and its modules have the same directory.
-				if(m.hasSubElement("Module") && f.equals(m.getPath()) && JOptionPane.showConfirmDialog(null, createLabel("Note: Extension " + m.getPath() + " has Modules. Load them now?"), "Load Modules", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if(m.hasSubElement("Module") && f.equals(m.getPath()) && JOptionPane.showConfirmDialog(null, createTextArea("Note: Extension " + m.getPath() + " has Modules. Load them now?", false), "Load Modules", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					List<File> paths = new LinkedList<>();
 					for(DesignElement e : m.getSubElementsByName("Module")) {
 						paths.add(new File(m.getModulePath(e.getAttributeByName("filename").getValue())));
@@ -478,14 +499,14 @@ public class XMLPanel extends JPanel {
 				}
 			}
 		}
+		JOptionPane.showMessageDialog(this, createScrollPane(createTextArea(
+				message + (bindTypesWhenDone ? "\nTransGenesis will now update type bindings for all extensions." : ""), false)));
 		if(bindTypesWhenDone) {
 			boolean showErrorsPrevious = showErrors;
 			showErrors = false;
 			bindNonModuleExtensions(getExtensions());
 			showErrors = showErrorsPrevious;
 		}
-		
-		JOptionPane.showMessageDialog(this, createScrollPane(createTextArea(message, false)));
 	}
 	private void loadModules(List<File> files) {
 		List<TranscendenceMod> loaded = getExtensions();
