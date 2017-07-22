@@ -154,18 +154,18 @@ public class Loader {
 		    		//If we have a Language subelement, then we need to identify it by the id= attribute
 		    		DesignElement add = null;
 		    		if(name.equals("Text")) {
-		    			String id = start.getAttributeByName(new QName("id")).getValue();
+		    			Attribute id = start.getAttributeByName(new QName("id"));
 		    			if(id != null) {
 		    				add = element.getAddableElement(
 			    					name,
 			    					new DesignAttribute(
 			    							"id",
 			    							ValueType.STRING,
-			    							id
+			    							id.getValue()
 			    							)
 			    					);
 			    			if(add == null) {
-			    				add = Language.createText(id);
+			    				add = Language.createText(id.getValue());
 			    			}
 		    			}
 		    		} else {

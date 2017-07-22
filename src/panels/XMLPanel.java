@@ -85,7 +85,7 @@ public class XMLPanel extends JPanel {
 				"TransGenesis: Transcendence XML Editor\n" +
 				"By 0xABCDEF/Archcannon\n\n" +
 				"Notes\n" +
-				"-Please use an isolated copy of the source code in case of unknown bugs.\n" +
+				"-Please use an isolated copy of the Transcendence source code in case of unknown bugs.\n" +
 				"-Select a File or Folder to load extensions.\n" +
 				"-Loading may take a while depending on how many files you are loading.\n" +
 				"-In order to load successfully, files must contain well-formed XML code.\n" +
@@ -200,6 +200,8 @@ public class XMLPanel extends JPanel {
 		});
 		loadExtensions(f, false);
 		elementTree.expandRow(0);
+		//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
+		bindNonModuleExtensions(getExtensions());
 		bindNonModuleExtensions(getExtensions());
 		resetLayout();
 	}
@@ -272,6 +274,8 @@ public class XMLPanel extends JPanel {
 				save();
 			}
 		});
+		saveButton.setFont(Fonts.Large.f);
+		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		JButton xmlButton = new JButton("Generate XML");
 		xmlButton.addActionListener(new ActionListener() {
@@ -289,28 +293,12 @@ public class XMLPanel extends JPanel {
 				}
 			}
 		});
+		xmlButton.setHorizontalAlignment(SwingConstants.LEFT);
 		xmlButton.setFont(Large.f);
 		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
 		
-		JButton loadExtension = createJButton("Load Extension/Folder");
-		loadExtension.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(e.getSource() == loadExtension) {
-					if(selected != null) {
-						setData(selected);
-					}
-					JFileChooser j = new JFileChooser();
-					j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-					j.setCurrentDirectory(new File(System.getProperty("user.dir")));
-					if(j.showOpenDialog(XMLPanel.this) == JFileChooser.APPROVE_OPTION) {
-						loadExtensions(j.getSelectedFile(), true);
-					}
-				}
-			}
-		});
-		add(loadExtension, new CC().x("0%").y("0%").width("25%").height("3%"));
-		
-		int yPercent = 3;
+		JPanel extensionButtons = new JPanel();
+		extensionButtons.setLayout(new GridLayout(5, 1));
 		for(Extensions extension : new Extensions[] {
 				Extensions.TranscendenceAdventure,
 				Extensions.TranscendenceExtension,
@@ -333,9 +321,30 @@ public class XMLPanel extends JPanel {
 				}
 				
 			});
-			add(b, new CC().x("0%").y(yPercent + "%").width("25%").height("3%"));
-			yPercent += 3;
+			b.setHorizontalAlignment(SwingConstants.LEFT);
+			extensionButtons.add(b);
 		}
+		
+		JButton loadExtension = createJButton("Load Extension/Folder");
+		loadExtension.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == loadExtension) {
+					if(selected != null) {
+						setData(selected);
+					}
+					JFileChooser j = new JFileChooser();
+					j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+					j.setCurrentDirectory(new File(System.getProperty("user.dir")));
+					if(j.showOpenDialog(XMLPanel.this) == JFileChooser.APPROVE_OPTION) {
+						loadExtensions(j.getSelectedFile(), true);
+					}
+				}
+			}
+		});
+		loadExtension.setHorizontalAlignment(SwingConstants.LEFT);
+		extensionButtons.add(loadExtension);
+		
+		add(extensionButtons, new CC().x("0%").y("0").minWidth("25%").maxWidth("25%").minHeight("15%").maxHeight("15%"));
 		
 		JButton deleteButton = createJButton("Delete Element");
 		deleteButton.addActionListener(new ActionListener() {
@@ -536,8 +545,9 @@ public class XMLPanel extends JPanel {
 	public void selectNode(DefaultMutableTreeNode node) {
 		Object obj = node.getUserObject();
 		if(obj instanceof DesignElement) {
-			selectElement((DesignElement) obj);
+			//Always set the extension first so that when the selected element gets initialized, it gets the correct type map. Otherwise, it will get one from the previously selected extension
 			selectedExtension = getExtension(node);
+			selectElement((DesignElement) obj);
 		}
 		else {
 			selectElement(null);
