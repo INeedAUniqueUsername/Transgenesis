@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -100,18 +102,6 @@ public class XMLPanel extends JPanel {
 				, false));
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
 		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
-		JFileChooser j = new JFileChooser();
-		j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		j.setMultiSelectionEnabled(true);
-		j.setCurrentDirectory(new File(System.getProperty("user.dir")));
-		setComponentsFont(j.getComponents(), Fonts.Medium.f);
-		File[] files = null;
-		if(j.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			//String dir = JOptionPane.showInputDialog("Specify mod directory");
-			files = j.getSelectedFiles();
-		} else {
-			files = null;
-		}
 		//origin = new DefaultMutableTreeNode(f.getAbsolutePath());
 		origin = new DefaultMutableTreeNode("TransGenesis");
 		/*
@@ -205,12 +195,14 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {}
 			public void mouseReleased(MouseEvent e) {}
 		});
-		if(files == null) {
+		File[] load = showFileChooser();
+		if(load.length > 0) {
+			for(File f : load) {
+				loadExtensions(f, false);
+			}
+		} else {
 			JOptionPane.showMessageDialog(this, createTextArea("No files/folders were selected. TransGenesis will now exit.", false));
 			System.exit(0);
-		}
-		for(File f : files) {
-			loadExtensions(f, false);
 		}
 		elementTree.expandRow(0);
 		JOptionPane.showMessageDialog(this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
@@ -343,12 +335,10 @@ public class XMLPanel extends JPanel {
 						elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
 					}
 				}
-				
 			});
 			b.setHorizontalAlignment(SwingConstants.LEFT);
 			extensionButtons.add(b);
 		}
-		
 		JButton loadExtension = createJButton("Load Extension/Folder");
 		loadExtension.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -356,12 +346,11 @@ public class XMLPanel extends JPanel {
 					if(selected != null) {
 						setData(selected);
 					}
-					JFileChooser j = new JFileChooser();
-					j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-					j.setCurrentDirectory(new File(System.getProperty("user.dir")));
-					if(j.showOpenDialog(XMLPanel.this) == JFileChooser.APPROVE_OPTION) {
-						loadExtensions(j.getSelectedFile(), true);
+					File[] load = showFileChooser();
+					for(File f : load) {
+						loadExtensions(f, false);
 					}
+					bindNonModuleExtensions(getExtensions());
 				}
 			}
 		});
@@ -465,6 +454,24 @@ public class XMLPanel extends JPanel {
 				.minWidth("75%").maxWidth("75%")
 				.minHeight("30%").maxHeight("30%")
 				);
+	}
+	public File[] showFileChooser() {
+		JFileChooser j = new JFileChooser();
+		j.setFileFilter(new FileNameExtensionFilter("XML files", "xml"));
+		j.setMultiSelectionEnabled(true);
+		if(getWidth() == 0 || getHeight() == 0) {
+			j.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT - 48));
+		} else {
+			j.setPreferredSize(getSize());
+		}
+		
+		j.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		setComponentsFont(j.getComponents(), Fonts.Medium.f);
+		j.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		if(j.showOpenDialog(XMLPanel.this) == JFileChooser.APPROVE_OPTION) {
+			return j.getSelectedFiles();
+		}
+		return new File[0];
 	}
 	public static void showWarningPane(String warnings) {
 		if(!showErrors) {

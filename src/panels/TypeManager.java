@@ -134,11 +134,12 @@ public class TypeManager {
 			    	break EventType;
 			    }
 			}
-			Collections.sort(elements);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println("sorting elements");
+		Collections.sort(elements);
+		System.out.println("sorting done");
 	}
 	public void createFromXML(EntityDeclaration e) {
 		System.out.println("Found Declaration");
@@ -511,17 +512,17 @@ public class TypeManager {
 		}
 		public int compareTo(TypeElement e) {
 			try {
-				long unid = Long.valueOf(this.unid);
+				long unid = Long.decode(this.unid);
 				if(e instanceof TypeEntry) {
-					long unid_e = Long.valueOf(((TypeEntry) e).unid);
+					long unid_e = Long.decode(((TypeEntry) e).unid);
 					if(unid < unid_e) {
 						return -1;
 					} else if(unid > unid_e) {
 						return 1;
 					}
 				} else if(e instanceof TypeRange) {
-					long unid_min_e = Long.valueOf(((TypeRange) e).getUNIDMin());
-					long unid_max_e = Long.valueOf(((TypeRange) e).getUNIDMax());
+					long unid_min_e = Long.decode(((TypeRange) e).getUNIDMin());
+					long unid_max_e = Long.decode(((TypeRange) e).getUNIDMax());
 					if(unid < unid_min_e) {
 						return -1;
 					} else if(unid > unid_max_e) {
@@ -529,7 +530,7 @@ public class TypeManager {
 					}
 				}
 			} catch(Exception ex) {
-				
+				ex.printStackTrace();
 			}
 			return 0;
 		}
@@ -760,18 +761,18 @@ public class TypeManager {
 		}
 		public int compareTo(TypeElement e) {
 			try {
-				long unid_min = Long.valueOf(this.unid_min);
-				long unid_max = Long.valueOf(this.unid_max);
+				long unid_min = Long.decode(this.unid_min);
+				long unid_max = Long.decode(this.unid_max);
 				if(e instanceof TypeEntry) {
-					long unid_e = Long.valueOf(((TypeEntry) e).getUNID());
+					long unid_e = Long.decode(((TypeEntry) e).getUNID());
 					if(unid_max < unid_e) {
 						return -1;
 					} else if(unid_min > unid_e) {
 						return 1;
 					}
 				} else if(e instanceof TypeRange) {
-					long unid_min_e = Long.valueOf(((TypeRange) e).getUNIDMin());
-					long unid_max_e = Long.valueOf(((TypeRange) e).getUNIDMax());
+					long unid_min_e = Long.decode(((TypeRange) e).getUNIDMin());
+					long unid_max_e = Long.decode(((TypeRange) e).getUNIDMax());
 					if(unid_max < unid_min_e) {
 						return -1;
 					} else if(unid_min > unid_max_e) {
@@ -779,7 +780,7 @@ public class TypeManager {
 					}
 				}
 			} catch(Exception ex) {
-				
+				ex.printStackTrace();
 			}
 			return 0;
 		}
