@@ -1,17 +1,6 @@
 package designType.subElements;
-import java.util.LinkedList;
-
-import javax.lang.model.util.Elements;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.event.ListSelectionEvent;
-
 import designType.TypeFactory;
 import designType.Types;
-import designType.subElements.SubElementFactory.SystemGroupElements;
-import window.Frame;
-import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElement;
 import xml.RenameableElement;
@@ -19,7 +8,7 @@ import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.ValueType.*;
 import static xml.DesignAttribute.*;
 public class SubElementFactory {
-	public enum SystemGroupElements implements SubElementType {
+	public enum SystemGroupElements implements ElementType {
 		;
 
 		@Override
@@ -29,7 +18,7 @@ public class SubElementFactory {
 		}
 
 	}
-	public enum DockScreensElements implements SubElementType {
+	public enum DockScreensElements implements ElementType {
 		DockScreen_Named, Pane_Named, Action;
 		
 		@Override
@@ -38,7 +27,7 @@ public class SubElementFactory {
 			switch(this) {
 			case DockScreen_Named:
 				e = new RenameableElement("DockScreen");
-				e.addOptionalSingleSubElements(TypeFactory.createSubElementsForType(Types.DockScreen));
+				e.addOptionalSingleSubElements(TypeFactory.createSingleSubElementsForType(Types.DockScreen));
 				break;
 			case Pane_Named:
 				e = new RenameableElement("Pane");
@@ -95,7 +84,7 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public enum DisplayAttributesElements implements SubElementType {
+	public enum DisplayAttributesElements implements ElementType {
 		ItemAttribute;
 
 		@Override
@@ -114,7 +103,7 @@ public class SubElementFactory {
 		}
 		
 	}
-	public static enum AdventureDescElements implements SubElementType {
+	public static enum AdventureDescElements implements ElementType {
 		EncounterOverrides,
 
 		ArmorDamageAdj,
@@ -143,7 +132,7 @@ public class SubElementFactory {
 			return result;
 		}
 	}
-	public static enum DisplayElements implements SubElementType {
+	public static enum DisplayElements implements ElementType {
 		Group,
 		Text,
 		Image;
@@ -188,7 +177,7 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public static enum DeviceTableElements implements SubElementType {
+	public static enum DeviceGeneratorElements implements ElementType {
 		Device, Item,
 		DeviceSlot,
 		Table,
@@ -199,12 +188,6 @@ public class SubElementFactory {
 		@Override
 		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
-			if(!this.equals(Null)) {
-				e.addAttributes(
-						att("chance", WHOLE),						//Table
-						att("levelFrequency", LEVEL_FREQUENCY)	//LevelTable
-						);
-			}
 			switch(this) {
 			case Device:
 			case Item:
@@ -247,8 +230,10 @@ public class SubElementFactory {
 			case Group:
 			case Devices:
 			case Table:
-			case LevelTable:
 				e.addOptionalMultipleSubElements(DeviceTableElements.values());
+				break;
+			case LevelTable:
+				e.addOptionalMultipleSubElements(DeviceLevelTableElements.values());
 				break;
 			case Null:
 				break;
@@ -256,8 +241,37 @@ public class SubElementFactory {
 			return e;
 		}
 		
+		//Same as DeviceGeneratorElements, but every element has a chance attribute
+		enum DeviceTableElements implements ElementType {
+			Device, Item,
+			DeviceSlot,
+			Table,
+			Group, Devices,
+			LevelTable,
+			Null;
+			public DesignElement get() {
+				DesignElement result = DeviceGeneratorElements.valueOf(name()).get();
+				result.addAttributes(att("chance", WHOLE));
+				return result;
+			}
+		}
+		
+		//Same as DeviceGeneratorElements, but every element has a levelFrequency attribute
+		enum DeviceLevelTableElements implements ElementType {
+			Device, Item,
+			DeviceSlot,
+			Table,
+			Group, Devices,
+			LevelTable,
+			Null;
+			public DesignElement get() {
+				DesignElement result = DeviceGeneratorElements.valueOf(name()).get();
+				result.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+				return result;
+			}
+		}
 	}
-	public static enum ItemGeneratorElements implements SubElementType {
+	public static enum ItemGeneratorElements implements ElementType {
 		Item,
 		Table,
 		RandomItem,
@@ -271,14 +285,10 @@ public class SubElementFactory {
 		public DesignElement get() {
 			// TODO Auto-generated method stub
 			DesignElement e = new DesignElement(name());
-			if(!this.equals(Null)) {
-				e.addAttributes(
-						att("chance", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
-						att("count", WHOLE),						//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
-						att("criteria", STRING),					//LocationCriteria
-						att("levelFrequency", LEVEL_FREQUENCY)	//LevelTable
-						);
-			}
+			e.addAttributes(
+					att("chance", WHOLE),						//Every element//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
+					att("count", DICE_RANGE)						//Every element//Table, LevelTable, Group, Components, Items, AverageValue, LocationCriteria
+					);
 			switch(this) {
 			case Item:
 				e.addAttributes(
@@ -315,8 +325,8 @@ public class SubElementFactory {
 			case Items:
 			case AverageValue:
 				e.addAttributes(
-						att("levelValue", ValueType.LEVEL_VALUE),
-						att("value", WHOLE)
+						att("levelValue", ValueType.CURRENCY_VALUE_SEQUENCE),
+						att("value", CURRENCY_VALUE_SEQUENCE)
 						);
 				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
 				break;
@@ -324,17 +334,47 @@ public class SubElementFactory {
 				e.addAttributes(att("table", ValueType.TYPE_ITEM_TABLE));
 				break;
 			case LevelTable:
-				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				e.addOptionalMultipleSubElements(LevelTableElements.values());
 				break;
 			case LocationCriteria:
-				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				e.addOptionalMultipleSubElements(LocationCriteriaElements.values());
 				break;
 			}
-			
 			return e;
 		}
+		enum LocationCriteriaElements implements ElementType {
+			Item,
+			Table,
+			RandomItem,
+			Group, Components, Items, AverageValue,
+			Lookup,
+			LevelTable,
+			LocationCriteria,
+			Null;
+			public DesignElement get() {
+				DesignElement e = ItemGeneratorElements.valueOf(name()).get();
+				e.addAttributes(att("criteria", STRING));
+				return e;
+			}
+			
+		}
+		enum LevelTableElements implements ElementType {
+			Item,
+			Table,
+			RandomItem,
+			Group, Components, Items, AverageValue,
+			Lookup,
+			LevelTable,
+			LocationCriteria,
+			Null;
+			public DesignElement get() {
+				DesignElement e = ItemGeneratorElements.valueOf(name()).get();
+				e.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+				return e;
+			}
+		}
 	}
-	public static enum EffectElements implements SubElementType {
+	public static enum EffectElements implements ElementType {
 		;
 
 		@Override
@@ -344,7 +384,7 @@ public class SubElementFactory {
 		}
 		
 	}
-	public static enum TradeElements implements SubElementType {
+	public static enum TradeElements implements ElementType {
 		AcceptDonation,
 		Buy,
 		Sell,
@@ -377,7 +417,7 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public static enum SovereignElements implements SubElementType {
+	public static enum SovereignElements implements ElementType {
 		//Relationships,
 			Relationship,
 			
@@ -400,7 +440,7 @@ public class SubElementFactory {
 		}
 		
 	}
-	public static enum ShipGeneratorElements implements SubElementType {
+	public static enum ShipGeneratorElements implements ElementType {
 		;
 
 		@Override
@@ -410,7 +450,7 @@ public class SubElementFactory {
 		}
 		
 	}
-	public static enum SystemCriteria implements SubElementType {
+	public static enum SystemCriteria implements ElementType {
 		Attributes,
 		Chance,
 		DistanceBetweenNodes,
@@ -453,7 +493,7 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public static enum ExtensionElements implements SubElementType {
+	public static enum ExtensionElements implements ElementType {
 		Module, Library;
 
 		@Override

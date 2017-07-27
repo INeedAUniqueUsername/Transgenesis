@@ -2,14 +2,14 @@ package mod;
 
 import designType.Types;
 import designType.subElements.SubElementFactory.ExtensionElements;
-import designType.subElements.SubElementType;
+import designType.subElements.ElementType;
 import xml.DesignAttribute;
 import xml.DesignElement;
 import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.*;
 public class ExtensionFactory {
 	//Done
-	public static enum Extensions implements SubElementType {
+	public static enum Extensions implements ElementType {
 		TranscendenceAdventure,
 		TranscendenceExtension,
 		TranscendenceLibrary,

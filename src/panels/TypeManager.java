@@ -70,6 +70,8 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import xml.DesignElement;
 public class TypeManager {
+	//Add search function for elements and Types
+	//When a Type is renamed, then all instances of it in elements should be renamed too
 	XMLPanel editor;
 	JScrollPane pane = null;
 	ArrayList<TypeElement> elements; //TO DO: Make sure that entries and ranges are correctly sorted at extension loading time if no working metadata file is available

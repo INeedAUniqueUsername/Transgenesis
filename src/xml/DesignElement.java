@@ -42,7 +42,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import designType.subElements.SubElementType;
+import designType.subElements.ElementType;
 import panels.XMLPanel;
 import window.Frame;
 import window.Window;
@@ -57,7 +57,7 @@ public class DesignElement {
 	private final List<DesignAttribute> requiredAttributes;				//Must be defined
 	private final List<DesignElement> requiredSingleSubElements;			//Must have 1 of each
 	private final List<DesignElement> optionalSingleSubElements;			//Can have 0 or 1 of each
-	private final List<SubElementType> optionalMultipleSubElements;		//Can have 0, 1, or more of each
+	private final List<ElementType> optionalMultipleSubElements;		//Can have 0, 1, or more of each
 	
 	public static DesignElement ele(String name) {
 		return new DesignElement(name);
@@ -72,7 +72,7 @@ public class DesignElement {
 		requiredAttributes = new ArrayList<DesignAttribute>();
 		requiredSingleSubElements = new ArrayList<DesignElement>();
 		optionalSingleSubElements = new ArrayList<DesignElement>();
-		optionalMultipleSubElements = new ArrayList<SubElementType>();
+		optionalMultipleSubElements = new ArrayList<ElementType>();
 	}
 	public DesignElement(String name) {
 		this.name = name;
@@ -83,7 +83,7 @@ public class DesignElement {
 		requiredAttributes = new ArrayList<DesignAttribute>();
 		requiredSingleSubElements = new ArrayList<DesignElement>();
 		optionalSingleSubElements = new ArrayList<DesignElement>();
-		optionalMultipleSubElements = new ArrayList<SubElementType>();
+		optionalMultipleSubElements = new ArrayList<ElementType>();
 	}
 	public DesignElement(DesignElement source, String name) {
 		this.name = name;
@@ -101,7 +101,7 @@ public class DesignElement {
 	public void addOptionalSingleSubElements(DesignElement...subelements) {
 		optionalSingleSubElements.addAll(Arrays.asList(subelements));
 	}
-	public void addOptionalMultipleSubElements(SubElementType...subelements) {
+	public void addOptionalMultipleSubElements(ElementType...subelements) {
 		optionalMultipleSubElements.addAll(Arrays.asList(subelements));
 	}
 	
@@ -348,7 +348,7 @@ public class DesignElement {
 				result.appendChild(child);
 			}
 			//Recursion issue, probably due to the fact that attributes that are equal still have different hash codes
-			for(SubElementType s : optionalMultipleSubElements) {
+			for(ElementType s : optionalMultipleSubElements) {
 				DesignElement e = s.get();
 				child = e.getDefinition(doc, name, seen);
 				child.setAttribute("category", "*");
@@ -398,14 +398,14 @@ public class DesignElement {
 		};
 		requiredSingleSubElements.forEach(singleCheck);
 		optionalSingleSubElements.forEach(singleCheck);
-		optionalMultipleSubElements.forEach((SubElementType e) -> addableElements.add(e.get()));
+		optionalMultipleSubElements.forEach((ElementType e) -> addableElements.add(e.get()));
 		return addableElements;
 	}
 	public DesignElement getAddableElement(String name) {
 		ArrayList<DesignElement> addableElements = new ArrayList<>();
 		addableElements.addAll(requiredSingleSubElements);
 		addableElements.addAll(optionalSingleSubElements);
-		optionalMultipleSubElements.forEach((SubElementType s) -> {
+		optionalMultipleSubElements.forEach((ElementType s) -> {
 			addableElements.add(s.get());
 		});
 		for(DesignElement e : addableElements) {
@@ -419,7 +419,7 @@ public class DesignElement {
 		ArrayList<DesignElement> addableElements = new ArrayList<>();
 		addableElements.addAll(requiredSingleSubElements);
 		addableElements.addAll(optionalSingleSubElements);
-		optionalMultipleSubElements.forEach((SubElementType s) -> {
+		optionalMultipleSubElements.forEach((ElementType s) -> {
 			addableElements.add(s.get());
 		});
 		for(DesignElement e : addableElements) {
@@ -513,7 +513,7 @@ public class DesignElement {
 			button.setEnabled(!subElements.contains(element));
 			subElementPanel.add(button);
 		}
-		for(SubElementType elementType : optionalMultipleSubElements) {
+		for(ElementType elementType : optionalMultipleSubElements) {
 			DesignElement element = elementType.get();
 			JButton button = new JButton(element.getDisplayName());
 			button.setFont(Medium.f);
@@ -551,7 +551,7 @@ public class DesignElement {
 		for(DesignElement e : optionalSingleSubElements) {
 			result.addOptionalSingleSubElements(e.clone());
 		}
-		for(SubElementType e : optionalMultipleSubElements) {
+		for(ElementType e : optionalMultipleSubElements) {
 			result.addOptionalMultipleSubElements(e);
 		}
 	}
@@ -577,7 +577,7 @@ public class DesignElement {
 		for(DesignElement e : optionalSingleSubElements) {
 			result += line(bulletWiki(level+1) + "0|1" + " " + e.toMinistryMarkdown(level+1));
 		}
-		for(SubElementType e : optionalMultipleSubElements) {
+		for(ElementType e : optionalMultipleSubElements) {
 			result += line(bulletWiki(level+1) + "0|+" + " " + e.get().toMinistryMarkdown(level+1));
 		}
 		return result;

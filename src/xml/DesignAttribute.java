@@ -211,8 +211,9 @@ public class DesignAttribute {
 					return false;
 				}
 			}
-		},
-		DECIMAL {
+		}, WHOLE_100 {
+			
+		}, DECIMAL {
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -552,6 +553,7 @@ public class DesignAttribute {
 				return design != null && design.getName().equals("ItemType");
 			}
 		}, LEVEL_VALUE {
+			/*
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -564,6 +566,12 @@ public class DesignAttribute {
 				});
 				return field;
 			}
+			*/
+		}, CURRENCY_VALUE {
+			//currency:value
+			
+		}, CURRENCY_VALUE_SEQUENCE {
+			//currency:value, currency:value, //currency:value, ... 
 		}, TYPE_ITEM_TABLE {
 			public JComponent getInputField(String value) {
 				//WIP

@@ -116,7 +116,7 @@ public class AttributeFactory {
 					att("paralyze", BOOLEAN),
 					att("disableShipScreen", BOOLEAN),
 					att("spin", BOOLEAN),
-					att("drag", WHOLE)
+					att("drag", WHOLE_100)
 			};
 		case Power:
 			return new DesignAttribute[] {
@@ -124,7 +124,13 @@ public class AttributeFactory {
 					att("key", CHARACTER, "")	
 			};
 		case ShipClass:
-			break;
+			return new DesignAttribute[] {
+					att("defaultBackgroundID", TYPE_IMAGE),		//SpaceObject
+					att("explosionType", TYPE_WEAPON),			//SpaceObject
+					att("level", WHOLE),						//SpaceObject
+					att("mass", WHOLE),							//SpaceObject
+					att("size", WHOLE),							//SpaceObject	
+			};
 		case ShipTable:
 			break;
 		case Sound:
@@ -143,10 +149,10 @@ public class AttributeFactory {
 		case SpaceEnvironmentType:
 			return new DesignAttribute[] {
 					att("autoEdges", BOOLEAN),
-					att("dragFactor", WHOLE),
+					att("dragFactor", WHOLE_100),
 					att("lrsJammer", BOOLEAN, "false"),
 					att("mapColor", HEX_COLOR),
-					att("opacity", WHOLE),
+					att("opacity", WHOLE_100),
 					att("shieldJammer", BOOLEAN, "false"),
 					att("srsJammer", BOOLEAN, "false")
 			};
@@ -157,16 +163,16 @@ public class AttributeFactory {
 					att("alertWhenDestroyed", BOOLEAN),
 					att("allowEnemyDocking", BOOLEAN),
 					att("armorID", TYPE_ARMOR),
-					att("backgroundPlane", STRING),
-					att("barrierEffect", STRING),
-					att("beacon", STRING),
+					att("backgroundPlane", WHOLE_100),	//Parallax, 0-100
+					att("barrierEffect", TYPE_EFFECT),
+					att("beacon", BOOLEAN),
 					
 					att("canAttack", BOOLEAN),
-					att("chance", STRING),
+					//att("chance", STRING),
 					att("constructionRate", WHOLE),
 					att("controllingSovereign", TYPE_SOVEREIGN),
-					att("count", WHOLE),
-					att("defaultBackgroundID", STRING),
+					//att("count", WHOLE),
+					att("defaultBackgroundID", TYPE_IMAGE),		//SpaceObject
 					att("destEntryPoint	", STRING),
 					att("destNodeID", STRING),
 					att("destroyWhenEmpty", BOOLEAN),
@@ -175,7 +181,7 @@ public class AttributeFactory {
 					att("enemyExclusionRadius", WHOLE),
 					att("ejectaAdj", INTEGER),
 					att("ejectaType", TYPE_WEAPON),
-					att("explosionType", TYPE_WEAPON),
+					att("explosionType", TYPE_WEAPON),			//SpaceObject
 					att("fireRateAdj", INTEGER),
 					att("frequency", FREQUENCY),
 					att("gateEffect", TYPE_EFFECT),
@@ -183,15 +189,15 @@ public class AttributeFactory {
 					att("hitPoints", WHOLE),
 					att("immutable", BOOLEAN),
 					att("inactive", BOOLEAN),
-					att("level", WHOLE),
+					att("level", WHOLE),						//SpaceObject
 					att("levelFrequency", LEVEL_FREQUENCY),
 					att("locationCriteria", STRING),
-					att("mass", WHOLE),
+					att("mass", WHOLE),							//SpaceObject
 					
 					att("maxHitPoints", WHOLE),
 					att("maxLightRadius", WHOLE),
 					att("maxStructuralHitPoints", WHOLE),
-					att("minShips", WHOLE),
+					//att("minShips", WHOLE),
 					att("mobile", BOOLEAN),
 					att("multiHull", BOOLEAN),
 					att("name", STRING),
@@ -201,7 +207,7 @@ public class AttributeFactory {
 					att("noMapDetails", BOOLEAN),
 					att("noMapIcon", BOOLEAN),
 					att("noMapLabel", BOOLEAN),
-					att("paintLayer", STRING),
+					att("paintLayer", PAINT_LAYER),
 					att("radioactive", BOOLEAN),
 					att("randomEncounters", FREQUENCY),
 					att("regen", WHOLE),
@@ -212,9 +218,9 @@ public class AttributeFactory {
 					att("shipRegen", WHOLE),
 					att("shipRepairRate", WHOLE),
 					att("sign", BOOLEAN),
-					att("size", WHOLE),
+					att("size", WHOLE),							//SpaceObject
 					att("sovereign", TYPE_SOVEREIGN),
-					att("spaceColor", STRING),
+					att("spaceColor", HEX_COLOR),
 					att("stealth", WHOLE),
 					att("structuralHitPoints", STRING),
 					att("timeStopImmune", BOOLEAN),

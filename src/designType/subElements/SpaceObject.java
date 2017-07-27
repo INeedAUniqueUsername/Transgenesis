@@ -6,7 +6,7 @@ import static xml.DesignAttribute.ValueType.STRING;
 import static xml.DesignAttribute.ValueType.WHOLE;
 
 import designType.Types;
-import designType.subElements.SubElementFactory.DeviceTableElements;
+import designType.subElements.SubElementFactory.DeviceGeneratorElements;
 import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.TradeElements;
 import xml.DesignAttribute.ValueType;
@@ -14,7 +14,6 @@ import xml.DesignElement;
 
 public final class SpaceObject {
 	private SpaceObject() {}
-
 	public static DesignElement[] createSpaceObjectSubElements(Types t) {
 		DesignElement names = new DesignElement("Names");
 		names.addAttributes(
@@ -24,7 +23,7 @@ public final class SpaceObject {
 		items.addOptionalMultipleSubElements(ItemGeneratorElements.values());
 		DesignElement devices = new DesignElement("Devices");
 		devices.addOptionalMultipleSubElements(
-				DeviceTableElements.values()
+				DeviceGeneratorElements.values()
 				);
 		DesignElement image = new DesignElement("Image");
 		image.addAttributes(SubElementFactory.createImageDescAttributes());

@@ -7,7 +7,7 @@ import xml.DesignElement;
 import xml.RenameableElement;
 
 //Done
-public enum DataElements implements SubElementType {
+public enum DataElements implements ElementType {
 	StaticData,
 	GlobalData,
 	InitialData

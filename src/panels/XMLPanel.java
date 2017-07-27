@@ -43,7 +43,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import designType.subElements.SubElementType;
+import designType.subElements.ElementType;
 import mod.ExtensionFactory.Extensions;
 import mod.TranscendenceMod;
 import net.miginfocom.layout.CC;
@@ -282,6 +282,17 @@ public class XMLPanel extends JPanel {
 		
 		JScrollPane textPanel = createScrollPane(textArea);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		textPanel.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent arg0) {
+				if(arg0.getSource() == textPanel) {
+					System.out.println("Clicked");
+				}
+			}
+			public void mouseEntered(MouseEvent arg0) {}
+			public void mouseExited(MouseEvent arg0) {}
+			public void mousePressed(MouseEvent arg0) {}
+			public void mouseReleased(MouseEvent arg0) {}
+		});
 		
 		JButton saveButton = createJButton("Save");
 		saveButton.addActionListener(new ActionListener() {
@@ -357,8 +368,6 @@ public class XMLPanel extends JPanel {
 		loadExtension.setHorizontalAlignment(SwingConstants.LEFT);
 		extensionButtons.add(loadExtension);
 		
-		add(extensionButtons, new CC().x("0%").y("0").minWidth("25%").maxWidth("25%").minHeight("15%").maxHeight("15%"));
-		
 		JButton deleteButton = createJButton("Delete Element");
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -383,6 +392,63 @@ public class XMLPanel extends JPanel {
 		});
 		deleteButton.setEnabled(!(selected == null));
 		
+		/*
+		//25% width, 100% height
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new MigLayout());
+		leftPanel.add(extensionButtons, new CC()
+				.spanX()
+				.wrap());
+		leftPanel.add(elementTreePane, new CC()
+				.spanX()
+				.growY((float) 500)
+				.wrap());
+		leftPanel.add(xmlButton, new CC()
+				.spanX()
+				.wrap());
+		leftPanel.add(saveButton, new CC()
+				.spanX()
+				.wrap());
+		add(leftPanel, new CC().spanX(25).spanY());
+		
+		//75% width, 100% height
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new MigLayout());
+		rightPanel.add(createScrollPane(nameField), new CC()
+				.spanX(50)
+				.spanY(5));
+		rightPanel.add(deleteButton, new CC()
+				.spanX(10)
+				.spanY(5)
+				.wrap());
+		rightPanel.add(createScrollPane(documentation), new CC()
+				.spanX()
+				.spanY(15)
+				.wrap());
+		rightPanel.add(createScrollPane(attributePanel), new CC()
+				.spanX(55)
+				.spanY(45));
+		rightPanel.add(createScrollPane(subElementPanel), new CC()
+				.spanX(20)
+				.spanY(45)
+				.wrap());
+		rightPanel.add(textPanel, new CC()
+				.spanX()
+				.spanY(30)
+				.wrap());
+		add(rightPanel, new CC().spanX(75).spanY());
+		*/
+		
+		
+		add(extensionButtons,
+				new CC()
+				.x("0%")
+				.y("0")
+				.minWidth("25%")
+				.maxWidth("25%")
+				.minHeight("15%")
+				.maxHeight("15%")
+				);
 		add(elementTreePane,
 				new CC()
 				.x("0%")
@@ -436,17 +502,6 @@ public class XMLPanel extends JPanel {
 				.minWidth("20%").maxWidth("20%")
 				.maxHeight("45%")
 				);
-		textPanel.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent arg0) {
-				if(arg0.getSource() == textPanel) {
-					System.out.println("Clicked");
-				}
-			}
-			public void mouseEntered(MouseEvent arg0) {}
-			public void mouseExited(MouseEvent arg0) {}
-			public void mousePressed(MouseEvent arg0) {}
-			public void mouseReleased(MouseEvent arg0) {}
-		});
 		add(textPanel,
 				new CC()
 				.x("25%")

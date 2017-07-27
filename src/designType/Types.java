@@ -1,6 +1,6 @@
 package designType;
 
-import designType.subElements.SubElementType;
+import designType.subElements.ElementType;
 import xml.DesignElement;
 
 //@Override
@@ -18,7 +18,7 @@ public int compareTo(Object arg0) {
 	return 0;
 }
 */
-public enum Types implements SubElementType {
+public enum Types implements ElementType {
 	AdventureDesc,
 	DockScreen,
 	EconomyType,

@@ -1,6 +1,7 @@
 package designType;
 
 import designType.subElements.DataElements;
+import designType.subElements.ElementType;
 import designType.subElements.Event;
 import designType.subElements.Events;
 import designType.subElements.Language;
@@ -32,9 +33,8 @@ public final class TypeFactory {
 	public static DesignElement createDesignType(Types t) {
 		DesignElement e = new Type(t.name());
 		e.addAttributes(AttributeFactory.createAttributesForType(t));
-		e.addOptionalSingleSubElements(
-				TypeFactory.createSubElementsForType(t)
-				);
+		e.addOptionalSingleSubElements(createSingleSubElementsForType(t));
+		e.addOptionalMultipleSubElements(createMultipleSubElementsForType(t));
 		switch(t) {
 		case StationType:
 			System.out.println("Replace ValueType for each attribute with the correct one.");
@@ -88,7 +88,63 @@ public final class TypeFactory {
 		return e;
 	}
 
-	public static DesignElement[] createSubElementsForType(Types t) {
+	private static ElementType[] createMultipleSubElementsForType(Types t) {
+		switch(t) {
+		case AdventureDesc:
+			break;
+		case DockScreen:
+			break;
+		case EconomyType:
+			break;
+		case EffectType:
+			break;
+		case Image:
+			break;
+		case ImageComposite:
+			break;
+		case ItemTable:
+			return ItemGeneratorElements.values();
+		case ItemType:
+			break;
+		case MissionType:
+			break;
+		case NameGenerator:
+			break;
+		case OverlayType:
+			break;
+		case Power:
+			break;
+		case ShipClass:
+			break;
+		case ShipClassOverride:
+			break;
+		case ShipTable:
+			break;
+		case Sound:
+			break;
+		case Sovereign:
+			break;
+		case SpaceEnvironmentType:
+			break;
+		case StationType:
+			break;
+		case SystemMap:
+			break;
+		case SystemTable:
+			break;
+		case SystemType:
+			break;
+		case TemplateType:
+			break;
+		case Type:
+			break;
+		default:
+			break;
+		}
+		return new ElementType[0];
+	}
+
+	public static DesignElement[] createSingleSubElementsForType(Types t) {
 		switch(t) {
 		case AdventureDesc:
 			DesignElement encounterOverrides = ele("EncounterOverrides");
