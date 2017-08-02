@@ -35,15 +35,6 @@ public final class TypeFactory {
 		e.addAttributes(AttributeFactory.createAttributesForType(t));
 		e.addOptionalSingleSubElements(createSingleSubElementsForType(t));
 		e.addOptionalMultipleSubElements(createMultipleSubElementsForType(t));
-		switch(t) {
-		case StationType:
-			System.out.println("Replace ValueType for each attribute with the correct one.");
-			//<Image>
-			//new Attribute("shipwreckID", ValueType.STRING),
-			//<Construction>
-			//new Attribute("maxConstruction", ValueType.INTEGER),
-			break;
-		}
 		
 		e.addAttributes(
 				att("UNID", UNID),

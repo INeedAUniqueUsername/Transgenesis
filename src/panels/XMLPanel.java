@@ -89,10 +89,12 @@ public class XMLPanel extends JPanel {
 				"TransGenesis: Transcendence XML Editor\n" +
 				"By 0xABCDEF/Archcannon\n\n" +
 				"Notes\n" +
+				"-Press Enter to close Dialogs such as this one.\n" +
 				"-Please use an isolated copy of the Transcendence source code in case of unknown bugs.\n" +
 				"-Select a File or Folder to load extensions.\n" +
 				"-Loading may take a while depending on how many files you are loading.\n" +
-				"-In order to load successfully, files must contain well-formed XML code.\n" +
+				"-In order to load successfully, files must have the .xml extension and contain\n" +
+				" well-formed XML code.\n" +
 				"-If an extension has unloaded dependencies or modules, then not all of its\n" +
 				" internal or external types will be recognized by TransGenesis. For optimal\n" +
 				" functionality, please have all dependencies and modules loaded.\n" +

@@ -11,6 +11,13 @@ import static xml.DesignAttribute.ValueType.*;
 import static xml.DesignAttribute.*;
 
 public class AttributeFactory {
+	
+	//TO DO: StationType
+			//<Image>
+			//new Attribute("shipwreckID", ValueType.STRING),
+			//<Construction>
+			//new Attribute("maxConstruction", ValueType.INTEGER),
+	
 	public static DesignAttribute[] createAttributesForType(Types t) {
 		DesignAttribute[] result = null;
 		switch(t) {
