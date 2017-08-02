@@ -83,8 +83,10 @@ public class Frame extends JFrame {
 		
 		/*
 		try {
-			//https://stackoverflow.com/questions/5640334/how-do-i-preserve-line-breaks-when-using-jsoup-to-convert-html-to-plain-text
-			//https://stackoverflow.com/questions/11154145/jsoup-how-to-extract-this-text
+			//Source Question: https://stackoverflow.com/questions/5640334/how-do-i-preserve-line-breaks-when-using-jsoup-to-convert-html-to-plain-text
+			//Source Answer: https://stackoverflow.com/a/19602313
+			//Source Question: https://stackoverflow.com/questions/11154145/jsoup-how-to-extract-this-text
+			//Source Answer: https://stackoverflow.com/a/11155500
 			Document d = Jsoup.connect("http://wiki.kronosaur.com/modding/xml/effecttype").get();
 			d.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
 		    d.select("br").append("\\n");

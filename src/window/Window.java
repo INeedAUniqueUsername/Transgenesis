@@ -5,15 +5,23 @@ import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import panels.XMLPanel;
 
 public class Window implements Runnable {
 	/*
@@ -39,10 +47,11 @@ public class Window implements Runnable {
 	Writer writer;
 	BufferedReader reader;
 	Frame frame;
+	ConsoleFrame console;
+	static Window instance;
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Window window = new Window();
+		instance = new Window();
 	}
 	
 	public Window(){
@@ -85,7 +94,54 @@ public class Window implements Runnable {
 
 	@Override
 	public void run() {
-		frame = new Frame();
+		SwingUtilities.invokeLater(() -> {
+			console = new ConsoleFrame();
+			frame = new Frame();
+		});
+		
 	}
+	class ConsoleFrame extends JFrame {
+		JTextArea consoleText;
+		public ConsoleFrame() {
+			super("TransGenesis Console");
+			setExtendedState(JFrame.MAXIMIZED_BOTH);
+			consoleText = XMLPanel.createTextArea("", false);
+			add(XMLPanel.createScrollPane(consoleText));
+			pack();
+			setVisible(true);
+			System.setOut(new PrintStream(new TextAreaOutputStream(consoleText)));
+		}
+	}
+	
+	//Source Question: https://stackoverflow.com/questions/9776465/how-to-visualize-console-java-in-jframe-jpanel
+	//Source Answer: https://stackoverflow.com/a/9776819
+	public class TextAreaOutputStream extends OutputStream {
 
+		   private final JTextArea textArea;
+		   private final StringBuilder sb = new StringBuilder();
+		   public TextAreaOutputStream(final JTextArea textArea) {
+		      this.textArea = textArea;
+		   }
+		   public void flush() {}
+		   public void close() {}
+		   public void write(int b) throws IOException {
+		      if (b == '\r')
+		         return;
+		      if (b == '\n') {
+		         final String text = new SimpleDateFormat("hh:mm:ss").format(new Date()) + "> " + sb.toString() + "\n";
+		         /*
+		         SwingUtilities.invokeLater(new Runnable() {
+		            public void run() {
+		               
+		            }
+		         });
+		         */
+		         textArea.append(text);
+		         textArea.repaint();
+		         sb.setLength(0);
+		         return;
+		      }
+		      sb.append((char) b);
+		   }
+		}
 }

@@ -1,6 +1,7 @@
 package xml;
 
 import java.awt.Dimension;
+import static window.Window.*;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -371,12 +372,11 @@ public class DesignElement {
 			if(a.getValue().isEmpty()) {
 				continue;
 			}
-			System.out.println("Attribute");
-			System.out.println(a.getValue());
+			System.out.println("Attribute: " + a.getName() + "=\"" + a.getValue() + "\"");
 			child.setAttribute(a.getName(), a.getValue());//.replaceAll("\\&", "&amp;")
 		}
 		for(DesignElement e : getSubElements()) {
-			System.out.println("Child");
+			System.out.println("SubElement");
 			child.appendChild(e.getOutput(doc));
 		}
 		return child;
@@ -528,6 +528,7 @@ public class DesignElement {
 		
 		
 		textArea.setText(getText());
+		textArea.setEditable(true);
 	}
 	public DesignElement clone() {
 		DesignElement result = new DesignElement(name);
@@ -566,7 +567,7 @@ public class DesignElement {
 		if(seen.indexOf(this) != -1) {
 			return result;
 		}
-		System.out.println(name);
+		//System.out.println(name);
 		seen.add(this);
 		for(DesignAttribute a : attributes.values()) {
 			result += line(bulletWiki(level+1) + a.toMinistryMarkdown());

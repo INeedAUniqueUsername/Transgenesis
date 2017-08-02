@@ -1,8 +1,10 @@
 package window;
 
 import java.io.ByteArrayInputStream;
+import static window.Window.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.security.SecureRandom;
@@ -25,6 +27,7 @@ import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.xml.sax.InputSource;
 
 import designType.subElements.ElementType;
@@ -57,7 +60,7 @@ public class Loader {
 		TranscendenceMod mod = null;	//Current mod
 		System.out.println("Processing: " + path.getAbsolutePath());
 		try {
-			System.out.println("Beginning Read");
+			System.out.println("Starting Process");
 			byte[] bytes = Files.readAllBytes(path.toPath());
 			String lines = new String(bytes);
 			lines = lines.replace("&", "&amp;");
@@ -106,14 +109,14 @@ public class Loader {
 			    case XMLEvent.START_ELEMENT:
 			    	StartElement start = event.asStartElement();
 			    	String name = start.getName().getLocalPart();
-			    	System.out.println("Element name: " + name);
+			    	System.out.println("Element found: " + name);
 			    	Consumer<DesignElement> addAttributes =((DesignElement e) -> {
 			    		DesignElement element = elementStack.getLast();
 				    	//Now add all the attributes
 				    	Iterator<Attribute> attributes = start.getAttributes();
 				    	while(attributes.hasNext()) {
 				    		Attribute a = attributes.next();
-				    		System.out.println("Attribute found: " + a.getName().getLocalPart() + "=" + a.getValue());
+				    		System.out.println("Attribute found: " + a.getName().getLocalPart() + "=\"" + a.getValue() + "\"");
 				    		element.setAttribute(a.getName().getLocalPart(), a.getValue());
 				    	}
 			    	});
@@ -143,7 +146,7 @@ public class Loader {
 			    	
 			    	//Otherwise, assume that we are making a DesignType and currently looking at a subelement
 		    		if(elementStack.size() == 0) {
-		    			System.out.println("Skipping Start: First element is unrecognized");
+		    			System.out.println("Skipping Element Start: First element is unrecognized");
 		    			break EventType;
 		    		}
 		    		DesignElement element = elementStack.getLast();
@@ -172,7 +175,7 @@ public class Loader {
 		    			add = element.getAddableElement(name);
 		    		}
 		    		if(add == null) {
-		    			System.out.println("Adding generic element: " + name);
+		    			System.out.println("Adding unknown element: " + name);
 		    			add = new DesignElement(name);
 		    		} else {
 		    			System.out.println("Adding identified element: " + name);
@@ -185,7 +188,7 @@ public class Loader {
 			    case XMLEvent.END_ELEMENT:
 			    	//This means that the first element was not recognized
 			    	if(elementStack.size() == 0) {
-			    		System.out.println("Skipping End: First element is unrecognized");
+			    		System.out.println("Skipping Element End: First element is unrecognized");
 			    	} else {
 			    		elementStack.removeLast().finalizeLoad();
 			    	}
@@ -207,11 +210,13 @@ public class Loader {
 			if(mod != null) {
 				mod.setUNIDs(new TypeManager(path));
 			}
+			System.out.println("Ending Process");
 		} catch (IOException | XMLStreamException e) {
 			System.out.println("Encountered error; could not load " + mod.getPath());
 			mod = new TranscendenceMod("TranscendenceError");
 			mod.setPath(path);
 			e.printStackTrace();
+			System.out.println(ExceptionUtils.getStackTrace(e));
 		}
 		return mod;
 		/*

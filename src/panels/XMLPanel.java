@@ -262,7 +262,7 @@ public class XMLPanel extends JPanel {
 		removeAll();
 		setLayout(new MigLayout());
 		
-		//nameField.setText("Element name");
+		nameField.setText("TransGenesis");
 		nameField.setEditable(false);
 		labelPanel.removeAll();
 		//labelPanel.add(createLabel("Attribute name"));
@@ -270,7 +270,7 @@ public class XMLPanel extends JPanel {
 		//fieldPanel.add(createLabel("Attribute value"));
 		subElementPanel.removeAll();
 		//subElementPanel.add(createLabel("Subelements"));
-		//textArea.setText("Element text");
+		textArea.setText("");
 		textArea.setEditable(false);
 		
 		

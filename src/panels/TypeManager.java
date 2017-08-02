@@ -196,6 +196,8 @@ public class TypeManager {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				saveAllData();
+				//Source Question: https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+				//Source Answer: https://stackoverflow.com/a/9650915
 				JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(container));
 				frame.remove(result);
 				frame.add(editor);
@@ -569,6 +571,8 @@ public class TypeManager {
 					JTextField field_type = createEntityField(container, ENTITY_DEFAULT, true);
 					field_types.add(field_type);
 					container.add(field_type);
+					//Source Question: https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+					//Source Answer: https://stackoverflow.com/a/9650915
 					((JFrame) SwingUtilities.getWindowAncestor(container)).pack();
 				}
 			});
@@ -615,6 +619,8 @@ public class TypeManager {
 	                    	field_types.get(
 	                    			(index < field_types.size() - 1) ? index : index - 1
 	                    			).requestFocus();
+	        				//Source Question: https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+	        				//Source Answer: https://stackoverflow.com/a/9650915
 	                    	((JFrame) SwingUtilities.getWindowAncestor(panel)).pack();
 	                	}
 	                	break;
@@ -628,6 +634,8 @@ public class TypeManager {
 	                	panel.add(field);
 	                	//Move focus to the next component
 	                	field.requestFocus();
+	    				//Source Question: https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
+	    				//Source Answer: https://stackoverflow.com/a/9650915
 	                	((JFrame) SwingUtilities.getWindowAncestor(panel)).pack();
 	                	break;
 	                }
