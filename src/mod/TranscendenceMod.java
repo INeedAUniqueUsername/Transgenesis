@@ -1,5 +1,6 @@
 package mod;
 
+import static java.lang.System.out;
 import java.awt.event.ActionEvent;
 import static window.Window.Fonts.*;
 import java.awt.event.ActionListener;
@@ -67,20 +68,21 @@ public class TranscendenceMod extends DesignElement {
 	//To allow overwriting dependency types without recursively binding all the extensions, we should take a list of Types from dependencies
 	//If we're a TranscendenceModule, then have our parent extension bind types for us
 	public void updateTypeBindings() {
+		String consoleName = getName() + path.getPath();
 		if(getName().equals("TranscendenceModule")) {
-			System.out.println("Warning: Not binding Types for TranscendenceModule");
 			//We should have our parent extension handle this
 			if(dependencies.size() < 1) {
-				System.out.println("Parent Extension unknown");
+				out.println(getConsoleMessage("Type Binding failed; Parent Extension unknown"));
 				return;
 			}
+			out.println(getConsoleMessage("Type Binding requested from Parent Extension"));
 			TranscendenceMod parent = dependencies.get(0);
 			parent.updateTypeBindings();
 			//Inherit typeMap from parent
 			typeMap = parent.typeMap;
 			return;
 		}
-		System.out.println("Type Binding requested");
+		out.println(getConsoleMessage("Type Binding requested"));
 		typeMap = new TreeMap<>();
 		//First, insert all of our own Types. This will allow dependencies to override them
 		for(String s : types.bindAll().values()) {
@@ -97,7 +99,8 @@ public class TranscendenceMod extends DesignElement {
 	}
 	//Allow modules to take external entities
 		public void updateDependencies() {
-			String warnings = getName() + ": Updating Dependencies";
+			String consoleName = getName() + path.getPath();
+			out.println(getConsoleMessage("Updating Dependencies"));
 			dependencies = new LinkedList<TranscendenceMod>();
 			for(DesignElement sub : getSubElements()) {
 				switch(sub.getName()) {
@@ -117,7 +120,7 @@ public class TranscendenceMod extends DesignElement {
 						}
 					}
 					if(!found) {
-						warnings += "\n" + getName() + ": " + "Could not find Library " + library_unid + ". It may be unloaded.";
+						out.println(getConsoleMessage("Could not find Library " + library_unid + ". It may be unloaded."));
 					}
 					break;
 				case "TranscendenceAdventure":
@@ -136,12 +139,11 @@ public class TranscendenceMod extends DesignElement {
 						}
 					}
 					if(!found) {
-						warnings += "\n" + getName() + ": " + "Could not find Library " + libraryPath + ". It may be unloaded.";
+						out.println(getConsoleMessage("Could not find Library " + libraryPath + ". It may be unloaded."));
 					}
 					break;
 				}
 			}
-			XMLPanel.showWarningPane(warnings);
 		}
 	public void bindDependencyDesigns(Map<String, DesignElement> typeMap) {
 		//Avoid going into a circular dependency binding loop by binding only the internal types from each dependency
@@ -155,7 +157,7 @@ public class TranscendenceMod extends DesignElement {
 	}
 	public void updateModules() {
 		modules.clear();
-		String warnings = getName() + ": " + "Updating Modules";
+		out.println(getConsoleMessage("Updating Modules"));
 		for(DesignElement e : getSubElements()) {
 			if(!e.getName().equals("Module")) {
 				continue;
@@ -176,17 +178,15 @@ public class TranscendenceMod extends DesignElement {
 				}
 			}
 			if(!found) {
-				warnings += "\n" + getName() + ": " + "Could not find Module " + modulePath + ". It may be unloaded.\n";
+				out.println(getConsoleMessage("Could not find Module " + modulePath + ". It may be unloaded."));
 			}
 			//Maybe we should automatically load the module if it is not loaded already
 		}
-		XMLPanel.showWarningPane(warnings);
 	}
 	//Bindings between Types and Designs are stored in the map
 	//This only affects Designs that are defined WITHIN the file and Modules
 	public void bindInternalDesigns(Map<String, DesignElement> typeMap) {
-		String warnings = getName() + ": Binding Internal Designs";
-		//warnings += typeMap.keySet().toString() + "\n";
+		out.println(getConsoleMessage("Binding Internal Designs"));
 		for(DesignElement sub : getSubElements()) {
 			//We already handled Library types as dependencies
 			if(!sub.getName().equals("Library") && sub.hasAttribute("unid")) {
@@ -202,23 +202,32 @@ public class TranscendenceMod extends DesignElement {
 							typeMap.put(sub_type, sub);
 						} else if(typeMap.get(sub_type).getName().equals(sub.getName())) {
 							//If the UNID is bound to a Design with the same tag, then it's probably an override
-							warnings += "\n" + sub.getName() + ": " + "Override Type: " + sub_type;
+							out.println(getConsoleMessage2(sub.getName(), String.format("%-15s %s", "Override Type:", sub_type)));
 						} else {
-							warnings += "\n" + sub.getName() + ": " + "Duplicate Type: " + sub_type;
+							out.println(getConsoleMessage2(sub.getName(), String.format("%-15s %s", "Duplicate Type:", sub_type)));
 						}
 					} else {
 						//Depending on the context, we will not be able to identify whether this is defining a completely nonexistent Type or overriding an external type
-						warnings += "\n" + sub.getName() + ": " + "Unknown UNID: " + sub_type + ". It may be an override for an unloaded dependency or it may be nonexistent\n";
+						out.println(getConsoleMessage2(sub.getName(), String.format("%-15s %-31s %s", "Unknown UNID:", sub_type + ";", "It may be an override for an unloaded dependency or it may be nonexistent")));
 					}
 				} else {
-					warnings += "\n" + sub.getName() + ": " + "Missing unid= attribute";
+					out.println(getConsoleMessage2(sub.getName(), "Missing unid= attribute"));
+					
 				}
 			}
 			for(TranscendenceMod module : modules) {
 				module.bindInternalDesigns(typeMap);
 			}
 		}
-		XMLPanel.showWarningPane(warnings);
+	}
+	public String getConsoleName() {
+		return String.format("%-21s %s", getName(), " (" + path.getName() + ")");
+	}
+	public String getConsoleMessage(String message) {
+		return String.format("%-53s - %s", getConsoleName(), message);
+	}
+	public String getConsoleMessage2(String subName, String message) {
+		return String.format("%-72s - %s", getConsoleMessage(subName), message);
 	}
 	public String getModulePath(String moduleFilename) {
 		String folder = path.getAbsolutePath().substring(0, path.getAbsolutePath().lastIndexOf(File.separator));
@@ -226,7 +235,7 @@ public class TranscendenceMod extends DesignElement {
 		return modulePath;
 	}
 	public Map<String, DesignElement> getTypeMap() {
-		System.out.println("Type Map requested");
+		out.println("Type Map requested");
 		return typeMap;
 	}
 	public String getXMLOutput() {
@@ -274,7 +283,7 @@ public class TranscendenceMod extends DesignElement {
 		return path;
 	}
 	public void save() {
-		System.out.println("File saved!");
+		out.println("File saved!");
 		File path_metadata = new File(path.getAbsolutePath() + ".dat");
 		path.delete();
 		path_metadata.delete();

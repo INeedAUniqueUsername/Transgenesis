@@ -116,11 +116,11 @@ public class TypeManager {
 			    	if(
 			    			"TransGenesis".equals(start.getName().getLocalPart())
 			    			) {
-			    		System.out.println("Found Data");
+			    		System.out.println("Begin Reading Metadata");
 			    		active = true;
 			    		continue Read;
 			    	} else if(active) {
-			    		System.out.println("Reading Data");
+			    		//System.out.println("Reading Data");
 			    		createFromXML(start);
 			    	}
 			    	break EventType;
@@ -130,7 +130,7 @@ public class TypeManager {
 			    			active &&
 			    			"Data".equals(end.getName().getLocalPart())
 			    			) {
-			    		System.out.println("Finished Reading");
+			    		System.out.println("End Reading Metadata");
 			    		active = false;
 			    	}
 			    	break EventType;
@@ -144,7 +144,7 @@ public class TypeManager {
 		System.out.println("sorting done");
 	}
 	public void createFromXML(EntityDeclaration e) {
-		System.out.println("Found Declaration");
+		//System.out.println("Found Declaration");
 		TypeElement entry = new TypeEntry(
 				"",
 				e.getReplacementText(),
@@ -160,7 +160,7 @@ public class TypeManager {
 		*/
 	}
 	public void createFromXML(StartElement event) {
-		System.out.println("Found Entry");
+		//System.out.println("Found Entry");
 		switch(event.getName().getLocalPart()) {
 		case "TypeEntry":
 			elements.add(new TypeEntry(
@@ -183,7 +183,7 @@ public class TypeManager {
 		this.editor = editor;
 	}
 	public JScrollPane initializeFrame() {
-		System.out.println("Initialize Frame");
+		System.out.println("Initialize Window for TypeManager");
 		JPanel container = new JPanel();
 		container.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		//panel.setPreferredSize(frame.getSize());
@@ -273,7 +273,7 @@ public class TypeManager {
 		return result;
 	}
 	public void refreshFrame() {
-		System.out.println("Refreshing Frame");
+		System.out.println("Refreshing Frame for TypeManager");
 		saveAllData();
 		
 		Point scrolling = new Point(0, 0);
@@ -289,7 +289,7 @@ public class TypeManager {
 		pane.setPreferredSize(size);
 		
 		editor.frame.pack();
-		System.out.println("Packing");
+		//System.out.println("Packing");
 		pane.getViewport().setViewPosition(scrolling);
 	}
 	public void saveAllData() {
