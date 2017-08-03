@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="SteamDebug|Win32">
+      <Configuration>SteamDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="SteamRelease|Win32">
+      <Configuration>SteamRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{32A1A9FA-BBFD-44E6-8BBC-F6F531FDE66E}</ProjectGuid>
+    <RootNamespace>TransCore</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SteamDebug|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SteamRelease|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='SteamDebug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='SteamRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SteamDebug|Win32'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='SteamRelease|Win32'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SteamDebug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SteamRelease|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="Code.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Compatibility10.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreCode.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreEffects.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreTypesLibrary.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Transcendence.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AresOrthodoxy.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BattleArena.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BattleArenaGladiators.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Antarctica.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <Xml Include="BattleArenaKidnapped.xml" />
+    <Xml Include="BattleArenaMelee.xml" />
+    <Xml Include="Benedict.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <None Include="BlackMarket.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CentauriWarlords.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CharonFortress.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CharonPirates.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Commonwealth.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CommonwealthAgricultural.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CommonwealthFleet.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CommonwealthMetropolis.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CommonwealthMilitia.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CommonwealthMining.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CorporateHierarchy.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Domina.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DwargRaiders.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="EncountersVol01.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Eridani.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="HSCompatibility.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="HumanSpaceMap.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Iocrym.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="KateMorgental.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="KorolovShipping.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Luminous.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="MiscItems.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="OutlawMiners.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Rasiermesser.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Ringers.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RogueFleet.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="SistersOfDomina.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdArmor.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdAutons.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdDevices.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdDockScreens.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdEffects.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CoreExplosions.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdFuel.xml" />
+    <None Include="StdPlayerShips.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdShields.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdSovereigns.xml" />
+    <None Include="StdSystems.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdTypes.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StdUnknownItems.xml" />
+    <None Include="StdWeapons.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StKatharines.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="SungSlavers.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Teratons.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Tinkers.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="UrakWarlords.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="UsefulItems.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Elysium.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Heretic.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Huari.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="PlayerShips.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="PointJuno.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="StarsOfThePilgrim.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BenedictStoryArc.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Benedict00.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Benedict02.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Benedict03.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Benedict01.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="HUD.xml" />
+    <None Include="RPGAnalyzers.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGAutons.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGAuxDevices.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGBehaviors.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGCharacters.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGCode.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGCompatibility.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGDockScreens.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGMissions.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGPlayer.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGShipScreens.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGTypes.xml" />
+    <None Include="RPGWingmen.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGArmorDockScreens.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGDeviceDockScreens.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="RPGCharacterClasses.xml" />
+    <None Include="RPGDialog.xml" />
+    <None Include="Environments.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Groups.xml" />
+    <None Include="Ice.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Metallic.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Mining.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Neurohack.xml" />
+    <None Include="Primordial.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Rocky.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Stargates.xml" />
+    <None Include="StarSystems.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GalaxyCompatibility.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GalaxyEffects.xml" />
+    <None Include="Volcanic.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Worlds.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Stars.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Ovoids.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <Xml Include="Benedict04.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Benedict05.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Benedict05A.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Benedict06.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Benedict07.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Benedict08.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="BlackMarketMission00.xml" />
+    <Xml Include="BlackMarketMission01.xml" />
+    <Xml Include="CommonwealthFleetMission01.xml" />
+    <Xml Include="CommonwealthFleetMission02.xml" />
+    <Xml Include="CommonwealthFleetMission03.xml" />
+    <Xml Include="CommonwealthFleetMission04.xml" />
+    <Xml Include="CommonwealthFleetMission05.xml" />
+    <Xml Include="CommonwealthFleetMission06.xml" />
+    <Xml Include="CommonwealthFleetMission07.xml" />
+    <Xml Include="CommonwealthFleetMission08.xml" />
+    <Xml Include="CommonwealthFleetMission09.xml" />
+    <Xml Include="CommonwealthFleetMission10.xml" />
+    <Xml Include="CommonwealthFleetMission11.xml" />
+    <Xml Include="CommonwealthFleetMissionLL01.xml" />
+    <Xml Include="CommonwealthFleetMissionLL02.xml" />
+    <Xml Include="CommonwealthMilitiaMission01.xml" />
+    <Xml Include="CommonwealthMilitiaMission02.xml" />
+    <Xml Include="CommonwealthMilitiaMission03.xml" />
+    <Xml Include="CommonwealthMilitiaMission04.xml" />
+    <Xml Include="CommonwealthMilitiaMissionSK01.xml" />
+    <Xml Include="CommonwealthShips.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="CompatibilityLibrary.xml" />
+    <Xml Include="CoreFireEffects.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="CoreHitEffects.xml" />
+    <Xml Include="CorePlaceholders.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="CoreProjectileEffects.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Dall01.xml" />
+    <Xml Include="EtaCeti.xml" />
+    <Xml Include="Ferians.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Fiona.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Huaramarca.xml" />
+    <Xml Include="HuaramarcaMission01.xml" />
+    <Xml Include="HuaramarcaMission02.xml" />
+    <Xml Include="HuaramarcaMission03.xml" />
+    <Xml Include="HuaramarcaMission04.xml" />
+    <Xml Include="HuaramarcaMission05.xml" />
+    <Xml Include="HuaramarcaMission06.xml" />
+    <Xml Include="HuaramarcaMission07.xml" />
+    <Xml Include="HuariMission01.xml" />
+    <Xml Include="HuariMission02.xml" />
+    <Xml Include="HuariMission03.xml" />
+    <Xml Include="HugoSandoval.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="HumanSpaceVol01.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Jenna.xml" />
+    <Xml Include="KorolovFreighters.xml" />
+    <Xml Include="Kronosaurus.xml" />
+    <Xml Include="KronosaurusMission01.xml" />
+    <Xml Include="KSMission01.xml" />
+    <Xml Include="KSMission02.xml" />
+    <Xml Include="KSMission03.xml" />
+    <Xml Include="KSMissionC01.xml" />
+    <Xml Include="KSMissionC02.xml" />
+    <Xml Include="Ore.xml" />
+    <Xml Include="Penitents.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="RaisuStation.xml" />
+    <Xml Include="Rama.xml" />
+    <Xml Include="RPGCommoditiesExchange.xml" />
+    <Xml Include="RPGComponents.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="RPGLibrary.xml" />
+    <Xml Include="GalaxyLibrary.xml" />
+    <Xml Include="RPGMembership.xml" />
+    <Xml Include="RPGShipBroker.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Sanctuary.xml" />
+    <Xml Include="StdMiningEquipment.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Stormhound.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="TeratonResearch.xml" />
+    <Xml Include="Volkov.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

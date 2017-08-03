@@ -156,7 +156,7 @@
 							<Action id="actionSanctum">
 								(scrShowScreen gScreen &dsSistersSanctum;)
 							</Action>
-							<Action id="actionPilgrimsAid" default="1">
+							<Action id="actionPilgrimsAid">
 								(scrShowScreen gScreen &dsSistersDockServices;)
 							</Action>
 							<Action id="actionDonate">
@@ -1344,7 +1344,7 @@
 					
 						;	First check to see if the item itself has a donation entry
 						
-						(setq entry (eval (itmGetStaticData theItem "00182001_Donation")))
+						(setq entry (eval (or (itmGetStaticData theItem 'sisters.donation) (itmGetStaticData theItem '00182001_Donation))))
 							entry
 						
 						;	If the item doesn't tell us anything then look for an entry

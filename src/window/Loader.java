@@ -62,6 +62,7 @@ public class Loader {
 	}
 	public static TranscendenceMod processMod(File path) {
 		TranscendenceMod mod = null;	//Current mod
+		boolean failed = false;
 		System.out.println("Reading: " + path.getAbsolutePath());
 		try {
 			System.out.println("Starting Read");
@@ -136,19 +137,17 @@ public class Loader {
 				    		continue Read;
 				    	} catch(Exception e) {}
 			    	}
-			    	if(elementStack.getLast() == mod) {
-			    		try {
-				    		//Check if we have a DesignType
-					    	Types result = Types.valueOf(name);
-				    		DesignElement element = result.get();
-				    		elementStack.getLast().addSubElements(element);
-				    		elementStack.addLast(element);
-				    		addAttributes.accept(element);
-				    		category = result;
-				    		System.out.println("DesignType Found");
-				    		continue Read;
-				    	} catch(Exception e) {}
-			    	}
+		    		try {
+			    		//Check if we have a DesignType
+				    	Types result = Types.valueOf(name);
+			    		DesignElement element = result.get();
+			    		elementStack.getLast().addSubElements(element);
+			    		elementStack.addLast(element);
+			    		addAttributes.accept(element);
+			    		category = result;
+			    		System.out.println("DesignType Found");
+			    		continue Read;
+			    	} catch(Exception e) {}
 			    	
 			    	//Otherwise, assume that we are making a DesignType and currently looking at a subelement
 		    		if(elementStack.size() == 0) {
@@ -217,11 +216,14 @@ public class Loader {
 				mod.setUNIDs(new TypeManager(path));
 			}
 			System.out.println("Ending Read");
-		} catch (IOException | XMLStreamException e) {
-			System.out.println("Encountered error; could not load " + mod.getPath());
+		} catch (Exception e) {
+			failed = true;
+			e.printStackTrace(System.out);
+		}
+		if(failed) {
+			System.out.println("Encountered error; could not load " + path);
 			mod = new TranscendenceMod("TranscendenceError");
 			mod.setPath(path);
-			e.printStackTrace(System.out);
 		}
 		return mod;
 		/*

@@ -84,6 +84,7 @@ public class XMLPanel extends JPanel {
 	private boolean saved;
 	//JPanel subelementPanel;
 	public XMLPanel(Frame frame) {
+		System.out.println("TransGenesis Running");
 		this.frame = frame;
 		JOptionPane.showMessageDialog(this, createTextArea(
 				"TransGenesis: Transcendence XML Editor\n" +
@@ -197,21 +198,42 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {}
 			public void mouseReleased(MouseEvent e) {}
 		});
-		File[] load = showFileChooser();
-		if(load.length > 0) {
-			for(File f : load) {
-				loadExtensions(f, false);
+		new Thread() {
+			public void run() {
+				File[] load = showFileChooser();
+				
+				JLabel wait = new JLabel("TransGenesis is loading Extensions");
+				wait.setFont(new Font("Consolas", Font.PLAIN, 72));
+				wait.setHorizontalAlignment(SwingConstants.CENTER);
+				wait.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+				add(wait);
+				packFrame();
+				
+				
+				if(load.length > 0) {
+					for(File f : load) {
+						loadExtensions(f, false);
+					}
+				} else {
+					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("No files/folders were selected. TransGenesis will now exit.", false));
+					System.exit(0);
+				}
+				
+				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
+				//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
+				bindNonModuleExtensions(getExtensions());
+				bindNonModuleExtensions(getExtensions());
+				elementTree.expandRow(0);
+				resetLayout();
+				packFrame();
 			}
-		} else {
-			JOptionPane.showMessageDialog(this, createTextArea("No files/folders were selected. TransGenesis will now exit.", false));
-			System.exit(0);
-		}
-		elementTree.expandRow(0);
-		JOptionPane.showMessageDialog(this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
-		//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
-		bindNonModuleExtensions(getExtensions());
-		bindNonModuleExtensions(getExtensions());
-		resetLayout();
+		}.start();
+	}
+	public void packFrame() {
+		Dimension size = getSize();
+		setPreferredSize(size);
+		frame.pack();
+		repaint();
 	}
 	//https://coderanch.com/t/342116/java/set-font-JFileChooser
 	public void setComponentsFont(Component[] comp, Font font)
@@ -538,7 +560,9 @@ public class XMLPanel extends JPanel {
 		for(TranscendenceMod m : mods) {
 			if(loaded.contains(m)) {
 				out.println("Warning: Extension " + m.getPath() + " already loaded.");
-			} else if(m == null || m.getName().equals("TranscendenceError")) {
+			} else if(m == null) {
+				out.println("Unknown error");
+			} else if(m.getName().equals("TranscendenceError")) {
 				out.println("Failure: Extension " + m.getPath() + " could not be loaded.");
 			} else {
 				out.println("Success: Extension " + m.getPath() + " loaded.");
@@ -640,7 +664,6 @@ public class XMLPanel extends JPanel {
 			e.initializeFrame(this);
 			showErrors = true;
 		}
-		
 		frame.pack();
 		repaint();
 	}
