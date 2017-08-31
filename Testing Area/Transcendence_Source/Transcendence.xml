@@ -1,0 +1,153 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE TranscendenceUniverse
+	[
+	<!-- 0000 0000-000F: Human Space -->
+	<!-- 0000 0010-001F: Core Types -->
+	<!-- 0000 0020-002F: RPG -->
+	<!-- 0000 0030-005F: Core Types -->
+	<!-- 0000 0060-006F: Human Space -->
+	<!-- 0000 0070-007F: Core Types -->
+	<!-- 0000 0080-008F: Human Space -->
+	<!-- 0000 0090-00AF: Core Types -->
+	<!-- 0000 1000-101F: Human Space -->
+	<!-- 0000 2000-200F: Human Space -->
+	<!-- 0000 2100-210F: Universe -->
+	<!-- 0000 2200-221F: Universe -->
+	<!-- 0000 2300-230F: Universe -->
+	<!-- 0000 3000-301F: Human Space -->
+	<!-- 0000 3800-380F: Human Space -->
+	<!-- 0000 4000-41FF: Human Space -->
+	<!-- 0000 5000-501F: Core Types & Universe -->
+	<!-- 0000 8000-81FF: Human Space -->
+	<!-- 0000 9000-901F: Human Space -->
+	<!-- 0000 9100-93FF: Human Space -->
+	<!-- 0000 A000-A02F: Human Space -->
+	<!-- 0000 B000-B00F: Human Space -->
+	<!-- 0000 F000-F01F: Human Space -->
+	<!-- 0000 F100     : Human Space -->
+	<!-- 0000 F101     : Core Types -->
+	<!-- 0000 F102-F105: Human Space -->
+	<!-- 0000 F106     : Core Types -->
+	<!-- 0000 F107-F10F: Human Space -->
+	<!-- 0000 F110     : Core Types -->
+	<!-- 0000 F111     : Core Types -->
+	<!-- 0000 F112-F11C: Human Space -->
+	<!-- 0000 F11D     : Core Types -->
+	<!-- 0000 F11E-F11F: Human Space -->
+	<!-- 0000 F120-F13E: Human Space -->
+	<!-- 0000 F13F     : Core Types -->
+	<!-- 0000 F140     : Core Types -->
+	<!-- 0000 F141     : Core Types -->
+	<!-- 0000 F142     : Core Types -->
+	<!-- 0000 F143     : Core Types -->
+	<!-- 0000 F144     : Core Types -->
+	<!-- 0000 F145     : Core Types -->
+	<!-- 0000 F146-F149: Human Space -->
+	<!-- 0000 F14A     : Universe -->
+	<!-- 0000 F14B     : Core Types -->
+	<!-- 0000 F14C     : Core Types -->
+	<!-- 0000 F14D     : Core Types -->
+	<!-- 0000 F14E-F16F: Human Space -->
+	<!-- 0000 F200-F203: Core Types -->
+	<!-- 0000 F204-F208: Human Space -->
+	
+	<!-- RPG LIBRARY 0001 -->
+	
+	<!ENTITY unidRPGLibrary				"0x00010000">
+
+	<!-- CANONICAL UNIVERSE LIBRARY 0002 -->
+	
+	<!ENTITY unidGalaxyLibrary			"0x00020000">
+	<!ENTITY unidUniverseLibrary		"0x00020000">	<!-- For backward compatibility -->
+
+	<!-- CORE TYPE LIBRARY 0003 -->
+	
+	<!ENTITY unidCoreTypesLibrary		"0x00030000">
+	
+	<!-- RESERVED 0004-000E -->
+
+	<!-- 000F 0000-000F: Human Space -->
+	<!-- 000F 1000-100F: Human Space -->
+
+	<!-- HUMAN SPACE LIBRARY 0010-001F -->
+
+	<!ENTITY unidHumanSpaceLibrary		"0x00100000">
+	
+	<!-- 0020 xxxx to 002F xxxx RESERVED FOR PART I -->
+	<!-- 0030 xxxx to 003F xxxx RESERVED FOR PART II LIBRARY -->
+	<!-- 0040 xxxx to 004F xxxx RESERVED FOR PART II ADVENTURE -->
+	<!-- 0050 xxxx to 005F xxxx RESERVED FOR PART III LIBRARY -->
+	<!-- 0060 xxxx to 006F xxxx RESERVED FOR PART III ADVENTURE -->
+	<!-- 0070 xxxx to 007F xxxx RESERVED FOR COMPATIBILITY LIBRARY -->
+	
+	<!ENTITY unidCompatibilityLibrary	"0x00700000">
+	
+	<!-- 0080-00FF RESERVED -->
+	
+	<!-- 0100 - 01FF RESERVED FOR DEBUG/TUTORIAL EXTENSIONS -->
+	<!-- 0200 - 07FF RESERVED -->
+	
+	<!-- HUMAN SPACE LIBRARY 0800-080F  -->
+
+	<!-- PART I 0020 0xxx -->
+
+	<!-- Needed for backwards compatibility -->
+	<!ENTITY smHumanSpace				"0x00200001">
+	<!ENTITY rsHumanSpace				"0x00200002">
+	<!ENTITY smElysium					"0x00200003">
+	<!ENTITY unidPartISystemMap			"0x00200004">
+	
+	<!-- HUARI 0021 0xxx -->
+	
+	<!-- PART I SOUNDTRACK 0082 -->
+	]>
+
+<TranscendenceUniverse
+		apiVersion=						"35"
+		>
+
+<!-- TRANSCENDENCE =============================================================
+
+	SCALES
+
+	1 second realtime = 60 seconds game-time
+	1 pixel = 12,500 kilometers
+
+	TECH LEVELS
+
+	  1		Personal (most humans can create/repair)
+	 2-3	Manufacturing (requires dedicated machines/devices)
+	 4-5	High-tech (requires special knowledge and/or sophisticated infrastructure)
+	 6-7	Restricted (technology available only to governments/corporations)
+	 8-9	Experimental (basic concepts understood; limited practice)
+	10-14	High Races (technology only available to Galactics)
+	15-20	Halo Races (technology only available to Ancients in globular clusters)
+	21-25	Hierodule (technology only available to hierodules)
+	26-50	Core Minds (technology only known to Core Minds)
+	 >50	Unknown (impossible or not known to be physically possible)
+
+	COORDINATES
+
+	docking port offsets				cartessian (from center)
+	animation offsets					cartessian (from center)
+	satellite offsets					cartessian (from center)
+	drive exhaust images				ship pointing right; screen coordinates
+	armor								polar (from center); 0 = front of ship
+	devices								polar (from center); 0 = front of ship
+
+-->
+
+<!-- CORE LIBRARIES ======================================================== -->
+	
+	<CoreLibrary filename="CoreTypesLibrary.xml"/>
+	<CoreLibrary filename="RPGLibrary.xml"/>
+	<CoreLibrary filename="GalaxyLibrary.xml"/>
+	<CoreLibrary filename="HumanSpaceVol01.xml"/>
+	<CoreLibrary filename="CompatibilityLibrary.xml"/>
+
+<!-- CORE ADVENTURE ======================================================== -->
+
+	<TranscendenceAdventure filename="StarsOfThePilgrim.xml"/>
+		
+</TranscendenceUniverse>
