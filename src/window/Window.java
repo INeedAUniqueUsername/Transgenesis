@@ -3,7 +3,9 @@ package window;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -22,6 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import mod.ExtensionFactory;
 import panels.XMLPanel;
 
 public class Window implements Runnable {
@@ -51,6 +54,25 @@ public class Window implements Runnable {
 	static Window instance;
 	
 	public static void main(String[] args) {
+		/*
+		try {
+			FileWriter fw = new FileWriter("T_E_S_T.xml");
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(ExtensionFactory.Extensions.TranscendenceAdventure.get().toMinistryMarkdown(1));
+			bw.close();
+			fw.close();
+		}catch(Exception e) {}
+		/**/
+		
+		
+		System.out.println("Run");
+		if(args.length == 1 && args[0].equals("ErrorTest")) {
+			try {
+				((Integer) null).intValue();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
 		instance = new Window();
 	}
 	

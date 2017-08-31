@@ -408,7 +408,7 @@ public final class TypeFactory {
 			
 			effectWhenHit.addAttributes(att("altEffect", BOOLEAN));
 			counter.addAttributes(
-					att("style", ValueType.OVERLAY_COUNTER_STTYLE),
+					att("style", ValueType.STYLE_COUNTER),
 					att("label", STRING),
 					att("max", WHOLE),
 					att("color", HEX_COLOR),
@@ -426,7 +426,7 @@ public final class TypeFactory {
 					ele("OnDestroyCheck")	
 			};
 		case ShipClass:
-			
+		case ShipClassOverride:
 			List<DesignElement> result = new ArrayList<>(Arrays.asList());
 			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
 			//WIP
@@ -504,7 +504,7 @@ public final class TypeFactory {
 			
 			DesignElement satellites = ele("Satellites");
 				satellites.addAttributes(
-						att("overlapCheck", SATELLITE_OVERLAP_CHECK)
+						att("overlapCheck", OVERLAP_CHECK)
 						);
 				satellites.addOptionalMultipleSubElements(SystemGroupElements.values());
 			
@@ -533,7 +533,12 @@ public final class TypeFactory {
 			return result.toArray(new DesignElement[0]);
 		case SystemMap:				break;
 		case SystemTable:			break;
-		case SystemType:			break;
+		case SystemType:
+			return new DesignElement[] {
+					new DesignElement("SystemGroup") {{
+						addOptionalMultipleSubElements(SystemGroupElements.values());
+					}}
+			};
 		case TemplateType:			break;
 		case Type:					break;
 		default:					break;

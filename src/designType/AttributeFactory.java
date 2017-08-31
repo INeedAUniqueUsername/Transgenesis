@@ -165,7 +165,7 @@ public class AttributeFactory {
 			};
 		case StationType:
 			return new DesignAttribute[] {
-					att("abandonedScreen", DOCKSCREEN_LOCAL_OR_TYPE),
+					att("abandonedScreen", SCREEN_LOCAL_OR_TYPE),
 					att("alertWhenAttacked", BOOLEAN),
 					att("alertWhenDestroyed", BOOLEAN),
 					att("allowEnemyDocking", BOOLEAN),
@@ -183,7 +183,7 @@ public class AttributeFactory {
 					att("destEntryPoint	", STRING),
 					att("destNodeID", STRING),
 					att("destroyWhenEmpty", BOOLEAN),
-					att("dockScreen", DOCKSCREEN_LOCAL_OR_TYPE),
+					att("dockScreen", SCREEN_LOCAL_OR_TYPE),
 					att("dockingPorts", WHOLE),
 					att("enemyExclusionRadius", WHOLE),
 					att("ejectaAdj", INTEGER),

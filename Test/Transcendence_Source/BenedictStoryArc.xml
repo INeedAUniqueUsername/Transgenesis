@@ -1,94 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TranscendenceModule
+[
 
+]>
 <TranscendenceModule>
-	
 	<!-- Benedict Story Arc
-
 	This type holds all global data and events for the Benedict and Sisters of
 	Domina story arc.
-	
 	This is the main story arc in Stars of the Pilgrim.
-
 	GLOBAL DATA
-	
 	curMission: The UNID of the most recent mission that the player accepted.
 			Nil if the player has not yet accepted any mission in the story
 			arc. Use benedict_missionAccepted to set this value.
-
 	firstDockedAtSisters: The tick on which the player first docked at a Sisters
 			of Domina station. Nil if never docked.
-			
 	introDone: If True, then we no longer need to show the Benedict Intro screen
 			at the Sisters of Domina.
-			
 	clues: There are 3 opportunities for the player to share information with
 			Benedict and/or Fiona. Each time the player does so, we increment
 			this variable.
-			
 	-->
-
-	<Type UNID="&unidBenedictStoryArc;">
-		<Events>
-			<GetGlobalDockScreen>
+<!-- DOCK SCREENS -->
+	<!-- Benedict Intro
+	GLOBAL DATA
+	q1, q2, ... q{n}: These are set to True if the player has already been given
+			answers to the question.
+	-->
+<!-- CODE -->
+	
+<Type UNID="&unidBenedictStoryArc;">	<Events>		<GetGlobalDockScreen>
 				(switch
 					;	If we're not a pilgrim, then nothing to do.
-						
 					(not (eq (objGetProperty gPlayerShip 'characterClass) &unidPilgrimClass;))
 						Nil
-							
 					;	If we're in the starting system, and if we dock with a Sisters
 					;	of Domina station, and if this is the first time we've docked,
 					;	then show the intro screen
-						
 					(and (eq (objGetType gSource) &stSistersOfDomina;)
 							(not (objGetProperty gSource 'abandoned))
 							(eq (sysGetNode) (objGetProperty gPlayerShip 'startingSystem))
 							(not (typGetData &unidBenedictStoryArc; 'firstDockedAtSisters))
 							)
 						(list &dsBenedictIntro; Nil 4)
-
 					;	In the Eridani system, if we dock with Bering station, and if
 					;	we started in Eridani, and if we are a pilgrim, then we
 					;	show our home.
-				
 					(and (eq (objGetType gSource) &stBeringStation;)
 							(not (objGetProperty gSource 'abandoned))
 							(eq (sysGetNode) (objGetProperty gPlayerShip 'startingSystem))
 							)
 						(list &dsPilgrimBeringStation; Nil 6)
-							
 					;	Otherwise, nothing
-
 					Nil
 					)
-			</GetGlobalDockScreen>
-		</Events>
-		
-		<Language>
-			<Text id="actionTalkToAbbess">*[M]atriarch's Chamber</Text>
-			<Text id="actionTalkToBenedict">*Talk to [B]enedict</Text>
-		</Language>
-	</Type>
-	
-<!-- DOCK SCREENS -->
-
-	<!-- Benedict Intro
-	
-	GLOBAL DATA
-	
-	q1, q2, ... q{n}: These are set to True if the player has already been given
-			answers to the question.
-	
-	-->
-
-	<DockScreen UNID="&dsBenedictIntro;"
-			nestedScreen=		"true"
-			inherit=			"&dsDockScreenBase;"
-			>
-
-		<Panes>
-			<Default>
-				<OnPaneInit>
+			
+</GetGlobalDockScreen>
+        </Events>
+        <Language>		<Text id="actionTalkToAbbess">*[M]atriarch's Chamber</Text>
+            <Text id="actionTalkToBenedict">*Talk to [B]enedict</Text>
+        </Language>
+    </Type>
+    <DockScreen UNID="&dsBenedictIntro;" inherit="&dsDockScreenBase;" nestedScreen="true">	<Panes>		<Default>			<OnPaneInit>
 					(block (
 						(nextActionPos 0)
 						(desc "")
@@ -99,31 +71,22 @@
 								)
 							)
 						)
-						
 						;	Set the description
-						
 						(switch
 							(not (typGetData &unidBenedictStoryArc; 'firstDockedAtSisters))
 								(setq desc (typTranslate &dsBenedictIntro; 'IntroFirst))
-							
 							(not (scrGetData gScreen 'answerQ))
 								(setq desc (typTranslate &dsBenedictIntro; 'IntroReturning))
-								
 							(setq desc
 								(typTranslate &dsBenedictIntro; (cat (scrGetData gScreen 'answerQ) ":Answer"))
 								)
 							)
-							
 						;	Add Benedict information, if necessary
-						
 						;(if meetBenedict
 						;	(setq desc (cat desc (typTranslate &dsBenedictIntro; 'BenedictMeeting)))
 						;	)
-							
 						(scrSetDesc gScreen desc)
-						
 						;	Add unanswered questions as actions:
-						
 						(if (not (typGetData &dsBenedictIntro; 'q1))
 							(block Nil
 								(scrAddAction gScreen 'q1 nextActionPos
@@ -137,7 +100,6 @@
 								(setq nextActionPos (add nextActionPos 1))
 								)
 							)
-							
 						(if (not (typGetData &dsBenedictIntro; 'q2))
 							(block Nil
 								(scrAddAction gScreen 'q2 nextActionPos
@@ -151,7 +113,6 @@
 								(setq nextActionPos (add nextActionPos 1))
 								)
 							)
-							
 						(if (not (typGetData &dsBenedictIntro; 'q3))
 							(block Nil
 								(scrAddAction gScreen 'q3 nextActionPos
@@ -165,39 +126,26 @@
 								(setq nextActionPos (add nextActionPos 1))
 								)
 							)
-							
 						;	Remember the first time we talk to the Sisters.
-						
 						(if (not (typGetData &unidBenedictStoryArc; 'firstDockedAtSisters))
 							(typSetData &unidBenedictStoryArc; 'firstDockedAtSisters (unvGetTick))
 							)
-							
 						;	If this is the last answer, then we continue with Benedict.
-						
 						(scrShowAction gScreen 'actionBenedict meetBenedict)
 						(scrShowAction gScreen 'actionDone (not meetBenedict))
 						)
-				</OnPaneInit>
-
-				<Actions>
-					<Action id="actionBenedict" default="true" cancel="true">
+				
+</OnPaneInit>
+                <Actions>				<Action cancel="true" default="true" id="actionBenedict">
 						(block (theMission)
-						
 							;	If we listened this far, we get to use the sanctum
-							
 							(objSetData gSource "freeSanctum" True)
-                            
                             ;   Intro done
-                            
                             (scrShowPane gScreen 'IntroDone)
-						
 							;	Exit the screen so when we return, we're back at the main screen
-							
 							;(scrExitScreen gScreen)
-							
 							;	If we have an open mission or if the first Benedict mission is
 							;	available, then show it.
-							
 							;(if	(or (setq theMission (@ (msnFind gSource "oS") 0))
 							;		(setq theMission (msnCreate &msBenedictsDrones; gSource)))
 							;	(scrShowScreen gScreen &dsRPGMission;
@@ -206,30 +154,24 @@
 							;		})
 							;	)
 							)
-					</Action>
 					
-					<Action id="actionDone" cancel="1">
+</Action>
+                    <Action cancel="1" id="actionDone">
 						(scrShowPane gScreen "IntroSkip")
-					</Action>
-				</Actions>
-			</Default>
-            
-            <IntroDone>
-                <OnPaneInit>
+					
+</Action>
+                </Actions>
+            </Default>
+            <IntroDone>            <OnPaneInit>
 					(scrSetDesc gScreen (typTranslate &dsBenedictIntro; "BenedictMeeting"))
-                </OnPaneInit>
                 
-                <Actions>
-					<Action id="actionContinue" default="1" cancel="1">
+</OnPaneInit>
+                <Actions>                <Action cancel="1" default="1" id="actionContinue">
 						(block (theMission)
-						
 							;	Exit the screen so when we return, we're back at the main screen
-							
 							(scrExitScreen gScreen)
-							
 							;	If we have an open mission or if the first Benedict mission is
 							;	available, then show it.
-							
 							(if	(or (setq theMission (@ (msnFind gSource "oS") 0))
 									(setq theMission (msnCreate &msBenedictsDrones; gSource)))
 								(scrShowScreen gScreen &dsRPGMission;
@@ -238,26 +180,20 @@
 									})
 								)
 							)
-					</Action>
+					
+</Action>
                 </Actions>
             </IntroDone>
-			
-			<IntroSkip>
-				<OnPaneInit>
+            <IntroSkip>			<OnPaneInit>
 					(scrSetDesc gScreen (typTranslate &dsBenedictIntro; "IntroSkip"))
-				</OnPaneInit>
 				
-				<Actions>
-					<Action id="actionContinue" default="1" cancel="1">
+</OnPaneInit>
+                <Actions>				<Action cancel="1" default="1" id="actionContinue">
 						(block (theMission)
-						
 							;	Exit the screen so when we return, we're back at the main screen
-							
 							(scrExitScreen gScreen)
-							
 							;	If we have an open mission or if the first Benedict mission is
 							;	available, then show it.
-							
 							(if	(or (setq theMission (@ (msnFind gSource "oS") 0))
 									(setq theMission (msnCreate &msBenedictsDrones; gSource)))
 								(scrShowScreen gScreen &dsRPGMission;
@@ -266,119 +202,101 @@
 									})
 								)
 							)
-					</Action>
-				</Actions>
-			</IntroSkip>
-		</Panes>
-		
-		<Language>
-			<Text id="actionBenedict">[C]ontinue</Text>
-			<Text id="actionDone">Do[n]e</Text>
-			
-			<Text id="IntroFirst">
+					
+</Action>
+                </Actions>
+            </IntroSkip>
+        </Panes>
+        <Language>		<Text id="actionBenedict">[C]ontinue</Text>
+            <Text id="actionDone">Do[n]e</Text>
+            <Text id="IntroFirst">
 				You are docked at an abbey of the Sisters of Domina.
 				A woman in a flowing cardinal robe approaches you.
-							
 				"Welcome, pilgrim! Your journey to the Galactic Core has just begun.
 				Your path will be filled with many obstacles, but do not worry:
 				Domina chooses only those who have the strength to succeed."
-			</Text>
-			<Text id="IntroReturning">
+			
+</Text>
+            <Text id="IntroReturning">
 				The abbess greets you:
-					
 				"Welcome back, %name%! Your journey to the Galactic Core has just begun.
 				Whatever obstacles you've faced so far are nothing compared to what
 				awaits you. Take comfort in Domina's guidance."
-			</Text>
-			<Text id="IntroSkip">
+			
+</Text>
+            <Text id="IntroSkip">
 				The abbess signals an unseen companion and a stout man emerges from
 				the shadows. He marches to the abbess's side, looking past you at
 				your ship.
-					
 				The abbess continues: "This is Benedict, our most valuable friend.
 				He will help you prepare for your journey."
-			</Text>
 			
-			<Text id="q1:Label">*"Who is [D]omina?"</Text>
-			<Text id="q1:Answer">
+</Text>
+            <Text id="q1:Label">*"Who is [D]omina?"</Text>
+            <Text id="q1:Answer">
 				"Domina is the divine intelligence who brought you here!
-					
 				"You can feel her in your thoughts, can't you? She compels you
 				to make the long journey to the Core.
-					
 				"I envy you! Very few are chosen by Domina, and though we see
 				only a fraction of her plan, we know she fights to defend all life
 				in the Galaxy. Whatever her plan, your journey will affect
 				all humanity.
-					
 				"Perhaps when you reach her you will understand."
-			</Text>
 			
-			<Text id="q2:Label">*"How do I reach the [G]alactic Core?"</Text>
-			<Text id="q2:Answer">
+</Text>
+            <Text id="q2:Label">*"How do I reach the [G]alactic Core?"</Text>
+            <Text id="q2:Answer">
 				"The stargates will take you. Seek them out and enter.
 				But be prepared for many obstacles. You must grow stronger to reach the Core.
-					
 				"You will upgrade your ship in your travels, and eventually you'll
 				command terrible energies, enough to defeat anyone who blocks your path."
-			</Text>
 			
-			<Text id="q3:Label">*"[W]hat obstacles will I face?"</Text>
-			<Text id="q3:Answer">
+</Text>
+            <Text id="q3:Label">*"[W]hat obstacles will I face?"</Text>
+            <Text id="q3:Answer">
 				"Star travel is dangerous, even in the Commonwealth.
 				You'll face pirates, outlaws and worse before you reach the Core.
 				But we can prepare you."
-			</Text>
 			
-			<Text id="BenedictMeeting">
+</Text>
+            <Text id="BenedictMeeting">
 				The abbess signals an unseen companion and a stout man emerges from
 				he shadows. He marches to the abbess's side, looking past you at
 				your ship.
-					
 				The abbess continues: "This is Benedict, our most valuable friend.
 				He will help you."
-			</Text>
-		</Language>
-	</DockScreen>
-
-<!-- CODE -->
-
-	<Globals>
+			
+</Text>
+        </Language>
+    </DockScreen>
+    <Globals>
 		(block Nil
 			(setq benedict_isFirstMission (lambda ()
 				(not (typGetData &unidBenedictStoryArc; 'curMission))
 				))
-				
 			(setq benedict_isMissionAvailable (lambda (missionUNID options)
 				(block (curMission)
 					(setq curMission (typGetData &unidBenedictStoryArc; 'curMission))
-
 					(switch
 						;	If there are active missions that the player has not 
 						;	yet completed, then they need to complete them first.
-
 						(and (not (@ options 'allowActiveMissions))
 								(msnFind "a +benedictStoryArc;")
 								)
 							Nil
-
 						;	If the new mission is earlier than the latest mission
 						;	then it is too late.
-
 						(and curMission (leq (typGetStaticData missionUNID 'sequence) (typGetStaticData curMission 'sequence)))
 							Nil
-
 						;	Otherwise, the mission is available
-
 						True
 						)
 					)
 				))
-
 			(setq benedict_missionAccepted (lambda (missionObj)
 				(typSetData &unidBenedictStoryArc; 'curMission (msnGetProperty missionObj 'unid))
 				))
 			)
-	</Globals>
-
+	
+</Globals>
 </TranscendenceModule>

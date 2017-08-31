@@ -8,21 +8,28 @@ import xml.RenameableElement;
 
 //Done
 public enum DataElements implements ElementType {
+	Data,
 	StaticData,
 	GlobalData,
 	InitialData
 	;
 	@Override
 	public DesignElement get() {
-		DesignElement e = new DesignElement(name());
-		e.addOptionalMultipleSubElements(() -> {
-			DesignElement data = new RenameableElement("Data");
-			data.addAttributes(
+		DesignElement e;
+		switch(this) {
+		case Data:
+			e = new RenameableElement("Data");
+			e.addAttributes(
 					att("id", STRING),
 					att("data", STRING)
 					);
-			return data;
-		});
+			break;
+		default:
+			e = new DesignElement(name());
+			e.addOptionalMultipleSubElements(Data);
+			break;
+		}
+		
 		return e;
 	}
 }

@@ -103,20 +103,7 @@ public class XMLPanel extends JPanel {
 				" subelements, or attributes.\n" +
 				"-Data about extension Type Entries/Ranges is stored as metadata in a .dat file."
 				, false));
-		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\ParseTest\\Test.xml";
-		//String dir = "C:\\Users\\Alex\\Desktop\\Transcendence Multiverse\\TransGenesis Test";
-		//origin = new DefaultMutableTreeNode(f.getAbsolutePath());
 		origin = new DefaultMutableTreeNode("TransGenesis");
-		/*
-		mods = Loader.loadAllMods(f);
-		for(TranscendenceMod tm : mods) {
-			if(tm == null) {
-				out.println("Null extension found");
-			} else {
-				origin.add(tm.toTreeNode());
-			}
-		}
-		*/
 		DefaultTreeCellRenderer elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
 			public Component getTreeCellRendererComponent(
@@ -164,13 +151,12 @@ public class XMLPanel extends JPanel {
 	    	}
 	    });
 	    elementTreePane = createScrollPane(elementTree);
-	    //elementTreePane.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 		
 	    nameField = new JTextField("TransGenesis");
 	    nameField.setFont(Title.f);
 	    nameField.setEditable(false);
 	    
-		documentation = new JLabel("Documentation.txt could not be found.");
+		documentation = new JLabel("Documentation.txt is unavailable.");
 		documentation.setFont(Medium.f);
 		documentation.setVerticalTextPosition(SwingConstants.TOP);
 		
@@ -202,7 +188,7 @@ public class XMLPanel extends JPanel {
 			public void run() {
 				File[] load = showFileChooser();
 				
-				JLabel wait = new JLabel("TransGenesis is loading Extensions");
+				JLabel wait = new JLabel("TransGenesis is initializing");
 				wait.setFont(new Font("Consolas", Font.PLAIN, 72));
 				wait.setHorizontalAlignment(SwingConstants.CENTER);
 				wait.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -214,18 +200,20 @@ public class XMLPanel extends JPanel {
 					for(File f : load) {
 						loadExtensions(f, false);
 					}
+					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
+					//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
+					bindNonModuleExtensions(getExtensions());
+					bindNonModuleExtensions(getExtensions());
 				} else {
-					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("No files/folders were selected. TransGenesis will now exit.", false));
-					System.exit(0);
+					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will begin without any extensions loaded.", false));
 				}
 				
-				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
-				//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
-				bindNonModuleExtensions(getExtensions());
-				bindNonModuleExtensions(getExtensions());
+				
 				elementTree.expandRow(0);
 				resetLayout();
 				packFrame();
+				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("Initialization complete", false));
+				requestFocus();
 			}
 		}.start();
 	}
@@ -383,9 +371,8 @@ public class XMLPanel extends JPanel {
 					}
 					File[] load = showFileChooser();
 					for(File f : load) {
-						loadExtensions(f, false);
+						loadExtensions(f, true);
 					}
-					bindNonModuleExtensions(getExtensions());
 				}
 			}
 		});
@@ -583,7 +570,6 @@ public class XMLPanel extends JPanel {
 		}
 		if(bindTypesWhenDone) {
 			JOptionPane.showMessageDialog(this, createScrollPane(createTextArea("TransGenesis will now update type bindings for all loaded extensions.", false)));
-			boolean showErrorsPrevious = showErrors;
 			bindNonModuleExtensions(getExtensions());
 		}
 	}

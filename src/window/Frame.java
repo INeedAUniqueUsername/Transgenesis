@@ -67,60 +67,7 @@ public class Frame extends JFrame {
 	ConsoleDialog console;
 	
 	public Frame() {
-		/*
-		try {
-			FileWriter fw = new FileWriter("XML Definitions.txt");
-			BufferedWriter bw = new BufferedWriter(fw);
-			DesignElementOld hierarchy = new DesignElementOld("Hierarchy");
-			hierarchy.addSubElements(
-					
-					ExtensionFactory.Extensions.TranscendenceExtension.get(),
-					ExtensionFactory.Extensions.TranscendenceLibrary.get(),
-					ExtensionFactory.Extensions.TranscendenceAdventure.get(),
-					ExtensionFactory.Extensions.TranscendenceModule.get()
-					);
-			bw.write(hierarchy.getXMLDefinition());
-			bw.close();
-			fw.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			
-		}
 		
-		/*
-		try {
-			//Source Question: https://stackoverflow.com/questions/5640334/how-do-i-preserve-line-breaks-when-using-jsoup-to-convert-html-to-plain-text
-			//Source Answer: https://stackoverflow.com/a/19602313
-			//Source Question: https://stackoverflow.com/questions/11154145/jsoup-how-to-extract-this-text
-			//Source Answer: https://stackoverflow.com/a/11155500
-			Document d = Jsoup.connect("http://wiki.kronosaur.com/modding/xml/effecttype").get();
-			d.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
-		    d.select("br").append("\\n");
-		    d.select("p").prepend("\\n\\n");
-		    String result = Jsoup.clean(d.html().replaceAll("\\\\n", "\n"), "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
-		    System.out.println(result.replaceAll("\n+", "\n"));
-			System.exit(0);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			FileWriter fw = new FileWriter("XML Hierarchy.txt");
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(ExtensionFactory.Extensions.TranscendenceAdventure.get().toMinistryMarkdown());
-			bw.close();
-			fw.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			
-		}
-		*/
 		setVisible(true);
 		console = new ConsoleDialog();		
 		console.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

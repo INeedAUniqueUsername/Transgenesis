@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
@@ -57,6 +58,7 @@ public class TranscendenceMod extends DesignElement {
 	//Does not include Modules
 	private List<TranscendenceMod> dependencies;
 	private List<TranscendenceMod> modules;
+	HashCodeContainer codes;
 	public TranscendenceMod(String name) {
 		super(name);
 		types = new TypeManager();
@@ -64,10 +66,19 @@ public class TranscendenceMod extends DesignElement {
 		path = null;
 		dependencies = new LinkedList<>();
 		modules = new LinkedList<>();
+		codes = new HashCodeContainer();
 	}
 	//To allow overwriting dependency types without recursively binding all the extensions, we should take a list of Types from dependencies
 	//If we're a TranscendenceModule, then have our parent extension bind types for us
 	public void updateTypeBindings() {
+		out.println(getConsoleMessage("Type Binding requested"));
+		int bindingCode = Objects.hash(types, dependencies, modules);
+		//Check if anything changed since the last binding. If not, then we don't update.
+		if(bindingCode == codes.getLastBindCode()) {
+			out.println(getConsoleMessage("Type binding skipped; no changes"));
+			return;
+		}
+		codes.setLastBindCode(bindingCode);
 		String consoleName = getName() + path.getPath();
 		if(getName().equals("TranscendenceModule")) {
 			//We should have our parent extension handle this
@@ -82,7 +93,7 @@ public class TranscendenceMod extends DesignElement {
 			typeMap = parent.typeMap;
 			return;
 		}
-		out.println(getConsoleMessage("Type Binding requested"));
+		out.println(getConsoleMessage("Type Binding initiated"));
 		typeMap = new TreeMap<>();
 		//First, insert all of our own Types. This will allow dependencies to override them
 		for(String s : types.bindAll().values()) {
@@ -215,9 +226,9 @@ public class TranscendenceMod extends DesignElement {
 					
 				}
 			}
-			for(TranscendenceMod module : modules) {
-				module.bindInternalDesigns(typeMap);
-			}
+		}
+		for(TranscendenceMod module : modules) {
+			module.bindInternalDesigns(typeMap);
 		}
 	}
 	public String getConsoleName() {
@@ -284,6 +295,12 @@ public class TranscendenceMod extends DesignElement {
 	}
 	public void save() {
 		out.println("File saved!");
+		int lastSaveCode = hashCode();
+		if(lastSaveCode == codes.getLastSaveCode()) {
+			out.println(getConsoleMessage("Saving skipped; no changes"));
+			return;
+		}
+		codes.setLastSaveCode(lastSaveCode);
 		File path_metadata = new File(path.getAbsolutePath() + ".dat");
 		path.delete();
 		path_metadata.delete();

@@ -43,7 +43,7 @@ public class DesignAttribute {
 				return true;
 			}
 		},
-		DOCKSCREEN_LOCAL_OR_TYPE {
+		SCREEN_LOCAL_OR_TYPE {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -592,7 +592,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("DockScreen");
 			}
-		}, OVERLAY_COUNTER_STTYLE {
+		}, STYLE_COUNTER {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(false, value, "", "commandBarProgress", "flag", "progress", "radius");
@@ -650,7 +650,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("OverlayType");
 			}
-		}, SATELLITE_OVERLAP_CHECK {
+		}, OVERLAP_CHECK {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(false, value, "", "true", "planetoids", "asteroids");
