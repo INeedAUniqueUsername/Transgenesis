@@ -1,10 +1,8 @@
 If the current parent element contains an optional/required subelement with the same name as what we are currently scanning, create a copy of that subelement in the current parent element and add all of our attributes and subelements into that copy
 
 Incomplete elements
-- SystemType
 - SystemTable
 - SystemMap
 - ImageComposite
 - ShipTable
 - ShipClassOverride
-- EffectType

@@ -35,6 +35,7 @@ public enum Types implements ElementType {
 	ShipClassOverride,
 	ShipTable,
 	Sound,
+	Soundtrack,
 	Sovereign,
 	SpaceEnvironmentType,
 	StationType,

@@ -663,14 +663,17 @@ public class XMLPanel extends JPanel {
 		Component[] fields = fieldPanel.getComponents();
 		for(int i = 0; i < attributes.size(); i++) {
 			String value = "";
-			Component field = fields[i];
+			Component field = fields[i+1];
 			if(field instanceof JTextField) {
 				value = ((JTextField) field).getText();
 			} else if(field instanceof JComboBox) {
 				value = (String) ((JComboBox) field).getSelectedItem();
-			} else if(field instanceof JLabel) {
+			}
+			/*
+			else if(field instanceof JLabel) {
 				value = (String) ((JLabel) field).getText();
 			}
+			*/
 			attributes.get(i).setValue(value);
 		}
 		e.setText(textArea.getText());
@@ -708,8 +711,17 @@ public class XMLPanel extends JPanel {
 		elementTreeModel.insertNodeInto(node, parent, 0);
 	    int rowIndex = parent.getIndex(node);
 	    elementTree.expandRow(rowIndex);
+	    addElementChildren(se, node);
 	    out.println("Tree Path (Create): " + new TreePath(elementTreeModel.getPathToRoot(node)));
 	    elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
+	}
+	public void addElementChildren(DesignElement se, DefaultMutableTreeNode parentNode) {
+		for(DesignElement sub : se.getSubElements()) {
+			DefaultMutableTreeNode subNode = new DefaultMutableTreeNode(sub);
+			elementTreeModel.insertNodeInto(subNode, parentNode, 0);
+			elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(subNode)));
+			addElementChildren(sub, subNode);
+		}
 	}
 	public static JScrollPane createScrollPane(JComponent c) {
 		JScrollPane result = new JScrollPane(c, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

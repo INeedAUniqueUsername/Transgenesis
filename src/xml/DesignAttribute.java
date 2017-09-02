@@ -31,8 +31,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design == null;
 			}
-		},
-		TYPE_ANY {
+		}, TYPE_ANY {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -42,8 +41,17 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return true;
 			}
-		},
-		SCREEN_LOCAL_OR_TYPE {
+		}, TYPE_SOUND {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElement design) {
+				return design != null && design.getName().equals("Sound");
+			}
+		}, SCREEN_LOCAL_OR_TYPE {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -61,8 +69,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("DockScreen");
 			}
-		},
-		TYPE_ARMOR {
+		}, TYPE_ARMOR {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -72,8 +79,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ItemType") && design.hasSubElement("Armor");
 			}
-		},
-		TYPE_IMAGE {
+		}, TYPE_IMAGE {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -83,8 +89,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("Image");
 			}
-		},
-		TYPE_MOD {
+		}, TYPE_MOD {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -94,8 +99,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("TranscendenceLibrary");
 			}
-		},
-		TYPE_SOVEREIGN {
+		}, TYPE_SOVEREIGN {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -105,8 +109,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("Sovereign");
 			}
-		},
-		TYPE_SPACE_ENVIRONMENT {
+		}, TYPE_SPACE_ENVIRONMENT {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -116,8 +119,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("SpaceEnvironment");
 			}
-		},
-		TYPE_SYSTEM_MAP {
+		}, TYPE_SYSTEM_MAP {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -127,8 +129,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("SystemMap");
 			}
-		},
-		TYPE_INHERITED {
+		}, TYPE_INHERITED {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -138,8 +139,7 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && (design.getName().equals("Type") || (design.hasAttribute("virtual") && design.getAttributeByName("virtual").getValue().equals("true")));
 			}
-		},
-		BOOLEAN {
+		}, BOOLEAN {
 			public JComponent getInputField(String value) {
 				JComboBox<String> field = createComboBox(false, value, "", "true", "false");
 				return field;
@@ -149,8 +149,7 @@ public class DesignAttribute {
 				// TODO Auto-generated method stub
 				return value.matches("true|false");
 			}
-		},
-		INTEGER {
+		}, INTEGER {
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -175,8 +174,7 @@ public class DesignAttribute {
 				}
 			}
 			
-		},
-		INTEGER_SEQUENCE {
+		}, INTEGER_SEQUENCE {
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -189,8 +187,7 @@ public class DesignAttribute {
 				});
 				return field;
 			}
-		},
-		WHOLE {
+		}, WHOLE {
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -220,7 +217,7 @@ public class DesignAttribute {
 					public void keyTyped(KeyEvent e) {
 		                char c = e.getKeyChar();
 		                String text = field.getText();
-		               if(!Character.isDigit(c) || (c == '.' && text.contains("."))) {
+		               if((c == '.' && text.contains(".")) || (c != '.' && !Character.isDigit(c))) {
 		            	   e.consume();
 		               }
 		            }
@@ -246,10 +243,8 @@ public class DesignAttribute {
 					return false;
 				}
 			}
-		},
-		HEX_COLOR {
-		},
-		HEX_NUMBER {
+		}, HEX_COLOR {
+		}, HEX_NUMBER {
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -262,36 +257,43 @@ public class DesignAttribute {
 				});
 				return field;
 			}
-		},
-		STRING {
+		}, STRING {
 			
-		},
-		FILENAME {
-		},
-		ALIGNMENT {
+		}, FILENAME {
+		}, FILE_JPG {
+		}, FILE_MP3 {
+		}, ALIGNMENT {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
 						"", "constructive order", "constructive chaos", "neutral", "destructive order", "destructive chaos", "republic", "federation","uplifter", "foundation","competitor", "archivist", "seeker", "hermit", "collective", "empire", "sterilizer", "corrector", "megalomaniac", "cryptologue", "perversion", "solipsist", "unorganized", "subsapient", "predator"
 						);
 			}
-		},
-		DISPOSITION {
+		}, DISPOSITION {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
 						"", "friend", "neutral", "enemy"
 						);
 			}
 			
-		},
-		BLENDING {
+		}, BLENDING {
 			public JComponent getInputField(String value) {
 				return createComboBox(false, value,
 						"",
 						"brighten"
 						);
 			}
-		},
-		DICE_RANGE {
+		}, BLEND_MODE {
+			public JComponent getInputField(String value) {
+				return createComboBox(false, value,
+						"normal",
+						"multiply",
+						"overlay",
+						"screen",
+						"hardLight",
+						"composite"
+						);
+			}
+		}, DICE_RANGE {
 			@Override
 			public boolean isValid(String value) {
 				return value.matches(
@@ -347,8 +349,7 @@ public class DesignAttribute {
 				});
 				return field;
 			}
-		},
-		CHARACTER {
+		}, CHARACTER {
 
 			@Override
 			public boolean isValid(String value) {
@@ -484,7 +485,7 @@ public class DesignAttribute {
 						"subjugateMinigame"
 						);
 			}
-		}, DOCKSCREEN_BACKGROUND_ID {
+		}, BACKGROUND_ID {
 			public JComponent getInputField(String value) {
 				return createComboBox(true, value,
 						"",
@@ -495,7 +496,7 @@ public class DesignAttribute {
 						"schematic"
 						);
 			}
-		}, DOCKSCREEN_DATA_FROM {
+		}, DATA_FROM {
 			public JComponent getInputField(String value) {
 				return createComboBox(true, value,
 						"",
@@ -616,6 +617,51 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(false, value, "", "default", "warning");
 				return field;
 			}
+		}, STYLE_FLARE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value, "", "fadingBlast", "flicker", "plain");
+				return field;
+			}
+		}, STYLE_LIGHTNING_STORM {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value, "", "objectArcs");
+				return field;
+			}
+		}, STYLE_PARTICLE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value, "", "plain", "flame", "smoke", "line");
+				return field;
+			}
+		}, STYLE_PARTICLE_CLOUD {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value,
+						"cloud",
+				        "exhaust",
+				        "jet",
+				        "ring",
+				        "splash"
+						);
+				return field;
+			}
+		}, STYLE_PARTICLE_PATTERN {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "", "comet", "jet");
+				return field;
+			}
+		}, STYLE_PARTICLE_SYSTEM {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "", "amorphous", "comet", "exhaust", "jet", "radiate", "spray", "writhe", "brownian");
+				return field;
+			}
+		}, STYLE_STARBURST {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "", "ballLightning", "flare", "plain", "lightningStar", "morningStar");
+				return field;
+			}
 		}, PROGRAM {
 			public JComponent getInputField(String value) {
 				//WIP
@@ -665,6 +711,143 @@ public class DesignAttribute {
 			}
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ShipClass");
+			}
+		}, EFFECT_INSTANCE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value, "", "game", "owner", "creator");
+				return field;
+			}
+		}, BEAM_TYPE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value, "", "heavyBlaster", "jaggedBolt", "laser", "lightning", "lightningBolt", "particle", "starblaster", "greenParticle", "blueParticle", "blaster", "greenLightning");
+				return field;
+			}
+		}, STYLE_LINE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value, "", "dashed", "solid");
+				return field;
+			}
+		}, STYLE_RAY {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"", 
+						"wavy",
+						"smooth",
+						"jagged",
+						"grainy",
+						"lightning",
+						"whiptail");
+				return field;
+			}
+		}, SHAPE_RAY {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"diamond",
+						"oval",
+						"straight",
+						"tapered",
+						"cone");
+				return field;
+			}
+		}, ANIMATE_RAY {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"fade",
+						"flicker",
+						"cycle");
+				return field;
+			}
+		}, ANIMATE_ORB {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"dissipate",
+						"explode",
+						"fade",
+						"flicker");
+				return field;
+			}
+		}, STYLE_ORB {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"smooth",
+						"flare",
+						"cloud",
+						"fireblast",
+						"smoke",
+						"diffraction",
+						"firecloud");
+				return field;
+			}
+		}, STYLE_SHOCKWAVE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+
+						"glowRing",
+						"image",
+						"cloud");
+				return field;
+			}
+		}, WEAPON_CONFIGURATION {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"dual",
+						"wall",
+						"spread2",
+						"spread3",
+						"spread5",
+						"alternating");
+				return field;
+			}
+		}, WEAPON_COUNTER {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"temperature",
+						"capacitor"
+						);
+				return field;
+			}
+		}, FAILURE_TYPE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"custom",
+						"explosion",
+						"heatDamage",
+						"jammed",
+						"misfire",
+						"noFailure",
+						"safeMode"
+						);
+				return field;
+			}
+		}, VARIANT_TYPE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"charges",
+						"missiles",
+						"levels"
+						);
+				return field;
+			}
+		}, FIRE_TYPE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"missile",
+						"beam",
+						"area",
+						"continuousBeam",
+						"particles",
+						"radius"
+						);
+				return field;
 			}
 		}
 		

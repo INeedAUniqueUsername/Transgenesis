@@ -39,7 +39,7 @@ public class AttributeFactory {
 				att("name", STRING),
 				att("desc", STRING),
 				att("type", DOCKSCREEN_TYPE),
-				att("backgroundID", ValueType.DOCKSCREEN_BACKGROUND_ID),
+				att("backgroundID", ValueType.BACKGROUND_ID),
 				att("nestedScreen", BOOLEAN),
 			};
 		case EconomyType:
@@ -143,6 +143,15 @@ public class AttributeFactory {
 		case Sound:
 			return new DesignAttribute[] {
 					att("filename", FILENAME)	
+			};
+		case Soundtrack:
+			return new DesignAttribute[] {
+					att("filename", FILENAME),
+					att("composedBy", STRING),
+					att("locationCriteria", STRING),
+					att("performedBy", STRING),
+					att("priority", WHOLE),
+					att("title", STRING)
 			};
 		case Sovereign:
 			return new DesignAttribute[] {

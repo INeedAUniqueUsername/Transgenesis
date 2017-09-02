@@ -457,20 +457,17 @@ public class DesignElement {
 		nameField.setEditable(false);
 		
 		List<DesignAttribute> attributes = getAttributes();
-		if(attributes.size() == 0) {
-			JLabel label = new JLabel("No attributes");
-			label.setFont(Large.f);
+		
+		createAttributePanelHeaders(attributes.size() > 0, labelPanel, fieldPanel);
+		
+		for(DesignAttribute a : attributes) {
+			JLabel label = XMLPanel.createLabel((String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase())));
 			labelPanel.add(label);
-		} else {
-			for(DesignAttribute a : attributes) {
-				JLabel label = XMLPanel.createLabel((String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase())));
-				labelPanel.add(label);
-				JComponent inputField = a.getValueType().getInputField(a.getValue());
-				//If the inputField is larger then the label, then the panel will expand so that both are the same width
-				//Restrict the size of the inputField
-				inputField.setPreferredSize(label.getPreferredSize());
-				fieldPanel.add(inputField);
-			}
+			JComponent inputField = a.getValueType().getInputField(a.getValue());
+			//If the inputField is larger then the label, then the panel will expand so that both are the same width
+			//Restrict the size of the inputField
+			inputField.setPreferredSize(label.getPreferredSize());
+			fieldPanel.add(inputField);
 		}
 		/*
 		ArrayList<DesignElementOld> addableSubElements = getAddableElements();
@@ -501,6 +498,9 @@ public class DesignElement {
 		ArrayList<DesignElement> singleSubElements = new ArrayList<>(requiredSingleSubElements.size() + optionalSingleSubElements.size());
 		singleSubElements.addAll(requiredSingleSubElements);
 		singleSubElements.addAll(optionalSingleSubElements);
+		
+		createSubElementPanelHeaders(singleSubElements.size() + optionalMultipleSubElements.size() > 0, subElementPanel);
+		
 		for(DesignElement element : singleSubElements) {
 			JButton button = new JButton(element.getDisplayName());
 			button.setFont(Medium.f);
@@ -526,9 +526,27 @@ public class DesignElement {
 			subElementPanel.add(button);
 		}
 		
-		
 		textArea.setText(getText());
 		textArea.setEditable(true);
+	}
+	public void createAttributePanelHeaders(boolean attributes, JPanel labelPanel, JPanel fieldPanel) {
+		if(attributes) {
+			JLabel headerName = new JLabel("Name");
+			headerName.setFont(Large.f);
+			labelPanel.add(headerName);
+			JLabel headerValue = new JLabel("Value");
+			headerValue.setFont(Large.f);
+			fieldPanel.add(headerValue);
+		} else {
+			JLabel header = new JLabel("No attributes");
+			header.setFont(Large.f);
+			labelPanel.add(header);
+		}
+	}
+	public void createSubElementPanelHeaders(boolean subelements, JPanel subElementPanel) {
+		subElementPanel.add(new JLabel(subelements ? "Create new subelements " : "No subelements") {{
+			setFont(Large.f);
+		}});
 	}
 	public DesignElement clone() {
 		DesignElement result = new DesignElement(name);

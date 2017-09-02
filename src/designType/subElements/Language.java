@@ -3,6 +3,8 @@ package designType.subElements;
 import static xml.DesignAttribute.att;
 import static xml.DesignAttribute.ValueType.STRING;
 
+import java.util.List;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -139,7 +141,11 @@ class Text extends DesignElement {
 		fieldPanel.removeAll();
 		subElementPanel.removeAll();
 		
-		for(DesignAttribute a : getAttributes()) {
+		List<DesignAttribute> attributes = getAttributes();
+		
+		createAttributePanelHeaders(attributes.size() > 0, labelPanel, fieldPanel);
+		
+		for(DesignAttribute a : attributes) {
 			JLabel label = XMLPanel.createLabel((String.format("%-28s[%s]", a.getName() + "=", a.getValueType().toString().toLowerCase())));
 			JTextField value = XMLPanel.createTextField(a.getValue(), false);
 			value.setPreferredSize(label.getPreferredSize());

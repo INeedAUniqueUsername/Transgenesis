@@ -11,6 +11,8 @@ import designType.subElements.SubElementFactory.AdventureDescElements;
 import designType.subElements.SubElementFactory.DisplayAttributesElements;
 import designType.subElements.SubElementFactory.DisplayElements;
 import designType.subElements.SubElementFactory.DockScreensElements;
+import designType.subElements.SubElementFactory.EffectElements;
+import designType.subElements.SubElementFactory.ItemElements;
 import designType.subElements.SubElementFactory.ItemGeneratorElements;
 import designType.subElements.SubElementFactory.ShipGeneratorElements;
 import designType.subElements.SubElementFactory.SovereignElements;
@@ -35,7 +37,6 @@ public final class TypeFactory {
 		e.addAttributes(AttributeFactory.createAttributesForType(t));
 		e.addOptionalSingleSubElements(createSingleSubElementsForType(t));
 		e.addOptionalMultipleSubElements(createMultipleSubElementsForType(t));
-		
 		e.addAttributes(
 				att("UNID", UNID),
 				att("attributes", STRING),
@@ -79,7 +80,7 @@ public final class TypeFactory {
 		return e;
 	}
 
-	private static ElementType[] createMultipleSubElementsForType(Types t) {
+	public static ElementType[] createMultipleSubElementsForType(Types t) {
 		switch(t) {
 		case AdventureDesc:
 			break;
@@ -88,7 +89,7 @@ public final class TypeFactory {
 		case EconomyType:
 			break;
 		case EffectType:
-			break;
+			return EffectElements.values();
 		case Image:
 			break;
 		case ImageComposite:
@@ -110,8 +111,10 @@ public final class TypeFactory {
 		case ShipClassOverride:
 			break;
 		case ShipTable:
-			break;
+			return ShipGeneratorElements.values();
 		case Sound:
+			break;
+		case Soundtrack:
 			break;
 		case Sovereign:
 			break;
@@ -154,7 +157,7 @@ public final class TypeFactory {
 			DesignElement list = ele("List");
 			for(DesignElement e : new DesignElement[] {listOptions, list}) {
 				e.addAttributes(
-						att("dataFrom", ValueType.DOCKSCREEN_DATA_FROM),
+						att("dataFrom", ValueType.DATA_FROM),
 						att("criteria", STRING),
 						att("list", STRING),
 						att("initialItem", STRING),
@@ -177,7 +180,7 @@ public final class TypeFactory {
 					att("display", STRING),
 					att("animate", STRING),
 					att("type", DOCKSCREEN_TYPE),
-					att("dataFrom", DOCKSCREEN_DATA_FROM)
+					att("dataFrom", DATA_FROM)
 					);
 			display.addOptionalSingleSubElements(
 					new Event("OnDisplayInit")
@@ -221,7 +224,7 @@ public final class TypeFactory {
 			repairerDevice = ele("RepairerDevice"),
 			shields = ele("Shields"),
 			solarDevice = ele("SolarDevice"),
-			weapon = ele("Weapon");
+			weapon = ItemElements.Weapon.get();
 			armor.addAttributes(
 					att("blindingDamageAdj", WHOLE),
 					att("blindingImmune", BOOLEAN),
@@ -356,7 +359,6 @@ public final class TypeFactory {
 					att("refuel", WHOLE),
 					att("powerGen", WHOLE)
 					);
-			weapon.addAttributes();
 			//WIP: Add device-specific events
 			components.addOptionalMultipleSubElements(ItemGeneratorElements.values());
 			
@@ -401,9 +403,9 @@ public final class TypeFactory {
 		case MissionType:			break;
 		case NameGenerator:			break;
 		case OverlayType:
-			DesignElement effect = new DesignElement(SubElementFactory.createEffects(), "Effect"),
-			hitEffect = new DesignElement(SubElementFactory.createEffects(), "HitEffect"),
-			effectWhenHit = new DesignElement(SubElementFactory.createEffects(), "EffectWhenHit"),
+			DesignElement effect = new DesignElement(Types.EffectType.get(), "Effect"),
+			hitEffect = new DesignElement(Types.EffectType.get(), "HitEffect"),
+			effectWhenHit = new DesignElement(Types.EffectType.get(), "EffectWhenHit"),
 			counter = ele("Counter");
 			
 			effectWhenHit.addAttributes(att("altEffect", BOOLEAN));
@@ -433,6 +435,14 @@ public final class TypeFactory {
 			return result.toArray(new DesignElement[0]);
 		case ShipTable:				break;
 		case Sound:					break;
+		case Soundtrack:
+			DesignElement segments = ele("Segments");
+			segments.addOptionalMultipleSubElements(() -> {
+				return new DesignElement("Segment") {{
+					addAttributes(att("startPos", WHOLE), att("endPos", WHOLE));
+				}};
+			});
+			break;
 		case Sovereign:
 			DesignElement relationships = ele("Relationships");
 				relationships.addOptionalMultipleSubElements(SovereignElements.Relationship);
