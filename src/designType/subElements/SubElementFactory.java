@@ -27,6 +27,15 @@ public class SubElementFactory {
 		Fragment,
 		Network,
 		Random;
+		
+		static ElementType[] systemTopologyElements = {
+				Node,
+				NodeGroup,
+				NodeTable,
+				Fragment,
+				Network,
+				Random
+		};
 		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
@@ -45,7 +54,7 @@ public class SubElementFactory {
 				break;
 				
 			case SystemTopology:
-				e.addOptionalMultipleSubElements(SystemTopologyElements.values());
+				e.addOptionalMultipleSubElements(systemTopologyElements);
 				break;
 			case TopologyProcessor:
 				e.addOptionalMultipleSubElements(TopologyProcessorElements.values());
@@ -327,17 +336,6 @@ public class SubElementFactory {
 				static ElementType[] tableProcessorElements = modifyElementTypes(TopologyProcessorElements.values(), (DesignElement elements) -> {
 					elements.addAttributes(att("chance", WHOLE));
 				});
-			}
-		}
-		enum SystemTopologyElements implements ElementType {
-			Node,
-			NodeGroup,
-			NodeTable,
-			Fragment,
-			Network,
-			Random;
-			public DesignElement get() {
-				return SystemMapElements.valueOf(name()).get();
 			}
 		}
 	}
