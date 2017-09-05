@@ -40,7 +40,7 @@ public enum Types implements ElementType {
 	SpaceEnvironmentType,
 	StationType,
 	SystemMap,
-	SystemTable,
+	SystemPartTable,
 	SystemType,
 	TemplateType,
 	Type,

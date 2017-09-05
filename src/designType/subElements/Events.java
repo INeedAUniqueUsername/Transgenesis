@@ -55,22 +55,32 @@ public final class Events {
 			e.addOptionalSingleSubElements(
 					new Event("CanBeInstalled"),
 					new Event("CanBeUninstalled"),
-					new Event("OnAddedAsEnhancement"),
-					new Event("OnDisable"),
 					new Event("OnEnable"),
-					
-					new Event("GetDescription"),
-					new Event("GetName"),
-					new Event("GetTradePrice"),
-					
+					new Event("OnDisable"),
+					new Event("OnAddedAsEnhancement"),
+					new Event("OnRemovedAsEnhancement"),
 					new Event("OnInstall"),
+					new Event("OnUninstall"),
+					
+					new Event("GetName"),
+					new Event("GetDescription"),
+					new Event("GetTradePrice"),
+					new Event("GetReferenceText"),
+					
+					new Event("OnDestroyCheck"),
 					new Event("OnObjDestroyed"),
 					new Event("OnReactorOverload"),
 					
 					new Event("OnRefuel"),
 					
-					new Event("OnRemovedAsEnhancement"),
-					new Event("OnUninstall")
+					new Event("OnFireWeapon"),
+					new Event("OnCreateShot"),
+					new Event("OnDamageAbandoned"),
+					new Event("OnDamageArmor"),
+					new Event("OnDamageOverlay"),
+					new Event("OnDamageShields"),
+					new Event("OnDestroyShot"),
+					new Event("OnFragment")
 					);
 			break;
 		case MissionType:
@@ -158,7 +168,7 @@ public final class Events {
 			e.addOptionalSingleSubElements(new Event("OnObjUpdate"));
 			break;
 		case SystemMap: 			break;
-		case SystemTable: 			break;
+		case SystemPartTable: 			break;
 		case SystemType:
 			e.addOptionalSingleSubElements(
 					new Event("OnCreate"),

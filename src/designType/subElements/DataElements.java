@@ -25,11 +25,15 @@ public enum DataElements implements ElementType {
 					);
 			break;
 		default:
-			e = new DesignElement(name());
-			e.addOptionalMultipleSubElements(Data);
+			e = getDataBlock(name());
 			break;
 		}
 		
 		return e;
+	}
+	public static DesignElement getDataBlock(String name) {
+		return new DesignElement(name) {{
+			addOptionalMultipleSubElements(Data);
+		}};
 	}
 }

@@ -129,7 +129,17 @@ public class DesignAttribute {
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("SystemMap");
 			}
-		}, TYPE_INHERITED {
+		}, TYPE_SYSTEM_TYPE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElement design) {
+				return design != null && design.getName().equals("SystemType");
+			}
+		},TYPE_INHERITED {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
@@ -138,6 +148,19 @@ public class DesignAttribute {
 			}
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && (design.getName().equals("Type") || (design.hasAttribute("virtual") && design.getAttributeByName("virtual").getValue().equals("true")));
+			}
+		}, SYSTEM_PART_TABLE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				XMLPanel.getExtensionTypeMap().forEach((String type, DesignElement design) -> {
+					if(typeIsValid(design) && design.getName().equals("SystemPartTable")) {
+						for(DesignElement table : design.getSubElements()) {
+							field.addItem(table.getName());
+						}
+					}
+				});
+				return field;
 			}
 		}, BOOLEAN {
 			public JComponent getInputField(String value) {
@@ -210,7 +233,7 @@ public class DesignAttribute {
 			}
 		}, WHOLE_100 {
 			
-		}, DECIMAL {
+		}, DOUBLE {
 			public JComponent getInputField(String value) {
 				JTextField field = (JTextField) super.getInputField(value);
 				field.addKeyListener(new KeyAdapter() {
@@ -344,6 +367,23 @@ public class DesignAttribute {
 		                		e.consume();
 		                	}
 		                	break;
+		                }
+		            }
+				});
+				return field;
+			}
+		}, RANGE_0_100 {
+			public JComponent getInputField(String value) {
+				JTextField field = (JTextField) super.getInputField(value);
+				field.addKeyListener(new KeyAdapter() {
+					//Add a key listener that prevents the user from adding more than one d, +, or -, and allows only digits
+		            public void keyTyped(KeyEvent e) {
+		                char c = e.getKeyChar();
+		                String text = field.getText();
+		                if((c == '-' && text.contains("-")) ||
+		                		(c != '-' && !Character.isDigit(c))
+		                		) {
+		                	e.consume();
 		                }
 		            }
 				});
@@ -702,6 +742,26 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(false, value, "", "true", "planetoids", "asteroids");
 				return field;
 			}
+		}, POINT{
+			public JComponent getInputField(String value) {
+				JTextField field = (JTextField) super.getInputField(value);
+				field.addKeyListener(new KeyAdapter() {
+					public void keyTyped(KeyEvent e) {
+						String text = field.getText();
+						char c = e.getKeyChar();
+						if(!(c == ',' && !text.contains(",")) && !Character.isDigit(c)) {
+							e.consume();
+						}
+		            }
+				});
+				return field;
+			}
+		}, PARTITION_NODES_ORDER {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(false, value, "", "random");
+				return field;
+			}
 		}, TYPE_SHIPCLASS {
 			public JComponent getInputField(String value) {
 				//WIP
@@ -898,13 +958,13 @@ public class DesignAttribute {
 		}
 		*/
 		public void addValidTypes(JComboBox<String> box) {
-			int count = box.getItemCount();
+			//int count = box.getItemCount();
 			XMLPanel.getExtensionTypeMap().forEach((String type, DesignElement design) -> {
 				if(typeIsValid(design)) {
 					box.addItem("&" + type + ";");
 				}
 			});
-			System.out.println(box.getItemCount() - count + " valid Types found.");
+			//System.out.println(box.getItemCount() - count + " valid Types found.");
 		}
 		public boolean typeIsValid(DesignElement design) {
 			return true;

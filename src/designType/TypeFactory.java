@@ -18,6 +18,8 @@ import designType.subElements.SubElementFactory.ShipGeneratorElements;
 import designType.subElements.SubElementFactory.SovereignElements;
 import designType.subElements.SubElementFactory.SystemCriteria;
 import designType.subElements.SubElementFactory.SystemGroupElements;
+import designType.subElements.SubElementFactory.SystemMapElements;
+import designType.subElements.SubElementFactory.SystemPartTableElements;
 import xml.DesignAttribute;
 import xml.DesignAttribute.ValueType;
 import xml.DesignElement;
@@ -123,9 +125,9 @@ public final class TypeFactory {
 		case StationType:
 			break;
 		case SystemMap:
-			break;
-		case SystemTable:
-			break;
+			return SystemMapElements.values();
+		case SystemPartTable:
+			return SystemPartTableElements.values();
 		case SystemType:
 			break;
 		case TemplateType:
@@ -248,7 +250,7 @@ public final class TypeFactory {
 					att("installCostAdj", WHOLE),
 					att("maxHPBonus", WHOLE),
 					att("maxSpeedBonus", WHOLE),
-					att("photoRecharge", BOOLEAN),
+					att("photoRecharge", STRING),
 					att("photoRepair", BOOLEAN),
 					att("powerUse", WHOLE),
 					att("radiationImmune", BOOLEAN),
@@ -288,11 +290,11 @@ public final class TypeFactory {
 					att("maxSpeed", WHOLE),
 					att("maxSpeedInc", WHOLE),
 					att("powerUse", WHOLE),
-					att("thrust", DECIMAL),
+					att("thrust", DOUBLE),
 					att("inertialessDrive", BOOLEAN),
-					att("rotationAccel", DECIMAL),
-					att("rotationStopAccel", DECIMAL),
-					att("maxRotationRate", DECIMAL)
+					att("rotationAccel", DOUBLE),
+					att("rotationStopAccel", DOUBLE),
+					att("maxRotationRate", DOUBLE)
 					);
 			enhancerDevice.addAttributes(
 					att("activateAdj", WHOLE),
@@ -542,7 +544,7 @@ public final class TypeFactory {
 			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
 			return result.toArray(new DesignElement[0]);
 		case SystemMap:				break;
-		case SystemTable:			break;
+		case SystemPartTable:			break;
 		case SystemType:
 			return new DesignElement[] {
 					new DesignElement("SystemGroup") {{

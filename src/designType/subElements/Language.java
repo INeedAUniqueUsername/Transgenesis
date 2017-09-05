@@ -108,7 +108,7 @@ public final class Language {
 		case SpaceEnvironmentType:	break;
 		case StationType:			break;
 		case SystemMap:				break;
-		case SystemTable:			break;
+		case SystemPartTable:			break;
 		case SystemType:			break;
 		case TemplateType:			break;
 		case Type:					break;

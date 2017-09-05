@@ -2,18 +2,349 @@ package designType.subElements;
 import designType.TypeFactory;
 import designType.Types;
 import designType.subElements.SubElementFactory.SystemGroupElements;
+import designType.subElements.SubElementFactory.SystemMapElements.TopologyCreatorElements.TopologyProcessorElements;
 import xml.DesignAttribute;
 import xml.DesignElement;
 import xml.RenameableElement;
 import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.ValueType.*;
+
+import java.util.function.Consumer;
+
 import static xml.DesignAttribute.*;
 public class SubElementFactory {
+	public enum SystemMapElements implements ElementType {
+		TopologyProcessor,
+		SystemTopology,
+		Uses,
+		
+		TopologyCreator,
+		RootNode,
+		
+		Node,
+		NodeGroup,
+		NodeTable,
+		Fragment,
+		Network,
+		Random;
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			//WIP
+			case Node:
+				break;
+			case NodeGroup:
+				break;
+			case NodeTable:
+				break;
+			case Fragment:
+				break;
+			case Network:
+				break;
+			case Random:
+				break;
+				
+			case SystemTopology:
+				e.addOptionalMultipleSubElements(SystemTopologyElements.values());
+				break;
+			case TopologyProcessor:
+				e.addOptionalMultipleSubElements(TopologyProcessorElements.values());
+				break;
+			case Uses:
+				e.addAttributes(att("unid", TYPE_SYSTEM_MAP));
+				break;
+
+			case RootNode:
+				//WIP
+				e.addAttributes(att("id", STRING));
+				break;
+			case TopologyCreator:
+				e.addOptionalMultipleSubElements(TopologyCreatorElements.values());
+				break;
+			default:
+				break;
+			
+			}
+			return e;
+		}
+		enum TopologyCreatorElements implements ElementType {
+			Node,
+			Stargate,
+			Stargates;
+			public DesignElement get() {
+				DesignElement e = new DesignElement(name());
+				switch(this) {
+				case Node:
+					e.addAttributes(att("id", STRING));
+					break;
+				case Stargate:
+					e.addAttributes(
+							att("chance", WHOLE_100),
+							att("debugOnly", BOOLEAN),
+							att("name", STRING),
+							att("to", STRING),
+							att("destID", STRING),
+							att("destGate", STRING),
+							att("oneWay", BOOLEAN),
+							att("path", INTEGER_SEQUENCE)
+							);
+					break;
+				case Stargates:
+					e.addOptionalMultipleSubElements(StargateGeneratorElements.values());
+					break;
+				}
+				return e;
+			}
+			enum StargateGeneratorElements implements ElementType {
+				Group,
+				Table,
+				Null,
+				Stargate;
+				static ElementType[] tableElements = modifyElementTypes(StargateGeneratorElements.values(), (DesignElement element) -> {
+					element.addAttributes(att("weight", INTEGER));
+				});
+				public DesignElement get() {
+					DesignElement e =  new DesignElement(name());
+					switch(this) {
+					case Group:
+						e.addOptionalMultipleSubElements(StargateGeneratorElements.values());
+						break;
+					case Table:
+						e.addOptionalMultipleSubElements(tableElements);
+						break;
+					case Stargate:
+						e.addAttributes(
+								att("debugOnly", BOOLEAN),
+								att("name", STRING),
+								att("to", STRING),
+								att("destID", STRING),
+								att("destGate", STRING),
+								att("oneWay", BOOLEAN),
+								att("path", INTEGER_SEQUENCE)
+								);
+						break;
+					}
+					return e;
+				}
+			}
+			enum TopologyProcessorElements implements ElementType {
+				Attributes,
+				ConquerNodes,
+				DistributeNodes,
+				FillNodes,
+				Group,			//Equivalent to a regular TopologyProcessor
+				LocateNodes,
+				PartitionNodes,
+				RandomPoints,
+				System,
+				Table;
+				static ElementType[] partitionNodesElements = modifyElementTypes(TopologyProcessorElements.values(), (DesignElement element) -> {
+					element.addAttributes(
+							att("nodeCount", DICE_RANGE),
+							att("maxPartitionCount", WHOLE)
+							);
+				});
+				public static DesignElement getCriteria() {
+					return new DesignElement("Criteria") {{
+						addOptionalMultipleSubElements(SystemCriteria.values());
+					}};
+				}
+				public static DesignElement getSystem() {
+					return new DesignElement("System") {{
+						addAttributes(att("name", STRING),
+								att("attributes", STRING),
+								att("level", WHOLE),
+								att("unid", TYPE_SYSTEM_TYPE),
+								att("variant", STRING)
+								);
+						addOptionalSingleSubElements(new DesignElement("Table") {{
+							addOptionalMultipleSubElements(() -> {
+								return new DesignElement("System") {{
+									addAttributes(
+											att("chance", INTEGER),
+											att("unid", TYPE_SYSTEM_TYPE)
+											);
+								}};
+							});
+						}});
+					}};
+				}
+				public static DesignElement getTopologyProcessor(String name) {
+					return new DesignElement(name) {{
+						addSubElements(getCriteria(), getSystem());
+						addOptionalMultipleSubElements(TopologyProcessorElements.values());
+					}};
+					
+				}
+				public DesignElement get() {
+					DesignElement e = new DesignElement(name());
+					switch(this) {
+					case Attributes:
+						e.addAttributes(att("attributes", STRING));
+						break;
+					case ConquerNodes:
+						e.addSubElements(
+								new DesignElement("SeedChance") {{
+									addOptionalMultipleSubElements(() -> {
+										return new DesignElement("Node") {{
+											addAttributes(
+													att("criteria", STRING),
+													att("weight", INTEGER),
+													att("successChance", INTEGER)
+													);
+										}};
+									});	
+								}}, new DesignElement("ExpandChance") {{
+									addOptionalMultipleSubElements(() -> {
+										return new DesignElement("Chance") {{
+											addAttributes(
+													att("criteria", STRING),
+													att("weight", INTEGER),
+													att("successChance", INTEGER)
+													);
+										}};
+									});
+								}},
+								getTopologyProcessor("Processor")
+								);
+						break;
+					case DistributeNodes:
+						e = getTopologyProcessor("DistributeNodes");
+						e.addAttributes(att("nodeCount", DICE_RANGE));
+						break;
+					case FillNodes:
+						e = getTopologyProcessor("FillNodes");
+						break;
+					case Group:
+						e = getTopologyProcessor("Group");
+						break;
+					case LocateNodes:
+						e.addAttributes(att("percentile", RANGE_0_100));
+						e.addSubElements(getCriteria(), new DesignElement("MapFunction") {{
+							addSubElements(new DesignElement("Noise") {{
+								addAttributes(att("scale", WHOLE));
+							}});
+						}});
+						e.addOptionalMultipleSubElements(TopologyProcessorElements.values());
+						break;
+					case PartitionNodes:
+						e.addAttributes(att("partitionOrder", PARTITION_NODES_ORDER));
+						e.addSubElements(getCriteria());
+						e.addOptionalMultipleSubElements(partitionNodesElements);
+						break;
+					case RandomPoints:
+						e.addAttributes(
+								att("count", DICE_RANGE),
+								att("minSeparation", WHOLE, "40")
+								);
+						e.addSubElements(getCriteria());
+						break;
+					case System:
+						e = getSystem();
+						break;
+					case Table:
+						e.addSubElements(getCriteria());
+						e.addOptionalMultipleSubElements(tableProcessorElements);
+						break;
+					default:
+						break;
+					}
+					return e;
+				}
+				enum RandomPointsElements implements ElementType {
+					Point,
+					Area,
+					Rotation;
+					public DesignElement get() {
+						DesignElement e = new DesignElement(name());
+						switch(this) {
+						case Point:
+							e.addAttributes(
+									att("chance", WHOLE),
+									att("labelEffect", TYPE_EFFECT),
+									att("mapEffect", TYPE_EFFECT)
+									);
+							DesignElement nodes = getTopologyProcessor("Nodes"),
+									labelEffect = createEffect("LabelEffect"),
+									mapEffect = createEffect("MapEffect");
+							nodes.addAttributes(
+									att("maxDist", WHOLE),
+									att("minDist", WHOLE)
+									);
+							for(DesignElement effect : new DesignElement[] {labelEffect, mapEffect}) {
+								effect.addAttributes(
+										att("effect", TYPE_EFFECT)
+										);
+								effect.addOptionalSingleSubElements(DataElements.getDataBlock("Data"));
+							}
+							//WIP
+							e.addOptionalSingleSubElements(
+									nodes,
+									labelEffect,
+									mapEffect
+									);
+							break;
+						case Area:
+							e.addOptionalMultipleSubElements(AreaElements.values());
+							break;
+						case Rotation:
+							e.addAttributes(
+									att("angle", WHOLE),
+									att("center", POINT),
+									att("tangent", POINT)
+									);
+							break;
+						}
+						return e;
+					}
+					enum AreaElements implements ElementType {
+						Table,
+						Group,
+						Line;
+						static ElementType[] tableElements = modifyElementTypes(StargateGeneratorElements.values(), (DesignElement element) -> {
+							element.addAttributes(att("weight", INTEGER));
+						});
+						public DesignElement get() {
+							DesignElement e = new DesignElement(name());
+							switch(this) {
+							case Table:
+								e.addOptionalMultipleSubElements(tableElements);
+								break;
+							case Group:
+								e.addOptionalMultipleSubElements(AreaElements.values());
+								break;
+							case Line:
+								e.addAttributes(
+										att("from", POINT),
+										att("to", POINT),
+										att("radius", WHOLE)
+										);
+							}
+							return e;
+						}
+					}
+				}
+				static ElementType[] tableProcessorElements = modifyElementTypes(TopologyProcessorElements.values(), (DesignElement elements) -> {
+					elements.addAttributes(att("chance", WHOLE));
+				});
+			}
+		}
+		enum SystemTopologyElements implements ElementType {
+			Node,
+			NodeGroup,
+			NodeTable,
+			Fragment,
+			Network,
+			Random;
+			public DesignElement get() {
+				return SystemMapElements.valueOf(name()).get();
+			}
+		}
+	}
 	public enum SystemGroupElements implements ElementType {
 		AddAttribute,
 		AddTerritory,
 		AntiTrojan,
-		ArcDistribution,
 		Code,
 		FillLocations,
 		FillRandomLocation,
@@ -25,6 +356,7 @@ public class SubElementFactory {
 		Marker,
 		Null,
 		Offset,
+		OrbitalDistribution,
 		Orbitals,
 		Particles,
 		PlaceRandomStation,
@@ -39,7 +371,21 @@ public class SubElementFactory {
 		Variant,
 		Variants,
 		VariantTable;
-
+		static ElementType[] levelTableElements = modifyElementTypes(SystemGroupElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+		});
+		static ElementType[] locationTableElements = modifyElementTypes(SystemGroupElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("criteria", STRING));
+		});
+		static ElementType[] tableElements = modifyElementTypes(SystemGroupElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("chance", WHOLE));
+		});
+		static ElementType[] variantTableElements = modifyElementTypes(SystemGroupElements.values(), (DesignElement element) -> {
+			element.addAttributes(
+					att("variant", STRING),
+					att("maxRadius", INTEGER),
+					att("variantLocationCriteria", STRING));
+		});
 		@Override
 		public DesignElement get() {
 			// TODO Auto-generated method stub
@@ -69,14 +415,6 @@ public class SubElementFactory {
 						att("offset", DICE_RANGE)
 				);
 				break;
-			case ArcDistribution:
-				e.addAttributes(
-						att("count", DICE_RANGE),
-						att("radialWidth", WHOLE),
-						att("radialEdgeWidth", WHOLE),
-						att("scale", SCALE_DISTANCE)
-				);
-				break;
 			case Code:
 				break;
 			case FillLocations:
@@ -96,15 +434,18 @@ public class SubElementFactory {
 				);
 				break;
 			case LevelTable:
-				e.addOptionalMultipleSubElements(SystemLevelTableElements.values());
+				e.addOptionalMultipleSubElements(levelTableElements);
 				break;
 			case LocationCriteriaTable:
-				e.addOptionalMultipleSubElements(SystemLocationTableElements.values());
+				e.addOptionalMultipleSubElements(locationTableElements);
 				break;
 			case Lookup:
 				e.addAttributes(
-						att("table", STRING)
+						att("table", SYSTEM_PART_TABLE),
+						att("xOffset", INTEGER),
+						att("yOffset", INTEGER)
 				);
+				e.addOptionalMultipleSubElements(SystemPartTableElements.values());
 				break;
 			case Marker:
 				e.addAttributes(
@@ -122,6 +463,14 @@ public class SubElementFactory {
 						att("angle", DICE_RANGE),
 						att("x", DICE_RANGE),
 						att("y", DICE_RANGE)
+				);
+				break;
+			case OrbitalDistribution:
+				e.addAttributes(
+						att("count", DICE_RANGE),
+						att("radialWidth", WHOLE),
+						att("radialEdgeWidth", WHOLE),
+						att("scale", SCALE_DISTANCE)
 				);
 				break;
 			case Orbitals:
@@ -175,28 +524,8 @@ public class SubElementFactory {
 					att("stationCriteria", STRING),
 					att("locationAttribs", STRING),
 					att("includeAll", BOOLEAN),
-					att("noSatellites", BOOLEAN),
-					att("showOrbit", BOOLEAN),
-					att("imageVariant", WHOLE),
-					att("paintLayer", PAINT_LAYER),
-					att("objName", STRING),
-					att("noMapLabel", BOOLEAN),
-					att("noConstruction", BOOLEAN),
-					att("noReinforcements", BOOLEAN)
+					att("noSatellites", BOOLEAN)
 				);
-				e.addOptionalSingleSubElements(
-						DataElements.InitialData.get(),
-						new DesignElement("Satellites") {{
-							addAttributes(
-									att("overlapCheck", OVERLAP_CHECK)
-									);
-							addOptionalMultipleSubElements(SystemGroupElements.values());
-						}},
-						new DesignElement("Ships") {{
-							addOptionalMultipleSubElements(ShipGeneratorElements.values());
-						}},
-						new Event("OnCreate")
-						);
 				break;
 			case Ship:
 				e.addAttributes(
@@ -229,10 +558,9 @@ public class SubElementFactory {
 					att("backgroundPlane", WHOLE),
 					att("sovereign", TYPE_SOVEREIGN)
 				);
-				e.addOptionalSingleSubElements(DataElements.InitialData.get());
 				break;
 			case Table:
-				e.addOptionalMultipleSubElements(SystemElementTableElements.values());
+				e.addOptionalMultipleSubElements(tableElements);
 				break;
 			case Variant:
 				e.addAttributes(
@@ -240,129 +568,47 @@ public class SubElementFactory {
 				);
 				break;
 			case VariantTable:
-				break;
 			case Variants:
+				e.addOptionalMultipleSubElements(variantTableElements);
 				break;
 			default:
 				break;
 			
 			}
+			if(this == RandomStation || this == Station) {
+				e.addAttributes(
+						att("showOrbit", BOOLEAN),
+						att("imageVariant", WHOLE),
+						att("paintLayer", PAINT_LAYER),
+						att("objName", STRING),
+						att("noMapLabel", BOOLEAN),
+						att("noConstruction", BOOLEAN),
+						att("noReinforcements", BOOLEAN));
+				e.addOptionalSingleSubElements(
+						DataElements.InitialData.get(),
+						new DesignElement("Satellites") {{
+							addAttributes(
+									att("overlapCheck", OVERLAP_CHECK)
+									);
+							addOptionalMultipleSubElements(SystemGroupElements.values());
+						}},
+						new DesignElement("Ships") {{
+							addOptionalMultipleSubElements(ShipGeneratorElements.values());
+						}},
+						new Event("OnCreate")
+						);
+			}
 			e.addAttributes(att);
 			return e;
 		}
-		enum SystemLevelTableElements implements ElementType {
-			AddAttribute,
-			AddTerritory,
-			AntiTrojan,
-			ArcDistribution,
-			Code,
-			FillLocations,
-			FillRandomLocation,
-			Group,
-			Label,
-			LevelTable,
-			LocationCriteriaTable,
-			Lookup,
-			Marker,
-			Null,
-			Offset,
-			Orbitals,
-			Particles,
-			PlaceRandomStation,
-			Primary,
-			RandomLocation,
-			RandomStation,
-			Ship,
-			SpaceEnvironment,
-			Stargate,
-			Station,
-			Table,
-			Variant,
-			Variants,
-			VariantTable;
-
-			@Override
-			public DesignElement get() {
-				DesignElement e = SystemGroupElements.valueOf(name()).get();
-				e.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
-				return e;
-			}
-		}
-		enum SystemLocationTableElements implements ElementType {
-			AddAttribute,
-			AddTerritory,
-			AntiTrojan,
-			ArcDistribution,
-			Code,
-			FillLocations,
-			FillRandomLocation,
-			Group,
-			Label,
-			LevelTable,
-			LocationCriteriaTable,
-			Lookup,
-			Marker,
-			Null,
-			Offset,
-			Orbitals,
-			Particles,
-			PlaceRandomStation,
-			Primary,
-			RandomLocation,
-			RandomStation,
-			Ship,
-			SpaceEnvironment,
-			Stargate,
-			Station,
-			Table,
-			Variant,
-			Variants,
-			VariantTable;
-
-			@Override
-			public DesignElement get() {
-				DesignElement e = SystemGroupElements.valueOf(name()).get();
-				e.addAttributes(att("criteria", STRING));
-				return e;
-			}
-		}
-		enum SystemElementTableElements implements ElementType {
-			AddAttribute,
-			AddTerritory,
-			AntiTrojan,
-			ArcDistribution,
-			Code,
-			FillLocations,
-			FillRandomLocation,
-			Group,
-			Label,
-			LevelTable,
-			LocationCriteriaTable,
-			Lookup,
-			Marker,
-			Null,
-			Offset,
-			Orbitals,
-			Particles,
-			PlaceRandomStation,
-			Primary,
-			RandomLocation,
-			RandomStation,
-			Ship,
-			SpaceEnvironment,
-			Stargate,
-			Station,
-			Table,
-			Variant,
-			Variants,
-			VariantTable;
-
-			@Override
-			public DesignElement get() {
-				DesignElement e = SystemGroupElements.valueOf(name()).get();
-				e.addAttributes(att("chance", WHOLE));
-				return e;
-			}
+		
+	}
+	public enum SystemPartTableElements implements ElementType {
+		PartTable;
+		public DesignElement get() {
+			return new RenameableElement("(Part Table)") {{
+				addOptionalMultipleSubElements(SystemGroupElements.values());
+			}};
 		}
 	}
 	public enum DockScreensElements implements ElementType {
@@ -806,7 +1052,7 @@ public class SubElementFactory {
 						);
 				break;
 			case Variants:
-				e.addOptionalMultipleSubElements(VariantsElements.values());
+				e.addOptionalMultipleSubElements(variantsElements);
 				break;
 			default:
 				break;
@@ -816,45 +1062,9 @@ public class SubElementFactory {
 			}});
 			return e;
 		}
-		public static enum VariantsElements implements ElementType {
-			Beam,
-			Bolt,
-			Damage,
-			Ellipse,
-			Flare,
-			Group,
-			Image,
-			ImageAndTail,
-			ImageFracture,
-			LightningStorm,
-			MoltenBolt,
-			Null,
-			Orb,
-			Particle,
-			ParticleCloud,
-			ParticleExplosion,
-			ParticlePattern, ParticleComet,
-			ParticleSystem, ParticleJet,
-			PlasmaSphere,
-			Polyflash,
-			Ray,
-			Sequencer,
-			Shape,
-			Shockwave,
-			SmokeTrail,
-			Starburst,
-			Text,
-			Variants
-			;
-
-			@Override
-			public DesignElement get() {
-				DesignElement e = EffectElements.valueOf(name()).get();
-				e.addAttributes(att("maxValue", INTEGER));
-				return e;
-			}
-			
-		}
+		static ElementType[] variantsElements = modifyElementTypes(EffectElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("maxValue", INTEGER));
+		});
 	}
 	public static enum AdventureDescElements implements ElementType {
 		EncounterOverrides,
@@ -938,46 +1148,22 @@ public class SubElementFactory {
 			case Group:
 			case Devices:
 			case Table:
-				e.addOptionalMultipleSubElements(DeviceTableElements.values());
+				e.addOptionalMultipleSubElements(tableElements);
 				break;
 			case LevelTable:
-				e.addOptionalMultipleSubElements(DeviceLevelTableElements.values());
+				e.addOptionalMultipleSubElements(levelTableElements);
 				break;
 			case Null:
 				break;
 			}
 			return e;
 		}
-		
-		//Same as DeviceGeneratorElements, but every element has a chance attribute
-		enum DeviceTableElements implements ElementType {
-			Device, Item,
-			DeviceSlot,
-			Table,
-			Group, Devices,
-			LevelTable,
-			Null;
-			public DesignElement get() {
-				DesignElement result = DeviceGeneratorElements.valueOf(name()).get();
-				result.addAttributes(att("chance", WHOLE));
-				return result;
-			}
-		}
-		
-		//Same as DeviceGeneratorElements, but every element has a levelFrequency attribute
-		enum DeviceLevelTableElements implements ElementType {
-			Device, Item,
-			DeviceSlot,
-			Table,
-			Group, Devices,
-			LevelTable,
-			Null;
-			public DesignElement get() {
-				DesignElement result = DeviceGeneratorElements.valueOf(name()).get();
-				result.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
-				return result;
-			}
-		}
+		static ElementType[] tableElements = modifyElementTypes(DeviceGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("chance", WHOLE));
+		});
+		static ElementType[] levelTableElements = modifyElementTypes(DeviceGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+		});
 	}
 	public static enum ItemElements implements ElementType {
 		Weapon;
@@ -1121,45 +1307,20 @@ public class SubElementFactory {
 				e.addAttributes(att("table", ValueType.TYPE_ITEM_TABLE));
 				break;
 			case LevelTable:
-				e.addOptionalMultipleSubElements(LevelTableElements.values());
+				e.addOptionalMultipleSubElements(levelTableElements);
 				break;
 			case LocationCriteria:
-				e.addOptionalMultipleSubElements(LocationCriteriaElements.values());
+				e.addOptionalMultipleSubElements(locationCriteriaElements);
 				break;
 			}
 			return e;
 		}
-		enum LocationCriteriaElements implements ElementType {
-			Item,
-			Table,
-			RandomItem,
-			Group, Components, Items, AverageValue,
-			Lookup,
-			LevelTable,
-			LocationCriteria,
-			Null;
-			public DesignElement get() {
-				DesignElement e = ItemGeneratorElements.valueOf(name()).get();
-				e.addAttributes(att("criteria", STRING));
-				return e;
-			}
-			
-		}
-		enum LevelTableElements implements ElementType {
-			Item,
-			Table,
-			RandomItem,
-			Group, Components, Items, AverageValue,
-			Lookup,
-			LevelTable,
-			LocationCriteria,
-			Null;
-			public DesignElement get() {
-				DesignElement e = ItemGeneratorElements.valueOf(name()).get();
-				e.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
-				return e;
-			}
-		}
+		static ElementType[] locationCriteriaElements = modifyElementTypes(ItemGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("criteria", STRING));
+		});
+		static ElementType[] levelTableElements = modifyElementTypes(ItemGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+		});
 	}
 	public static enum TradeElements implements ElementType {
 		AcceptDonation,
@@ -1331,7 +1492,7 @@ public class SubElementFactory {
 				att("imageTicksPerFrame", WHOLE),
 				att("flashTicks", WHOLE),
 				att("blending", BLENDING),
-				att("viewportRatio", DECIMAL),
+				att("viewportRatio", DOUBLE),
 				att("viewportSize", INTEGER),
 				att("rotationOffset", INTEGER),
 				att("xOffset", INTEGER),
@@ -1398,7 +1559,7 @@ public class SubElementFactory {
 					att("passthrough", INTEGER),
 					att("damage", STRING),
 					att("failsafe", INTEGER),
-					att("fragmentRadius", DECIMAL),
+					att("fragmentRadius", DOUBLE),
 					att("fragmentInterval", DICE_RANGE),
 					att("hitEffect", TYPE_EFFECT),
 					att("vaporTrailWidth", INTEGER),
@@ -1447,5 +1608,17 @@ public class SubElementFactory {
 			});
 		}};
 	}
-	
+	public static ElementType[] modifyElementTypes(ElementType[] elements, Consumer<DesignElement> modifier) {
+		int count = elements.length;
+		ElementType[] result = new ElementType[count];
+		for(int i = 0; i < count; i++) {
+			final int index = i;
+			result[index] = () -> {
+				DesignElement e = elements[index].get();
+				modifier.accept(e);
+				return e;
+			};
+		}
+		return result;
+	}
 }

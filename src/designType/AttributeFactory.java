@@ -257,8 +257,19 @@ public class AttributeFactory {
 					att("mediumDamageCount", INTEGER)	
 			};
 		case SystemMap:
-			break;
-		case SystemTable:
+			return new DesignAttribute[] {
+					att("name", STRING),
+					att("backgroundImage", TYPE_IMAGE),
+					att("displayOn", TYPE_SYSTEM_MAP),
+					att("startingMap", BOOLEAN),
+					att("lightYearsPerPixel", DOUBLE),
+					att("initlaScale", INTEGER),
+					att("maxScale", INTEGER),
+					att("minScale", INTEGER),
+					att("stargateLineColor", HEX_COLOR),
+					att("debugShowAttributes", BOOLEAN)
+			};
+		case SystemPartTable:
 			break;
 		case SystemType:
 			return new DesignAttribute[] {
