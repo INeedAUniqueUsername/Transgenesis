@@ -3,6 +3,7 @@ import designType.TypeFactory;
 import designType.Types;
 import designType.subElements.SubElementFactory.SystemGroupElements;
 import designType.subElements.SubElementFactory.SystemMapElements.TopologyCreatorElements.TopologyProcessorElements;
+import designType.subElements.SubElementFactory.SystemMapElements.TopologyCreatorElements.TopologyProcessorElements.RandomPointsElements;
 import xml.DesignAttribute;
 import xml.DesignElement;
 import xml.RenameableElement;
@@ -36,21 +37,87 @@ public class SubElementFactory {
 				Network,
 				Random
 		};
+		static ElementType system = () -> {
+			return new DesignElement("System") {{
+				addAttributes(
+						att("unid", TYPE_SYSTEM_TYPE),
+						att("name", STRING),
+						att("level", INTEGER),
+						att("variant", STRING),
+						att("attributes", STRING)
+						);
+			}};
+		};
+		static  ElementType tableSystem = modifyElementType(system, (DesignElement element) -> {
+			element.addAttributes(att("weight", INTEGER));
+		});
 		public DesignElement get() {
 			DesignElement e = new DesignElement(name());
 			switch(this) {
+			case Node:
+			case NodeGroup:
+			case NodeTable:
+			case Fragment:
+			case Network:
+			case Random:
+				e.addAttributes(
+						att("id", STRING),
+						att("rootNode", BOOLEAN)
+						);
+				addSystemMapEffects(e);
+				break;
+			}
+			switch(this) {
 			//WIP
 			case Node:
+				e.addAttributes(
+						att("pos", POINT),
+						att("x", INTEGER),
+						att("y", INTEGER),
+						att("attributes", STRING),
+						att("endGame", BOOLEAN),
+						att("epitaph", STRING),
+						att("endGameReason", STRING)
+						);
+				e.addOptionalSingleSubElements(
+						system.get(),
+						new DesignElement("Table") {{
+						addOptionalMultipleSubElements(tableSystem);
+						}}
+				);
+				e.addOptionalMultipleSubElements(TopologyCreatorElements.stargateElements);
 				break;
 			case NodeGroup:
+				e.addOptionalMultipleSubElements(TopologyCreatorElements.values());
 				break;
 			case NodeTable:
+				e.addOptionalMultipleSubElements(() -> {
+					return new DesignElement("Node") {{
+						addAttributes(
+								att("chance", WHOLE),
+								att("id", STRING)
+								);
+					}};
+				});
 				break;
 			case Fragment:
+				e.addOptionalMultipleSubElements(systemTopologyElements);
 				break;
 			case Network:
+				e.addOptionalSingleSubElements(new DesignElement("Nodes") {{
+					addOptionalMultipleSubElements(systemTopologyElements);
+				}}, new DesignElement(""));
+				
 				break;
 			case Random:
+				e.addAttributes(att("count", DICE_RANGE), att("minSeparation", WHOLE, "40"));
+				e.addOptionalSingleSubElements(new DesignElement("SetNodes") {{
+					addOptionalMultipleSubElements(Node);
+				}}, new DesignElement("NodeTemplate") {{
+					addAttributes(att("attributes", STRING));
+					addOptionalSingleSubElements(system.get());
+				}});
+				e.addSubElements(RandomPointsElements.Area.get());
 				break;
 				
 			case SystemTopology:
@@ -62,24 +129,85 @@ public class SubElementFactory {
 			case Uses:
 				e.addAttributes(att("unid", TYPE_SYSTEM_MAP));
 				break;
-
+			//Creators
 			case RootNode:
 				//WIP
 				e.addAttributes(att("id", STRING));
 				break;
 			case TopologyCreator:
 				e.addOptionalMultipleSubElements(TopologyCreatorElements.values());
+				e.addOptionalMultipleSubElements(TopologyCreatorElements.values());
 				break;
+				
 			default:
 				break;
 			
 			}
 			return e;
 		}
+		public static void addSystemMapEffects(DesignElement e) {
+			
+			e.addAttributes(
+					att("labelEffect", TYPE_EFFECT),
+					att("mapEffect", TYPE_EFFECT));
+			DesignElement	labelEffect = createEffect("LabelEffect"),
+					mapEffect = createEffect("MapEffect");
+			for(DesignElement effect : new DesignElement[] {labelEffect, mapEffect}) {
+				effect.addAttributes(
+						att("effect", TYPE_EFFECT)
+						);
+				effect.addOptionalSingleSubElements(DataElements.getDataBlock("Data"));
+			}
+			e.addOptionalSingleSubElements(labelEffect, mapEffect);
+		}
+		enum NetworkStargatesElements implements ElementType {
+			Group,
+			Table,
+			Null,
+			Stargate,
+			EntranceNode;
+			static ElementType[] tableElements = modifyElementTypes(NetworkStargatesElements.values(), (DesignElement element) -> {
+				element.addAttributes(att("weight", INTEGER));
+			});
+			public DesignElement get() {
+				DesignElement e =  new DesignElement(name());
+				switch(this) {
+				case Group:
+					e.addOptionalMultipleSubElements(NetworkStargatesElements.values());
+					break;
+				case Table:
+					e.addOptionalMultipleSubElements(tableElements);
+					break;
+				case Stargate:
+					e.addAttributes(
+							att("debugOnly", BOOLEAN),
+							att("name", STRING),
+							att("to", STRING),
+							att("destID", STRING),
+							att("destGate", STRING),
+							att("oneWay", BOOLEAN),
+							att("path", INTEGER_SEQUENCE)
+							);
+					break;
+				case EntranceNode:
+					e.addAttributes(att("nodeID", STRING));
+					break;
+				case Null:
+					break;
+				default:
+					break;
+				}
+				return e;
+			}
+		}
 		enum TopologyCreatorElements implements ElementType {
 			Node,
 			Stargate,
-			Stargates;
+			Stargates,
+			StargateTable;
+			static ElementType[] stargateElements = {
+					Stargate, Stargates, StargateTable
+			};
 			public DesignElement get() {
 				DesignElement e = new DesignElement(name());
 				switch(this) {
@@ -100,6 +228,9 @@ public class SubElementFactory {
 					break;
 				case Stargates:
 					e.addOptionalMultipleSubElements(StargateGeneratorElements.values());
+					break;
+				case StargateTable:
+					e.addOptionalMultipleSubElements(StargateGeneratorElements.tableElements);
 					break;
 				}
 				return e;
@@ -268,30 +399,17 @@ public class SubElementFactory {
 						DesignElement e = new DesignElement(name());
 						switch(this) {
 						case Point:
+							addSystemMapEffects(e);
 							e.addAttributes(
-									att("chance", WHOLE),
-									att("labelEffect", TYPE_EFFECT),
-									att("mapEffect", TYPE_EFFECT)
+									att("chance", WHOLE)
 									);
-							DesignElement nodes = getTopologyProcessor("Nodes"),
-									labelEffect = createEffect("LabelEffect"),
-									mapEffect = createEffect("MapEffect");
+							DesignElement nodes = getTopologyProcessor("Nodes");
 							nodes.addAttributes(
 									att("maxDist", WHOLE),
 									att("minDist", WHOLE)
 									);
-							for(DesignElement effect : new DesignElement[] {labelEffect, mapEffect}) {
-								effect.addAttributes(
-										att("effect", TYPE_EFFECT)
-										);
-								effect.addOptionalSingleSubElements(DataElements.getDataBlock("Data"));
-							}
 							//WIP
-							e.addOptionalSingleSubElements(
-									nodes,
-									labelEffect,
-									mapEffect
-									);
+							e.addOptionalSingleSubElements(nodes);
 							break;
 						case Area:
 							e.addOptionalMultipleSubElements(AreaElements.values());
@@ -1618,5 +1736,12 @@ public class SubElementFactory {
 			};
 		}
 		return result;
+	}
+	public static ElementType modifyElementType(ElementType element, Consumer<DesignElement> modifier) {
+		return () -> {
+			DesignElement e = element.get();
+			modifier.accept(e);
+			return e;
+		};
 	}
 }
