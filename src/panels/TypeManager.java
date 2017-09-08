@@ -68,6 +68,7 @@ import mod.TranscendenceMod;
 import mod.ExtensionFactory.Extensions;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+import window.Window.Fonts;
 import xml.DesignElement;
 public class TypeManager {
 	//Add search function for elements and Types
@@ -255,11 +256,8 @@ public class TypeManager {
 			moveDownButton.setEnabled(index < elements.size() - 1);
 			elementButtons.add(moveDownButton);
 			
-			JPanel row = new JPanel();
-			row.setLayout(new MigLayout());
-			row.add(elementButtons, new CC().width("10%"));
-			row.add(elements.get(i).initializePanel(), new CC().width("80%"));
 			JButton deleteButton = createJButton("Delete");
+			deleteButton.setFont(Fonts.Large.f);
 			deleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if(e.getSource() == deleteButton) {
@@ -268,6 +266,12 @@ public class TypeManager {
 					}
 				}
 			});
+			
+			JPanel row = new JPanel();
+			row.setLayout(new MigLayout());
+			row.add(deleteButton, new CC().width("5%"));
+			row.add(elementButtons, new CC().width("5%"));
+			row.add(elements.get(i).initializePanel(), new CC().width("80%"));
 			container.add(row, new CC().x("5%").width("90%").wrap());
 		}
 		return result;
@@ -438,7 +442,7 @@ public class TypeManager {
 		protected JTextArea field_comment;
 		protected JTextField field_type;
 		public Type() {
-			this(ENTITY_DEFAULT, COMMENT_DEFAULT);
+			this(COMMENT_DEFAULT, ENTITY_DEFAULT);
 		}
 		public Type(String comment, String type) {
 			this.comment = comment;
@@ -718,7 +722,7 @@ public class TypeManager {
 			subrow.add(field_unid_min = TypeElement.createUNIDField(unid_min, true));
 			subrow.add(field_unid_max = TypeElement.createUNIDField(unid_max, true));
 			container.add(subrow);
-			System.out.println("Entity Count: " + types.size());
+			//System.out.println("Entity Count: " + types.size());
 			field_types.clear();
 			for(String type : types) {
 				JTextField field_type = createEntityField(container, type, true);

@@ -25,6 +25,7 @@ public final class SpaceObject {
 		devices.addOptionalMultipleSubElements(
 				DeviceGeneratorElements.values()
 				);
+		//Replace with Composite Image
 		DesignElement image = new DesignElement("Image");
 		image.addAttributes(SubElementFactory.createImageDescAttributes());
 		if(t == Types.StationType) {

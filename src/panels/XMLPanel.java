@@ -22,9 +22,11 @@ import java.util.TreeMap;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -75,6 +77,8 @@ public class XMLPanel extends JPanel {
 	private static TranscendenceMod selectedExtension;
 	
 	public final JTextField nameField;
+	public final JTextField extensionField;
+	public final JPanel actionsPanel;
 	public final JLabel documentation;
 	public final JPanel labelPanel;
 	public final JPanel fieldPanel;
@@ -107,55 +111,59 @@ public class XMLPanel extends JPanel {
 		DefaultTreeCellRenderer elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			
 			public Component getTreeCellRendererComponent(
-		        JTree tree,
-		        Object value,
-		        boolean sel,
-		        boolean expanded,
-		        boolean leaf,
-		        int row,
-		        boolean hasFocus) {
+				JTree tree,
+				Object value,
+				boolean sel,
+				boolean expanded,
+				boolean leaf,
+				int row,
+				boolean hasFocus) {
 
-			    super.getTreeCellRendererComponent(
-			                    tree, value, sel,
-			                    expanded, leaf, row,
-			                    hasFocus);
-			    Object obj = ((DefaultMutableTreeNode) value).getUserObject();
-			    if(obj instanceof DesignElement) {
-			    	DesignElement element = (DesignElement) obj;
-			    }
-			    return this;
+				super.getTreeCellRendererComponent(
+								tree, value, sel,
+								expanded, leaf, row,
+								hasFocus);
+				Object obj = ((DefaultMutableTreeNode) value).getUserObject();
+				if(obj instanceof DesignElement) {
+					DesignElement element = (DesignElement) obj;
+				}
+				return this;
 			}
 		};
 		
 		elementTreeModel = new DefaultTreeModel(origin);
 		elementTree = new JTree(elementTreeModel);
-	    elementTree.getSelectionModel().setSelectionMode
-	    	(TreeSelectionModel.SINGLE_TREE_SELECTION);
-	    elementTree.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    elementTree.setFont(Fonts.Medium.f);
-	    elementTree.setName("XML");
-	    elementTree.setShowsRootHandles(true);
-	    elementTree.setCellRenderer(elementTreeCellRenderer);
-	    elementTree.expandRow(0);
-	    elementTree.setSelectionPath(new TreePath(origin));
-	    elementTree.addTreeSelectionListener(new TreeSelectionListener() {
-	    	@Override
-	    	public void valueChanged(TreeSelectionEvent arg0) {
-	    		// TODO Auto-generated method stub
-	    		if(selected != null) {
-	    			setData(selected);
-	    		}
-	    		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-	    				elementTree.getLastSelectedPathComponent();
-	    		selectNode(node);
-	    	}
-	    });
-	    elementTreePane = createScrollPane(elementTree);
+		elementTree.getSelectionModel().setSelectionMode
+			(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		elementTree.setAlignmentX(Component.CENTER_ALIGNMENT);
+		elementTree.setFont(Fonts.Medium.f);
+		elementTree.setName("XML");
+		elementTree.setShowsRootHandles(true);
+		elementTree.setCellRenderer(elementTreeCellRenderer);
+		elementTree.expandRow(0);
+		elementTree.setSelectionPath(new TreePath(origin));
+		elementTree.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				if(selected != null) {
+					setData(selected);
+				}
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+						elementTree.getLastSelectedPathComponent();
+				selectNode(node);
+			}
+		});
+		elementTreePane = createScrollPane(elementTree);
 		
-	    nameField = new JTextField("TransGenesis");
-	    nameField.setFont(Title.f);
-	    nameField.setEditable(false);
-	    
+		nameField = createTextField("Transgenesis", false);
+		
+		extensionField = createTextField(System.getProperty("user.dir"), false);
+		
+		actionsPanel = new JPanel();
+		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
+		
+		
 		documentation = new JLabel("Documentation.txt is unavailable.");
 		documentation.setFont(Medium.f);
 		documentation.setVerticalTextPosition(SwingConstants.TOP);
@@ -175,8 +183,8 @@ public class XMLPanel extends JPanel {
 		textArea.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2 && !e.isConsumed()) {
-                    e.consume();
-                    out.println("Double Click");
+					e.consume();
+					out.println("Double Click");
 				}
 			}
 			public void mouseEntered(MouseEvent e) {}
@@ -224,15 +232,13 @@ public class XMLPanel extends JPanel {
 		repaint();
 	}
 	//https://coderanch.com/t/342116/java/set-font-JFileChooser
-	public void setComponentsFont(Component[] comp, Font font)
-	  {
-	    for(int x = 0; x < comp.length; x++)
-	    {
-	      if(comp[x] instanceof Container) setComponentsFont(((Container)comp[x]).getComponents(), font);
-	      try{comp[x].setFont(font);}
-	      catch(Exception e){}//do nothing
-	    }
-	  }
+	public static void setComponentsFont(Component[] comp, Font font) {
+		for(int x = 0; x < comp.length; x++) {
+			if(comp[x] instanceof Container) setComponentsFont(((Container)comp[x]).getComponents(), font);
+			try{comp[x].setFont(font);}
+			catch(Exception e){}//do nothing
+		}
+	}
 	public static List<TranscendenceMod> getExtensions() {
 		List<TranscendenceMod> result = new LinkedList<>();
 		for(int i = 0; i < origin.getChildCount(); i++) {
@@ -276,12 +282,12 @@ public class XMLPanel extends JPanel {
 		
 		nameField.setText("TransGenesis");
 		nameField.setEditable(false);
+		extensionField.setText(System.getProperty("user.dir"));
+		extensionField.setEditable(false);
+		actionsPanel.removeAll();
 		labelPanel.removeAll();
-		//labelPanel.add(createLabel("Attribute name"));
 		fieldPanel.removeAll();
-		//fieldPanel.add(createLabel("Attribute value"));
 		subElementPanel.removeAll();
-		//subElementPanel.add(createLabel("Subelements"));
 		textArea.setText("");
 		textArea.setEditable(false);
 		
@@ -291,6 +297,11 @@ public class XMLPanel extends JPanel {
 		attributePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		attributePanel.add(labelPanel);
 		attributePanel.add(fieldPanel);
+		
+		JPanel combinedPanel = new JPanel();
+		combinedPanel.setLayout(new MigLayout());
+		combinedPanel.add(createScrollPane(attributePanel), new CC().width("75%").alignY("top"));
+		combinedPanel.add(createScrollPane(subElementPanel), new CC().width("25%").alignY("top"));
 		
 		JScrollPane textPanel = createScrollPane(textArea);
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -305,8 +316,17 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent arg0) {}
 			public void mouseReleased(MouseEvent arg0) {}
 		});
+		JButton bindButton = createJButton("Bind Extension");
+		bindButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				bind();
+			}
+		});
+		bindButton.setFont(Fonts.Large.f);
+		bindButton.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		JButton saveButton = createJButton("Save");
+		JButton saveButton = createJButton("Save Extension");
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -352,10 +372,26 @@ public class XMLPanel extends JPanel {
 							setData(selected);
 						}
 						TranscendenceMod mod = extension.get();
-						mod.setPath(new File(JOptionPane.showInputDialog("Specify file path")));
-						DefaultMutableTreeNode node = new DefaultMutableTreeNode(mod);
-						elementTreeModel.insertNodeInto(node, origin, 0);
-						elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
+						String path = JOptionPane.showInputDialog(createTextArea("Specify file path", false));
+						if(path == null) {
+							return;
+						}
+						try {
+							File f = new File(path);
+							if(f.isFile()) {
+								JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("[Warning] Overwriting existing file  " + path, false));
+							}
+							else if(!f.createNewFile()) {
+								JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("[Failure] Unable to create file " + path, false));
+							}
+							
+							mod.setPath(f);
+							DefaultMutableTreeNode node = new DefaultMutableTreeNode(mod);
+							elementTreeModel.insertNodeInto(node, origin, 0);
+							elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
+						}catch(Exception ex) {
+							JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("[Failure] Invalid file path " + path, false));
+						}
 					}
 				}
 			});
@@ -379,78 +415,59 @@ public class XMLPanel extends JPanel {
 		loadExtension.setHorizontalAlignment(SwingConstants.LEFT);
 		extensionButtons.add(loadExtension);
 		
-		JButton deleteButton = createJButton("Delete Element");
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(arg0.getSource() == deleteButton && selected != null) {
-					DefaultMutableTreeNode node = getNode(selected),
-							parent = (DefaultMutableTreeNode) node.getParent();
-					if(parent == null) {
-						selected = null;
-						selectedExtension = null;
-					} else {
-						DesignElement parentElement = (DesignElement) parent.getUserObject();
-						parentElement.getSubElements().remove(selected);
-						if(parent.getChildCount() > 1) {
-							selectNode(((DefaultMutableTreeNode) parent.getChildAt(1)));
-						} else if(parent.getUserObject() instanceof DesignElement) {
-							selectNode(parent);
-						}
-					}
-					elementTreeModel.removeNodeFromParent(node);
-				}
-			}
-		});
-		deleteButton.setEnabled(!(selected == null));
-		
-		/*
 		//25% width, 100% height
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new MigLayout());
 		leftPanel.add(extensionButtons, new CC()
-				.spanX()
+				.width("100%")
 				.wrap());
 		leftPanel.add(elementTreePane, new CC()
-				.spanX()
-				.growY((float) 500)
+				.width("100%")
+				.height("100%")
+				.wrap());
+		leftPanel.add(bindButton, new CC()
+				.width("100%")
+				.wrap()
+				);
+		leftPanel.add(saveButton, new CC()
+				.width("100%")
 				.wrap());
 		leftPanel.add(xmlButton, new CC()
-				.spanX()
+				.width("100%")
 				.wrap());
-		leftPanel.add(saveButton, new CC()
-				.spanX()
-				.wrap());
-		add(leftPanel, new CC().spanX(25).spanY());
+		add(leftPanel, new CC().width("25%").height("100%"));
 		
 		//75% width, 100% height
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new MigLayout());
 		rightPanel.add(createScrollPane(nameField), new CC()
-				.spanX(50)
-				.spanY(5));
-		rightPanel.add(deleteButton, new CC()
-				.spanX(10)
-				.spanY(5)
+				.width("100%")
+				.height("5%")
+				.wrap()
+				);
+		rightPanel.add(extensionField, new CC()
+				.width("100%")
+				.height("5%")
+				.wrap()
+				);
+		rightPanel.add(actionsPanel, new CC()
+				.width("100%")
+				.height("5%")
 				.wrap());
+		
 		rightPanel.add(createScrollPane(documentation), new CC()
-				.spanX()
-				.spanY(15)
+				.width("100%")
+				.height("15%")
 				.wrap());
-		rightPanel.add(createScrollPane(attributePanel), new CC()
-				.spanX(55)
-				.spanY(45));
-		rightPanel.add(createScrollPane(subElementPanel), new CC()
-				.spanX(20)
-				.spanY(45)
-				.wrap());
+		rightPanel.add(combinedPanel, new CC().width("100%").height("45%").wrap());
 		rightPanel.add(textPanel, new CC()
-				.spanX()
-				.spanY(30)
+				.width("100%")
+				.height("25%")
 				.wrap());
-		add(rightPanel, new CC().spanX(75).spanY());
-		*/
+		add(rightPanel, new CC().width("75%").height("100%"));
 		
 		
+		/*
 		add(extensionButtons,
 				new CC()
 				.x("0%")
@@ -520,6 +537,7 @@ public class XMLPanel extends JPanel {
 				.minWidth("75%").maxWidth("75%")
 				.minHeight("30%").maxHeight("30%")
 				);
+		*/
 	}
 	public File[] showFileChooser() {
 		JFileChooser j = new JFileChooser();
@@ -611,9 +629,15 @@ public class XMLPanel extends JPanel {
 		}
 		return false;
 	}
+	private void bind() {
+		if(selected != null) {
+			setData(selected);
+		}
+		if(selectedExtension != null) {
+			selectedExtension.updateTypeBindings();
+		}
+	}
 	private void save() {
-		boolean previous = showErrors;
-		showErrors = false;
 		if(selected != null) {
 			setData(selected);
 		}
@@ -621,22 +645,20 @@ public class XMLPanel extends JPanel {
 			selectedExtension.updateTypeBindings();
 			selectedExtension.save();
 		}
-		showErrors = previous;
-		saved = true;
 	}
 	public static DesignElement getSelected() {
 		return selected;
 	}
 	public void selectNode(DefaultMutableTreeNode node) {
-		Object obj = node.getUserObject();
-		if(obj instanceof DesignElement) {
+		Object obj;
+		if(node != null && (obj = node.getUserObject()) instanceof DesignElement) {
 			//Always set the extension first so that when the selected element gets initialized, it gets the correct type map. Otherwise, it will get one from the previously selected extension
 			selectedExtension = getExtension(node);
 			selectElement((DesignElement) obj);
 		}
 		else {
-			selectElement(null);
 			selectedExtension = null;
+			selectElement(null);
 		}
 	}
 	public void selectElement(DesignElement e) {
@@ -646,12 +668,65 @@ public class XMLPanel extends JPanel {
 		resetLayout();
 		if(e != null) {
 			out.println("Initialize from element: " + e.getName());
-			showErrors = false;
 			e.initializeFrame(this);
-			showErrors = true;
+			extensionField.setText(selectedExtension.getPath().getAbsolutePath());
+			
+			actionsPanel.add(getRemoveElementButton());
+			if(e instanceof TranscendenceMod && ((TranscendenceMod) e).getPath().isFile()) {
+				actionsPanel.add(getDeleteExtensionButton());
+			}
 		}
 		frame.pack();
 		repaint();
+	}
+	public JButton getRemoveElementButton() {
+		JButton removeElementButton = createJButton("Remove Element");
+		removeElementButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				removeSelectedElement();
+			}
+		});
+		return removeElementButton;
+	}
+	public JButton getDeleteExtensionButton() {
+		JButton deleteExtensionButton = createJButton("Delete Extension");
+		deleteExtensionButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String path = selectedExtension.getPath().getName();
+				String input = JOptionPane.showInputDialog(createTextArea("[Warning] To delete this extension, type in the file name", false));
+				if(input.equals(path)) {
+					selectedExtension.getPath().delete();
+					removeSelectedElement();
+					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("[Success] Deleted extension file " + path, false));
+				} else {
+					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("[Failure] Incorrect input path " + input, false));
+				}
+			}
+		});
+		return deleteExtensionButton;
+	}
+	public void removeSelectedElement() {
+		DefaultMutableTreeNode node = getNode(getSelected()),
+				parent = (DefaultMutableTreeNode) node.getParent();
+		Object parentObj;;
+		elementTreeModel.removeNodeFromParent(node);
+		if(parent == null/* || !((parentObj = parent.getUserObject()) instanceof DesignElement)*/) {
+			selectElement(null);
+			selectedExtension = null;
+		} else if(!((parentObj = parent.getUserObject()) instanceof DesignElement)) {
+			selectNode(parent);
+		} else {
+			System.out.println("DesignElement Parent Node found");
+			DesignElement parentElement = (DesignElement) parentObj;
+			parentElement.getSubElements().remove(getSelected());
+			if(parent.getChildCount() > 1) {
+				selectNode(((DefaultMutableTreeNode) parent.getChildAt(1)));
+			} else if(parent.getUserObject() instanceof DesignElement) {
+				selectNode(parent);
+			} else {
+				selectNode(parent);
+			}
+		}
 	}
 	public void removeSelf() {
 		frame.remove(this);
@@ -687,11 +762,11 @@ public class XMLPanel extends JPanel {
 	{
 		DefaultMutableTreeNode theNode = null;
 		for (Enumeration<DefaultMutableTreeNode> e = (Enumeration<DefaultMutableTreeNode>) ((DefaultMutableTreeNode) elementTreeModel.getRoot()).depthFirstEnumeration(); e.hasMoreElements() && theNode == null;) {
-		    DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
-		    if (node.getUserObject().equals(element)) {
-		        theNode = node;
-		        break;
-		    }
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+			if (node.getUserObject().equals(element)) {
+				theNode = node;
+				break;
+			}
 		}
 		if(theNode == null) {
 			out.println("Could not find node");
@@ -702,18 +777,18 @@ public class XMLPanel extends JPanel {
 	}
 	public void expandTreeNodes() {
 		for(int i = 0; i < elementTree.getRowCount(); i++){
-	        elementTree.expandRow(i);
-	    }
+			elementTree.expandRow(i);
+		}
 	}
 	public void addElement(DesignElement se)
 	{
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(se), parent = (DefaultMutableTreeNode) elementTree.getLastSelectedPathComponent();
 		elementTreeModel.insertNodeInto(node, parent, 0);
-	    int rowIndex = parent.getIndex(node);
-	    elementTree.expandRow(rowIndex);
-	    addElementChildren(se, node);
-	    out.println("Tree Path (Create): " + new TreePath(elementTreeModel.getPathToRoot(node)));
-	    elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
+		int rowIndex = parent.getIndex(node);
+		elementTree.expandRow(rowIndex);
+		addElementChildren(se, node);
+		out.println("Tree Path (Create): " + new TreePath(elementTreeModel.getPathToRoot(node)));
+		elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
 	}
 	public void addElementChildren(DesignElement se, DefaultMutableTreeNode parentNode) {
 		for(DesignElement sub : se.getSubElements()) {

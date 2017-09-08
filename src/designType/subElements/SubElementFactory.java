@@ -106,8 +106,9 @@ public class SubElementFactory {
 			case Network:
 				e.addOptionalSingleSubElements(new DesignElement("Nodes") {{
 					addOptionalMultipleSubElements(systemTopologyElements);
-				}}, new DesignElement(""));
-				
+				}}, new DesignElement("Stargates") {{
+					addOptionalMultipleSubElements(NetworkStargatesElements.values());
+				}});
 				break;
 			case Random:
 				e.addAttributes(att("count", DICE_RANGE), att("minSeparation", WHOLE, "40"));
@@ -165,7 +166,7 @@ public class SubElementFactory {
 			Table,
 			Null,
 			Stargate,
-			EntranceNode;
+			FragmentEntrance;
 			static ElementType[] tableElements = modifyElementTypes(NetworkStargatesElements.values(), (DesignElement element) -> {
 				element.addAttributes(att("weight", INTEGER));
 			});
@@ -189,7 +190,7 @@ public class SubElementFactory {
 							att("path", INTEGER_SEQUENCE)
 							);
 					break;
-				case EntranceNode:
+				case FragmentEntrance:
 					e.addAttributes(att("nodeID", STRING));
 					break;
 				case Null:
