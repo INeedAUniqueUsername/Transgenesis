@@ -68,8 +68,7 @@ public class XMLPanel extends JPanel {
 	public final JFrame frame;
 	private final DefaultTreeModel elementTreeModel;
 	private final JTree elementTree;
-	private final JScrollPane elementTreePane;
-	
+		
 	public static boolean showErrors = false;
 	
 	//private final List<TranscendenceMod> mods;
@@ -84,8 +83,11 @@ public class XMLPanel extends JPanel {
 	public final JPanel fieldPanel;
 	public final JPanel subElementPanel;
 	public final JTextArea textArea;
-	private static DefaultMutableTreeNode origin;
-	private boolean saved;
+	public static DefaultMutableTreeNode origin;
+	
+	//public final JTextArea searchBar;
+	public final JScrollPane elementTreePane;
+	public final JButton bindButton, saveButton, xmlButton;
 	//JPanel subelementPanel;
 	public XMLPanel(Frame frame) {
 		System.out.println("TransGenesis Running");
@@ -109,7 +111,10 @@ public class XMLPanel extends JPanel {
 				, false));
 		origin = new DefaultMutableTreeNode("TransGenesis");
 		DefaultTreeCellRenderer elementTreeCellRenderer = new DefaultTreeCellRenderer() {
-			
+			final Color defaultBackgroundSelectionColor = getBackgroundSelectionColor();
+			final Color defaultBackgroundNonSelectionColor = getBackgroundNonSelectionColor();
+			final Color defaultTextSelectionColor = getTextSelectionColor();
+			final Color defaultTextNonSelectionColor = getTextNonSelectionColor();
 			public Component getTreeCellRendererComponent(
 				JTree tree,
 				Object value,
@@ -123,10 +128,21 @@ public class XMLPanel extends JPanel {
 								tree, value, sel,
 								expanded, leaf, row,
 								hasFocus);
+				/*
 				Object obj = ((DefaultMutableTreeNode) value).getUserObject();
-				if(obj instanceof DesignElement) {
-					DesignElement element = (DesignElement) obj;
+				if(obj instanceof TranscendenceMod) {
+					boolean unbound = ((TranscendenceMod) obj).isUnbound();
+					boolean unsaved = ((TranscendenceMod) obj).isUnsaved();
+					this.setBackgroundNonSelectionColor(
+							unbound && unsaved ? new Color(255, 128, 0) :
+							unbound ? new Color(255, 255, 0) :
+							unsaved ? new Color(255, 0, 0) :
+							defaultBackgroundNonSelectionColor
+							);
+				} else {
+					this.setBackgroundNonSelectionColor(defaultBackgroundNonSelectionColor);
 				}
+				*/
 				return this;
 			}
 		};
@@ -192,6 +208,47 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {}
 			public void mouseReleased(MouseEvent e) {}
 		});
+		
+		bindButton = createJButton("Bind Extension");
+		bindButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				bind();
+			}
+		});
+		bindButton.setFont(Fonts.Large.f);
+		bindButton.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		saveButton = createJButton("Save Extension");
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				save();
+			}
+		});
+		saveButton.setFont(Fonts.Large.f);
+		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		xmlButton = new JButton("Generate XML");
+		xmlButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(selected != null) {
+					save();
+					JTextArea ta = new JTextArea(selected.getXMLOutput());
+					ta.setFont(Medium.f);
+					ta.setTabSize(4);
+					ta.setEditable(false);
+					JScrollPane pane = createScrollPane(ta);
+					pane.setPreferredSize(getSize());
+					JOptionPane.showMessageDialog(frame, pane);
+				}
+			}
+		});
+		xmlButton.setHorizontalAlignment(SwingConstants.LEFT);
+		xmlButton.setFont(Large.f);
+		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
+		
 		new Thread() {
 			public void run() {
 				File[] load = showFileChooser();
@@ -290,7 +347,9 @@ public class XMLPanel extends JPanel {
 		subElementPanel.removeAll();
 		textArea.setText("");
 		textArea.setEditable(false);
-		
+		bindButton.setEnabled(false);
+		saveButton.setEnabled(false);
+		xmlButton.setEnabled(false);
 		
 		JPanel attributePanel = new JPanel();
 		attributePanel.setLayout(new GridLayout(0, 2));
@@ -316,45 +375,7 @@ public class XMLPanel extends JPanel {
 			public void mousePressed(MouseEvent arg0) {}
 			public void mouseReleased(MouseEvent arg0) {}
 		});
-		JButton bindButton = createJButton("Bind Extension");
-		bindButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				bind();
-			}
-		});
-		bindButton.setFont(Fonts.Large.f);
-		bindButton.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		JButton saveButton = createJButton("Save Extension");
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				save();
-			}
-		});
-		saveButton.setFont(Fonts.Large.f);
-		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JButton xmlButton = new JButton("Generate XML");
-		xmlButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(selected != null) {
-					save();
-					JTextArea ta = new JTextArea(selected.getXMLOutput());
-					ta.setFont(Medium.f);
-					ta.setTabSize(4);
-					ta.setEditable(false);
-					JScrollPane pane = createScrollPane(ta);
-					pane.setPreferredSize(getSize());
-					JOptionPane.showMessageDialog(frame, pane);
-				}
-			}
-		});
-		xmlButton.setHorizontalAlignment(SwingConstants.LEFT);
-		xmlButton.setFont(Large.f);
-		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
 		
 		JPanel extensionButtons = new JPanel();
 		extensionButtons.setLayout(new GridLayout(5, 1));
@@ -435,7 +456,7 @@ public class XMLPanel extends JPanel {
 		leftPanel.add(xmlButton, new CC()
 				.width("100%")
 				.wrap());
-		add(leftPanel, new CC().width("25%").height("100%"));
+		add(leftPanel, new CC().width("30%").height("100%"));
 		
 		//75% width, 100% height
 		JPanel rightPanel = new JPanel();
@@ -464,7 +485,7 @@ public class XMLPanel extends JPanel {
 				.width("100%")
 				.height("25%")
 				.wrap());
-		add(rightPanel, new CC().width("75%").height("100%"));
+		add(rightPanel, new CC().width("70%").height("100%"));
 		
 		
 		/*
@@ -668,14 +689,23 @@ public class XMLPanel extends JPanel {
 		resetLayout();
 		if(e != null) {
 			out.println("Initialize from element: " + e.getName());
-			e.initializeFrame(this);
 			extensionField.setText(selectedExtension.getPath().getAbsolutePath());
-			
 			actionsPanel.add(getRemoveElementButton());
 			if(e instanceof TranscendenceMod && ((TranscendenceMod) e).getPath().isFile()) {
 				actionsPanel.add(getDeleteExtensionButton());
 			}
+			xmlButton.setEnabled(true);
+			e.initializeFrame(this);
 		}
+		
+		if(selectedExtension != null) {
+			//bindButton.setEnabled(selectedExtension.isUnbound());
+			//saveButton.setEnabled(selectedExtension.isUnsaved());
+			bindButton.setEnabled(true);
+			saveButton.setEnabled(true);
+		}
+		
+		
 		frame.pack();
 		repaint();
 	}
@@ -732,7 +762,6 @@ public class XMLPanel extends JPanel {
 		frame.remove(this);
 	}
 	public void setData(DesignElement e) {
-		saved = false;
 		e.setName(nameField.getText());
 		List<DesignAttribute> attributes = e.getAttributes();
 		Component[] fields = fieldPanel.getComponents();

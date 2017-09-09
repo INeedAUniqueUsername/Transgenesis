@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -187,6 +188,8 @@ public class TranscendenceMod extends DesignElement {
 			FindModule:
 			for(TranscendenceMod m : XMLPanel.getExtensions()) {
 				if(m.path.getAbsolutePath().equals(modulePath)) {
+					//A parent extension handles binding for all of its modules
+					m.codes.setLastBindCode(m.getBindCode());
 					modules.add(m);
 					//We are the parent extension and we are the module's only dependency
 					m.dependencies.clear();
@@ -275,6 +278,7 @@ public class TranscendenceMod extends DesignElement {
 	}
 	public String getDisplayName() {
 		String name = getName().replaceFirst("Transcendence", "");
+		/*
 		for(DesignAttribute a : new DesignAttribute[] {getAttributeByName("name"), getAttributeByName("UNID")}) {
 			if(a == null) {
 				continue;
@@ -284,6 +288,7 @@ public class TranscendenceMod extends DesignElement {
 				return String.format("%-16s%s", name, displayName);
 			}
 		}
+		*/
 		if(path != null) {
 			return String.format("%-16s%s", name, path.getName());
 		}
@@ -354,6 +359,7 @@ public class TranscendenceMod extends DesignElement {
 	}
 	
 	public void initializeFrame(XMLPanel panel) {
+		super.initializeFrame(panel);
 		JButton manageUNIDs = new JButton("Manage UNIDs");
 		manageUNIDs.addActionListener(new ActionListener() {
 			@Override
@@ -365,25 +371,37 @@ public class TranscendenceMod extends DesignElement {
 					panel.frame.pack();
 				}
 			}});
-		manageUNIDs.setFont(Large.f);
-		JLabel filePath = XMLPanel.createLabel(path.getAbsolutePath());
-		/*
-		panel.add(manageUNIDs, new CC()
-				.x("75%")
-				.y("0%")
-				.width("15%")
-				.height("5%")
-				);
-		panel.add(filePath, new CC()
-				.x("25%")
-				.y("5%")
-				.minWidth("75%").maxWidth("75%")
-				.minHeight("5%").maxHeight("5%")
-				);
-		*/
-		super.initializeFrame(panel);
+		manageUNIDs.setFont(Medium.f);
+		panel.actionsPanel.add(manageUNIDs);
+		
+		
+		JButton viewTypeBindingsButton = new JButton("View Type Bindings");
+		viewTypeBindingsButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == viewTypeBindingsButton) {
+					JOptionPane.showMessageDialog(panel, XMLPanel.createScrollPane(XMLPanel.createTextArea(getTypeMapText(), false)));
+				}
+			}
+			
+		});
+		viewTypeBindingsButton.setFont(Medium.f);
+		panel.actionsPanel.add(viewTypeBindingsButton);
+	}
+	public String getTypeMapText() {
+		String result = "";
+		for(Entry<String, DesignElement> e : typeMap.entrySet()) {
+			DesignElement design = e.getValue();
+			result += String.format(
+					"%-32s%s",
+					e.getKey(),
+					design == null ? "" : design.getName()
+					) + "\n";
+		}
+		return result;
 	}
 	public String toString() {
-		return String.format("%-28s%-4s%-4s", super.toString(), (isUnsaved() ? "[S]" : ""), (isUnbound() ? "[B]" : ""));
+		return String.format("%-36s%-4s%-4s", super.toString(), (isUnbound() ? "[B]" : ""), (isUnsaved() ? "[S]" : ""));
 	}
 }

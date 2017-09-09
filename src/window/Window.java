@@ -25,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import mod.ExtensionFactory;
 import panels.XMLPanel;
@@ -56,6 +58,9 @@ public class Window implements Runnable {
 	static Window instance;
 	
 	public static void main(String[] args) {
+		//javax.swing.UIManager.put("OptionPane.font", Fonts.Medium.f);
+		UIManager.put("OptionPane.buttonFont", new FontUIResource(Fonts.Medium.f));
+		
 		/*
 		try {
 			FileWriter fw = new FileWriter("T_E_S_T.xml");
