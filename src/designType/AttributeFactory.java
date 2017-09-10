@@ -25,8 +25,8 @@ public class AttributeFactory {
 			att("level", WHOLE),
 			att("mass", WHOLE),
 			att("size", WHOLE),
-			att("timeStopImmune", BOOLEAN)
-			
+			att("timeStopImmune", BOOLEAN),
+			att("virtual", BOOLEAN),
 	};
 	public static DesignAttribute[] createAttributesForType(Types t) {
 		DesignAttribute[] result = null;
@@ -150,12 +150,38 @@ public class AttributeFactory {
 					att("cargoSpace", WHOLE),
 					att("character", TYPE_ANY),
 					att("characterClass", TYPE_ANY),
+					att("class", WHOLE),
 					att("cyberDefenseLevel", WHOLE),
 					att("defaultSovereign", TYPE_SOVEREIGN),
 					att("deviceCriteria", STRING),
 					att("drivePowerUse", WHOLE),
-					att("fuelCapacity", WHOLE),
+					att("fuelCapacity", DOUBLE),
 					att("hullValue", STRING),
+					att("inertialessDrive", BOOLEAN),
+					att("leavesWreck", WHOLE_100),
+					att("manufacturer", STRING),
+					att("maxArmor", WHOLE),
+					att("maxArmorSpeed", WHOLE),
+					att("maxCargoSpace", WHOLE),
+					att("maxDevices", WHOLE),
+					att("maxNonDevices", WHOLE),
+					att("maxNonWeapons", WHOLE),
+					att("maxReactorPower", WHOLE),
+					att("maxSpeed", WHOLE),
+					att("maxStructuralHitPoints", WHOLE),
+					att("maxWeapons", WHOLE),
+					att("minArmorSpeed", WHOLE),
+					att("name", STRING),
+					att("radioactiveWreck", BOOLEAN),
+					att("reactorPower", WHOLE),
+					att("reactorEfficiency", DOUBLE),
+					att("score", WHOLE),
+					att("shipCompartment", BOOLEAN),
+					att("stdArmor", WHOLE),
+					att("structuralHitPoints", WHOLE),
+					att("thrust", INTEGER),
+					att("thrustRatio", DOUBLE),
+					att("wreckType", TYPE_STATION),
 			}));
 			return attributes.toArray(new DesignAttribute[0]);
 		case ShipTable:

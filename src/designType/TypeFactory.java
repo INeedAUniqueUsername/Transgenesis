@@ -325,16 +325,14 @@ public final class TypeFactory {
 					);
 			missile.addAttributes(att("W.I.P.", STRING));
 			reactorDevice.addAttributes(
-					att("fuelCapacity", WHOLE),
 					att("fuelCriteria", STRING),
-					att("maxFuel", WHOLE),
+					att("maxFuel", DOUBLE),
 					att("maxFuelTech", WHOLE),
 					att("minFuelTech", WHOLE),
 					att("maxPower", WHOLE),
 					att("maxPowerBonusPerCharge", WHOLE),
 					att("noFuel", BOOLEAN),
-					att("reactorEfficiency", WHOLE),
-					att("reactorPower", WHOLE)
+					att("reactorEfficiency", DOUBLE)
 					);
 			shields.addAttributes(
 					att("absorbAdj", WHOLE),
@@ -436,6 +434,32 @@ public final class TypeFactory {
 			List<DesignElement> result = new ArrayList<>(Arrays.asList());
 			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
 			result.addAll(Arrays.asList(new DesignElement[] {
+					new DesignElement("AISettings") {{
+						addAttributes(
+								att("combatStyle", ValueType.COMBAT_STYLE, "standard"),
+								//Deprecated
+								//att("flyBy", BOOLEAN),
+								//att("standOff", BOOLEAN),
+								att("flickingStyle", FLOCKING_STYLE),
+								att("flockFormation", BOOLEAN),
+								att("fireRateAdj", WHOLE),
+								att("fireRangeAdj", WHOLE),
+								att("fireAccuracy", WHOLE_100),
+								att("perception", WHOLE, "4"),
+								att("combatSeparation", INTEGER),
+								att("ascendOnGate", BOOLEAN),
+								att("ignoreShieldsDown", BOOLEAN),
+								att("noDogfights", BOOLEAN),
+								att("nonCombatant", BOOLEAN),
+								att("noFriendlyFire", BOOLEAN),
+								att("aggressor", BOOLEAN),
+								att("noAttackOnThreat", BOOLEAN),
+								att("noTargetsOfOpportunity", BOOLEAN),
+								att("noFriendlyFireCheck", BOOLEAN),
+								att("noNavPaths", BOOLEAN),
+								att("noOrderGiver", BOOLEAN)
+								);
+					}},
 					new DesignElement("Armor") {{
 						addAttributes(
 								att("armorID", TYPE_ARMOR),
@@ -458,12 +482,182 @@ public final class TypeFactory {
 						});
 					}},
 					//WIP
-					new DesignElement("DriveImages"),
-					new DesignElement("Effects"),
-					new DesignElement("Equipment"),
-					new DesignElement("Escorts"),
-					new DesignElement("Interior"),
-					new DesignElement("PlayerSettings"),
+					new DesignElement("DriveImages") {{
+						addOptionalMultipleSubElements(
+								() -> {
+									return new DesignElement("NozzleImage") {{
+										addAttributes(SubElementFactory.createImageDescAttributes());
+									}};
+								}, () -> {
+									return new DesignElement("NozzlePos") {{
+										addAttributes(
+												SubElementFactory.createShipEffectAttributes()
+												);
+									}};
+								}
+								);
+					}},
+					new DesignElement("Effects") {{
+						addOptionalMultipleSubElements(
+								() -> {
+									return new DesignElement("Effect") {{
+										addAttributes(
+												att("effect", TYPE_EFFECT),
+												att("type", SHIP_EFFECT_TYPE),
+												att("rotation", INTEGER)
+												);
+										addAttributes(SubElementFactory.createShipEffectAttributes());
+										addOptionalMultipleSubElements(TypeFactory.createMultipleSubElementsForType(Types.EffectType));
+										addOptionalSingleSubElements(TypeFactory.createSingleSubElementsForType(Types.EffectType));
+									}};
+								}
+								);
+					}},
+					new DesignElement("Equipment") {{
+						addOptionalMultipleSubElements(
+								() -> {
+									return new DesignElement("Install") {{
+										addAttributes(att("equipment", SHIP_EQUIPMENT));
+									}};
+								}, () -> {
+									return new DesignElement("Remove") {{
+										addAttributes(att("equipment", SHIP_EQUIPMENT));
+									}};
+								}
+								);
+					}},
+					new DesignElement("Escorts") {{
+						addOptionalMultipleSubElements(ShipGeneratorElements.values());
+					}},
+					new DesignElement("Interior") {{
+						addOptionalMultipleSubElements(
+								() -> {
+									return new DesignElement("Compartment") {{
+										addAttributes(SubElementFactory.createInteriorAttributes());
+										addAttributes(
+												att("hitPoints", WHOLE),
+												att("posX", INTEGER),
+												att("posY", INTEGER),
+												att("sizeX", INTEGER),
+												att("sizeY", INTEGER)
+												);
+									}};
+								}, () -> {
+									return new DesignElement("Section") {{
+										addAttributes(SubElementFactory.createInteriorAttributes());
+										addAttributes(SubElementFactory.createShipEffectAttributes());
+										addAttributes(
+												att("class", TYPE_SHIPCLASS),
+												att("attachTo", STRING)
+												);
+										
+									}};
+								}
+								);
+						
+					}},
+					new DesignElement("PlayerSettings") {{
+						addAttributes(
+								att("desc", STRING),
+								att("largeImage", TYPE_IMAGE),
+								att("debugOnly", BOOLEAN),
+								att("initialClass", ValueType.INITIAL_CLASS),
+								att("sortOrder", WHOLE_100),
+								att("ui", ValueType.SHIP_UI),
+								att("startingCredits", STRING),
+								att("startingMap", TYPE_SYSTEM_MAP),
+								att("startingSystem", STRING),
+								att("startingPos", STRING, "Start"),
+								att("shipScreen", TYPE_DOCKSCREEN, "&dsShipInterior;"),
+								att("dockServicesScreen", TYPE_DOCKSCREEN),
+								att("shipConfigScreen", TYPE_DOCKSCREEN)
+								);
+						addOptionalSingleSubElements(
+								new DesignElement("DockScreenDisplay") {{
+									addAttributes(
+											att("backgroundImage", TYPE_IMAGE),
+											att("contentMask", TYPE_IMAGE),
+											att("textColor", HEX_COLOR),
+											att("textBackgroundColor", HEX_COLOR),
+											att("titleBackgroundColor", HEX_COLOR),
+											att("titleTextColor", HEX_COLOR)
+											);
+								}}, new DesignElement("ArmorDisplay") {{
+									addAttributes(att("style", ValueType.HUD_STYLE, "circular"));
+									//style="circular" or style="rectangular"
+									addAttributes(
+											att("armorColor", HEX_COLOR),
+											att("shieldsColor", HEX_COLOR)
+											);
+									addSubElements(
+											//style="default"
+											new DesignElement("ShipImage") {{
+												addAttributes(SubElementFactory.createImageDescAttributes());
+											}}
+											);
+									addOptionalMultipleSubElements(() -> {
+										//style="default"
+										return new DesignElement("ArmorSection") {{
+											addAttributes(SubElementFactory.createImageDescAttributes());
+											addAttributes(
+													att("name", STRING),
+													att("destX", INTEGER),
+													att("destY", INTEGER),
+													att("hpX", INTEGER),
+													att("hpY", INTEGER),
+													att("nameY", INTEGER),
+													att("nameBreakWidth", INTEGER),
+													att("nameDestX", INTEGER),
+													att("nameDestY", INTEGER)
+													);
+										}};
+									});
+								}},
+								new DesignElement("ReactorDisplay") {{
+									addAttributes(att("style", ValueType.HUD_STYLE, "circular"));
+									//style="circular"
+									addAttributes(
+											att("backgroundColor", HEX_COLOR),
+											att("fuelColor", HEX_COLOR),
+											att("powerColor", HEX_COLOR),
+											att("powerGenColor", HEX_COLOR),
+											att("warningColor", HEX_COLOR)
+											);
+									
+									DesignElement powerLevelImage = SubElementFactory.createImageDescElement("PowerLevelImage");
+									powerLevelImage.addAttributes(att("destX", INTEGER), att("destY", INTEGER));
+									DesignElement powerGenImage = SubElementFactory.createImageDescElement("PowerGenImage");
+									powerGenImage.addAttributes(att("destX", INTEGER), att("destY", INTEGER));
+									DesignElement fuelLevelImage = SubElementFactory.createImageDescElement("FuelLevelImage");
+									fuelLevelImage.addAttributes(att("destX", INTEGER), att("destY", INTEGER));
+									//style="default"
+									addSubElements(
+											
+											SubElementFactory.createImageDescElement("Image"),
+											powerLevelImage,
+											powerGenImage,
+											fuelLevelImage,
+											SubElementFactory.createImageDescElement("FuelLowLevelImage"),
+											SubElementFactory.createRectangleElement("ReactorText"),
+											SubElementFactory.createRectangleElement("PowerLevelText"),
+											SubElementFactory.createRectangleElement("FuelLevelText")
+											
+											);
+								}},
+								new DesignElement("ShieldDisplay") {{
+									addAttributes(att("shieldEffect", TYPE_EFFECT));
+									addOptionalSingleSubElements(SubElementFactory.createEffect("ShieldEffect"), SubElementFactory.createImageDescElement("Image"));
+									
+								}},
+								new DesignElement("WeaponDisplay") {{
+									addAttributes(att("style", ValueType.HUD_STYLE, "circular"));
+									//style="circular"
+									addAttributes(att("backgroundColor", HEX_COLOR), att("targetColor", HEX_COLOR), att("weaponColor", HEX_COLOR));
+									//style="default"
+									addSubElements(SubElementFactory.createImageDescElement("Image"));
+								}}
+								);
+					}},
 			}));
 			return result.toArray(new DesignElement[0]);
 		case ShipTable:				break;

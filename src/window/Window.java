@@ -43,10 +43,10 @@ public class Window implements Runnable {
 	*/
 	public static final boolean DEBUG = true;
 	public static final String FONT = "Consolas";
-	public enum Fonts {
-		Title(new Font(FONT, Font.BOLD, 28)),		//32
-		Large(new Font(FONT, Font.BOLD, 20)),		//24
-		Medium(new Font(FONT, Font.PLAIN, 16));		//20
+	public static enum Fonts {
+		Title(new Font(FONT, Font.BOLD, 26)),		//32
+		Large(new Font(FONT, Font.BOLD, 22)),		//24
+		Medium(new Font(FONT, Font.PLAIN, 18));		//20
 		public final Font f;
 		Fonts(Font f) {
 			this.f = f;

@@ -929,6 +929,87 @@ public class DesignAttribute {
 						);
 				return field;
 			}
+		}, SHIP_EFFECT_TYPE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"rotateLeft",
+						"rotateRight",
+						"thrustMain"
+						);
+				return field;
+			}
+		}, SHIP_EQUIPMENT {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"SRS",
+						"LRS",
+						"SystemMap",
+						"Autopilot",
+						"SRSEnhancer",
+						"TargetingComputer",
+						"GalacticMap",
+						"FriendlyFireLock"
+						);
+				return field;
+			}
+		}, SHIP_COMPARTMENT_TYPE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"cargo",
+						"general",
+						"mainDrive"
+						);
+				return field;
+			}
+		}, COMBAT_STYLE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"standard",
+						"advanced",
+						"chase",
+						"flyBy",
+						"noRetreat",
+						"standOff"
+						);
+				return field;
+			}
+		}, FLOCKING_STYLE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"cloud",
+						"compact",
+						"random"
+						);
+				return field;
+			}
+		}, INITIAL_CLASS {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"true",
+						"always"
+						);
+				return field;
+			}
+		}, SHIP_UI {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"pilot",
+						"command"
+						);
+				return field;
+			}
+		}, HUD_STYLE {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"default",
+						"circular",
+						"rectangular"
+						);
+				return field;
+			}
 		}
 		
 		;

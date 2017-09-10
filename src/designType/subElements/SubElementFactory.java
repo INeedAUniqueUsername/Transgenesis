@@ -1599,6 +1599,16 @@ public class SubElementFactory {
 		break;
 	}
 	*/
+	public static DesignElement createRectangleElement(String name) {
+		return new DesignElement(name) {{
+			addAttributes(att("x", INTEGER), att("y", INTEGER), att("width", INTEGER), att("height", INTEGER));
+		}};
+	}
+	public static DesignElement createImageDescElement(String name) {
+		return new DesignElement(name) {{
+			addAttributes(createImageDescAttributes());
+		}};
+	}
 	public static DesignAttribute[] createImageDescAttributes() {
 		return new DesignAttribute[] {
 				att("imageID", TYPE_IMAGE),
@@ -1618,6 +1628,24 @@ public class SubElementFactory {
 				att("rotationOffset", INTEGER),
 				att("xOffset", INTEGER),
 				att("yOffset", INTEGER)
+		};
+	}
+	public static DesignAttribute[] createInteriorAttributes() {
+		return new DesignAttribute[] {
+				att("id", STRING),
+				att("name", STRING, "interior compartment"),
+				att("type", ValueType.SHIP_COMPARTMENT_TYPE, "general")
+		};
+	}
+	public static DesignAttribute[] createShipEffectAttributes() {
+		return new DesignAttribute[] {
+				att("posAngle", INTEGER),
+				att("posRadius", INTEGER),
+				att("posZ", INTEGER),
+				att("x", INTEGER),
+				att("y", INTEGER),
+				att("bringToFront", STRING),
+				att("sendToBack", STRING)
 		};
 	}
 	public static DesignAttribute[] createNameAttributes() {
