@@ -181,14 +181,6 @@ public class XMLPanel extends JPanel {
 				// TODO Auto-generated method stub
 				
 			}
-
-			public IElementCriterion parseQuery(String query) {
-				if(query.startsWith("&")) {
-					return new PartialUNIDCriterion(query);
-				} else {
-					return new PartialNameCriterion(query);
-				}
-			}
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 				SwingUtilities.invokeLater(() -> {
@@ -198,7 +190,7 @@ public class XMLPanel extends JPanel {
 						elementTreeModel.setRoot(elementTreeOrigin);
 					} else {
 						//Switch to Search Mode and find matching elements
-						IElementCriterion criterion = parseQuery(query);
+						IElementCriterion criterion = IElementCriterion.parseQuery(query);
 						System.out.println("Entering Search");
 						searchTreeOrigin.removeAllChildren();
 						for(TranscendenceMod e : getExtensions()) {

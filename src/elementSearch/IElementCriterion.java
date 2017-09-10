@@ -65,6 +65,7 @@ public interface IElementCriterion {
 		}
 		return result;
 	}
+	/*
 	public static void parseQuery(String query) {
 		String[] terms = query.split(" ");
 		LinkedList<ElementCriterion> stack = new LinkedList<>();
@@ -94,6 +95,14 @@ public interface IElementCriterion {
 					}
 				}
 			}
+		}
+	}
+	*/
+	public static IElementCriterion parseQuery(String query) {
+		if(query.startsWith("&")) {
+			return new PartialUNIDCriterion(query);
+		} else {
+			return new PartialNameCriterion(query);
 		}
 	}
 }
