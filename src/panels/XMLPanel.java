@@ -349,45 +349,41 @@ public class XMLPanel extends JPanel {
 	}
 	public void initialize(String... args) {
 		if(args.length == 0) {
-			new Thread() {
-				public void run() {
-					JLabel wait = new JLabel("TransGenesis is initializing");
-					wait.setFont(new Font("Consolas", Font.PLAIN, 72));
-					wait.setHorizontalAlignment(SwingConstants.CENTER);
-					wait.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-					add(wait);
-					packFrame();
-					
-					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea(
-							"TransGenesis: Transcendence XML Editor\n" +
-							"By 0xABCDEF/Archcannon\n\n" +
-							"Notes\n" +
-							"-Press Enter to close Dialogs such as this one.\n" +
-							"-Please use an isolated copy of the Transcendence source code in case of unknown bugs.\n" +
-							"-Select a File or Folder to load extensions.\n" +
-							"-Loading may take a while depending on how many files you are loading.\n" +
-							"-In order to load successfully, files must have the .xml extension and contain\n" +
-							" well-formed XML code.\n" +
-							"-If an extension has unloaded dependencies or modules, then not all of its\n" +
-							" internal or external types will be recognized by TransGenesis. For optimal\n" +
-							" functionality, please have all dependencies and modules loaded.\n" +
-							"-Design definitions are incomplete, so TransGenesis may not recognize all elements,\n" +
-							" subelements, or attributes.\n" +
-							"-Data about extension Type Entries/Ranges is stored as metadata in a .dat file."
-							, false));
-					
-					File[] load = showFileChooser();
-					
-					if(load.length > 0) {
-						for(File f : load) {
-							loadExtensions(f, false);
-						}
-						JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
-					} else {
-						JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will begin without any extensions loaded.", false));
-					}
+			JLabel wait = new JLabel("TransGenesis is initializing");
+			wait.setFont(new Font("Consolas", Font.PLAIN, 72));
+			wait.setHorizontalAlignment(SwingConstants.CENTER);
+			wait.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+			add(wait);
+			packFrame();
+			
+			JOptionPane.showMessageDialog(XMLPanel.this, createTextArea(
+					"TransGenesis: Transcendence XML Editor\n" +
+					"By 0xABCDEF/Archcannon\n\n" +
+					"Notes\n" +
+					"-Press Enter to close Dialogs such as this one.\n" +
+					"-Please use an isolated copy of the Transcendence source code in case of unknown bugs.\n" +
+					"-Select a File or Folder to load extensions.\n" +
+					"-Loading may take a while depending on how many files you are loading.\n" +
+					"-In order to load successfully, files must have the .xml extension and contain\n" +
+					" well-formed XML code.\n" +
+					"-If an extension has unloaded dependencies or modules, then not all of its\n" +
+					" internal or external types will be recognized by TransGenesis. For optimal\n" +
+					" functionality, please have all dependencies and modules loaded.\n" +
+					"-Design definitions are incomplete, so TransGenesis may not recognize all elements,\n" +
+					" subelements, or attributes.\n" +
+					"-Data about extension Type Entries/Ranges is stored as metadata in a .dat file."
+					, false));
+			
+			File[] load = showFileChooser();
+			
+			if(load.length > 0) {
+				for(File f : load) {
+					loadExtensions(f, false);
 				}
-			}.start();
+				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
+			} else {
+				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will begin without any extensions loaded.", false));
+			}
 		} else {
 			for(String arg : args) {
 				String argName = arg.split(":")[0];

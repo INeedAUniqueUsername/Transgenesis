@@ -128,7 +128,7 @@ public class DesignElement {
 		DesignAttribute a = attributes.get(name);
 		if(a == null) {
 			System.out.println("Unknown attribute: " + name);
-			attributes.put(name, new DesignAttribute(name, ValueType.STRING, value));
+			attributes.put(name, new DesignAttribute(name, ValueType.UNKNOWN, value));
 		} else {
 			attributes.get(name).setValue(value);
 		}

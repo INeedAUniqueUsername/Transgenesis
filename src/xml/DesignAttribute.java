@@ -21,6 +21,7 @@ import window.Window;
 import static window.Window.Fonts.*;
 public class DesignAttribute {
 	public enum ValueType {
+		UNKNOWN {},
 		UNID {
 			public JComponent getInputField(String value) {
 				//WIP
@@ -281,7 +282,6 @@ public class DesignAttribute {
 				return field;
 			}
 		}, STRING {
-			
 		}, FILENAME {
 		}, FILE_JPG {
 		}, FILE_MP3 {
