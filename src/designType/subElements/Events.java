@@ -64,6 +64,7 @@ public final class Events {
 					
 					new Event("GetName"),
 					new Event("GetDescription"),
+					new Event("GetDisplayAttributes"),
 					new Event("GetTradePrice"),
 					new Event("GetReferenceText"),
 					

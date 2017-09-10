@@ -20,11 +20,13 @@ public class AttributeFactory {
 			//new Attribute("maxConstruction", ValueType.INTEGER),
 	public static final DesignAttribute[] spaceObjectAttributes = {
 			att("defaultBackgroundID", TYPE_IMAGE),
+			att("dockScreen", SCREEN_LOCAL_OR_TYPE),
 			att("explosionType", TYPE_WEAPON),
 			att("level", WHOLE),
 			att("mass", WHOLE),
 			att("size", WHOLE),
 			att("timeStopImmune", BOOLEAN)
+			
 	};
 	public static DesignAttribute[] createAttributesForType(Types t) {
 		DesignAttribute[] result = null;
@@ -141,7 +143,21 @@ public class AttributeFactory {
 		case ShipClass:
 		case ShipClassOverride:
 			//WIP
-			return spaceObjectAttributes;
+			ArrayList<DesignAttribute> attributes = new ArrayList<>();
+			attributes.addAll(Arrays.asList(spaceObjectAttributes));
+			attributes.addAll(Arrays.asList(new DesignAttribute[] {
+					att("armorCriteria", STRING),
+					att("cargoSpace", WHOLE),
+					att("character", TYPE_ANY),
+					att("characterClass", TYPE_ANY),
+					att("cyberDefenseLevel", WHOLE),
+					att("defaultSovereign", TYPE_SOVEREIGN),
+					att("deviceCriteria", STRING),
+					att("drivePowerUse", WHOLE),
+					att("fuelCapacity", WHOLE),
+					att("hullValue", STRING),
+			}));
+			return attributes.toArray(new DesignAttribute[0]);
 		case ShipTable:
 			break;
 		case Sound:
@@ -177,7 +193,8 @@ public class AttributeFactory {
 					att("srsJammer", BOOLEAN, "false")
 			};
 		case StationType:
-			ArrayList<DesignAttribute> attributes = new ArrayList<>();
+			attributes = new ArrayList<>();
+			attributes.addAll(Arrays.asList(spaceObjectAttributes));
 			attributes.addAll(Arrays.asList(new DesignAttribute[] {
 					att("abandonedScreen", SCREEN_LOCAL_OR_TYPE),
 					att("alertWhenAttacked", BOOLEAN),
@@ -193,7 +210,6 @@ public class AttributeFactory {
 					att("destEntryPoint	", STRING),
 					att("destNodeID", STRING),
 					att("destroyWhenEmpty", BOOLEAN),
-					att("dockScreen", SCREEN_LOCAL_OR_TYPE),
 					att("dockingPorts", WHOLE),
 					att("enemyExclusionRadius", WHOLE),
 					att("ejectaAdj", INTEGER),
@@ -251,7 +267,6 @@ public class AttributeFactory {
 					att("mediumDamageHeight", INTEGER),
 					att("mediumDamageCount", INTEGER)	
 			}));
-		attributes.addAll(Arrays.asList(spaceObjectAttributes));
 		return attributes.toArray(new DesignAttribute[0]);
 		case SystemMap:
 			return new DesignAttribute[] {

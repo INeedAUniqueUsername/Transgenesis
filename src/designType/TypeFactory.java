@@ -8,6 +8,7 @@ import designType.subElements.Language;
 import designType.subElements.SpaceObject;
 import designType.subElements.SubElementFactory;
 import designType.subElements.SubElementFactory.AdventureDescElements;
+import designType.subElements.SubElementFactory.DeviceGeneratorElements;
 import designType.subElements.SubElementFactory.DisplayAttributesElements;
 import designType.subElements.SubElementFactory.DisplayElements;
 import designType.subElements.SubElementFactory.DockScreensElements;
@@ -434,7 +435,36 @@ public final class TypeFactory {
 		case ShipClassOverride:
 			List<DesignElement> result = new ArrayList<>(Arrays.asList());
 			result.addAll(Arrays.asList(SpaceObject.createSpaceObjectSubElements(t)));
-			//WIP
+			result.addAll(Arrays.asList(new DesignElement[] {
+					new DesignElement("Armor") {{
+						addAttributes(
+								att("armorID", TYPE_ARMOR),
+								att("count", WHOLE),
+								att("enhanced", INTEGER),
+								att("enhancement", STRING),
+								att("level", WHOLE),
+								att("startAt", INTEGER)
+								);
+						addOptionalMultipleSubElements(() -> {
+							return new DesignElement("ArmorSection") {{
+								addAttributes(
+										att("start", INTEGER),
+										att("span", INTEGER),
+										att("armorID", TYPE_ARMOR),
+										att("level", WHOLE),
+										att("nonCritical", ValueType.ARMOR_NONCRITICAL)
+										);
+							}};
+						});
+					}},
+					//WIP
+					new DesignElement("DriveImages"),
+					new DesignElement("Effects"),
+					new DesignElement("Equipment"),
+					new DesignElement("Escorts"),
+					new DesignElement("Interior"),
+					new DesignElement("PlayerSettings"),
+			}));
 			return result.toArray(new DesignElement[0]);
 		case ShipTable:				break;
 		case Sound:					break;

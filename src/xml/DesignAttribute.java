@@ -909,6 +909,26 @@ public class DesignAttribute {
 						);
 				return field;
 			}
+		}, ARMOR_NONCRITICAL {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"dev0",
+						"dev1",
+						"dev2",
+						"dev3",
+						"dev4",
+						"dev5",
+						"dev6",
+						"dev7",
+						"maneuver",
+						"drive",
+						"scanners",
+						"tactical",
+						"cargo",
+						""
+						);
+				return field;
+			}
 		}
 		
 		;
