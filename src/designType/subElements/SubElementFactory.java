@@ -1,4 +1,5 @@
 package designType.subElements;
+import designType.AttributeFactory;
 import designType.TypeFactory;
 import designType.Types;
 import designType.subElements.SubElementFactory.SystemGroupElements;
@@ -544,6 +545,7 @@ public class SubElementFactory {
 				);
 				break;
 			case Group:
+				e.addOptionalMultipleSubElements(SystemGroupElements.values());
 				break;
 			case Label:
 				e.addAttributes(
@@ -737,7 +739,9 @@ public class SubElementFactory {
 			switch(this) {
 			case DockScreen_Named:
 				e = new RenameableElement("DockScreen");
+				e.addAttributes(AttributeFactory.createAttributesForType(Types.DockScreen));
 				e.addOptionalSingleSubElements(TypeFactory.createSingleSubElementsForType(Types.DockScreen));
+				e.addOptionalMultipleSubElements(TypeFactory.createMultipleSubElementsForType(Types.DockScreen));
 				break;
 			case Pane_Named:
 				e = new RenameableElement("Pane");

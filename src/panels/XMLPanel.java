@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -37,20 +39,24 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import designType.subElements.ElementType;
+import elementSearch.IElementCriterion;
+import elementSearch.PartialNameCriterion;
+import elementSearch.PartialUNIDCriterion;
 import mod.ExtensionFactory.Extensions;
 import mod.TranscendenceMod;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
-import window.Frame;
 import window.Loader;
 import window.Window;
 import window.Window.Fonts;
@@ -58,6 +64,8 @@ import xml.DesignAttribute;
 import xml.DesignElement;
 import static window.Window.Fonts.*;
 public class XMLPanel extends JPanel {
+	public static XMLPanel instance;
+	
 	public static final int SCREEN_WIDTH;
 	public static final int SCREEN_HEIGHT;
 	static {
@@ -66,14 +74,20 @@ public class XMLPanel extends JPanel {
 		SCREEN_HEIGHT = (int) (screenSize.getHeight() * 0.96);
 	}
 	public final JFrame frame;
+	
 	private final DefaultTreeModel elementTreeModel;
 	private final JTree elementTree;
-		
-	public static boolean showErrors = false;
+	private final DefaultMutableTreeNode elementTreeOrigin;
+	private final JScrollPane elementTreePane;
+	
+	//private final DefaultTreeModel searchTreeModel;
+	//private final JTree searchTree;
+	private final DefaultMutableTreeNode searchTreeOrigin;
+	//private final JScrollPane searchTreePane;
 	
 	//private final List<TranscendenceMod> mods;
-	private static DesignElement selected;
-	private static TranscendenceMod selectedExtension;
+	private DesignElement selected;
+	private TranscendenceMod selectedExtension;
 	
 	public final JTextField nameField;
 	public final JTextField extensionField;
@@ -83,33 +97,15 @@ public class XMLPanel extends JPanel {
 	public final JPanel fieldPanel;
 	public final JPanel subElementPanel;
 	public final JTextArea textArea;
-	public static DefaultMutableTreeNode origin;
 	
-	//public final JTextArea searchBar;
-	public final JScrollPane elementTreePane;
+	public final JTextField searchBar;
 	public final JButton bindButton, saveButton, xmlButton;
 	//JPanel subelementPanel;
-	public XMLPanel(Frame frame) {
+	public XMLPanel(JFrame frame) {
+		instance = this;
 		System.out.println("TransGenesis Running");
 		this.frame = frame;
-		JOptionPane.showMessageDialog(this, createTextArea(
-				"TransGenesis: Transcendence XML Editor\n" +
-				"By 0xABCDEF/Archcannon\n\n" +
-				"Notes\n" +
-				"-Press Enter to close Dialogs such as this one.\n" +
-				"-Please use an isolated copy of the Transcendence source code in case of unknown bugs.\n" +
-				"-Select a File or Folder to load extensions.\n" +
-				"-Loading may take a while depending on how many files you are loading.\n" +
-				"-In order to load successfully, files must have the .xml extension and contain\n" +
-				" well-formed XML code.\n" +
-				"-If an extension has unloaded dependencies or modules, then not all of its\n" +
-				" internal or external types will be recognized by TransGenesis. For optimal\n" +
-				" functionality, please have all dependencies and modules loaded.\n" +
-				"-Design definitions are incomplete, so TransGenesis may not recognize all elements,\n" +
-				" subelements, or attributes.\n" +
-				"-Data about extension Type Entries/Ranges is stored as metadata in a .dat file."
-				, false));
-		origin = new DefaultMutableTreeNode("TransGenesis");
+		elementTreeOrigin = new DefaultMutableTreeNode("TransGenesis");
 		DefaultTreeCellRenderer elementTreeCellRenderer = new DefaultTreeCellRenderer() {
 			final Color defaultBackgroundSelectionColor = getBackgroundSelectionColor();
 			final Color defaultBackgroundNonSelectionColor = getBackgroundNonSelectionColor();
@@ -147,17 +143,16 @@ public class XMLPanel extends JPanel {
 			}
 		};
 		
-		elementTreeModel = new DefaultTreeModel(origin);
+		elementTreeModel = new DefaultTreeModel(elementTreeOrigin);
 		elementTree = new JTree(elementTreeModel);
 		elementTree.getSelectionModel().setSelectionMode
 			(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		elementTree.setAlignmentX(Component.CENTER_ALIGNMENT);
 		elementTree.setFont(Fonts.Medium.f);
-		elementTree.setName("XML");
 		elementTree.setShowsRootHandles(true);
 		elementTree.setCellRenderer(elementTreeCellRenderer);
 		elementTree.expandRow(0);
-		elementTree.setSelectionPath(new TreePath(origin));
+		elementTree.setSelectionPath(new TreePath(elementTreeOrigin));
 		elementTree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
@@ -172,43 +167,91 @@ public class XMLPanel extends JPanel {
 		});
 		elementTreePane = createScrollPane(elementTree);
 		
-		nameField = createTextField("Transgenesis", false);
-		
-		extensionField = createTextField(System.getProperty("user.dir"), false);
-		
-		actionsPanel = new JPanel();
-		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
-		
-		
-		documentation = new JLabel("Documentation.txt is unavailable.");
-		documentation.setFont(Medium.f);
-		documentation.setVerticalTextPosition(SwingConstants.TOP);
-		
-		labelPanel = new JPanel();
-		fieldPanel = new JPanel();
-		labelPanel.setLayout(new GridLayout(0, 1));
-		fieldPanel.setLayout(new GridLayout(0, 1));
-		
-		subElementPanel = new JPanel();
-		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		subElementPanel.setLayout(new GridLayout(0, 1));
-		
-		textArea = new JTextArea();
-		textArea.setTabSize(4);
-		textArea.setFont(Medium.f);
-		textArea.addMouseListener(new MouseListener() {
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2 && !e.isConsumed()) {
-					e.consume();
-					out.println("Double Click");
+		searchBar = createTextField("", true);
+		searchBar.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public IElementCriterion parseQuery(String query) {
+				if(query.startsWith("&")) {
+					return new PartialUNIDCriterion(query);
+				} else {
+					return new PartialNameCriterion(query);
 				}
 			}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				SwingUtilities.invokeLater(() -> {
+					String query = searchBar.getText();
+					if(query.isEmpty()) {
+						System.out.println("Exiting Search");
+						elementTreeModel.setRoot(elementTreeOrigin);
+					} else {
+						//Switch to Search Mode and find matching elements
+						IElementCriterion criterion = parseQuery(query);
+						System.out.println("Entering Search");
+						searchTreeOrigin.removeAllChildren();
+						for(TranscendenceMod e : getExtensions()) {
+							MutableTreeNode result = e.createSearchTree(criterion);
+							if(result != null) {
+								searchTreeOrigin.add(result);
+							}
+						}
+						elementTreeModel.setRoot(searchTreeOrigin);
+						
+						System.out.println("Expanding Result Paths");
+						//Expand tree nodes all the way up to before matching elements
+						Enumeration<DefaultMutableTreeNode> e = searchTreeOrigin.depthFirstEnumeration();
+						for(DefaultMutableTreeNode n = e.nextElement(); e.hasMoreElements(); n = e.nextElement()) {
+							Object obj = n.getUserObject();
+							if(obj instanceof DesignElement && criterion.elementMatches((DesignElement) obj)) {
+								System.out.println("Expanding Result Path");
+								elementTree.expandPath(new TreePath(n.getPath()).getParentPath());
+							}
+						}
+					}
+					searchBar.requestFocus();
+				});
+			}
+			
 		});
 		
+		searchTreeOrigin = new DefaultMutableTreeNode("Element Search");
+		/*
+		searchTreeModel = new DefaultTreeModel(searchTreeOrigin);
+		searchTree = new JTree(searchTreeModel);
+		searchTree.getSelectionModel().setSelectionMode
+			(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		searchTree.setAlignmentX(Component.CENTER_ALIGNMENT);
+		searchTree.setFont(Fonts.Medium.f);
+		searchTree.setShowsRootHandles(true);
+		searchTree.setCellRenderer(elementTreeCellRenderer);
+		searchTree.expandRow(0);
+		searchTree.setSelectionPath(new TreePath(searchTreeOrigin));
+		searchTree.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				if(selected != null) {
+					setData(selected);
+				}
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+						elementTree.getLastSelectedPathComponent();
+				selectNode(node);
+			}
+		});
+		searchTreePane = createScrollPane(searchTree);
+		*/
 		bindButton = createJButton("Bind Extension");
 		bindButton.addActionListener(new ActionListener() {
 			@Override
@@ -240,8 +283,27 @@ public class XMLPanel extends JPanel {
 					ta.setTabSize(4);
 					ta.setEditable(false);
 					JScrollPane pane = createScrollPane(ta);
-					pane.setPreferredSize(getSize());
+					pane.setMaximumSize(XMLPanel.this.getSize());
 					JOptionPane.showMessageDialog(frame, pane);
+					/*
+					frame.remove(XMLPanel.this);
+					JPanel panel = new JPanel() {{
+						setMaximumSize(XMLPanel.this.getSize());
+						add(pane);
+						add(new JButton("Done") {{
+							addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent arg0) {
+									frame.removeAll();
+									frame.add(XMLPanel.this);
+									frame.pack();
+								}
+							});
+						}});
+					}};
+					frame.add(panel);
+					frame.pack();
+					*/
 				}
 			}
 		});
@@ -249,44 +311,120 @@ public class XMLPanel extends JPanel {
 		xmlButton.setFont(Large.f);
 		xmlButton.setAlignmentX(LEFT_ALIGNMENT);
 		
-		new Thread() {
-			public void run() {
-				File[] load = showFileChooser();
-				
-				JLabel wait = new JLabel("TransGenesis is initializing");
-				wait.setFont(new Font("Consolas", Font.PLAIN, 72));
-				wait.setHorizontalAlignment(SwingConstants.CENTER);
-				wait.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-				add(wait);
-				packFrame();
-				
-				
-				if(load.length > 0) {
-					for(File f : load) {
-						loadExtensions(f, false);
-					}
-					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
-					//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
-					bindNonModuleExtensions(getExtensions());
-					bindNonModuleExtensions(getExtensions());
-				} else {
-					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will begin without any extensions loaded.", false));
+		
+		
+		
+		
+		nameField = createTextField("Transgenesis", false);
+		nameField.setFont(Large.f);
+		
+		extensionField = createTextField(System.getProperty("user.dir"), false);
+		
+		actionsPanel = new JPanel();
+		actionsPanel.setLayout(new BoxLayout(actionsPanel, BoxLayout.X_AXIS));
+		
+		
+		documentation = new JLabel("Documentation.txt is unavailable.");
+		documentation.setFont(Medium.f);
+		documentation.setVerticalTextPosition(SwingConstants.TOP);
+		
+		labelPanel = new JPanel();
+		fieldPanel = new JPanel();
+		labelPanel.setLayout(new GridLayout(0, 1));
+		fieldPanel.setLayout(new GridLayout(0, 1));
+		
+		subElementPanel = new JPanel();
+		subElementPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		subElementPanel.setLayout(new GridLayout(0, 1));
+		
+		textArea = new JTextArea();
+		textArea.setTabSize(4);
+		textArea.setFont(Medium.f);
+		textArea.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				/*
+				if (e.getClickCount() == 2 && !e.isConsumed()) {
+					e.consume();
+					out.println("Double Click");
 				}
-				
-				
-				elementTree.expandRow(0);
-				resetLayout();
-				packFrame();
-				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("Initialization complete", false));
-				requestFocus();
+				*/
 			}
-		}.start();
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {}
+		});
+	}
+	public void initialize(String... args) {
+		if(args.length == 0) {
+			new Thread() {
+				public void run() {
+					JLabel wait = new JLabel("TransGenesis is initializing");
+					wait.setFont(new Font("Consolas", Font.PLAIN, 72));
+					wait.setHorizontalAlignment(SwingConstants.CENTER);
+					wait.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+					add(wait);
+					packFrame();
+					
+					JOptionPane.showMessageDialog(XMLPanel.this, createTextArea(
+							"TransGenesis: Transcendence XML Editor\n" +
+							"By 0xABCDEF/Archcannon\n\n" +
+							"Notes\n" +
+							"-Press Enter to close Dialogs such as this one.\n" +
+							"-Please use an isolated copy of the Transcendence source code in case of unknown bugs.\n" +
+							"-Select a File or Folder to load extensions.\n" +
+							"-Loading may take a while depending on how many files you are loading.\n" +
+							"-In order to load successfully, files must have the .xml extension and contain\n" +
+							" well-formed XML code.\n" +
+							"-If an extension has unloaded dependencies or modules, then not all of its\n" +
+							" internal or external types will be recognized by TransGenesis. For optimal\n" +
+							" functionality, please have all dependencies and modules loaded.\n" +
+							"-Design definitions are incomplete, so TransGenesis may not recognize all elements,\n" +
+							" subelements, or attributes.\n" +
+							"-Data about extension Type Entries/Ranges is stored as metadata in a .dat file."
+							, false));
+					
+					File[] load = showFileChooser();
+					
+					if(load.length > 0) {
+						for(File f : load) {
+							loadExtensions(f, false);
+						}
+						JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
+					} else {
+						JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will begin without any extensions loaded.", false));
+					}
+				}
+			}.start();
+		} else {
+			for(String arg : args) {
+				String argName = arg.split(":")[0];
+				if(argName.equals("path")) {
+					loadExtensions(new File(arg.substring(argName.length() + 1)), false);
+				}
+			}
+		}
+		onInitializationComplete();
+	}
+	public void onInitializationComplete() {
+		//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
+		bindNonModuleExtensions(getExtensions());
+		bindNonModuleExtensions(getExtensions());
+		
+		elementTree.expandRow(0);
+		resetLayout();
+		packFrame();
+		JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("Initialization complete", false));
+		requestFocus();
 	}
 	public void packFrame() {
 		Dimension size = getSize();
 		setPreferredSize(size);
 		frame.pack();
 		repaint();
+	}
+	public static XMLPanel getInstance() {
+		return instance;
 	}
 	//https://coderanch.com/t/342116/java/set-font-JFileChooser
 	public static void setComponentsFont(Component[] comp, Font font) {
@@ -296,10 +434,10 @@ public class XMLPanel extends JPanel {
 			catch(Exception e){}//do nothing
 		}
 	}
-	public static List<TranscendenceMod> getExtensions() {
+	public List<TranscendenceMod> getExtensions() {
 		List<TranscendenceMod> result = new LinkedList<>();
-		for(int i = 0; i < origin.getChildCount(); i++) {
-			result.add((TranscendenceMod) ((DefaultMutableTreeNode) origin.getChildAt(i)).getUserObject()); 
+		for(int i = 0; i < elementTreeOrigin.getChildCount(); i++) {
+			result.add((TranscendenceMod) ((DefaultMutableTreeNode) elementTreeOrigin.getChildAt(i)).getUserObject()); 
 		}
 		return result;
 	}
@@ -320,7 +458,7 @@ public class XMLPanel extends JPanel {
 		return null;
 	}
 	//Get all the Types defined by the selected extension
-	public static Map<String, DesignElement> getExtensionTypeMap() {
+	public Map<String, DesignElement> getExtensionTypeMap() {
 		if(selectedExtension != null) {
 			//This only updates when save is pressed
 			//selectedExtension.updateTypeBindings();
@@ -408,7 +546,7 @@ public class XMLPanel extends JPanel {
 							
 							mod.setPath(f);
 							DefaultMutableTreeNode node = new DefaultMutableTreeNode(mod);
-							elementTreeModel.insertNodeInto(node, origin, 0);
+							elementTreeModel.insertNodeInto(node, elementTreeOrigin, 0);
 							elementTree.setSelectionPath(new TreePath(elementTreeModel.getPathToRoot(node)));
 						}catch(Exception ex) {
 							JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("[Failure] Invalid file path " + path, false));
@@ -440,6 +578,9 @@ public class XMLPanel extends JPanel {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new MigLayout());
 		leftPanel.add(extensionButtons, new CC()
+				.width("100%")
+				.wrap());
+		leftPanel.add(searchBar, new CC()
 				.width("100%")
 				.wrap());
 		leftPanel.add(elementTreePane, new CC()
@@ -592,7 +733,7 @@ public class XMLPanel extends JPanel {
 				out.println("Failure: Extension " + m.getPath() + " could not be loaded.");
 			} else {
 				out.println("Success: Extension " + m.getPath() + " loaded.");
-				elementTreeModel.insertNodeInto(m.toTreeNode(), origin, 0);
+				elementTreeModel.insertNodeInto(m.toTreeNode(), elementTreeOrigin, 0);
 				/*
 				if(m.hasSubElement("Library") && JOptionPane.showConfirmDialog(null, "This Extension depends on other Libraries. Load them now?", "Load Dependencies", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				}
@@ -628,7 +769,7 @@ public class XMLPanel extends JPanel {
 				out.println("Failure: Module " + m.getPath() + " could not be loaded");
 			} else {
 				out.println("Success: Module " + m.getPath() + " loaded");
-				elementTreeModel.insertNodeInto(m.toTreeNode(), origin, 0);
+				elementTreeModel.insertNodeInto(m.toTreeNode(), elementTreeOrigin, 0);
 			}
 		}
 	}
@@ -667,7 +808,7 @@ public class XMLPanel extends JPanel {
 			selectedExtension.save();
 		}
 	}
-	public static DesignElement getSelected() {
+	public DesignElement getSelected() {
 		return selected;
 	}
 	public void selectNode(DefaultMutableTreeNode node) {

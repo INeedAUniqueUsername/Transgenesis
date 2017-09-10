@@ -1,7 +1,6 @@
 package xml;
 
 import panels.XMLPanel;
-import window.Frame;
 
 public class RenameableElement extends DesignElement {
 

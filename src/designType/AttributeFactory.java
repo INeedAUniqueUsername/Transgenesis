@@ -1,5 +1,6 @@
 package designType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +18,14 @@ public class AttributeFactory {
 			//new Attribute("shipwreckID", ValueType.STRING),
 			//<Construction>
 			//new Attribute("maxConstruction", ValueType.INTEGER),
-	
+	public static final DesignAttribute[] spaceObjectAttributes = {
+			att("defaultBackgroundID", TYPE_IMAGE),
+			att("explosionType", TYPE_WEAPON),
+			att("level", WHOLE),
+			att("mass", WHOLE),
+			att("size", WHOLE),
+			att("timeStopImmune", BOOLEAN)
+	};
 	public static DesignAttribute[] createAttributesForType(Types t) {
 		DesignAttribute[] result = null;
 		switch(t) {
@@ -131,13 +139,9 @@ public class AttributeFactory {
 					att("key", CHARACTER, "")	
 			};
 		case ShipClass:
-			return new DesignAttribute[] {
-					att("defaultBackgroundID", TYPE_IMAGE),		//SpaceObject
-					att("explosionType", TYPE_WEAPON),			//SpaceObject
-					att("level", WHOLE),						//SpaceObject
-					att("mass", WHOLE),							//SpaceObject
-					att("size", WHOLE),							//SpaceObject	
-			};
+		case ShipClassOverride:
+			//WIP
+			return spaceObjectAttributes;
 		case ShipTable:
 			break;
 		case Sound:
@@ -173,7 +177,8 @@ public class AttributeFactory {
 					att("srsJammer", BOOLEAN, "false")
 			};
 		case StationType:
-			return new DesignAttribute[] {
+			ArrayList<DesignAttribute> attributes = new ArrayList<>();
+			attributes.addAll(Arrays.asList(new DesignAttribute[] {
 					att("abandonedScreen", SCREEN_LOCAL_OR_TYPE),
 					att("alertWhenAttacked", BOOLEAN),
 					att("alertWhenDestroyed", BOOLEAN),
@@ -182,13 +187,9 @@ public class AttributeFactory {
 					att("backgroundPlane", WHOLE_100),	//Parallax, 0-100
 					att("barrierEffect", TYPE_EFFECT),
 					att("beacon", BOOLEAN),
-					
 					att("canAttack", BOOLEAN),
-					//att("chance", STRING),
 					att("constructionRate", WHOLE),
 					att("controllingSovereign", TYPE_SOVEREIGN),
-					//att("count", WHOLE),
-					att("defaultBackgroundID", TYPE_IMAGE),		//SpaceObject
 					att("destEntryPoint	", STRING),
 					att("destNodeID", STRING),
 					att("destroyWhenEmpty", BOOLEAN),
@@ -197,7 +198,6 @@ public class AttributeFactory {
 					att("enemyExclusionRadius", WHOLE),
 					att("ejectaAdj", INTEGER),
 					att("ejectaType", TYPE_WEAPON),
-					att("explosionType", TYPE_WEAPON),			//SpaceObject
 					att("fireRateAdj", INTEGER),
 					att("frequency", FREQUENCY),
 					att("gateEffect", TYPE_EFFECT),
@@ -205,15 +205,12 @@ public class AttributeFactory {
 					att("hitPoints", WHOLE),
 					att("immutable", BOOLEAN),
 					att("inactive", BOOLEAN),
-					att("level", WHOLE),						//SpaceObject
 					att("levelFrequency", LEVEL_FREQUENCY),
 					att("locationCriteria", STRING),
-					att("mass", WHOLE),							//SpaceObject
 					
 					att("maxHitPoints", WHOLE),
 					att("maxLightRadius", WHOLE),
 					att("maxStructuralHitPoints", WHOLE),
-					//att("minShips", WHOLE),
 					att("mobile", BOOLEAN),
 					att("multiHull", BOOLEAN),
 					att("name", STRING),
@@ -234,12 +231,10 @@ public class AttributeFactory {
 					att("shipRegen", WHOLE),
 					att("shipRepairRate", WHOLE),
 					att("sign", BOOLEAN),
-					att("size", WHOLE),							//SpaceObject
 					att("sovereign", TYPE_SOVEREIGN),
 					att("spaceColor", HEX_COLOR),
 					att("stealth", WHOLE),
 					att("structuralHitPoints", STRING),
-					att("timeStopImmune", BOOLEAN),
 					att("UNID", UNID),
 					att("unique", UNIQUE),
 					att("virtual", BOOLEAN),
@@ -255,7 +250,9 @@ public class AttributeFactory {
 					att("mediumDamageWidth", INTEGER),
 					att("mediumDamageHeight", INTEGER),
 					att("mediumDamageCount", INTEGER)	
-			};
+			}));
+		attributes.addAll(Arrays.asList(spaceObjectAttributes));
+		return attributes.toArray(new DesignAttribute[0]);
 		case SystemMap:
 			return new DesignAttribute[] {
 					att("name", STRING),

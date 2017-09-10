@@ -1,5 +1,6 @@
 package xml;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import static window.Window.*;
 import java.awt.GridLayout;
@@ -26,6 +27,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.plaf.synth.SynthSpinnerUI;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -44,8 +47,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import designType.subElements.ElementType;
+import elementSearch.IElementCriterion;
 import panels.XMLPanel;
-import window.Frame;
 import window.Window;
 import xml.DesignAttribute.ValueType;
 import static window.Window.Fonts.*;
@@ -663,5 +666,28 @@ public class DesignElement {
 			}
 		}
 		return false;
+	}
+	//Recursively check if this element is part of at least one path to an element that matches all search criteria.
+	//If so, return a node containing the matching paths
+	//Otherwise, return null
+	public MutableTreeNode createSearchTree(IElementCriterion c) {
+		
+		//Check if we are the destination of the path
+		if(c.elementMatches(this)) {
+			return toTreeNode();
+		} else {
+			DefaultMutableTreeNode result = new DefaultMutableTreeNode(this);
+			//Check if one of our subelements matches
+			for(DesignElement subElement : subElements) {
+				MutableTreeNode subResult = subElement.createSearchTree(c);
+				if(subResult != null) {
+					result.add(subResult);
+				}
+			}
+			if(result.getChildCount() > 0) {
+				return result;
+			}
+		}
+		return null;
 	}
 }

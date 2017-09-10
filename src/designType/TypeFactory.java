@@ -227,6 +227,7 @@ public final class TypeFactory {
 			shields = ele("Shields"),
 			solarDevice = ele("SolarDevice"),
 			weapon = ItemElements.Weapon.get();
+			//Add armor subelements
 			armor.addAttributes(
 					att("blindingDamageAdj", WHOLE),
 					att("blindingImmune", BOOLEAN),

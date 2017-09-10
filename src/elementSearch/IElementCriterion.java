@@ -1,14 +1,11 @@
 package elementSearch;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 
-import xml.DesignAttribute;
 import xml.DesignElement;
 
 public interface IElementCriterion {
-	public boolean processElement(DesignElement e);
+	public boolean elementMatches(DesignElement e);
 	//This keeps individual element criteria in one piece
 	public static String[] splitElementTerms(String query) {
 		LinkedList<StringBuilder> terms = new LinkedList<>();
@@ -98,54 +95,5 @@ public interface IElementCriterion {
 				}
 			}
 		}
-	}
-}
-class ElementCriterion implements IElementCriterion {
-	public static void main(String[] args) {
-		for(String s : IElementCriterion.splitElementSubTerms("<A a=\"5 5 5\" b=\"3\">")) {
-			System.out.println(s);
-		}
-	}
-	
-	ArrayList<IElementCriterion> subCriteria;
-	@Override
-	public boolean processElement(DesignElement e) {
-		for(IElementCriterion c : subCriteria) {
-			if(!c.processElement(e)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	public void addSubCriteria(IElementCriterion... subCriteria) {
-		this.subCriteria.addAll(Arrays.asList(subCriteria));
-	}
-}
-class NameCriterion implements IElementCriterion {
-	private String name;
-	public NameCriterion(String name) {
-		this.name = name;
-	}
-	@Override
-	public boolean processElement(DesignElement e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-}
-class AttributeCriterion implements IElementCriterion {
-
-	private String name, value;
-	public AttributeCriterion(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	@Override
-	public boolean processElement(DesignElement e) {
-		for(DesignAttribute a : e.getAttributes()) {
-			if(a.getName().equals(name) && a.getValue().equals(value)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

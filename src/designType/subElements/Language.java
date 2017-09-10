@@ -13,7 +13,6 @@ import javax.swing.JTextField;
 
 import designType.Types;
 import panels.XMLPanel;
-import window.Frame;
 import window.Window;
 import xml.DesignAttribute;
 import xml.DesignElement;

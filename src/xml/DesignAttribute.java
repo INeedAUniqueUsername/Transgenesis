@@ -57,7 +57,7 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(true, value);
 				
 				//Get the named local dockscreens from the selected element and add them to the box
-				DesignElement selected = XMLPanel.getSelected();
+				DesignElement selected = XMLPanel.getInstance().getSelected();
 				if(selected.hasSubElement("DockScreens")) {
 					for(DesignElement e : selected.getSubElementsByName("DockScreens").get(0).getSubElements()) {
 						field.addItem(e.getName());
@@ -153,7 +153,7 @@ public class DesignAttribute {
 			public JComponent getInputField(String value) {
 				//WIP
 				JComboBox<String> field = createComboBox(true, value);
-				XMLPanel.getExtensionTypeMap().forEach((String type, DesignElement design) -> {
+				XMLPanel.getInstance().getExtensionTypeMap().forEach((String type, DesignElement design) -> {
 					if(typeIsValid(design) && design.getName().equals("SystemPartTable")) {
 						for(DesignElement table : design.getSubElements()) {
 							field.addItem(table.getName());
@@ -959,7 +959,7 @@ public class DesignAttribute {
 		*/
 		public void addValidTypes(JComboBox<String> box) {
 			//int count = box.getItemCount();
-			XMLPanel.getExtensionTypeMap().forEach((String type, DesignElement design) -> {
+			XMLPanel.getInstance().getExtensionTypeMap().forEach((String type, DesignElement design) -> {
 				if(typeIsValid(design)) {
 					box.addItem("&" + type + ";");
 				}

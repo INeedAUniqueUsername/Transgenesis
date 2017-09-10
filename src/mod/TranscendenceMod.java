@@ -22,6 +22,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -122,7 +123,7 @@ public class TranscendenceMod extends DesignElement {
 					//Make sure that Library Types are defined in our TypeManager so that they always work in-game
 					boolean found = false;
 					FindLibrary:
-					for(TranscendenceMod m : XMLPanel.getExtensions()) {
+					for(TranscendenceMod m : XMLPanel.getInstance().getExtensions()) {
 						if(
 								m.getName().equals("TranscendenceLibrary") ||
 								m.getName().equals("CoreLibrary") &&
@@ -144,7 +145,7 @@ public class TranscendenceMod extends DesignElement {
 					//Make sure that Library Types are defined in our TypeManager so that they always work in-game
 					found = false;
 					FindLibrary:
-					for(TranscendenceMod m : XMLPanel.getExtensions()) {
+					for(TranscendenceMod m : XMLPanel.getInstance().getExtensions()) {
 						if(
 								m.getName().equals(sub.getName()) &&
 								m.getPath().getAbsolutePath().equals(libraryPath)) {
@@ -186,7 +187,7 @@ public class TranscendenceMod extends DesignElement {
 			out.println(getConsoleMessage("[General] Finding Module " + modulePath + "."));
 			boolean found = false;
 			FindModule:
-			for(TranscendenceMod m : XMLPanel.getExtensions()) {
+			for(TranscendenceMod m : XMLPanel.getInstance().getExtensions()) {
 				if(m.path.getAbsolutePath().equals(modulePath)) {
 					//A parent extension handles binding for all of its modules
 					m.codes.setLastBindCode(m.getBindCode());
@@ -381,7 +382,9 @@ public class TranscendenceMod extends DesignElement {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == viewTypeBindingsButton) {
-					JOptionPane.showMessageDialog(panel, XMLPanel.createScrollPane(XMLPanel.createTextArea(getTypeMapText(), false)));
+					JScrollPane scrollPane = XMLPanel.createScrollPane(XMLPanel.createTextArea(getTypeMapText(), false));
+					scrollPane.setMaximumSize(panel.getSize());
+					JOptionPane.showMessageDialog(panel, scrollPane);
 				}
 			}
 			
@@ -402,6 +405,6 @@ public class TranscendenceMod extends DesignElement {
 		return result;
 	}
 	public String toString() {
-		return String.format("%-36s%-4s%-4s", super.toString(), (isUnbound() ? "[B]" : ""), (isUnsaved() ? "[S]" : ""));
+		return String.format("%-42s%-3s%-3s", super.toString(), (isUnbound() ? "[B]" : ""), (isUnsaved() ? "[S]" : ""));
 	}
 }
