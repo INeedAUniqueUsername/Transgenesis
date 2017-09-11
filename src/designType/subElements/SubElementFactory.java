@@ -1396,7 +1396,7 @@ public class SubElementFactory {
 				break;
 			case Table:
 				e.addOptionalMultipleSubElements(
-						ItemGeneratorElements.values()
+						tableElements
 						);
 				break;
 			case RandomItem:
@@ -1422,7 +1422,7 @@ public class SubElementFactory {
 						att("levelValue", ValueType.CURRENCY_VALUE_SEQUENCE),
 						att("value", CURRENCY_VALUE_SEQUENCE)
 						);
-				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				e.addOptionalMultipleSubElements(groupElements);
 				break;
 			case Lookup:
 				e.addAttributes(att("table", ValueType.TYPE_ITEM_TABLE));
@@ -1437,10 +1437,16 @@ public class SubElementFactory {
 			return e;
 		}
 		static ElementType[] locationCriteriaElements = modifyElementTypes(ItemGeneratorElements.values(), (DesignElement element) -> {
-			element.addAttributes(att("criteria", STRING));
+			element.addAttributes(att("criteria", STRING), att("count", DICE_RANGE));
 		});
 		static ElementType[] levelTableElements = modifyElementTypes(ItemGeneratorElements.values(), (DesignElement element) -> {
-			element.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+			element.addAttributes(att("levelFrequency", LEVEL_FREQUENCY), att("count", DICE_RANGE));
+		});
+		static ElementType[] tableElements = modifyElementTypes(ItemGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("chance", INTEGER), att("count", DICE_RANGE));
+		});
+		static ElementType[] groupElements = modifyElementTypes(ItemGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("chance", INTEGER), att("count", DICE_RANGE));
 		});
 	}
 	public static enum TradeElements implements ElementType {
@@ -1500,14 +1506,69 @@ public class SubElementFactory {
 		
 	}
 	public static enum ShipGeneratorElements implements ElementType {
-		;
-
+		Ship,
+		Table,
+		LevelTable,
+		Group, Ships, Escorts,
+		Null,
+		Lookup;
+		static ElementType[] groupElements = modifyElementTypes(ShipGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("chance", INTEGER));
+		});
+		static ElementType[] tableElements = modifyElementTypes(ShipGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("chance", INTEGER));
+		});
+		static ElementType[] levelTableElements = modifyElementTypes(ShipGeneratorElements.values(), (DesignElement element) -> {
+			element.addAttributes(att("levelFrequency", LEVEL_FREQUENCY));
+		});
 		@Override
 		public DesignElement get() {
-			// TODO Auto-generated method stub
-			return new DesignElement("W.I.P.");
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			case Ship:
+				e.addAttributes(
+						att("controller", ValueType.SHIP_CONTROLLER),
+						att("maxShips", INTEGER),
+						att("count", DICE_RANGE, "1"),
+						att("name", STRING),
+						att("class", TYPE_SHIPCLASS),
+						att("sovereign", TYPE_SOVEREIGN),
+						att("eventHandler", TYPE_ANY),
+						att("orders", ValueType.SHIP_ORDER),
+						att("itemTable", TYPE_ITEM_TABLE)
+						);
+				e.addOptionalSingleSubElements(
+						SpaceObject.createNamesElement(),
+						new Event("OnCreate"),
+						ItemGeneratorElements.Items.get(),
+						DataElements.InitialData.get(),
+						Escorts.get()
+						);
+				break;
+			case Table:
+				e.addAttributes(att("count", DICE_RANGE));
+				e.addOptionalMultipleSubElements(tableElements);
+				break;
+			case LevelTable:
+				e.addAttributes(att("count", DICE_RANGE));
+				e.addOptionalMultipleSubElements(levelTableElements);
+				break;
+			case Group:
+			case Ships:
+			case Escorts:
+				e.addAttributes(att("count", DICE_RANGE));
+				e.addOptionalMultipleSubElements(groupElements);
+				break;
+			case Null:
+				break;
+			case Lookup:
+				e.addAttributes(att("count", DICE_RANGE), att("table", TYPE_SHIP_TABLE));
+				break;			
+			default:
+				break;
+			}
+			return e;
 		}
-		
 	}
 	public static enum SystemCriteria implements ElementType {
 		Attributes,
@@ -1569,6 +1630,16 @@ public class SubElementFactory {
 			return e;
 		}
 	}
+	public static enum UniverseElements implements ElementType {
+		CoreLibrary, TranscendenceAdventure;
+
+		@Override
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
+			e.addAttributes(att("filename", STRING));
+			return e;
+		}
+	}
 	
 	/*
 	switch(s) {
@@ -1612,16 +1683,16 @@ public class SubElementFactory {
 	public static DesignAttribute[] createImageDescAttributes() {
 		return new DesignAttribute[] {
 				att("imageID", TYPE_IMAGE),
-				att("imageX", WHOLE),
-				att("imageY", WHOLE),
-				att("imageWidth", WHOLE),
-				att("imageHeight", WHOLE),
-				att("imageFrameCount", WHOLE),
-				att("rotationCount", WHOLE),
+				att("imageX", INTEGER),
+				att("imageY", INTEGER),
+				att("imageWidth", INTEGER),
+				att("imageHeight", INTEGER),
+				att("imageFrameCount", INTEGER),
+				att("rotationCount", INTEGER),
 				att("rotationColumns", WHOLE),
 				att("animationColumns", WHOLE),
-				att("imageTicksPerFrame", WHOLE),
-				att("flashTicks", WHOLE),
+				att("imageTicksPerFrame", INTEGER),
+				att("flashTicks", INTEGER),
 				att("blending", BLENDING),
 				att("viewportRatio", DOUBLE),
 				att("viewportSize", INTEGER),

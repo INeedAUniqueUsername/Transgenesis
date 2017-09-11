@@ -74,36 +74,39 @@ public class AttributeFactory {
 		case ItemTable:
 			break;
 		case ItemType:
-			return new DesignAttribute[] {
-					att("ammoCharges", BOOLEAN),
-					att("charges", WHOLE),
-					att("data", STRING),
-					att("enhancement", STRING),
-					att("frequency", FREQUENCY),
-					att("level", WHOLE),
-					att("massBonusPerCharge", WHOLE),
-					att("name", STRING),
-					att("noSaleIfUsed", BOOLEAN),
-					att("numberAppearing", WHOLE),
-					att("pluralName", STRING),
-					att("randomDamaged", BOOLEAN),
-					att("reverseArticle", BOOLEAN),
-					att("secondPlural", BOOLEAN),
-					att("showReference", BOOLEAN),
-					att("sortName", STRING),
-					att("unknownType", TYPE_ITEM),
-					att("useAsArmorSet", BOOLEAN),
-					att("useCompleteArmorOnly", BOOLEAN),
-					att("useEnabledOnly", BOOLEAN),
-					att("useInstalledOnly", BOOLEAN),
-					att("useKey", CHARACTER),
-					att("useScreen", ValueType.TYPE_DOCKSCREEN),
-					att("useUninstalledOnly", BOOLEAN),
-					att("value", WHOLE),
-					att("valueBonusPerCharge", WHOLE),
-					att("valueCharges", BOOLEAN),
-					att("virtual", BOOLEAN),
-			};
+			ArrayList<DesignAttribute> attributes = new ArrayList<DesignAttribute>() {{
+				addAll(Arrays.asList(createNameFlags()));
+				addAll(Arrays.asList(new DesignAttribute[] {
+						att("ammoCharges", BOOLEAN),
+						att("charges", WHOLE),
+						att("data", STRING),
+						att("enhancement", STRING),
+						att("frequency", FREQUENCY),
+						att("level", WHOLE),
+						att("mass", WHOLE),
+						att("massBonusPerCharge", WHOLE),
+						att("name", STRING),
+						att("noSaleIfUsed", BOOLEAN),
+						att("numberAppearing", WHOLE),
+						att("pluralName", STRING),
+						att("randomDamaged", BOOLEAN),
+						att("showReference", BOOLEAN),
+						att("sortName", STRING),
+						att("unknownType", TYPE_ITEM),
+						att("useAsArmorSet", BOOLEAN),
+						att("useCompleteArmorOnly", BOOLEAN),
+						att("useEnabledOnly", BOOLEAN),
+						att("useInstalledOnly", BOOLEAN),
+						att("useKey", CHARACTER),
+						att("useScreen", ValueType.TYPE_DOCKSCREEN),
+						att("useUninstalledOnly", BOOLEAN),
+						att("value", WHOLE),
+						att("valueBonusPerCharge", WHOLE),
+						att("valueCharges", BOOLEAN),
+						att("virtual", BOOLEAN)
+				}));
+			}};
+			return attributes.toArray(new DesignAttribute[0]);
 		case MissionType:
 			return new DesignAttribute[] {
 					att("allowPlayerDelete", BOOLEAN, "false"),
@@ -143,7 +146,7 @@ public class AttributeFactory {
 		case ShipClass:
 		case ShipClassOverride:
 			//WIP
-			ArrayList<DesignAttribute> attributes = new ArrayList<>();
+			attributes = new ArrayList<>();
 			attributes.addAll(Arrays.asList(spaceObjectAttributes));
 			attributes.addAll(Arrays.asList(new DesignAttribute[] {
 					att("armorCriteria", STRING),
@@ -181,6 +184,7 @@ public class AttributeFactory {
 					att("structuralHitPoints", WHOLE),
 					att("thrust", INTEGER),
 					att("thrustRatio", DOUBLE),
+					att("type", STRING),
 					att("wreckType", TYPE_STATION),
 			}));
 			return attributes.toArray(new DesignAttribute[0]);
@@ -347,5 +351,17 @@ public class AttributeFactory {
 					return enhanceAbilities;
 				}
 		);
+	}
+	public static DesignAttribute[] createNameFlags() {
+		return new DesignAttribute[] {
+				att("definiteArticle", BOOLEAN),
+				att("firstPlural", BOOLEAN),
+				att("esPlural", BOOLEAN),
+				att("customPlural", BOOLEAN),
+				att("secondPlural", BOOLEAN),
+				att("reverseArticle", BOOLEAN),
+				att("noArticle", BOOLEAN),
+				att("personalName", BOOLEAN),
+		};
 	}
 }

@@ -221,7 +221,7 @@ public final class TypeFactory {
 			initialData = DataElements.InitialData.get(),
 			invoke = ele("Invoke"),
 			miscellaneousDevice = ele("MiscellaneousDevice"),
-			missile = ele("Missile"),
+			missile = SubElementFactory.createWeaponDescElement("Missile"),
 			names = ele("Names"),
 			reactorDevice = ele("ReactorDevice"),
 			repairerDevice = ele("RepairerDevice"),
@@ -323,7 +323,9 @@ public final class TypeFactory {
 					att("capacitorPowerUse", WHOLE),
 					att("powerRating", WHOLE)
 					);
-			missile.addAttributes(att("W.I.P.", STRING));
+			//WIP
+			//names
+			//missile
 			reactorDevice.addAttributes(
 					att("fuelCriteria", STRING),
 					att("maxFuel", DOUBLE),
@@ -440,7 +442,7 @@ public final class TypeFactory {
 								//Deprecated
 								//att("flyBy", BOOLEAN),
 								//att("standOff", BOOLEAN),
-								att("flickingStyle", FLOCKING_STYLE),
+								att("flockingStyle", FLOCKING_STYLE),
 								att("flockFormation", BOOLEAN),
 								att("fireRateAdj", WHOLE),
 								att("fireRangeAdj", WHOLE),
@@ -528,7 +530,7 @@ public final class TypeFactory {
 					}},
 					new DesignElement("Escorts") {{
 						addOptionalMultipleSubElements(ShipGeneratorElements.values());
-					}},
+					}}, SubElementFactory.createImageDescElement("Image"),
 					new DesignElement("Interior") {{
 						addOptionalMultipleSubElements(
 								() -> {
@@ -555,6 +557,13 @@ public final class TypeFactory {
 								}
 								);
 						
+					}}, new DesignElement("Maneuver") {{
+						addAttributes(
+								att("rotationCount", WHOLE, "20"),
+								att("maxRotationRate", DOUBLE),
+								att("rotationAccel", DOUBLE),
+								att("rotationStopAccel", DOUBLE)
+								);
 					}},
 					new DesignElement("PlayerSettings") {{
 						addAttributes(
@@ -726,11 +735,16 @@ public final class TypeFactory {
 				encounters.addAttributes(att("frequency", FREQUENCY));
 				encounters.addOptionalMultipleSubElements(ShipGeneratorElements.values());
 				
-			//WIP
+			//WIP, move to CompositeImageElements
+			image = ele("Image");
 			DesignElement imageComposite = ele("ImageComposite");
 			DesignElement imageEffect = ele("ImageEffect");
 			DesignElement imageLookup = ele("ImageLookup");
 			DesignElement imageVariants = ele("ImageVariants");
+			
+			for(DesignElement i : new DesignElement[] {image, imageComposite, imageEffect, imageLookup, imageVariants}) {
+				i.addAttributes(att("shipwreckID", ValueType.TYPE_SHIPCLASS)); //WIP, replace with list
+			}
 			
 			DesignElement reinforcements = ele("Reinforcements");
 				reinforcements.addAttributes(

@@ -14,6 +14,29 @@ import xml.DesignElement;
 
 public final class SpaceObject {
 	private SpaceObject() {}
+	public static DesignElement createNamesElement() {
+		return new DesignElement("Names") {{
+			addAttributes(SubElementFactory.createNameAttributes());
+		}};
+	}
+	enum SpaceObjectElements implements ElementType {
+		Names,
+		Items;
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			case Names:
+				e.addAttributes(
+						SubElementFactory.createNameAttributes()
+						);
+				break;
+			case Items:
+				e.addOptionalMultipleSubElements(ItemGeneratorElements.values());
+				break;
+			}
+			return e;
+		}
+	}
 	public static DesignElement[] createSpaceObjectSubElements(Types t) {
 		DesignElement names = new DesignElement("Names");
 		names.addAttributes(
@@ -25,12 +48,15 @@ public final class SpaceObject {
 		devices.addOptionalMultipleSubElements(
 				DeviceGeneratorElements.values()
 				);
-		//Replace with Composite Image
+		
+		/*
 		DesignElement image = new DesignElement("Image");
 		image.addAttributes(SubElementFactory.createImageDescAttributes());
 		if(t == Types.StationType) {
-			image.addAttributes(att("shipwreckID", ValueType.TYPE_SHIPCLASS));
+			image.addAttributes(att("shipwreckID", ValueType.TYPE_SHIPCLASS)); //WIP, replace with list
 		}
+		*/
+		
 		
 		
 		DesignElement heroImage = new DesignElement("HeroImage");
@@ -60,7 +86,7 @@ public final class SpaceObject {
 		trade.addOptionalMultipleSubElements(TradeElements.values());
 		
 		return new DesignElement[] {
-				names, items, devices, image, heroImage, initialData, dockingPorts, trade
+				names, items, devices, /*image,*/ heroImage, initialData, dockingPorts, trade
 		};
 	}
 }

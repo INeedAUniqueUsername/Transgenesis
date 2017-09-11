@@ -137,17 +137,20 @@ public class Loader {
 				    		continue Read;
 				    	} catch(Exception e) {}
 			    	}
-		    		try {
-			    		//Check if we have a DesignType
-				    	Types result = Types.valueOf(name);
-			    		DesignElement element = result.get();
-			    		elementStack.getLast().addSubElements(element);
-			    		elementStack.addLast(element);
-			    		addAttributes.accept(element);
-			    		category = result;
-			    		System.out.println("DesignType Found");
-			    		continue Read;
-			    	} catch(Exception e) {}
+			    	//We only check for DesignType on the extension level
+			    	if(elementStack.size() == 1) {
+			    		try {
+				    		//Check if we have a DesignType
+					    	Types result = Types.valueOf(name);
+				    		DesignElement element = result.get();
+				    		elementStack.getLast().addSubElements(element);
+				    		elementStack.addLast(element);
+				    		addAttributes.accept(element);
+				    		category = result;
+				    		System.out.println("DesignType Found");
+				    		continue Read;
+				    	} catch(Exception e) {}
+			    	}
 			    	
 			    	//Otherwise, assume that we are making a DesignType and currently looking at a subelement
 		    		if(elementStack.size() == 0) {

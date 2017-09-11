@@ -58,7 +58,7 @@ public class DesignAttribute {
 				JComboBox<String> field = createComboBox(true, value);
 				
 				//Get the named local dockscreens from the selected element and add them to the box
-				DesignElement selected = XMLPanel.getInstance().getSelected();
+				DesignElement selected = XMLPanel.getInstance().getSelectedElement();
 				if(selected.hasSubElement("DockScreens")) {
 					for(DesignElement e : selected.getSubElementsByName("DockScreens").get(0).getSubElements()) {
 						field.addItem(e.getName());
@@ -98,7 +98,7 @@ public class DesignAttribute {
 				return field;
 			}
 			public boolean typeIsValid(DesignElement design) {
-				return design != null && design.getName().equals("TranscendenceLibrary");
+				return design != null && (design.getName().equals("TranscendenceLibrary") || design.getName().equals("CoreLibrary"));
 			}
 		}, TYPE_SOVEREIGN {
 			public JComponent getInputField(String value) {
@@ -458,14 +458,14 @@ public class DesignAttribute {
 			}
 		}, SYSTEMTYPE_BACKGROUND {
 			public JComponent getInputField(String value) {
-				return createComboBox(true, value,
+				return createComboBox(false, value,
 						"",
 						"none"
 						);
 			}
 		}, SHAPE_SPACE_ENVIRONMENT {
 			public JComponent getInputField(String value) {
-				return createComboBox(true, value,
+				return createComboBox(false, value,
 						"",
 						"circular",
 						"arc"
@@ -473,7 +473,7 @@ public class DesignAttribute {
 			}
 		}, PAINT_LAYER {
 			public JComponent getInputField(String value) {
-				return createComboBox(true, value,
+				return createComboBox(false, value,
 						"",
 						"overhang"
 						);
@@ -622,6 +622,16 @@ public class DesignAttribute {
 			}
 			public boolean typeIsValid(DesignElement design) {
 				return design != null && design.getName().equals("ItemTable");
+			}
+		}, TYPE_SHIP_TABLE {
+			public JComponent getInputField(String value) {
+				//WIP
+				JComboBox<String> field = createComboBox(true, value);
+				addValidTypes(field);
+				return field;
+			}
+			public boolean typeIsValid(DesignElement design) {
+				return design != null && design.getName().equals("ShipTable");
 			}
 		}, TYPE_DOCKSCREEN {
 			public JComponent getInputField(String value) {
@@ -1010,6 +1020,78 @@ public class DesignAttribute {
 						);
 				return field;
 			}
+		}, SHIP_ORDER {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						//	name						target	data
+						"",
+
+						"guard",
+						"dock",
+						"attack",
+						"wait",	
+						"gate",	
+
+						"gateOnThreat",
+						"gateOnStationDestroyed",
+						"patrol",
+						"escort",
+						"scavenge",
+
+						"followPlayerThroughGate",
+						"attackNearestEnemy",	
+						"tradeRoute",			
+						"wander",				
+						"loot",					
+
+						"hold",	
+						"mine",	
+						"waitForPlayer",	
+						"attackPlayerOnReturn",
+						"follow",				
+
+						"navPath",				
+						"goto",					
+						"waitForTarget",		
+						"waitForEnemy",			
+						"bombard",				
+
+						"approach",				
+						"aim",					
+						"orbit",				
+						"holdCourse",			
+						"turnTo",				
+
+						"attackHold",			
+						"attackStation",		
+						"fireEvent",			
+						"waitForUndock",		
+						"sendMessage",			
+
+						"attackArea",			
+						"holdAndAttack",		
+						"gotoPos",				
+						"waitForThreat",		
+						"sentry"
+					
+						);
+				return field;
+			}
+		}, SHIP_CONTROLLER {
+			public JComponent getInputField(String value) {
+				JComboBox<String> field = createComboBox(false, value,
+						"",
+						"auton",
+						"crew",
+						"ferian",
+						"fleet",
+						"fleetcommand",
+						"gaianprocessor",
+						"gladiator",
+						"zoanthrope"
+						);
+				return field;
+			}
 		}
 		
 		;
@@ -1025,6 +1107,7 @@ public class DesignAttribute {
 		};
 		public JComponent getInputField(String value) {
 			JTextField field = new JTextField();
+			//field.setBackground(XMLPanel.BACKGROUND);
 			field.setFont(Medium.f);
 			field.setText(value);
 			return field;
@@ -1039,6 +1122,7 @@ public class DesignAttribute {
 		}
 		public JComboBox<String> createComboBox(boolean editable, String value, String... choices) {
 			JComboBox<String> field = new JComboBox<String>();
+			//field.setBackground(XMLPanel.BACKGROUND);
 			for(String s : choices) {
 				field.addItem(s);
 			}

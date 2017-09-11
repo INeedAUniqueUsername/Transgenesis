@@ -534,7 +534,7 @@ public class DesignElement {
 	}
 	public void createAttributePanelHeaders(boolean attributes, JPanel labelPanel, JPanel fieldPanel) {
 		if(attributes) {
-			JLabel headerName = new JLabel("Name");
+			JLabel headerName = new JLabel(String.format("%-28s%s", "Name", ""));
 			headerName.setFont(Large.f);
 			labelPanel.add(headerName);
 			JLabel headerValue = new JLabel("Value");
