@@ -772,7 +772,7 @@ public class XMLPanel extends JPanel {
 			if(loaded.contains(m)) {
 				out.println("Warning: Module " + m.getPath() + " already loaded");
 			} else if(m == null || m.getName().equals("TranscendenceError")) {
-				out.println("Failure: Module " + m.getPath() + " could not be loaded");
+				out.println("Failure: Module " + m.getPath() + " could not be loaded; " + m.getText());
 			} else {
 				out.println("Success: Module " + m.getPath() + " loaded");
 				elementTreeModel.insertNodeInto(m.toTreeNode(), elementTreeOrigin, 0);

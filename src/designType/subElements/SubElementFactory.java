@@ -1613,33 +1613,6 @@ public class SubElementFactory {
 			return e;
 		}
 	}
-	public static enum ExtensionElements implements ElementType {
-		Module, Library;
-
-		@Override
-		public DesignElement get() {
-			DesignElement e = new DesignElement(name());
-			switch(this) {
-			case Library:
-				e.addAttributes(att("unid", TYPE_MOD));
-				break;
-			case Module:
-				e.addAttributes(att("filename", STRING));
-				break;
-			}
-			return e;
-		}
-	}
-	public static enum UniverseElements implements ElementType {
-		CoreLibrary, TranscendenceAdventure;
-
-		@Override
-		public DesignElement get() {
-			DesignElement e = new DesignElement(name());
-			e.addAttributes(att("filename", STRING));
-			return e;
-		}
-	}
 	
 	/*
 	switch(s) {

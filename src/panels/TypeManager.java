@@ -202,7 +202,7 @@ public class TypeManager {
 				JFrame frame = ((JFrame) SwingUtilities.getWindowAncestor(container));
 				frame.remove(result);
 				frame.add(editor);
-				editor.selectElement(editor.getSelected());
+				editor.selectElement(editor.getSelectedExtension(), editor.getSelectedElement());
 				frame.pack();
 			}
 		});

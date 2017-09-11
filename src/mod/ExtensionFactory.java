@@ -1,14 +1,41 @@
 package mod;
 
 import designType.Types;
-import designType.subElements.SubElementFactory.ExtensionElements;
 import designType.subElements.ElementType;
 import xml.DesignAttribute;
 import xml.DesignElement;
 import xml.DesignAttribute.ValueType;
 import static xml.DesignAttribute.*;
+import static xml.DesignAttribute.ValueType.STRING;
+import static xml.DesignAttribute.ValueType.TYPE_MOD;
 public class ExtensionFactory {
-	//Done
+	public static enum ExtensionElements implements ElementType {
+		Module, Library;
+
+		@Override
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
+			switch(this) {
+			case Library:
+				e.addAttributes(att("unid", TYPE_MOD));
+				break;
+			case Module:
+				e.addAttributes(att("filename", STRING));
+				break;
+			}
+			return e;
+		}
+	}
+	public static enum EmbeddedExtensionElements implements ElementType {
+		CoreLibrary, TranscendenceLibrary, TranscendenceAdventure;
+
+		@Override
+		public DesignElement get() {
+			DesignElement e = new DesignElement(name());
+			e.addAttributes(att("filename", STRING));
+			return e;
+		}
+	}
 	public static enum Extensions implements ElementType {
 		TranscendenceAdventure,
 		TranscendenceExtension,
@@ -48,12 +75,10 @@ public class ExtensionFactory {
 						att("usesXML", ValueType.BOOLEAN, ""),//"false"),
 						att("version", ValueType.STRING, "")//"1.0")
 						);
-				
-				e.addOptionalMultipleSubElements(ExtensionElements.Module, ExtensionElements.Library);
 				break;
 			//TranscendenceModule is an extension with only DesignTypes
 			case TranscendenceModule:
-				e = new TranscendenceMod("TranscendenceModule");
+				e.addOptionalMultipleSubElements(ExtensionElements.values());
 				break;
 			default:
 				try {

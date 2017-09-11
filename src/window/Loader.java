@@ -222,11 +222,14 @@ public class Loader {
 		} catch (Exception e) {
 			failed = true;
 			e.printStackTrace(System.out);
-		}
-		if(failed) {
+			
 			System.out.println("Encountered error; could not load " + path);
 			mod = new TranscendenceMod("TranscendenceError");
 			mod.setPath(path);
+			mod.setText(ExceptionUtils.getStackTrace(e));
+		}
+		if(failed) {
+			
 		}
 		return mod;
 		/*
