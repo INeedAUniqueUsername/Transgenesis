@@ -75,6 +75,13 @@ public class TranscendenceMod extends DesignElement {
 		modules = new LinkedList<>();
 		codes = new HashCodeContainer();
 	}
+	public List<TranscendenceMod> collapseModuleChain() {
+		ArrayList<TranscendenceMod> allModules = new ArrayList<>();
+		for(TranscendenceMod module : modules) {
+			allModules.addAll(module.collapseModuleChain());
+		}
+		return allModules;
+	}
 	//To allow overwriting dependency types without recursively binding all the extensions, we should take a list of Types from dependencies
 	//If we're a TranscendenceModule, then have our parent extension bind types for us
 	public void updateTypeBindingsWithModules() {
@@ -88,18 +95,18 @@ public class TranscendenceMod extends DesignElement {
 	public void updateTypeBindings() {
 		out.println(getConsoleMessage("[General] Type Binding requested"));
 		//Check if anything changed since the last binding. If not, then we don't update.
-		if(isUnbound()) {
+		if(!isUnbound()) {
 			out.println(getConsoleMessage("[Warning] Type binding skipped; no changes"));
 			return;
 		}
 		String consoleName = getName() + path.getPath();
 		
 		typeMap.clear();
-		if(getName().equals("TranscendenceModule")) {
+		BindParent: if(getName().equals("TranscendenceModule")) {
 			//We should have our parent extension handle this
 			if(parent == null) {
-				out.println(getConsoleMessage("[Failure] Parent Type Binding failed; Parent Extension unknown"));
-				return;
+				out.println(getConsoleMessage("[Warning] Parent Type Binding canceled; Parent Extension unknown"));
+				break BindParent;
 			}
 			out.println(getConsoleMessage("[General] Type Binding requested from Parent Extension"));
 			
@@ -116,7 +123,11 @@ public class TranscendenceMod extends DesignElement {
 			typeMap.putAll(parent.typeMap);
 		}
 		
-		
+		bindAccessibleTypes(typeMap);
+		codes.setLastBindCode(getBindCode());
+		out.println(getConsoleMessage("[Success] Type Binding complete"));
+	}
+	public void bindAccessibleTypes(Map<String, DesignElement> typeMap) {
 		//Insert all of our own Types. This will allow dependencies to override them
 		for(String s : types.bindAll().values()) {
 			if(typeMap.containsKey(s)) {
@@ -134,8 +145,6 @@ public class TranscendenceMod extends DesignElement {
 		updateModules();
 		bindInternalTypes(typeMap);
 		bindModuleTypes(typeMap);
-		codes.setLastBindCode(getBindCode());
-		out.println(getConsoleMessage("[Success] Type Binding complete"));
 	}
 	//Allow modules to take external entities
 	//Note: If we are a Module, we do not inherit dependencies from the Parent Extension. We will just receive the Type Map, which already includes the Parent Extension's Dependency Types
@@ -408,13 +417,19 @@ public class TranscendenceMod extends DesignElement {
 	public boolean isUnsaved() {
 		return getSaveCode() != codes.getLastSaveCode();
 	}
-	//Bind Code depends on changes with Types
+	//Bind Code depends on changes with local/dependency Types and module Designs
 	public int getBindCode() {
 		Function<TranscendenceMod, Collection<String>> getTypes = (TranscendenceMod extension) -> {
 			return extension.types.bindAll().values();
 			};
 		//out.println(getConsoleMessage("[General] Bind Code: " + Objects.hash(parent == null ? null : getTypes.apply(parent), types.bindAll().values(), dependencies.stream().map(getTypes), modules.stream().map(getTypes))));	
-		return Objects.hash(parent == null ? null : getTypes.apply(parent), types.bindAll().values(), dependencies.stream().map(getTypes), modules.stream().map(getTypes));
+		return Objects.hash(
+				parent == null ? null : getTypes.apply(parent),
+						types.bindAll().values(),
+						dependencies.stream().map(getTypes),
+						collapseModuleChain().stream().map((TranscendenceMod module) -> {
+							return module.getSubElements().hashCode();
+						}));
 		//return Objects.hash(parent, types, dependencies, modules);
 	}
 	//Save Code depends on changes to our own code 
