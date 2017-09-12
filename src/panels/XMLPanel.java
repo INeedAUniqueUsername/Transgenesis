@@ -835,6 +835,7 @@ public class XMLPanel extends JPanel {
 		if(selectedExtension != null) {
 			selectedExtension.updateTypeBindingsWithModules();
 		}
+		elementTreeModel.nodeStructureChanged(elementTreeOrigin);
 	}
 	private void save() {
 		if(selectedElement != null) {
@@ -844,6 +845,7 @@ public class XMLPanel extends JPanel {
 			selectedExtension.updateTypeBindings();
 			selectedExtension.save();
 		}
+		elementTreeModel.nodeStructureChanged(elementTreeOrigin);
 	}
 	public TranscendenceMod getSelectedExtension() {
 		return selectedExtension;
@@ -877,7 +879,6 @@ public class XMLPanel extends JPanel {
 			xmlButton.setEnabled(true);
 			element.initializeFrame(this);
 		}
-		
 		if(selectedExtension != null) {
 			//bindButton.setEnabled(selectedExtension.isUnbound());
 			//saveButton.setEnabled(selectedExtension.isUnsaved());

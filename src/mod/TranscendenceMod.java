@@ -65,6 +65,7 @@ public class TranscendenceMod extends DesignElement {
 	private List<TranscendenceMod> dependencies;
 	private List<TranscendenceMod> modules;
 	HashCodeContainer codes;
+	ChangeDetector changes = new ChangeDetector(this);
 	public TranscendenceMod(String name) {
 		super(name);
 		parent = null;
@@ -85,12 +86,23 @@ public class TranscendenceMod extends DesignElement {
 	//To allow overwriting dependency types without recursively binding all the extensions, we should take a list of Types from dependencies
 	//If we're a TranscendenceModule, then have our parent extension bind types for us
 	public void updateTypeBindingsWithModules() {
-		out.println(getConsoleMessage("Recursive Type Binding requested"));
-		//Save as updateTypeBindings() but recursively updates all module type bindings too
+		out.println(getConsoleMessage("[General] Recursive Type Binding requested"));
 		updateTypeBindings();
-		for(TranscendenceMod module : new ArrayList<TranscendenceMod>(modules)) {
-			module.updateTypeBindingsWithModules();
+		for(TranscendenceMod module : modules) {
+			module.updateTypeBindingsWithModules(typeMap);
 		}
+		System.out.println("[General] Recursive Type Binding complete");
+		codes.setLastBindCode(getBindCode());
+	}
+	public void updateTypeBindingsWithModules(Map<String, DesignElement> parentMap) {
+		out.println(getConsoleMessage("[General] Recursive Type Binding continued"));
+		typeMap = new TreeMap<String, DesignElement>(parentMap);
+		bindAccessibleTypes(typeMap);
+		for(TranscendenceMod module : modules) {
+			module.updateTypeBindingsWithModules(typeMap);
+		}
+		System.out.println("[General] Recursive Type Binding partially complete");
+		codes.setLastBindCode(getBindCode());
 	}
 	public void updateTypeBindings() {
 		out.println(getConsoleMessage("[General] Type Binding requested"));
@@ -417,24 +429,37 @@ public class TranscendenceMod extends DesignElement {
 	public boolean isUnsaved() {
 		return getSaveCode() != codes.getLastSaveCode();
 	}
+	public int getLastBindCode() {
+		return codes.getLastBindCode();
+	}
+	public int getLastSaveCode() {
+		return codes.getLastSaveCode();
+	}
 	//Bind Code depends on changes with local/dependency Types and module Designs
 	public int getBindCode() {
+		changes.showChanges(this);
+		changes.update(this);
+		/*
 		Function<TranscendenceMod, Collection<String>> getTypes = (TranscendenceMod extension) -> {
 			return extension.types.bindAll().values();
 			};
+		*/
 		//out.println(getConsoleMessage("[General] Bind Code: " + Objects.hash(parent == null ? null : getTypes.apply(parent), types.bindAll().values(), dependencies.stream().map(getTypes), modules.stream().map(getTypes))));	
 		return Objects.hash(
-				parent == null ? null : getTypes.apply(parent),
-						types.bindAll().values(),
-						dependencies.stream().map(getTypes),
-						collapseModuleChain().stream().map((TranscendenceMod module) -> {
-							return module.getSubElements().hashCode();
-						}));
+				types,
+				dependencies,//dependencies.stream().map(getTypes),
+				modules
+				/*
+				collapseModuleChain().stream().map((TranscendenceMod module) -> {
+					return module.getSubElements().hashCode();
+				})
+				*/
+				);
 		//return Objects.hash(parent, types, dependencies, modules);
 	}
 	//Save Code depends on changes to our own code 
 	public int getSaveCode() {
-		return Objects.hash(types, this.getAttributesMap(), this.getSubElements());
+		return Objects.hash(types, this.getAttributes(), this.getSubElements());
 	}
 	public void save() {
 		if(!path.isFile()) {
@@ -442,12 +467,11 @@ public class TranscendenceMod extends DesignElement {
 			return;
 		}
 		out.println(getConsoleMessage("[Success] File saved"));
-		int lastSaveCode = hashCode();
-		if(lastSaveCode == codes.getLastSaveCode()) {
+		if(!isUnsaved()) {
 			out.println(getConsoleMessage("[Warning] Saving skipped; no changes"));
 			return;
 		}
-		codes.setLastSaveCode(lastSaveCode);
+		codes.setLastSaveCode(getSaveCode());
 		File path_metadata = new File(path.getAbsolutePath() + ".dat");
 		path.delete();
 		path_metadata.delete();
@@ -525,5 +549,38 @@ public class TranscendenceMod extends DesignElement {
 	}
 	public String toString() {
 		return String.format("%-42s%-3s%-3s", super.toString(), (isUnbound() ? "[B]" : ""), (isUnsaved() ? "[S]" : ""));
+	}
+	public int hashCode() {
+		return Objects.hash(this.dependencies, this.modules, this.path, this.types);
+	}
+	class ChangeDetector {
+		private TranscendenceMod parent;
+		private TypeManager types;
+		Map<String, DesignElement> typeMap;
+		private File path;
+		private List<TranscendenceMod> dependencies;
+		private List<TranscendenceMod> modules;
+		public ChangeDetector(TranscendenceMod extension) {
+			update(extension);
+		}
+		public void update(TranscendenceMod extension) {
+			parent = extension.parent;
+			types = extension.types;
+			typeMap = extension.typeMap;
+			path = extension.path;
+			dependencies = extension.dependencies;
+			modules = extension.modules;
+		}
+		public void showChanges(TranscendenceMod extension) {
+			if(parent != extension.parent) System.out.println(getConsoleMessage("Parent changed"));
+			if(types != extension.types) System.out.println(getConsoleMessage("Types changed"));
+			if(typeMap != extension.typeMap) System.out.println(getConsoleMessage("Type Map changed"));
+			if(path != extension.path) System.out.println(getConsoleMessage("Path changed"));
+			if(dependencies != extension.dependencies) System.out.println(getConsoleMessage("Dependencies changed"));
+			if(modules != extension.modules) System.out.println(getConsoleMessage("Modules changed"));
+		}
+		public int hashCode() {
+			return 0;
+		}
 	}
 }
