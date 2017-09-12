@@ -1403,7 +1403,7 @@ public class SubElementFactory {
 				e.addAttributes(
 						att("criteria", STRING),
 						att("attributes", STRING),
-						att("modifiers", STRING),
+						//att("modifiers", STRING), //Deprecated
 						att("categories", STRING),
 						att("levelFrequency", LEVEL_FREQUENCY),
 						att("level", WHOLE),

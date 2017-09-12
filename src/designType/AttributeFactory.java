@@ -80,6 +80,7 @@ public class AttributeFactory {
 						att("ammoCharges", BOOLEAN),
 						att("charges", WHOLE),
 						att("data", STRING),
+						att("description", STRING),
 						att("enhancement", STRING),
 						att("frequency", FREQUENCY),
 						att("level", WHOLE),

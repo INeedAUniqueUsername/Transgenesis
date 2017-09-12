@@ -75,7 +75,7 @@ public class TypeManager {
 	//When a Type is renamed, then all instances of it in elements should be renamed too
 	XMLPanel editor;
 	JScrollPane pane = null;
-	ArrayList<TypeElement> elements; //TO DO: Make sure that entries and ranges are correctly sorted at extension loading time if no working metadata file is available
+	List<TypeElement> elements; //TO DO: Make sure that entries and ranges are correctly sorted at extension loading time if no working metadata file is available
 	public TypeManager() {
 		elements = new ArrayList<>();
 	}

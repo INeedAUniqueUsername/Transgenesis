@@ -79,6 +79,9 @@ public class ExtensionFactory {
 			//TranscendenceModule is an extension with only DesignTypes
 			case TranscendenceModule:
 				e.addOptionalMultipleSubElements(ExtensionElements.values());
+				e.addOptionalSingleSubElements(new DesignElement("Modules") {{
+					addOptionalMultipleSubElements(ExtensionElements.Module);
+				}});
 				break;
 			default:
 				try {
