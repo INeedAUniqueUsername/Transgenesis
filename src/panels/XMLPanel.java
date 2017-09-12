@@ -783,7 +783,7 @@ public class XMLPanel extends JPanel {
 		for(TranscendenceMod mod : mods) {
 			//Do not bind on TranscendenceModules because we will have their parents bind for them
 			if(!mod.getName().equals("TranscendenceModule")) {
-				mod.updateTypeBindings();
+				mod.updateTypeBindingsWithModules();
 			}
 		}
 	}
@@ -802,7 +802,7 @@ public class XMLPanel extends JPanel {
 			setData(selectedElement);
 		}
 		if(selectedExtension != null) {
-			selectedExtension.updateTypeBindings();
+			selectedExtension.updateTypeBindingsWithModules();
 		}
 	}
 	private void save() {

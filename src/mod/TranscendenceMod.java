@@ -10,12 +10,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -74,6 +76,14 @@ public class TranscendenceMod extends DesignElement {
 	}
 	//To allow overwriting dependency types without recursively binding all the extensions, we should take a list of Types from dependencies
 	//If we're a TranscendenceModule, then have our parent extension bind types for us
+	public void updateTypeBindingsWithModules() {
+		out.println(getConsoleMessage("Recursive Type Binding requested"));
+		//Save as updateTypeBindings() but recursively updates all module type bindings too
+		updateTypeBindings();
+		for(TranscendenceMod module : modules) {
+			module.updateTypeBindingsWithModules();
+		}
+	}
 	public void updateTypeBindings() {
 		out.println(getConsoleMessage("[General] Type Binding requested"));
 		int bindingCode = getBindCode();
@@ -93,9 +103,15 @@ public class TranscendenceMod extends DesignElement {
 				return;
 			}
 			out.println(getConsoleMessage("[General] Type Binding requested from Parent Extension"));
-			parent.updateTypeBindings();
 			
-			out.println(getConsoleMessage("[General] Type Binding copied from Parent Extension"));
+			//We only update Parent Extension Type Bindings if there are unbound changes
+			if(parent.isUnbound()) {
+				parent.updateTypeBindings();
+			} else {
+				out.println(getConsoleMessage("[Warning] Parent Type Binding skipped; no changes"));
+			}
+			
+			out.println(getConsoleMessage("[Success] Parent Type Binding complete; copying Types"));
 			//Inherit types from our Parent Extension; we will not automatically receive them when the Parent Extension is updated
 			//We make a copy of the type map from the Parent Extension since we don't want it to inherit Types/Dependencies that are exclusive to us
 			typeMap.putAll(parent.typeMap);
@@ -186,6 +202,11 @@ public class TranscendenceMod extends DesignElement {
 		}
 	}
 	public void bindAsDependency(Map<String, DesignElement> typeMap) {
+		/*
+		if(typeMap.get(getAttributeByName("unid")) == this) {
+			return;
+		}
+		*/
 		for(String s : types.bindAll().values()) {
 			typeMap.put(s, null);
 		}
@@ -193,6 +214,13 @@ public class TranscendenceMod extends DesignElement {
 		for(TranscendenceMod module : modules) {
 			module.bindAsDependency(typeMap);
 		}
+		
+		/*
+		updateDependencies();
+		for(TranscendenceMod dependency : dependencies) {
+			dependency.bindAsDependency(typeMap);
+		}
+		*/
 	}
 	public void updateModules() {
 		modules.clear();
@@ -275,6 +303,8 @@ public class TranscendenceMod extends DesignElement {
 						//Check if the UNID has not already been bound to a Design
 						if(typeMap.get(sub_type) == null) {
 							typeMap.put(sub_type, sub);
+						} else if(typeMap.get(sub_type) == sub) {
+							//Ignore if this element was bound earlier (such as during a Parent Type Binding).
 						} else if(typeMap.get(sub_type).getName().equals(sub.getName())) {
 							//If the UNID is bound to a Design with the same tag, then it's probably an override
 							out.println(getConsoleMessage2(sub.getName(), String.format("%-15s %s", "[Warning] Override Type:", sub_type)));
@@ -376,10 +406,17 @@ public class TranscendenceMod extends DesignElement {
 		return getBindCode() != codes.getLastBindCode();
 	}
 	public boolean isUnsaved() {
-		return hashCode() != codes.getLastSaveCode();
+		return getSaveCode() != codes.getLastSaveCode();
 	}
+	//Bind Code depends on changes with Types
 	public int getBindCode() {
-		return Objects.hash(types, dependencies, modules);
+		//Function<TranscendenceMod, BidiMap<String, String>> getTypes = (TranscendenceMod dependency) -> {return dependency.types.bindAll();};
+		//return Objects.hash(getTypes.apply(parent), types, dependencies.stream().map(getTypes), modules.stream().map(getTypes));
+		return Objects.hash(parent, types, dependencies, modules);
+	}
+	//Save Code depends on changes to our own code 
+	public int getSaveCode() {
+		return Objects.hash(types, this.getAttributesMap(), this.getSubElements());
 	}
 	public void save() {
 		if(!path.isFile()) {
