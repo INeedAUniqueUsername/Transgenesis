@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -395,6 +396,7 @@ public class XMLPanel extends JPanel {
 				for(File f : load) {
 					loadExtensions(f);
 				}
+				checkModules();
 				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will now prepare type bindings for all loaded extensions.", false));
 			} else {
 				JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("TransGenesis will begin without any extensions loaded.", false));
@@ -443,6 +445,14 @@ public class XMLPanel extends JPanel {
 			result.add((TranscendenceMod) ((DefaultMutableTreeNode) elementTreeOrigin.getChildAt(i)).getUserObject()); 
 		}
 		return result;
+	}
+	public TranscendenceMod getExtensionByPath(File path) {
+		for(TranscendenceMod extension : getExtensions()) {
+			if(extension.getPath().equals(path)) {
+				return extension;
+			}
+		}
+		return null;
 	}
 	public TranscendenceMod getExtension(DefaultMutableTreeNode node) {
 		//It's possible that the selected extension is in the node itself
@@ -570,6 +580,7 @@ public class XMLPanel extends JPanel {
 					File[] load = showFileChooser();
 					for(File f : load) {
 						loadExtensions(f);
+						checkModules();
 						bindTypes();
 					}
 				}
@@ -736,7 +747,7 @@ public class XMLPanel extends JPanel {
 			} else if(extension == null) {
 				out.println("Unknown error");
 			} else if(extension.getName().equals("TranscendenceError")) {
-				out.println("Failure: Extension " + extension.getPath() + " could not be loaded.");
+				out.println("Failure: Extension " + extension.getPath() + " could not be loaded; " + extension.getText());
 			} else {
 				out.println("Success: Extension " + extension.getPath() + " loaded.");
 				elementTreeModel.insertNodeInto(extension.toTreeNode(), elementTreeOrigin, 0);
@@ -744,14 +755,32 @@ public class XMLPanel extends JPanel {
 				if(m.hasSubElement("Library") && JOptionPane.showConfirmDialog(null, "This Extension depends on other Libraries. Load them now?", "Load Dependencies", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				}
 				*/
-				//If the file is not the same as the Extension path, then we can assume that the file is the directory that contains the Extension. We can assume that an Extension and its modules have the same directory.
-				if(extension.hasSubElement("Module") && f.equals(extension.getPath()) && JOptionPane.showConfirmDialog(null, createTextArea("Note: Extension " + extension.getPath() + " has Modules. Load them now?", false), "Load Modules", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-					List<File> paths = new LinkedList<>();
-					for(DesignElement e : extension.getSubElementsByName("Module")) {
-						paths.add(new File(extension.getModulePath(e.getAttributeByName("filename").getValue())));
-					}
-					loadModules(paths);
+			}
+		}
+	}
+	private void checkModules() {
+		//HashMap<TranscendenceMod, List<File>> extensionModules = new HashMap<>();
+		for(TranscendenceMod extension : getExtensions()) {
+			LinkedList<File> unloadedModules = new LinkedList<File>();
+			//extensionModules.put(extension, unloadedModules);
+			for(DesignElement e : extension.getSubElementsByName("Module")) {
+				File modulePath = new File(extension.getModulePath(e.getAttributeByName("filename").getValue()));
+				if(getExtensionByPath(modulePath) == null) {
+					unloadedModules.add(modulePath);
 				}
+			}
+			if(unloadedModules.size() > 0) {
+				String message = "Extension " + extension.getPath().getAbsolutePath() + " has unloaded Modules. Load them now?\n";
+				for(File modulePath : unloadedModules) {
+					message += '\n' + modulePath.getAbsolutePath();
+				}
+				
+				if(JOptionPane.showConfirmDialog(this, createTextArea(message, false), "Load Modules", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+					for(File path : unloadedModules) {
+						loadExtensions(path);
+					}
+				}
+				
 			}
 		}
 	}
@@ -759,6 +788,7 @@ public class XMLPanel extends JPanel {
 		JOptionPane.showMessageDialog(this, createScrollPane(createTextArea("TransGenesis will now update type bindings for all loaded extensions.", false)));
 		bindNonModuleExtensions(getExtensions());
 	}
+	/*
 	private void loadModules(List<File> files) {
 		List<TranscendenceMod> loaded = getExtensions();
 		List<TranscendenceMod> mods = new LinkedList<>();
@@ -779,6 +809,7 @@ public class XMLPanel extends JPanel {
 			}
 		}
 	}
+	*/
 	public void bindNonModuleExtensions(List<TranscendenceMod> mods) {
 		for(TranscendenceMod mod : mods) {
 			//Do not bind on TranscendenceModules because we will have their parents bind for them

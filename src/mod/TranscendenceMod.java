@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -80,19 +81,17 @@ public class TranscendenceMod extends DesignElement {
 		out.println(getConsoleMessage("Recursive Type Binding requested"));
 		//Save as updateTypeBindings() but recursively updates all module type bindings too
 		updateTypeBindings();
-		for(TranscendenceMod module : modules) {
+		for(TranscendenceMod module : new ArrayList<TranscendenceMod>(modules)) {
 			module.updateTypeBindingsWithModules();
 		}
 	}
 	public void updateTypeBindings() {
 		out.println(getConsoleMessage("[General] Type Binding requested"));
-		int bindingCode = getBindCode();
 		//Check if anything changed since the last binding. If not, then we don't update.
-		if(bindingCode == codes.getLastBindCode()) {
+		if(isUnbound()) {
 			out.println(getConsoleMessage("[Warning] Type binding skipped; no changes"));
 			return;
 		}
-		codes.setLastBindCode(bindingCode);
 		String consoleName = getName() + path.getPath();
 		
 		typeMap.clear();
@@ -135,6 +134,7 @@ public class TranscendenceMod extends DesignElement {
 		updateModules();
 		bindInternalTypes(typeMap);
 		bindModuleTypes(typeMap);
+		codes.setLastBindCode(getBindCode());
 		out.println(getConsoleMessage("[Success] Type Binding complete"));
 	}
 	//Allow modules to take external entities
@@ -410,9 +410,12 @@ public class TranscendenceMod extends DesignElement {
 	}
 	//Bind Code depends on changes with Types
 	public int getBindCode() {
-		//Function<TranscendenceMod, BidiMap<String, String>> getTypes = (TranscendenceMod dependency) -> {return dependency.types.bindAll();};
-		//return Objects.hash(getTypes.apply(parent), types, dependencies.stream().map(getTypes), modules.stream().map(getTypes));
-		return Objects.hash(parent, types, dependencies, modules);
+		Function<TranscendenceMod, Collection<String>> getTypes = (TranscendenceMod extension) -> {
+			return extension.types.bindAll().values();
+			};
+		//out.println(getConsoleMessage("[General] Bind Code: " + Objects.hash(parent == null ? null : getTypes.apply(parent), types.bindAll().values(), dependencies.stream().map(getTypes), modules.stream().map(getTypes))));	
+		return Objects.hash(parent == null ? null : getTypes.apply(parent), types.bindAll().values(), dependencies.stream().map(getTypes), modules.stream().map(getTypes));
+		//return Objects.hash(parent, types, dependencies, modules);
 	}
 	//Save Code depends on changes to our own code 
 	public int getSaveCode() {
