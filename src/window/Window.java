@@ -109,7 +109,8 @@ public class Window implements Runnable {
 			setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
 			console.setSize(getSize());
 			console.setLocation(0, 128);
-			console.setSize(getWidth(), getHeight() - 128);
+			console.setSize(getWidth(), getHeight());
+			console.requestFocus();
 			XMLPanel xmlPanel = new XMLPanel(this);
 			xmlPanel.initialize(args);
 			//xmlPanel.initialize("path:C:\\Users\\Alex\\workspace\\TransGenesis\\Testing Area\\Transcendence_Source\\StarsOfThePilgrim.xml");

@@ -410,6 +410,47 @@ public class XMLPanel extends JPanel {
 			}
 		}
 		onInitializationComplete();
+		SwingUtilities.invokeLater(() -> {
+			for(Object message : new Object[] {
+					createTextArea(	"Welcome to TransGenesis", false),
+					createTextArea(	"Use the New/Load buttons to add extensions.\n" +
+									"----Use the tree menu on the center left to select an extension/element to modify.\n" +
+									"--------You can view an element's existing subelements by double clicking its name on the tree.\n" +
+									"----Use the search bar above the tree menu to search for elements\n" +
+									"--------Begin the search query with \'&\' to find elements by UNID\n" +
+									"--------Otherwise, the search bar returns elements that match by name", false),
+					createTextArea(	"When you select an element, its information appears in various fields on the right pane.\n" +
+									"----The Name Field (top of the right pane) displays the name of the element. If\n" +
+									"it is highlighted white instead of grey, that means you can rename the element.\n" +
+									"----The File Field (below the Name Field) shows the location of the file where\n" +
+									"the element is located.\n" +
+									"----Below the File Field is a (currently empty) row of buttons for various actions.\n" +
+									"----The Documentation panel shows information about the element.\n" +
+									"----The Attributes panel allows you to modify values for the element's attributes.\n" +
+									"--------The attribute fields will restrict inputs to valid values. Fields that take\n" +
+									"Types as values will smart drop-down menus to select Types accessible to the extension.\n" +
+									"----The Subelements panel allows you to add new subelements to the element.\n" +
+									"--------Certain subelement buttons are greyed out if you cannot add any more of them.\n" + 
+									"----The Text Area (bottom of the right pane) allows you to set the text/code\n" +
+									"content of the element", false),
+					createTextArea(	"Extensions will have a [B] indicator if you need to update Type Bindings.\n" +
+									"You can do this by selecting the extension and clicking Bind Extension.\n" +
+									"The [S] indicator means that an extension has unsaved changes. Select the extension and\n" +
+									"click Save Extension.\n" +
+									"Click Generate XML to see the XML output of the selected element.", false),
+					createTextArea(	"----All elements have a Remove Element button which deletes them from their parent element.\n" +
+									"--------If an extension is selected, Remove Element simply unloads the extension from Transgenesis.\n" +
+									"----Extensions provide a few special action buttons.\n" +
+									"--------The Delete Extension button\n" +
+									"--------The Manage UNIDs button allows you to define Type Entries (i.e. [0x00000001] and [itExample])\n" +
+									"and Type Ranges (i.e. [0x00000001 - 0x00000005] and [itExample1, itExample2, itExample3,\n" +
+									"itExample4, itExample5]) to be used by the extension.\n" +
+									"--------The View Type Bindings button allows you to see which UNIDs are bound to which Types", false)
+			}) {
+				JOptionPane.showMessageDialog(XMLPanel.this, message);
+			}
+			
+		});
 	}
 	public void onInitializationComplete() {
 		//Bind the extensions twice because some extensions have unbound dependencies when they bind for the first time
@@ -419,6 +460,7 @@ public class XMLPanel extends JPanel {
 		elementTree.expandRow(0);
 		resetLayout();
 		packFrame();
+		requestFocus();
 		JOptionPane.showMessageDialog(XMLPanel.this, createTextArea("Initialization complete", false));
 		requestFocus();
 	}
@@ -835,7 +877,6 @@ public class XMLPanel extends JPanel {
 		if(selectedExtension != null) {
 			selectedExtension.updateTypeBindingsWithModules();
 		}
-		elementTreeModel.nodeStructureChanged(elementTreeOrigin);
 	}
 	private void save() {
 		if(selectedElement != null) {
@@ -845,7 +886,6 @@ public class XMLPanel extends JPanel {
 			selectedExtension.updateTypeBindings();
 			selectedExtension.save();
 		}
-		elementTreeModel.nodeStructureChanged(elementTreeOrigin);
 	}
 	public TranscendenceMod getSelectedExtension() {
 		return selectedExtension;

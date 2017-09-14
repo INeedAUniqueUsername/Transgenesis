@@ -74,7 +74,10 @@ public final class SpaceObject {
 				att("portRadius", INTEGER),
 				att("rotation", INTEGER),
 				att("x", INTEGER),
-				att("y", INTEGER)
+				att("y", INTEGER),
+				att("posAngle", INTEGER),
+				att("posRadius", INTEGER),
+				att("posZ", INTEGER)
 				);
 		DesignElement trade = new DesignElement("Trade");
 		trade.addAttributes(
