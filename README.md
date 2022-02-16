@@ -3,4 +3,6 @@ This is a structured XML editor for Transcendence. It provides smart content edi
 
 Forum topic: https://forums.kronosaur.com/viewtopic.php?f=2&t=8362
 
-As of 2018, this project is inactive and no longer compatible with the current release of Transcendence.
+As of 2018, this project is discontinued and no longer compatible with the current release of Transcendence.
+
+As of 2021, this project is now succeeded by [Transgenesis II](https://github.com/INeedAUniqueUsername/Transgenesis-II).
